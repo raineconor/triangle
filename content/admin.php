@@ -60,7 +60,7 @@
     <a class="left-col-btn" href="logout.php">Logout</a>
 
     <div id="version">
-      v 1.01.39
+      v <?php include "scripts/version.php"; echo $latestVersion; ?>
       <br>
       <span style="font-size:10px;">(C) Copyright 2020 Raine Conor. All rights reserved.</span>
     </div>

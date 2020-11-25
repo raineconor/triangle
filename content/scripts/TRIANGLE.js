@@ -10,7 +10,7 @@ var x = 0;
 var y = 0;
 var z = 0;
 
-TRIANGLE.version = "1.01.40";
+TRIANGLE.version = "1.01.41";
 
 
 //==================================================================================================
@@ -689,7 +689,7 @@ insertUserClass : function(name) {
   var params = "instance=" + TRIANGLE.instance + "&name=" + name;
 
   AJAX.get("scripts/insertUserClass.php", params, function(xmlhttp) {
-    console.log(xmlhttp.responseText);
+    /*console.log(xmlhttp.responseText);*/
     var userClass = JSON.parse(xmlhttp.responseText);
     var newItem = document.createElement("div");
     newItem.setAttribute("user-class", name);
@@ -2879,6 +2879,7 @@ TRIANGLE.TemplateItem = function(index) {
   this.fontFamily = this.objRef.style.fontFamily;
   this.fontColor = this.objRef.style.color;
   this.fontSize = this.objRef.style.fontSize;
+  this.fontWeight = this.objRef.style.fontWeight;
   this.lineHeight = this.objRef.style.lineHeight;
   //============================================================
   //this.hoverStyle = this.objRef.getAttribute("hover-style");
@@ -7197,6 +7198,7 @@ TRIANGLE.styleFunctions = [
   function (id, value) {id.style.boxShadow = value;},
   function (id, value) {id.style.color = value;},
   function (id, value) {id.style.fontSize = value;},
+  function (id, value) {id.style.fontWeight = value;},
   function (id, value) {id.style.lineHeight = value;},
   function (id, value) {id.style.textAlign = value;},
   function (id, value) {id.style.fontFamily = value;},
@@ -7253,6 +7255,7 @@ TRIANGLE.getStyles = function getStyles(element) {
   element.style.boxShadow,
   element.style.color,
   element.style.fontSize,
+  element.style.fontWeight,
   element.style.lineHeight,
   element.style.textAlign,
   element.style.fontFamily,
@@ -8048,7 +8051,7 @@ loadTemplate : function loadTemplate(templateName, pageName) {
     TRIANGLE.currentTemplate = templateName;
     TRIANGLE.currentPage = pageName;
 
-    setTimeout(TRIANGLE.updateTemplateItems, 100); // find flag, for some reason the items dont update unless theres a delay
+    setTimeout(TRIANGLE.updateTemplateItems, 100); // [find flag], for some reason the items dont update unless theres a delay
 
     document.getElementById("FTPselect").selectedIndex = 0;
 
@@ -8608,6 +8611,7 @@ compressionMap : {
   "line-height" : "lH",
   "text-align" : "tA",
   "font-family" : "fF",
+  "font-weight" : "fW",
   "text-decoration" : "tD"
 }
 
