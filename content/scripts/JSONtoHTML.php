@@ -671,11 +671,10 @@ function formatCSStext($cssStr, $isCropped = "") {
 
     "border-radius",
     "box-shadow",
-    "font-family", "font-weight",
+    "font-family", "font-weight", "font-size",
     "color",
-    "font-size",
     "line-height",
-    "text-align", "text-decoration", "text-shadow",
+    "text-align", "text-decoration", "text-dcoration-color", "text-shadow",
     "letter-spacing",
     "cursor",
     "opacity",
@@ -684,7 +683,7 @@ function formatCSStext($cssStr, $isCropped = "") {
 
     "grid-template-columns", "grid-column-gap", "grid-row-gap", "grid-gap", "grid-column-start", "grid-column-end", "grid-row-start", "grid-row-end",
 
-    "flex-wrap", "flexx-direction", "flex-flow", "justify-content", "align-items", "align-content", "order", "flex-grow", "flex-shrink", "flex-basis", "flex", "align-self"
+    "flex-wrap", "flex-direction", "flex-flow", "justify-content", "align-items", "align-content", "order", "flex-grow", "flex-shrink", "flex-basis", "flex", "align-self"
   ];
 
   $space = "  ";

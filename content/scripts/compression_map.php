@@ -29,6 +29,8 @@ $compression_map = [
   "line-height" => "lH",
   "text-align" => "tA",
   "font-family" => "fF",
+  "font-weight" => "fW",
+  "text-decoration-color" => "tDc",
   "text-decoration" => "tD"
 ];
 

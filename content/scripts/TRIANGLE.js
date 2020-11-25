@@ -2884,6 +2884,14 @@ TRIANGLE.TemplateItem = function(index) {
   this.fontSize = this.objRef.style.fontSize;
   this.fontWeight = this.objRef.style.fontWeight;
   this.lineHeight = this.objRef.style.lineHeight;
+  this.textDecorationColor = this.objRef.style.textDecorationColor;
+
+  this.flexFlow = this.objRef.style.flexFlow;
+  this.alignItems = this.objRef.style.alignItems;
+  this.justifyContent = this.objRef.style.justifyContent;
+
+  this.transition = this.objRef.style.transition;
+  this.animation = this.objRef.style.animation;
   //============================================================
   //this.hoverStyle = this.objRef.getAttribute("hover-style");
   this.hover = {};
@@ -7209,6 +7217,12 @@ TRIANGLE.styleFunctions = [
   function (id, value) {id.style.textAlign = value;},
   function (id, value) {id.style.fontFamily = value;},
   function (id, value) {id.style.textDecoration = value;},
+  function (id, value) {id.style.textDecorationColor = value;},
+  function (id, value) {id.style.flexFlow = value;},
+  function (id, value) {id.style.alignItems = value;},
+  function (id, value) {id.style.justifyContent = value;},
+  function (id, value) {id.style.transition = value;},
+  function (id, value) {id.style.animation = value;},
   function (id, value) {id.innerHTML = value;},
   function (id, value) {id.className = value;},
   function (id, value) {if (value) id.setAttribute("item-align", value);},
@@ -7269,6 +7283,12 @@ TRIANGLE.getStyles = function getStyles(element) {
   element.style.textAlign,
   element.style.fontFamily,
   element.style.textDecoration,
+  element.style.textDecorationColor,
+  element.style.flexFlow,
+  element.style.alignItems,
+  element.style.justifyContent,
+  element.style.transition,
+  element.style.animation,
   element.innerHTML,
   element.className,
   element.getAttribute("item-align"),
@@ -8591,6 +8611,7 @@ decompress : function(json) {
   return JSON.stringify(json);
 },
 
+// update server-side map too
 compressionMap : {
   "background-color" : "bC",
   "background-image" : "bI",
@@ -8621,7 +8642,8 @@ compressionMap : {
   "text-align" : "tA",
   "font-family" : "fF",
   "font-weight" : "fW",
-  "text-decoration" : "tD"
+  "text-decoration" : "tD",
+  "text-decoration-color" : "tDc"
 }
 
 
