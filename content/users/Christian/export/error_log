@@ -1,0 +1,179 @@
+[28-Apr-2019 23:36:44 UTC] PHP Warning:  dir(/home/tcadmin/public_html/content/scripts/../users/Christian/export/bible temp): failed to open dir: No such file or directory in /home/tcadmin/public_html/content/scripts/publish.php on line 69
+[28-Apr-2019 23:36:44 UTC] PHP Fatal error:  Call to a member function read() on boolean in /home/tcadmin/public_html/content/scripts/publish.php on line 70
+[29-Apr-2020 16:54:27 UTC] PHP Warning:  ftp_put(): Could not open data connection to port 56858: Connection timed out in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[29-Apr-2020 16:55:40 UTC] PHP Warning:  ftp_put(): Could not open data connection to port 54804: Connection timed out in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[29-Apr-2020 16:57:01 UTC] PHP Warning:  ftp_put(): Could not open data connection to port 51209: Connection timed out in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:38 UTC] PHP Warning:  ftp_put(): Connecting to port 44393 in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:38 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:38 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:38 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:38 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:38 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:38 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:38 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:38 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:38 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:38 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:38 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:38 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:38 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:38 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:38 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:38 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:38 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:39 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:39 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:39 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:39 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:39 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:39 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:39 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:39 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:39 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:39 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:39 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:39 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:39 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:39 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:39 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:39 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:39 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:39 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:39 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:40 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:40 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:40 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:40 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:40 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:40 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:40 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:40 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:40 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:40 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:40 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:40 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:40 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:40 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:40 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:40 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:40 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:40 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:40 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:40 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:41 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:41 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:41 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:41 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:41 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:41 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:41 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:41 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:41 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:41 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:41 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:41 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:41 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:41 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:41 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:41 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:41 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:41 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:41 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:41 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:41 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:42 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:42 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:42 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:42 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:42 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:42 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:42 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:42 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:42 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:42 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:42 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:42 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:42 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:42 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:42 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:42 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:42 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:42 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:42 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:43 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:43 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:43 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:43 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:43 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:43 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:43 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:43 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:43 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:43 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:43 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:43 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:43 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:43 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:43 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:43 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:43 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:43 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:43 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:43 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:44 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:44 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:44 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:44 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:44 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:44 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:44 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:44 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:44 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 17:14:44 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 18:06:36 UTC] PHP Warning:  ftp_put(): Could not open data connection to port 37789: Connection timed out in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 18:37:54 UTC] PHP Warning:  ftp_put(): Could not open data connection to port 34325: Connection timed out in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 22:42:33 UTC] PHP Warning:  ftp_put(): Connecting to port 56432 in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 22:42:33 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 22:42:34 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 22:42:34 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 22:42:34 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 22:42:34 UTC] PHP Warning:  ftp_put(): Unknown command in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 22:47:54 UTC] PHP Warning:  ftp_put(): Could not open data connection to port 56450: Connection timed out in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 22:49:37 UTC] PHP Warning:  ftp_put(): Connecting to port 60798 in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 22:49:39 UTC] PHP Warning:  ftp_put(): 91.778 seconds (measured here), 68.34 bytes per second in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 22:53:31 UTC] PHP Warning:  ftp_put(): Could not open data connection to port 43387: Connection timed out in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[30-Apr-2020 22:54:37 UTC] PHP Warning:  ftp_put(): Could not open data connection to port 35321: Connection timed out in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[04-May-2020 22:04:23 UTC] PHP Warning:  ftp_put(): Could not open data connection to port 36155: Connection timed out in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[04-May-2020 22:19:23 UTC] PHP Warning:  ftp_put(): Could not open data connection to port 39649: Connection timed out in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[04-May-2020 22:20:35 UTC] PHP Warning:  ftp_put(): Could not open data connection to port 59432: Connection timed out in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[04-May-2020 22:21:50 UTC] PHP Warning:  ftp_put(): Could not open data connection to port 41670: Connection timed out in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[04-May-2020 22:23:17 UTC] PHP Warning:  ftp_put(): Could not open data connection to port 34898: Connection timed out in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[04-May-2020 22:32:15 UTC] PHP Warning:  ftp_put(): Could not open data connection to port 48337: Connection timed out in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[04-May-2020 22:33:29 UTC] PHP Warning:  ftp_put(): Could not open data connection to port 36355: Connection timed out in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[05-May-2020 18:08:50 UTC] PHP Warning:  ftp_put(): Could not open data connection to port 43550: Connection timed out in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[05-May-2020 18:09:56 UTC] PHP Warning:  ftp_put(): Could not open data connection to port 54284: Connection timed out in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[05-May-2020 18:11:10 UTC] PHP Warning:  ftp_put(): Could not open data connection to port 41772: Connection timed out in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[05-May-2020 20:24:34 UTC] PHP Warning:  ftp_put(): Could not open data connection to port 41886: Connection timed out in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[05-May-2020 20:25:41 UTC] PHP Warning:  ftp_put(): Could not open data connection to port 52803: Connection timed out in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[05-May-2020 20:26:52 UTC] PHP Warning:  ftp_put(): Could not open data connection to port 56149: Connection timed out in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[05-May-2020 20:28:03 UTC] PHP Warning:  ftp_put(): Could not open data connection to port 38201: Connection timed out in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[05-May-2020 20:41:21 UTC] PHP Warning:  ftp_put(): Could not open data connection to port 43325: Connection timed out in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[05-May-2020 20:42:46 UTC] PHP Warning:  ftp_put(): Could not open data connection to port 39344: Connection timed out in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[05-May-2020 20:43:59 UTC] PHP Warning:  ftp_put(): Could not open data connection to port 35134: Connection timed out in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[05-May-2020 22:28:15 UTC] PHP Warning:  ftp_put(): Could not open data connection to port 39749: Connection timed out in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[05-May-2020 22:29:25 UTC] PHP Warning:  ftp_put(): Could not open data connection to port 41695: Connection timed out in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[05-May-2020 22:30:30 UTC] PHP Warning:  ftp_put(): Could not open data connection to port 50592: Connection timed out in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[05-May-2020 22:33:00 UTC] PHP Warning:  ftp_put(): Could not open data connection to port 33763: Connection timed out in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[05-May-2020 22:34:32 UTC] PHP Warning:  ftp_put(): Could not open data connection to port 58526: Connection timed out in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[05-May-2020 22:49:05 UTC] PHP Warning:  ftp_put(): Could not open data connection to port 45687: Connection timed out in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[05-May-2020 22:56:36 UTC] PHP Warning:  ftp_put(): Could not open data connection to port 37450: Connection timed out in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[05-May-2020 22:57:59 UTC] PHP Warning:  ftp_put(): Could not open data connection to port 59973: Connection timed out in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[05-May-2020 23:16:37 UTC] PHP Warning:  ftp_put(): Could not open data connection to port 59311: Connection timed out in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[05-May-2020 23:19:54 UTC] PHP Warning:  ftp_put(): Could not open data connection to port 38554: Connection timed out in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[05-May-2020 23:21:08 UTC] PHP Warning:  ftp_put(): Could not open data connection to port 42610: Connection timed out in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[06-May-2020 16:25:45 UTC] PHP Warning:  ftp_put(): Could not open data connection to port 60315: Connection timed out in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[06-May-2020 20:46:08 UTC] PHP Warning:  ftp_put(): Could not open data connection to port 43774: Connection timed out in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[06-May-2020 20:47:11 UTC] PHP Warning:  ftp_put(): Could not open data connection to port 58423: Connection timed out in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[06-May-2020 20:48:47 UTC] PHP Warning:  ftp_put(): Could not open data connection to port 56715: Connection timed out in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[06-May-2020 20:59:15 UTC] PHP Warning:  ftp_put(): Could not open data connection to port 46566: Connection timed out in /home/tcadmin/public_html/content/scripts/publish.php on line 78
+[06-May-2020 21:07:12 UTC] PHP Warning:  ftp_put(): Could not open data connection to port 59099: Connection timed out in /home/tcadmin/public_html/content/scripts/publish.php on line 78

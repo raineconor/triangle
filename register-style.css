@@ -1,0 +1,91 @@
+/*
+(C) Copyright 2020 Raine Conor. All rights reserved.
+*/
+
+* {
+  box-sizing:border-box;
+}
+
+body {
+  margin:0;
+  font-family:'Helvetica', sans-serif;
+}
+
+#content {
+  background-color:#ffffff;
+  height:91vh;
+  width:100%;
+  display:table;
+  padding:15px;
+}
+
+#logo {
+  display:block;
+  margin:0 auto;
+  margin-bottom:2em;
+  max-width:80%;
+}
+
+#registerBox {
+  display:table-cell;
+  vertical-align:middle;
+  text-align:center;
+}
+
+#registerForm {
+  text-align:right;
+  width:auto;
+  display:inline-block;
+  font-size:120%;
+}
+
+#registerForm table {
+  width:100%;
+}
+
+table input {
+  width:100%;
+  font-size:110%;
+  padding:4px;
+  border:1px solid gray;
+}
+
+#registerForm td {
+  text-align:right;
+}
+
+#registerForm td:nth-of-type(2n) {
+  /*text-align:left;*/
+}
+
+#registerBtn {
+  font-size:115%;
+  width:100%;
+  margin:1.5em 0;
+  border:none;
+  background-color:#358AEA;
+  cursor:pointer;
+  padding:5px;
+  color:#FFFFFF;
+}
+
+#registerBtn:hover {
+  background-color:#1054A3;
+}
+
+#footer {
+  /*background-color:#FAB6C2;*/
+  width:100%;
+  height:9vh;
+  padding:20px;
+  position:fixed;
+  left:0;
+  right:0;
+  bottom:0;
+  text-align:center;
+  color:lightgray;
+}
+
+.error {
+  color:red;
+}

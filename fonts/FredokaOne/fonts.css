@@ -1,0 +1,7 @@
+@font-face {
+	font-family: 'Fredoka';
+	src: url('http://braydengregerson.com/triangle/fonts/FredokaOne/Fredoka.eot');
+	src: local('☺'), url('http://braydengregerson.com/triangle/fonts/FredokaOne/Fredoka.woff') format('woff'), url('http://braydengregerson.com/triangle/fonts/FredokaOne/Fredoka.ttf') format('truetype'), url('http://braydengregerson.com/triangle/fonts/FredokaOne/Fredoka.svg') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
