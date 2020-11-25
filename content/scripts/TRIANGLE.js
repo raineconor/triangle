@@ -61,6 +61,7 @@ insert : function insertImage(filepath) {
         TRIANGLE.item.objRef.style.backgroundRepeat = "no-repeat";
         TRIANGLE.item.objRef.style.backgroundPosition = "center top";
         TRIANGLE.images.setBackground = false;
+        TRIANGLE.updateTemplateItems();
 
       } else {
 
@@ -101,6 +102,8 @@ insert : function insertImage(filepath) {
 
       document.getElementById("bodyBgData").style.backgroundRepeat =
       document.body.style.backgroundRepeat = "repeat";
+
+      TRIANGLE.updateTemplateItems();
 
     } else {
       var imgContainer = document.createElement("div");
@@ -7167,6 +7170,9 @@ clearZip : function() {
 TRIANGLE.styleFunctions = [
   function (id, value) {id.style.backgroundColor = value;},
   function (id, value) {id.style.backgroundImage = value;},
+  function (id, value) {id.style.backgroundSize = value;},
+  function (id, value) {id.style.backgroundPosition = value;},
+  function (id, value) {id.style.backgroundIRepeat = value;},
   function (id, value) {id.style.height = value;},
   function (id, value) {id.style.minHeight = value;},
   function (id, value) {id.style.width = value;},
@@ -7224,6 +7230,9 @@ TRIANGLE.getStyles = function getStyles(element) {
   var elementStyles = [
   element.style.backgroundColor,
   element.style.backgroundImage,
+  element.style.backgroundSize,
+  element.style.backgroundPosition,
+  element.style.backgroundRepeat,
   element.style.height,
   element.style.minHeight,
   element.style.width,
