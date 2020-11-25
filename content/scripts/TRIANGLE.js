@@ -36,14 +36,14 @@ insert : function insertImage(filepath) {
   if (TRIANGLE.item) {
     if (TRIANGLE.isType.imageItem(TRIANGLE.item.objRef)) {
       //TRIANGLE.item.objRef.style.width = "auto";
-      TRIANGLE.item.image.src = filepath;
+      TRIANGLE.item.image.src = filepath.replace(/http(s?):\/\//g, "//");
       TRIANGLE.item.image.style.width = "100%";
       TRIANGLE.item.image.style.height = "auto";
       TRIANGLE.item.image.style.margin = "";
 
       TRIANGLE.item.objRef.style.overflow = "";
       TRIANGLE.item.objRef.style.height = "auto";
-      TRIANGLE.item.objRef.style.minHeight = "auto";//shit
+      TRIANGLE.item.objRef.style.minHeight = "auto"; //shit
       //TRIANGLE.item.objRef.style.minHeight = TRIANGLE.item.image.getBoundingClientRect().height + "px";
       TRIANGLE.item.objRef.removeAttribute("crop-map");
       TRIANGLE.item.objRef.removeAttribute("crop-ratio");

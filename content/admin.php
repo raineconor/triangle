@@ -24,7 +24,7 @@
 <head>
 <title>Triangle | My Profile</title>
 
-<link rel="shortcut icon" href="http://trianglecms.com/favicon.ico" />
+<link rel="shortcut icon" href="/favicon.ico" />
 
 <!--=========== CSS Include: =============-->
 <link rel="stylesheet" href="admin-style.css" type="text/css" media="screen">

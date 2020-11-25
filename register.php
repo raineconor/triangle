@@ -16,7 +16,7 @@
 <!--=================================-->
 
 <!--=========== Meta Tags: ==========-->
-<link rel="shortcut icon" href="http://trianglecms.com/favicon.ico" />
+<link rel="shortcut icon" href="/favicon.ico" />
 <meta name="description" content="Register for Triangle CMS online visual website builder and content management system.">
 <meta name="keywords" content="triangle, cms, online, visual, website, builder, alternative, software">
 <!--=================================-->

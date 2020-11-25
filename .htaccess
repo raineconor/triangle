@@ -1,3 +1,7 @@
+## HSTS ##
+Header always set Strict-Transport-Security "max-age=31536000" env=HTTPS
+## HSTS ##
+
 # compress text, html, javascript, css, xml:
 AddOutputFilterByType DEFLATE text/plain
 AddOutputFilterByType DEFLATE text/html

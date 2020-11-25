@@ -108,7 +108,7 @@
                                         //"http://trianglecms.com",
                                         "/home/tcadmin/public_html",
                                         $HTMLimages[2][$y]);*/
-      $HTMLimages[2][$y] = preg_replace("/http:\/\/(www\.)?trianglecms\.com/",
+      $HTMLimages[2][$y] = preg_replace("/http(s?):\/\/(www\.)?trianglecms\.com/",
                                         //"http://trianglecms.com",
                                         "/home/tcadmin/public_html",
                                         $HTMLimages[2][$y]);
@@ -132,6 +132,10 @@
                                       "/home/tcadmin/public_html",
                                       $CSSimages[1][$y]);
       $CSSimages[1][$y] = str_replace("http://trianglecms.com",
+                                      //"http://trianglecms.com",
+                                      "/home/tcadmin/public_html",
+                                      $CSSimages[1][$y]);
+      $CSSimages[1][$y] = str_replace("https://trianglecms.com",
                                       //"http://trianglecms.com",
                                       "/home/tcadmin/public_html",
                                       $CSSimages[1][$y]);
