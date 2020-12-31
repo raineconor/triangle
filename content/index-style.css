@@ -61,7 +61,7 @@ input[type=radio] {
 hr {
   height:1px;
   border:none;
-  background-color:gray;
+  background-color:lightgray;
 }
 
 #sideMenu h1,
@@ -308,7 +308,7 @@ hr {
   cursor:pointer;
 }
 .sideMenuTitle {
-  color:#666666;
+  color:#444444;
   font-size:40px;
 }
 .sideMenuIcon:hover {
@@ -349,9 +349,12 @@ hr {
   /*width:300px;*/
   margin:auto;
   cursor:pointer;
+  border-left:0px solid white;
+  transition:border-left 150ms;
+  color:#333333;
 }
 .sideMenuListItem:hover {
-  background-color:#EEEEEE;
+  border-left:10px solid #2170D6;
 }
 .hide {
   display:none;
@@ -1181,13 +1184,17 @@ hr.clearFloat {
   cursor:pointer;
   width:90%;
   float:left;
+  background-color:inherit;
+  transition:border-left 150ms;
+  color:#333333;
+  border-left:0px solid white;
 }
 .pageThumbnail:last-child {
   border-bottom:none;
 }
 .pageThumbnail:hover {
-  /*border-color:black;*/
-  background-color:#EEEEEE;
+  color:#161616;
+  border-left:10px solid #2170D6;
 }
 
 .deletePage {

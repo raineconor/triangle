@@ -1,6 +1,3 @@
-/*
-(C) Copyright 2020 Raine Conor. All rights reserved.
-*/
 document.body.onload = deferFonts;
 /*setTimeout(deferFonts, 2000);*/
 

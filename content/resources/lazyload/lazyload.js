@@ -1,7 +1,3 @@
-/*
-(C) Copyright 2020 Raine Conor. All rights reserved.
-*/
-
 document.addEventListener("scroll", lazyload);
 function lazyload() {
   var images = document.querySelectorAll('img[lazyload]');

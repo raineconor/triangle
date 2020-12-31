@@ -91,6 +91,8 @@
 <!--=========== CSS Include: =============-->
 <link rel="stylesheet" href="index-style.css" type="text/css" media="screen" />
 <link rel="stylesheet" href="shortcodes.css" type="text/css" media="screen" />
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@100;300;400;700&display=swap" rel="stylesheet">
 <!--======================================-->
 </head>
 <body style="background-color:white;font-family:Arial,sans-serif;font-size:14px;margin:0;">
@@ -1492,7 +1494,7 @@ TRIANGLE.instance = parseInt(<?php echo $instanceNumber; ?>);
 console.log(TRIANGLE.instance);
 </script>
 <script type="text/javascript" src="scripts/AJAX.js"></script>
-<script type="text/javascript" src="scripts/TRIANGLE<?php echo str_replace(".", "", $latestVersion); ?>.<?php if ($_SERVER["HTTP_HOST"] === "trianglecms.com" || $_SERVER["HTTP_HOST"] === "www.trianglecms.com") echo "min."; ?>js"></script>
+<script type="text/javascript" src="scripts/TRIANGLE<?php if ($_SERVER["HTTP_HOST"] === "trianglecms.com" || $_SERVER["HTTP_HOST"] === "www.trianglecms.com") echo str_replace(".", "", $latestVersion); ?>.<?php if ($_SERVER["HTTP_HOST"] === "trianglecms.com" || $_SERVER["HTTP_HOST"] === "www.trianglecms.com") echo "min."; ?>js"></script>
 
 <?php echo $callLoad; ?>
 <?php echo $max_templates; ?>

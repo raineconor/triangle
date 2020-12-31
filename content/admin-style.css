@@ -18,7 +18,8 @@
 }
 
 body {
-  font-family:'Roboto', 'Arial', sans-serif;
+  /*font-family:'Roboto', 'Arial', sans-serif;*/
+  font-family:'Lato', 'Arial', sans-serif;
   font-size:14px;
   margin:0;
 }
@@ -26,10 +27,10 @@ body {
 header {
   background-color:#ffffff;
   padding:15px;
-  text-align:center;
-  color:white;
-  border-bottom:3px solid #4F4E57;
-  height:100px;
+  text-align:left;
+  height:60px;
+  display:flex;
+  align-items:center;
 }
 
 section {
@@ -37,13 +38,14 @@ section {
 }
 
 section h2 {
-  margin:10px 0 19px 0;
+  margin:0 0 10px 0;
+  color:#222222;
 }
 
 hr {
   height:1px;
   border:none;
-  background-color:gray;
+  background-color:lightgray;
   margin-bottom:15px;
   margin-top:15px;
 }
@@ -56,25 +58,38 @@ hr {
   position:absolute;
   left:0;
   bottom:0;
-  top:100px;
-  width:190px;
-  background-color:#333333;
+  top:60px;
+  width:220px;
+  background-color:#131720;
+  padding-top:20px;
 }
 #right-column {
   position:absolute;
-  left:190px;
+  left:220px;
   bottom:0;
-  top:100px;
+  top:60px;
   right:0;
   overflow:auto;
+  /*padding:20px;*/
+  background-color:#dfe5eb;
+  border-top:1px solid lightgray;
 }
 #profile-greeting {
-  text-align:center;
   color:#ffffff;
-  font-size:120%;
-  padding:12px 10px 11px 10px;
-  border-bottom:1px solid gray;
-  margin-bottom:10px;
+  font-size:24px;
+  padding:10px 22px;
+  font-weight:700;
+  border-left:8px solid #2b2f37;
+}
+#profile-avatar {
+  border-radius:50%;
+  background-color:#2b2f37;
+  width:40px;
+  height:40px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  margin-right:10px;
 }
 #newTemplate {
   border:1px solid gray;
@@ -122,6 +137,11 @@ hr {
   background-color:#eeeeee;
   width:70vw;
 }
+#dashboard-logo {
+  width:auto;
+  height:40px;
+  padding-left:20px;
+}
 
 /*============================================
                  Class Styles
@@ -129,36 +149,38 @@ hr {
 
 .left-col-btn {
   background-color:inherit;
-  padding:10px 15px;
-  color:lightgray;
+  padding:10px 30px;
+  color:white;
   display:block;
   text-decoration:none;
 }
 .left-col-btn:hover {
-  background-color:#595959;
-  color:#ffffff;
+  background-color:#2b2f37;
 }
 
 .menuLink {
-  color:black;
+  color:#333333;
   display:block;
   /*border:1px solid gray;*/
-  border-bottom:1px solid lightgray;
+  border-left:0px solid white;
+  border-bottom:1px solid #dfdfdf;
   text-decoration:none;
   padding:15px;
   float:left;
   width:84%;
   cursor:pointer;
   user-select:none;
+  transition:all 150ms;
 }
 
 .menuLink:nth-of-type(2n) {
-  background-color:#f6f6f6;
+  /*background-color:#f6f6f6;*/
 }
 
 .menuLink:hover {
-  background-color:#5da1ee;
-  color:#FFFFFF;
+  /*background-color:#95bcef;*/
+  color:#161616;
+  border-left:10px solid #2170D6;
   /*border:1px solid #333333;*/
 }
 
@@ -173,11 +195,13 @@ hr {
   text-align:center;
   float:right;
   border-bottom:1px solid lightgray;
+  transition:all 80ms;
+  background-color:inherit;
 }
 
 .menuLinkDelete:hover {
   color:white;
-  background-color:red;
+  background-color:#E1341E;
 }
 
 .menuLinkDetails,
@@ -190,6 +214,8 @@ hr {
   border-bottom:1px solid lightgray;
   text-decoration:none;
   color:inherit;
+  background-color:inherit;
+  transition:all 80ms;
 }
 
 .menuLinkDetails:hover,
@@ -285,7 +311,9 @@ hr {
 }
 
 .menu {
+  background-color: white;
   display:none;
+  padding:30px;
 }
 .userImg {
   padding:10px;
@@ -322,7 +350,7 @@ hr {
   cursor:pointer;
 }
 .deleteImage:hover {
-  color:red;
+  color:#E1341E;
 }
 .menuAlt {
   background-color:#f6f6f6;
@@ -363,9 +391,10 @@ hr {
 }
 
 .templateChoice {
-  color:black;
+  color:#333333;
   display:block;
   border-bottom:1px solid lightgray;
+  border-left:0px solid white;
   text-decoration:none;
   padding:15px;
   cursor:pointer;
@@ -375,8 +404,10 @@ hr {
   width:31.33%;
   float:left;
   margin:1%;
+  transition:all 150ms;
 }
 
 .templateChoice:hover {
-  background-color:#dedede;
+  color:#161616;
+  border-left:10px solid #2170D6;
 }

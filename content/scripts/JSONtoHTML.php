@@ -680,6 +680,7 @@ function formatCSStext($cssStr, $isCropped = "") {
     "opacity",
     "z-index",
     "-webkit-transition", "transition", "animation",
+    "transform",
 
     "grid-template-columns", "grid-column-gap", "grid-row-gap", "grid-gap", "grid-column-start", "grid-column-end", "grid-row-start", "grid-row-end",
 

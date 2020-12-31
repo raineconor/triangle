@@ -1,18 +1,18 @@
 <?php
 
 // Linux AMPPS
-/*$host = '127.0.0.1';
+$host = '127.0.0.1';
 $db   = 'triangle';
 $user = 'root';
-$pass = 'mysql';*/
+$pass = 'mysql';
 
 
 // EPA VPS
-$host = 'localhost';
+/*$host = 'localhost';
 $db   = 'tcadmin_triangle';
 $user = 'tcadmin_admin';
 //$pass = 'n~0bKf~lc@ORp)L/(ar;dZ?p(]}w1m=;zC_C;!AJPhsT?TLt+MY%IpzDk-4I+:LH';
-$pass = 'OC9Icq&Rggw@B5P0D4^9rMrLiDp^&0KwlG8MdHV^8';
+$pass = 'OC9Icq&Rggw@B5P0D4^9rMrLiDp^&0KwlG8MdHV^8';*/
 
 
 // AWS
@@ -132,9 +132,9 @@ function template_exists($username, $template) {
   $query = 'SELECT template FROM templates WHERE username = ? AND template = ?';
   $items = [$username, $template];
   $result = db_query($query, $items);
-  
+
   $premadeQuery = db_query($query, ['triangle', $template]);
-  
+
   if ($result || $premadeQuery) {
     return true;
   } else {
@@ -146,9 +146,9 @@ function page_exists($username, $template, $page) {
   $query = 'SELECT page FROM templates WHERE username = ? AND template = ? AND page = ?';
   $items = [$username, $template, $page];
   $result = db_query($query, $items);
-  
+
   $premadeQuery = db_query($query, ['triangle', $template, $page]);
-  
+
   if ($result || $premadeQuery) {
     return true;
   } else {
@@ -167,7 +167,7 @@ function update_page($username, $template, $page, $content, $ecomItems, $changes
   $query = 'UPDATE templates SET content = ?, ecommerce_items = ?, changes = ? WHERE username = ? AND template = ? AND page = ?';
   $items = [$content, $ecomItems, $changes, $username, $template, $page];
   $result = db_query($query, $items);
-  
+
   return $result;
 }
 
@@ -230,7 +230,7 @@ function update_ecommerce_items($username, $template, $shippingSetup) {
     $combineEcomItems = rtrim($combineEcomItems, ',');
     if (!empty($combineEcomItems)) $combineEcomItems = '{' . $combineEcomItems . '}';
     $itemIDsOnly = rtrim($itemIDsOnly, ',');
-    
+
     if (db_query('SELECT id FROM ecommerce_items WHERE username = ? AND template = ?', [$username, $template])) {
       db_query('UPDATE ecommerce_items SET item_ids = ?, item_data = ?, shipping_setup = ? WHERE username = ? AND template = ?',
               [$itemIDsOnly, $combineEcomItems, $shippingSetup, $username, $template]);
@@ -262,4 +262,3 @@ function edit_business_profile($username, $template, $id) {
     }
   }
 }
-

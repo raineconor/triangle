@@ -4085,7 +4085,8 @@ TRIANGLE.appendRow = function appendRow() {
   var newDiv = document.createElement("div");
   // default styles
   newDiv.className = "templateItem"; // add templateItem class to every generated element to be read by query
-  newDiv.style.backgroundColor = TRIANGLE.randomColor(); // set background color so div is visible
+  //newDiv.style.backgroundColor = TRIANGLE.randomColor(); // set background color so div is visible
+  newDiv.style.backgroundColor = "#efefef";
   newDiv.style.minHeight = "100px"; // set default height so div is visible
   newDiv.style.height = "auto"; // set default height so div is visible
   newDiv.style.width = "100%"; // set default width so TRIANGLE.options.insertColumns() can divide it

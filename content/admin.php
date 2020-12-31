@@ -32,7 +32,9 @@
 <!--======================================-->
 
 <!--=========== Font Include: ============-->
-<link href='https://fonts.googleapis.com/css?family=Roboto:400,700,500' rel='stylesheet' type='text/css'>
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<!--<link href='https://fonts.googleapis.com/css?family=Roboto:400,700,500' rel='stylesheet' type='text/css'>-->
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@100;300;400;700&display=swap" rel="stylesheet">
 <!--======================================-->
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -41,12 +43,14 @@
 
 <div id="container-fluid" style="padding:0;">
   <header>
-    <a href="/"><img class="img-responsive-h" src="images/blue-triangle-small.png"></a>
+    <a href="/"><img id="dashboard-logo" src="images/blue-triangle-small.png"></a>
+    <span style="font-weight:700;color:#333333;font-size:22px;padding-left:5px;">Triangle</span>
   </header>
 
   <div id="left-column">
     <div id="profile-greeting">
-      Welcome,<br><?php echo $username; ?>!
+      <!--<span id="profile-avatar"><?php echo strtoupper($username[0]); ?></span>-->
+    <?php echo $username; ?>
     </div>
     <a class="left-col-btn" href="#" onClick="toggleMenu('myTemplates')">My Templates</a>
     <a class="left-col-btn" href="#" onClick="toggleMenu('myImages');lazyload();">My Images</a>
@@ -81,7 +85,7 @@
         $query;
         $searchTemplates;
         $template_html = '';
-        if (isset($_SESSION["usertype"]) && $_SESSION["usertype"] === "admin") {
+        if (isset($_SESSION["usertype"]) && $_SESSION["usertype"] === "admin" && false) {
           $query = 'SELECT username, template FROM templates WHERE page = ? LIMIT 100';
           $searchTemplates = ['index'];
           $template_html = '<hr>Search User: <input type="text" id="searchUser" onKeyUp="sortTemplates(this.value);"><hr>';
@@ -370,13 +374,12 @@
         <div id="echoConfirmDelete"></div>
       </div>
 
-      <div class="popUpMenu" id="templateChoices" style="background-color:#eeeeee;width:65%;padding:40px;">
+      <div class="popUpMenu" id="templateChoices" style="background-color:#fefefe;width:65%;padding:40px;border-radius:3px;">
         <h3>Choose a template type:</h3>
         <hr>
-        <a class="templateChoice" target="_blank" onClick="closePopUp();" href="index.php?premadeTemplate=default">Multipurpose</a>
+        <!--<a class="templateChoice" target="_blank" onClick="closePopUp();" href="index.php?premadeTemplate=default">Multipurpose</a>
         <a class="templateChoice" target="_blank" onClick="closePopUp();" href="index.php?premadeTemplate=railroad">Personal Blog</a>
-        <a class="templateChoice" target="_blank" onClick="closePopUp();" href="index.php?premadeTemplate=Skybound">Photography</a>
-        <a class="templateChoice" target="_blank" onClick="closePopUp();" href="index.php?premadeTemplate=stitchwork">Quilting</a>
+        <a class="templateChoice" target="_blank" onClick="closePopUp();" href="index.php?premadeTemplate=Skybound">Photography</a>-->
         <a class="templateChoice" target="_blank" onClick="closePopUp();" href="index.php">Blank template</a>
         <div style="clear:both;"></div>
         <br>
