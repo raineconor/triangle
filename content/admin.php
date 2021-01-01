@@ -55,7 +55,6 @@
     <a class="left-col-btn" href="#" onClick="toggleMenu('myTemplates')">My Templates</a>
     <a class="left-col-btn" href="#" onClick="toggleMenu('myImages');lazyload();">My Images</a>
     <a class="left-col-btn" href="#" onClick="toggleMenu('myFonts')">My Fonts</a>
-    <!--<a class="left-col-btn" href="#" onClick="toggleMenu('ecommerce')">Ecommerce</a>-->
     <!--<a class="left-col-btn" href="#" onClick="">Community</a>-->
     <!--<a class="left-col-btn" href="#" onClick="toggleMenu('news')">News</a>-->
     <!--<a class="left-col-btn" href="index.php" target="_blank">Blank Editor</a>-->
@@ -231,81 +230,6 @@
     </div>
   </section>
 
-  <section class="menu" id="ecommerce">
-    <h2>Ecommerce</h2>
-    <hr>
-      <span class="menuLink" onClick="openPopUp('newBusinessProfile');">
-      + New Business Profile
-      </span>
-      <?php
-        $businesses = db_query_all('SELECT * FROM business_profiles WHERE username = ?', [$username]);
-        $businesses_html = '';
-        for ($x = count($businesses) - 1; $x >= 0; $x--) {
-
-          if (!empty($businesses[$x]["sandbox_id"])) {
-            $sandbox_id = decrypt($businesses[$x]["sandbox_id"]);
-          } else {
-            $sandbox_id = "";
-          }
-
-          if (!empty($businesses[$x]["sandbox_secret"])) {
-            $sandbox_secret = decrypt($businesses[$x]["sandbox_secret"]);
-          } else {
-            $sandbox_secret = "";
-          }
-
-          if (!empty($businesses[$x]["live_id"])) {
-            $live_id = decrypt($businesses[$x]["live_id"]);
-          } else {
-            $live_id = "";
-          }
-
-          if (!empty($businesses[$x]["live_secret"])) {
-            $live_secret = decrypt($businesses[$x]["live_secret"]);
-          } else {
-            $live_secret = "";
-          }
-
-          $businesses_html .= '<div id="business-' . $x . '">'
-                           . '<span class="menuLink" onClick="editBusinessProfile('
-                           . "'" . $businesses[$x]["id"] . "',"
-                           . "'" . $businesses[$x]["name"] . "',"
-                           . "'" . $businesses[$x]["country"] . "',"
-                           . "'" . $businesses[$x]["state"] . "',"
-                           . "'" . $businesses[$x]["city"] . "',"
-                           . "'" . $businesses[$x]["address"] . "',"
-                           . "'" . $businesses[$x]["postal"] . "',"
-                           . "'" . $sandbox_id . "',"
-                           . "'" . $sandbox_secret . "',"
-                           . "'" . $live_id . "',"
-                           . "'" . $live_secret . "'"
-                           . ');">'
-                           . $businesses[$x]["name"]
-                           /*. "<span class=\"templateDate\">"
-                           . date ("M d, Y", filemtime($template_dir . $template_files[$x] . "/."))
-                           . "</span>"*/
-                           . '</span>'
-
-                           . '<span class="menuLinkDelete" onClick="deleteBusinessProfile(' . $businesses[$x]["id"] . ', ' . $x . ');">'
-                           . "Delete"
-                           . '</span>'
-
-                           /*. '<span class="menuLinkDetails" onClick="menuLinkDetails(\'' . urlencode($businesses[$x]["name"]) . '\', \'businessDetails-' . $x . '\');">'
-                           . "Details"
-                           . '</span>'
-
-                           . '</div>'
-
-                           . '<div style="clear:both;"></div>'
-                           . '<div class="detailsMenu" id="businessDetails-' . $x . '" style="display:none;">'
-                           . '<h2>Business Details: ' . $businesses[$x]["name"] . '</h2>'
-                           . '<hr>'*/
-                           . '</div>';
-        }
-        echo $businesses_html;
-      ?>
-  </section>
-
   <section class="menu" id="news">
     <h2>News</h2>
     <hr>
@@ -386,85 +310,6 @@
         <button onClick="closePopUp();">Cancel</button>
       </div>
 
-      <div class="popUpMenu" id="newBusinessProfile">
-        <h3>Edit Business Profile</h3>
-        <hr>
-        <div style="max-width:360px;margin:0 auto;">
-        Business name field is required to save the profile. Other fields may be left blank, but
-        this may cause restrictions on exported sites using ecommerce capabilites.
-        </div>
-        <hr>
-        <div style="text-align:right;">
-          <input type="hidden" id="businessID">
-          Business Name: <input type="text" maxlength="64" id="businessName"><br>
-          Country: <input type="text" value="USA" disabled><br>
-          State:
-          <select id="businessState">
-            <option selected="selected" value="0">-- Select a State --</option>
-            <option value="AL">Alabama</option>
-            <option value="AK">Alaska</option>
-            <option value="AZ">Arizona</option>
-            <option value="AR">Arkansas</option>
-            <option value="CA">California</option>
-            <option value="CO">Colorado</option>
-            <option value="CT">Connecticut</option>
-            <option value="DE">Delaware</option>
-            <option value="DC">District Of Columbia</option>
-            <option value="FL">Florida</option>
-            <option value="GA">Georgia</option>
-            <option value="HI">Hawaii</option>
-            <option value="ID">Idaho</option>
-            <option value="IL">Illinois</option>
-            <option value="IN">Indiana</option>
-            <option value="IA">Iowa</option>
-            <option value="KS">Kansas</option>
-            <option value="KY">Kentucky</option>
-            <option value="LA">Louisiana</option>
-            <option value="ME">Maine</option>
-            <option value="MD">Maryland</option>
-            <option value="MA">Massachusetts</option>
-            <option value="MI">Michigan</option>
-            <option value="MN">Minnesota</option>
-            <option value="MS">Mississippi</option>
-            <option value="MO">Missouri</option>
-            <option value="MT">Montana</option>
-            <option value="NE">Nebraska</option>
-            <option value="NV">Nevada</option>
-            <option value="NH">New Hampshire</option>
-            <option value="NJ">New Jersey</option>
-            <option value="NM">New Mexico</option>
-            <option value="NY">New York</option>
-            <option value="NC">North Carolina</option>
-            <option value="ND">North Dakota</option>
-            <option value="OH">Ohio</option>
-            <option value="OK">Oklahoma</option>
-            <option value="OR">Oregon</option>
-            <option value="PA">Pennsylvania</option>
-            <option value="RI">Rhode Island</option>
-            <option value="SC">South Carolina</option>
-            <option value="SD">South Dakota</option>
-            <option value="TN">Tennessee</option>
-            <option value="TX">Texas</option>
-            <option value="UT">Utah</option>
-            <option value="VT">Vermont</option>
-            <option value="VA">Virginia</option>
-            <option value="WA">Washington</option>
-            <option value="WV">West Virginia</option>
-            <option value="WI">Wisconsin</option>
-            <option value="WY">Wyoming</option>
-          </select><br>
-          City: <input type="text" maxlength="32" id="businessCity"><br>
-          Street Address: <input type="text" maxlength="64" id="businessAddress"><br>
-          Postal Code: <input type="text" maxlength="12" id="businessPostal"><br>
-          PayPal API Sandbox Client ID: <input type="text" maxlength="80" id="businessSandboxID"><br>
-          PayPal API Sandbox Client Secret: <input type="text" maxlength="80" id="businessSandboxSecret"><br>
-          PayPal API Live Client ID: <input type="text" maxlength="80" id="businessLiveID"><br>
-          PayPal API Live Client Secret: <input type="text" maxlength="80" id="businessLiveSecret"><br>
-        </div><br>
-        <button onClick="closePopUp();">Cancel</button>
-        <button onClick="addBusinessProfile();">Save</button>
-        <hr>
-      </div>
     </div>
   </div>
 
