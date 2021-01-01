@@ -1,18 +1,18 @@
 <?php
 
 // Linux AMPPS
-/*$host = '127.0.0.1';
+$host = '127.0.0.1';
 $db   = 'triangle';
 $user = 'root';
-$pass = 'mysql';*/
+$pass = 'mysql';
 
 
 // EPA VPS
-$host = 'localhost';
+/*$host = 'localhost';
 $db   = 'tcadmin_triangle';
 $user = 'tcadmin_admin';
 //$pass = 'n~0bKf~lc@ORp)L/(ar;dZ?p(]}w1m=;zC_C;!AJPhsT?TLt+MY%IpzDk-4I+:LH';
-$pass = 'OC9Icq&Rggw@B5P0D4^9rMrLiDp^&0KwlG8MdHV^8';
+$pass = 'OC9Icq&Rggw@B5P0D4^9rMrLiDp^&0KwlG8MdHV^8';*/
 
 
 // AWS
