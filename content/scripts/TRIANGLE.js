@@ -6724,6 +6724,18 @@ shiftUp : function shiftUp(index) {
     TRIANGLE.updateTemplateItems();
     TRIANGLE.importItem.single(trackIndex);
     TRIANGLE.selectionBorder.update();
+
+    var itemRect = TRIANGLE.item.objRef.getBoundingClientRect();
+    var screenHeight = window.innerHeight;
+    var menuRect = document.getElementById("menu").getBoundingClientRect().bottom;
+    if (itemRect.top < menuRect) {
+      TRIANGLE.item.objRef.scrollIntoView();
+      window.scrollBy(0,-250);
+    } else if (itemRect.bottom > screenHeight) {
+      //window.scrollTo(0, document.body.scrollHeight);
+      TRIANGLE.item.objRef.scrollIntoView();
+      window.scrollBy(0,200);
+    }
   }
 },
 
@@ -6756,6 +6768,18 @@ shiftDown : function shiftDown(index) {
     TRIANGLE.selectItem(trackIndex);
     TRIANGLE.importItem.single(TRIANGLE.item.nextSibling().getAttribute("index"));
     TRIANGLE.selectionBorder.update();
+
+    var itemRect = TRIANGLE.item.objRef.getBoundingClientRect();
+    var screenHeight = window.innerHeight;
+    var menuRect = document.getElementById("menu").getBoundingClientRect().bottom;
+    if (itemRect.top < menuRect) {
+      TRIANGLE.item.objRef.scrollIntoView();
+      window.scrollBy(0,-250);
+    } else if (itemRect.bottom > screenHeight) {
+      //window.scrollTo(0, document.body.scrollHeight);
+      TRIANGLE.item.objRef.scrollIntoView();
+      window.scrollBy(0,200);
+    }
   }
 },
 
@@ -8028,7 +8052,7 @@ getLoadList : function getLoadList() {
     var listThumbs = document.getElementById("echoLoadList").querySelectorAll(".loadListItem");
     for (i = 0; i < listThumbs.length; i++) {
       if (TRIANGLE.currentTemplate !== "" && listThumbs[i].innerHTML == TRIANGLE.currentTemplate) {
-        listThumbs[i].style.backgroundColor = "#dce5ee";
+        listThumbs[i].style.backgroundColor = "#cce6ff";
       } else {
         listThumbs[i].style.backgroundColor = "";
       }
@@ -8672,7 +8696,7 @@ loadPages : function loadPages(template, listType) {
       var pageThumbs = document.getElementById("echoPageList").querySelectorAll(".pageThumbnail");
       for (i = 0; i < pageThumbs.length; i++) {
         if (TRIANGLE.currentPage !== "" && pageThumbs[i].innerHTML == TRIANGLE.currentPage) {
-          pageThumbs[i].style.backgroundColor = "#dce5ee";
+          pageThumbs[i].style.backgroundColor = "#cce6ff";
         } else {
           pageThumbs[i].style.backgroundColor = "";
         }

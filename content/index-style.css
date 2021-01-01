@@ -1110,10 +1110,13 @@ hr {
   /*width:300px;*/
   margin:auto;
   cursor:pointer;
+  transition:border-left 150ms;
+  background-color:inherit;
+  border-left:0px solid white;
 }
 
 .loadListItem:hover {
-  background-color:#EEEEEE;
+  border-left:10px solid #2170D6;
 }
 
 .bigColorBox {
@@ -1121,7 +1124,7 @@ hr {
   height:80px;
   display:inline-block;
   cursor:pointer;
-  border:2px solid gray;
+  border:1px solid gray;
 }
 
 .smallColorBox {
@@ -1129,7 +1132,7 @@ hr {
   height:80px;
   display:inline-block;
   cursor:pointer;
-  border:2px solid gray;
+  border:1px solid gray;
 }
 
 .customColorBox {
@@ -1137,12 +1140,12 @@ hr {
   height:40px;
   display:inline-block;
   cursor:pointer;
-  border:2px solid gray;
+  border:1px solid gray;
 }
 
 .bigColorBox:hover,
 .smallColorBox:hover {
-  border:2px solid #333333;
+  border:1px solid #333333;
 }
 
 .dragging {
