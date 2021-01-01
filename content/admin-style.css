@@ -50,6 +50,10 @@ hr {
   margin-top:15px;
 }
 
+input {
+  border:1px solid lightgray;
+}
+
 /*============================================
                    ID Styles
 ============================================*/
@@ -104,7 +108,7 @@ hr {
 }
 #version {
   text-align:center;
-  color:gray;
+  color:#434956;
   position:absolute;
   left:0;
   right:0;

@@ -24,6 +24,7 @@ TRIANGLE.images = {
 load : function loadImages() {
   AJAX.get("scripts/imageList.php", "", function(xmlhttp) {
     document.getElementById("echoImageList").innerHTML = xmlhttp.responseText;
+    lazyload();
   });
 },
 
@@ -2626,6 +2627,31 @@ changeFontSize : function() {
   } else {
     return;
   }
+},
+
+changeFontWeight : function(weight) {
+  /*if (TRIANGLE.item && TRIANGLE.isType.textBox(TRIANGLE.item.objRef)) {
+    var currentSize = document.getElementById("fontSize").value;
+    var unit = TRIANGLE.getUnit(TRIANGLE.item.fontSize);
+    var newSize = parseFloat(currentSize) + unit;
+
+    TRIANGLE.item.objRef.style.fontSize = newSize;
+
+    TRIANGLE.selectionBorder.update();
+  } else {
+    return;
+  }
+
+  var item = TRIANGLE.item;
+  if (!TRIANGLE.isType.textBox(item.objRef)) return;
+  TRIANGLE.text.replaceTextSelection();
+  if (item.objRef.isContentEditable) {
+    document.execCommand("styleWithCSS", null, true);
+    document.execCommand("foreColor", null, fontColor);
+    document.execCommand("styleWithCSS", null, false);
+  } else {
+    item.objRef.style.color = fontColor;
+  }*/
 },
 
 
@@ -5249,9 +5275,12 @@ function importFont() {
   var fontLineHeight = TRIANGLE.item.lineHeight;
   var fontLineHeightInput = document.getElementById("fontLineHeight");
   var fontFamilyInput = document.getElementById("fontType");
+  var fontWeight = TRIANGLE.item.fontWeight;
+  var fontWeightInput = document.getElementById("fontWeight");
   fontColorInput.value = fontColor;
   fontSizeInput.value = isNaN(parseFloat(fontSize)) ? null : parseFloat(fontSize);
   fontLineHeightInput.value = fontLineHeight;
+  fontWeightInput.value = fontWeight;
   for (i = 0; i < fontFamilyInput.options.length; i++) {
     var optionText = fontFamilyInput.options[i].text;
     if (optionText == TRIANGLE.item.fontFamily.replace(/'|"/g, "")) {
@@ -5971,6 +6000,7 @@ function saveFont() {
   var fontColorInput = document.getElementById("fontColor");
   var fontSizeInput = document.getElementById("fontSize");
   var fontLineHeightInput = document.getElementById("fontLineHeight");
+  var fontWeightInput = document.getElementById("fontWeight");
   TRIANGLE.saveItem.createAnimation("color", TRIANGLE.item.fontColor, fontColorInput.value, function(){TRIANGLE.selectionBorder.create()});
   TRIANGLE.item.objRef.style.color = fontColorInput.value;
   if ((/\D/g).test(fontSizeInput.value)) {
@@ -5981,6 +6011,8 @@ function saveFont() {
     TRIANGLE.item.objRef.style.fontSize = fontSizeInput.value + "px";
   }
   TRIANGLE.item.objRef.style.lineHeight = fontLineHeightInput.value;
+  //TRIANGLE.saveItem.createAnimation("font-weight", TRIANGLE.item.fontWeight, fontWeightInput.value, function(){TRIANGLE.selectionBorder.create()});
+  TRIANGLE.item.objRef.style.fontWeight = fontWeightInput.value;
 }
 
 function saveUserID() {
@@ -7396,7 +7428,7 @@ verticalMiddle : function verticalMiddle() {
 
   TRIANGLE.selectionBorder.remove();
   TRIANGLE.checkPadding(item.parent);
-  item.parent.style.display = "table";
+  /*item.parent.style.display = "table";
   item.parent.style.height = item.parent.style.minHeight;
 
   var tableCell = document.createElement("div");
@@ -7407,12 +7439,15 @@ verticalMiddle : function verticalMiddle() {
   tableCell.style.minHeight = "auto";
   tableCell.style.height = "auto";
   tableCell.className = "templateItem childItem";
-  tableCell.innerHTML = item.parent.innerHTML;
+  tableCell.innerHTML = item.parent.innerHTML;*/
 
-  item.parent.removeChild(item.objRef);
-  item.parent.innerHTML = "";
+  /*item.parent.removeChild(item.objRef);
+  item.parent.innerHTML = "";*/
 
-  item.parent.appendChild(tableCell);
+  item.parent.style.display = "flex";
+  item.parent.style.alignItems = "center";
+
+  //item.parent.appendChild(flexBox);
 
   TRIANGLE.updateTemplateItems(true);
   //TRIANGLE.updateTemplateItems(); // yes this is called twice. Literally retarded. The table-cell won't show its hover border unless this is double called
@@ -8052,7 +8087,7 @@ getLoadList : function getLoadList() {
     var listThumbs = document.getElementById("echoLoadList").querySelectorAll(".loadListItem");
     for (i = 0; i < listThumbs.length; i++) {
       if (TRIANGLE.currentTemplate !== "" && listThumbs[i].innerHTML == TRIANGLE.currentTemplate) {
-        listThumbs[i].style.backgroundColor = "#cce6ff";
+        listThumbs[i].style.backgroundColor = "#ccdef6";
       } else {
         listThumbs[i].style.backgroundColor = "";
       }
@@ -8696,7 +8731,7 @@ loadPages : function loadPages(template, listType) {
       var pageThumbs = document.getElementById("echoPageList").querySelectorAll(".pageThumbnail");
       for (i = 0; i < pageThumbs.length; i++) {
         if (TRIANGLE.currentPage !== "" && pageThumbs[i].innerHTML == TRIANGLE.currentPage) {
-          pageThumbs[i].style.backgroundColor = "#cce6ff";
+          pageThumbs[i].style.backgroundColor = "#ccdef6";
         } else {
           pageThumbs[i].style.backgroundColor = "";
         }

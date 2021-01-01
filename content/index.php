@@ -523,10 +523,16 @@
       <input type="text" id="fontColor"><br>
       Size:
       <input type="number" id="fontSize" min="0" onChange="TRIANGLE.text.changeFontSize();"><br>
+    </div>
+
+    <div class="menuSection">
+      <div class="menuSectionTitle">Style</div>
       Style:
       <div class="smSqBtn" onmousedown="TRIANGLE.text.bold();"><img src="images/opBoldText.svg"></div>
       <div class="smSqBtn" onmousedown="TRIANGLE.text.italic();"><img src="images/opItalicText.svg"></div>
       <div class="smSqBtn" onmousedown="TRIANGLE.text.underline();"><img src="images/opUnderlineText.svg"></div><br>
+      Weight:
+      <input type="text" id="fontWeight">
     </div>
 
     <div class="menuSection">
@@ -1131,8 +1137,7 @@
   </div>
 
   <div class="sideSubMenu" id="saveMenuOptions">
-    <span class="sideMenuTitle">Save</span>
-    <hr>
+    <span class="sideMenuH1">Save</span>
     <div class="saveMenuOption">
       <img class="sideMenuIcon" src="images/save-current-template.gif" onClick="TRIANGLE.clearSelection();TRIANGLE.saveTemplate.saveCurrent();" id="saveCurrentTemplate"> Save over current file
     </div>
@@ -1151,19 +1156,16 @@
   </div>
 
   <div class="sideSubMenu" id="openMenuOptions">
-    <span class="sideMenuTitle">Open</span>
-    <hr>
+    <span class="sideMenuH1">Open</span>
     <div class="sideMenuOption" style="display:none;">
       <img class="sideMenuIcon" src="images/opImportSite.svg" onClick="TRIANGLE.popUp.open('importWebsiteCell');TRIANGLE.menu.closeSideMenu();document.getElementById('importWebsiteURL').focus();"> Import Website (Beta)
     </div>
-    <h3>My Templates</h3>
-    <hr>
+    <span class="sideMenuH2">My Templates</span>
     <div id="echoLoadList"></div>
   </div>
 
   <div class="sideSubMenu" id="pagesMenuOptions">
-    <span class="sideMenuTitle">Pages</span>
-    <hr>
+    <span class="sideMenuH1">Pages</span>
     <div class="sideMenuListItem" onClick="document.getElementById('createNewPage').style.display = 'block';document.getElementById('newPageNameInput').focus();">+ New Page</div>
     <div id="createNewPage" style="display:none;">
       <div id="cancelNewPage" onClick="document.getElementById('createNewPage').style.display = 'none';document.getElementById('newPageNameInput').value = '';">&#8864;</div>
@@ -1177,28 +1179,25 @@
   </div>
 
   <div class="sideSubMenu" id="imageLibraryMenu">
-    <span class="sideMenuTitle">Images</span>
-    <hr>
+    <span class="sideMenuH1">Images</span>
 
     <div id="echoImageList"></div>
   </div>
 
   <div class="sideSubMenu" id="userItemMenu">
-    <span class="sideMenuTitle">My Items</span>
-    <hr>
-    <h3>IDs</h3>
-    <hr>
+    <span class="sideMenuH1">My Items</span>
+    <span class="sideMenuH3">IDs</span>
     <div id="echoUserLibrary">
       <div id="echoUserIDs"></div>
-      <h3>Classes</h3>
-      <hr>
+      <br>
+      <br>
+      <span class="sideMenuH3">Classes</span>
       <div id="echoUserClasses"></div>
     </div>
   </div>
 
   <div class="sideSubMenu" id="libraryMenu">
-    <span class="sideMenuTitle">Library</span>
-    <hr>
+    <span class="sideMenuH1">Library</span>
 
     <div id="echoPremadeTemplates">
       <div class="sideMenuListItem" onclick="TRIANGLE.menu.displayLibraryCategory('library-Templates');">Premade Templates</div>
@@ -1216,12 +1215,12 @@
   </div>
 
   <!--<div class="sideSubMenu" id="openMenuOptions">
-    <span class="sideMenuTitle">Open</span>
+    <span class="sideMenuH1">Open</span>
     <hr>
 
     <div id="echoLoadList"></div>
 
-    <span class="sideMenuTitle">Pages</span>
+    <span class="sideMenuH1">Pages</span>
     <hr>
 
     <div id="echoPageList"></div>
@@ -1492,6 +1491,20 @@ TRIANGLE.savedShippingSetup = <?php echo $shipping_setup; ?>;
 //console.log(TRIANGLE.savedShippingSetup);
 TRIANGLE.instance = parseInt(<?php echo $instanceNumber; ?>);
 console.log(TRIANGLE.instance);
+
+document.getElementById("echoImageList").addEventListener("scroll", lazyload);
+function lazyload() {
+  var images = document.querySelectorAll('img[lazyload]');
+  var screenHeight = window.innerHeight;
+  for (var i = 0; i < images.length; i++) {
+    if (images[i].getBoundingClientRect().top < screenHeight + 600) {
+      images[i].src = images[i].getAttribute("lazyload");
+      images[i].removeAttribute("lazyload");
+    }
+  }
+}
+lazyload();
+
 </script>
 <script type="text/javascript" src="scripts/AJAX.js"></script>
 <script type="text/javascript" src="scripts/TRIANGLE<?php if ($_SERVER["HTTP_HOST"] === "trianglecms.com" || $_SERVER["HTTP_HOST"] === "www.trianglecms.com") echo str_replace(".", "", $latestVersion); ?>.<?php if ($_SERVER["HTTP_HOST"] === "trianglecms.com" || $_SERVER["HTTP_HOST"] === "www.trianglecms.com") echo "min."; ?>js"></script>

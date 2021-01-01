@@ -43,7 +43,7 @@
 
 <div id="container-fluid" style="padding:0;">
   <header>
-    <a href="/"><img id="dashboard-logo" src="images/blue-triangle-small.png"></a>
+    <img id="dashboard-logo" src="images/blue-triangle-small.png">
     <span style="font-weight:700;color:#333333;font-size:22px;padding-left:5px;">Triangle</span>
   </header>
 
