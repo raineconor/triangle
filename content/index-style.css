@@ -531,7 +531,7 @@ hr {
   display:inline-block;
 }
 
-#itemTypeLabel {
+#tooltip {
   position:fixed;
   color:white;
   background:rgba(0,0,0,0.7);
@@ -540,7 +540,7 @@ hr {
   width:auto;
   padding:3px 6px;
   font-size:10px;
-  z-index:2;
+  z-index:100;
 }
 
 #echoImageList {
@@ -1004,7 +1004,7 @@ hr {
   /*background-color:#5f6f86;*/
   /*color:#ffffff;*/
   /*color:#333333;*/
-  padding:3px;
+  padding:3px 5px;
   text-align:center;
   margin-bottom:7px;
   font-weight:bold;
@@ -1128,7 +1128,7 @@ hr {
 }
 
 .bigColorBox {
-  width:170px;
+  width:180px;
   height:80px;
   display:inline-block;
   cursor:pointer;
@@ -1136,11 +1136,31 @@ hr {
 }
 
 .smallColorBox {
-  width:150px;
-  height:80px;
+  width:55px;
+  height:55px;
   display:inline-block;
   cursor:pointer;
   border:1px solid gray;
+}
+
+.tinyColorBox {
+  width:22px;
+  height:22px;
+  vertical-align: bottom;
+  display:inline-block;
+  cursor:pointer;
+  border-top:1px solid gray;
+  border-bottom:1px solid gray;
+  border-right:1px solid gray;
+  /*border:1px solid #e6e6e6;*/
+}
+
+.tinyColorBoxSpacing {
+  width:22px;
+  height:22px;
+  vertical-align:bottom;
+  display:inline-block;
+  background:none;
 }
 
 .customColorBox {
@@ -1368,7 +1388,7 @@ hr.clearFloat {
 .colorPaletteItem {
   width:30px;
   height:30px;
-  border:2px solid #333;
+  border:1px solid #333;
   float:left;
   margin:3px;
 }

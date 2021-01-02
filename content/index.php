@@ -240,13 +240,13 @@
     <div class="menuSection">
       <div class="menuSectionTitle">General</div>
       Background:
-      <input type="text" id="bgColor"><br>
+      <input type="text" id="bgColor"><div class="tinyColorBox" id="colorElementBg"></div><br>
       Height:
-      <input type="text" id="height"><br>
+      <input type="text" id="height"><div class="tinyColorBoxSpacing"></div><br>
       Width:
-      <input type="text" id="width"><br>
+      <input type="text" id="width"><div class="tinyColorBoxSpacing"></div><br>
       Display:
-      <input type="text" id="display"><br>
+      <input type="text" id="display"><div class="tinyColorBoxSpacing"></div><br>
     </div>
 
     <!-- Dropdowns -->
@@ -296,7 +296,7 @@
         <option value="3">dotted</option>
       </select>
       Color:
-      <input type="text" id="borderLcolor"><span class="applyAllBtn" onClick="TRIANGLE.saveItem.applyAll(['borderLwidth', 'borderRwidth', 'borderTwidth', 'borderBwidth'], true);TRIANGLE.saveItem.applyAll(['borderLtype', 'borderRtype', 'borderTtype', 'borderBtype'], true);TRIANGLE.saveItem.applyAll(['borderLcolor', 'borderRcolor', 'borderTcolor', 'borderBcolor']);">&#9662;</span><br>
+      <input type="text" id="borderLcolor"><div class="tinyColorBox" id="colorListBorderL"></div><span class="applyAllBtn" onClick="TRIANGLE.saveItem.applyAll(['borderLwidth', 'borderRwidth', 'borderTwidth', 'borderBwidth'], true);TRIANGLE.saveItem.applyAll(['borderLtype', 'borderRtype', 'borderTtype', 'borderBtype'], true);TRIANGLE.saveItem.applyAll(['borderLcolor', 'borderRcolor', 'borderTcolor', 'borderBcolor']);">&#9662;</span><br>
 
       Right:
       <input type="text" id="borderRwidth" size="7">
@@ -306,7 +306,7 @@
         <option value="3">dotted</option>
       </select>
       Color:
-      <input type="text" id="borderRcolor"><span class="applyAllSpacing"></span><br>
+      <input type="text" id="borderRcolor"><div class="tinyColorBox" id="colorListBorderR"></div><span class="applyAllSpacing"></span><br>
 
       Top:
       <input type="text" id="borderTwidth" size="7">
@@ -316,7 +316,7 @@
         <option value="3">dotted</option>
       </select>
       Color:
-      <input type="text" id="borderTcolor"><span class="applyAllSpacing"></span><br>
+      <input type="text" id="borderTcolor"><div class="tinyColorBox" id="colorListBorderT"></div><span class="applyAllSpacing"></span><br>
 
       Bottom:
       <input type="text" id="borderBwidth" size="7">
@@ -326,7 +326,7 @@
         <option value="3">dotted</option>
       </select>
       Color:
-      <input type="text" id="borderBcolor"><span class="applyAllSpacing"></span>
+      <input type="text" id="borderBcolor"><div class="tinyColorBox" id="colorListBorderB"></div><span class="applyAllSpacing"></span>
 
     </div>
 
@@ -334,13 +334,13 @@
     <div class="menuSection hidden" id="boxShadowMenu" style="display:none;">
       <div class="menuSectionTitle">Box Shadow</div>
       Horizontal Distance:<!-- Shadow Right: -->
-      <input type="text" id="boxShadowH" size="7"><br>
+      <input type="text" id="boxShadowH" size="7"><div class="tinyColorBoxSpacing"></div><br>
       Vertical Distance:<!-- Shadow Bottom: -->
-      <input type="text" id="boxShadowV" size="7"><br>
+      <input type="text" id="boxShadowV" size="7"><div class="tinyColorBoxSpacing"></div><br>
       Blur:
-      <input type="text" id="boxShadowBlur" size="7"><br>
+      <input type="text" id="boxShadowBlur" size="7"><div class="tinyColorBoxSpacing"></div><br>
       Color:
-      <input type="text" id="boxShadowColor" size="7">
+      <input type="text" id="boxShadowColor" size="7"><div class="tinyColorBox" id="colorBoxShadow"></div>
     </div>
 
     <div class="subMenuOption" id="itemAlignLeft" onClick="TRIANGLE.style.itemAlignLeft();" style="margin-left:10px;">
@@ -398,55 +398,11 @@
     </div>
 
     <div class="menuSection" id="opColorMainBg">
-      <div class="menuSectionTitle">Main Background</div>
+      <div class="menuSectionTitle">Body Background</div>
       <!--<div class="bigColorBox" id="colorMainBg" onClick="showColorMenu('document.body.style.backgroundColor');"></div>-->
       <div class="bigColorBox" id="colorMainBg"></div>
     </div>
 
-    <div class="menuSection" id="opColorElementBg" style="display:none;">
-      <div class="menuSectionTitle">Element Background</div>
-      <!--<div class="bigColorBox" id="colorElementBg" onClick="showCanvasMenu(this, function(){createAnimation('background-color', item.bgColor, canvasColorChoice, function(){importItem(item.index)});item.selectedObject.style.backgroundColor = canvasColorChoice});"></div>-->
-      <div class="bigColorBox" id="colorElementBg"></div>
-    </div>
-
-    <div class="menuSection" id="opColorBorder" style="display:none;">
-
-      <div class="menuSectionTitle">Border</div>
-      <div style="display:inline-block" id="colorListBorderLwrapper">
-        <div class="smallColorBox" id="colorListBorderL" style="display:none"></div>
-        <div class="optionLabel" id="labelColorListBorderL">Left</div>
-      </div>
-
-      <div style="display:inline-block" id="colorListBorderRwrapper">
-        <div class="smallColorBox" id="colorListBorderR" style="display:none"></div>
-        <div class="optionLabel" id="labelColorListBorderR">Right</div>
-      </div>
-
-      <div style="display:inline-block" id="colorListBorderRwrapper">
-        <div class="smallColorBox" id="colorListBorderT" style="display:none"></div>
-        <div class="optionLabel" id="labelColorListBorderT">Top</div>
-      </div>
-
-      <div style="display:inline-block" id="colorListBorderRwrapper">
-        <div class="smallColorBox" id="colorListBorderB" style="display:none"></div>
-        <div class="optionLabel" id="labelColorListBorderB">Bottom</div>
-      </div>
-    </div>
-
-    <div class="menuSection" id="opColorBoxShadow" style="display:none;">
-      <div class="menuSectionTitle">Box Shadow</div>
-      <div class="bigColorBox" id="colorBoxShadow"></div>
-    </div>
-
-    <div class="menuSection" id="opColorFont" style="display:none;">
-      <div class="menuSectionTitle">Font</div>
-      <div class="bigColorBox" id="colorFont" onMouseOver="TRIANGLE.text.saveTextSelection();"></div>
-    </div>
-
-    <div class="menuSection" id="opCustomColors" style="display:none;">
-      <div class="menuSectionTitle">Custom Colors</div>
-      <div id="colorListCustomColors"></div>
-    </div>
   </div>
 
   <!-- Text Styles -->
@@ -519,11 +475,11 @@
              . '</option>';
         }
         ?>
-      </select><br>
+      </select><div class="tinyColorBoxSpacing"></div><br>
       Color:
-      <input type="text" id="fontColor"><br>
+      <input type="text" id="fontColor"><div class="tinyColorBox" id="colorFont" onMouseOver="TRIANGLE.text.saveTextSelection();"></div><br>
       Size:
-      <input type="number" id="fontSize" min="0" onChange="TRIANGLE.text.changeFontSize();"><br>
+      <input type="number" id="fontSize" min="0" onChange="TRIANGLE.text.changeFontSize();"><div class="tinyColorBoxSpacing"></div><br>
     </div>
 
     <div class="menuSection">
@@ -700,141 +656,6 @@
       <div class="menuSectionTitle">Premade Items</div>
       <div id="echoLibrary"></div>
     </div>-->
-  </div>
-
-  <!-- Effects -->
-  <div class="subMenu" id="displayEffects">
-    <!-- Effect Trigger -->
-    <div class="menuSection">
-      <div class="menuSectionTitle">Effect Trigger</div>
-      <div class="radioBox" style="text-align:left;">
-        <input type="radio" name="effectTrigger" value="pageload"> Page Load<br>
-        <input type="radio" name="effectTrigger" value="hover"> Hover<br>
-        <input type="radio" name="effectTrigger" value="click"> Click<br>
-        <input type="radio" name="effectTrigger" value="keypress"> Key Press
-      </div>
-    </div>
-
-    <!-- General -->
-    <div class="menuSection">
-      <div class="menuSectionTitle">General</div>
-      Background:
-      <input type="text" id=""><br>
-      Height:
-      <input type="text" id=""><br>
-      Width:
-      <input type="text" id=""><br>
-      Display:
-      <input type="text" id=""><br>
-    </div>
-
-    <!-- Dropdowns -->
-    <div class="menuSection">
-      <div class="menuSectionTitle">Edges</div>
-      <div class="menuDropdown" onClick="TRIANGLE.menu.toggleMenuDisplay('hoverPaddingMenu','inline-block');">Padding</div><br>
-      <div class="menuDropdown" onClick="TRIANGLE.menu.toggleMenuDisplay('hoverMarginMenu','inline-block');">Margin</div><br>
-      <div class="menuDropdown" onClick="TRIANGLE.menu.toggleMenuDisplay('hoverBorderMenu','inline-block');">Border</div><br>
-      <div class="menuDropdown" onClick="TRIANGLE.menu.toggleMenuDisplay('hoverBoxShadowMenu','inline-block');">Shadow</div>
-    </div>
-
-    <!-- Padding -->
-    <div class="menuSection hidden" id="hoverPaddingMenu" style="display:none;">
-      <div class="menuSectionTitle">Padding</div>
-      Left:
-      <input type="text" id="hoverPaddingL" size="7"><br>
-      Right:
-      <input type="text" id="hoverPaddingR" size="7"><br>
-      Top:
-      <input type="text" id="hoverPaddingT" size="7"><br>
-      Bottom:
-      <input type="text" id="hoverPaddingB" size="7">
-    </div>
-
-    <!-- Margin -->
-    <div class="menuSection hidden" id="hoverMarginMenu" style="display:none;">
-      <div class="menuSectionTitle">Margin</div>
-      Left:
-      <input type="text" id="hoverMarginL" size="7"><br>
-      Right:
-      <input type="text" id="hoverMarginR" size="7"><br>
-      Top:
-      <input type="text" id="hoverMarginT" size="7"><br>
-      Bottom:
-      <input type="text" id="hoverMarginB" size="7">
-    </div>
-
-    <!-- Border -->
-    <div class="menuSection hidden" id="hoverBorderMenu" style="display:none;">
-      <div class="menuSectionTitle">Border</div>
-
-      Left:
-      <input type="text" id="hoverBorderLwidth" size="7">
-      <select id="hoverBorderLtype" onChange="TRIANGLE.saveItem.applyChanges();">
-        <option value="1">solid</option>
-        <option value="2">dashed</option>
-        <option value="3">dotted</option>
-      </select>
-      Color:
-      <input type="text" id="hoverBorderLcolor"><br>
-
-      Right:
-      <input type="text" id="hoverBorderRwidth" size="7">
-      <select id="hoverBorderRtype" onChange="TRIANGLE.saveItem.applyChanges();">
-        <option value="1">solid</option>
-        <option value="2">dashed</option>
-        <option value="3">dotted</option>
-      </select>
-      Color:
-      <input type="text" id="hoverBorderRcolor"><br>
-
-      Top:
-      <input type="text" id="hoverBorderTwidth" size="7">
-      <select id="hoverBorderTtype" onChange="TRIANGLE.saveItem.applyChanges();">
-        <option value="1">solid</option>
-        <option value="2">dashed</option>
-        <option value="3">dotted</option>
-      </select>
-      Color:
-      <input type="text" id="hoverBorderTcolor"><br>
-
-      Bottom:
-      <input type="text" id="hoverBorderBwidth" size="7">
-      <select id="hoverBorderBtype" onChange="TRIANGLE.saveItem.applyChanges();">
-        <option value="1">solid</option>
-        <option value="2">dashed</option>
-        <option value="3">dotted</option>
-      </select>
-      Color:
-      <input type="text" id="hoverBorderBcolor">
-
-    </div>
-
-    <!-- Box Shadow -->
-    <div class="menuSection hidden" id="hoverBoxShadowMenu" style="display:none;">
-      <div class="menuSectionTitle">Box Shadow</div>
-      Horizontal Distance:<!-- Shadow Right: -->
-      <input type="text" id="hoverBoxShadowH" size="7"><br>
-      Vertical Distance:<!-- Shadow Bottom: -->
-      <input type="text" id="hoverBoxShadowV" size="7"><br>
-      Blur:
-      <input type="text" id="hoverBoxShadowBlur" size="7"><br>
-      Color:
-      <input type="text" id="hoverBoxShadowColor" size="7">
-    </div>
-
-    <div class="menuSection" id="">
-      <div class="menuSectionTitle">Animation</div>
-      Fade:
-      <input type="text" id="animationFade" size="7"><br>
-      Slide:
-      <input type="text" id="animationSlide" size="7"><br>
-      Scale:
-      <input type="text" id="animationScale" size="7"><br>
-      Color:
-      <input type="text" id="animationColor" size="7">
-    </div>
-
-    <button onclick="TRIANGLE.effects.enterStudio();">Effects Editor</button>
   </div>
 
   <!-- Developer -->
@@ -1304,7 +1125,7 @@
   </div>
 </div>
 
-<div id="itemTypeLabel" style="display:none;"></div>
+<div id="tooltip" style="display:none;"></div>
 
 <script type="text/javascript">
 var TRIANGLE = TRIANGLE || {};

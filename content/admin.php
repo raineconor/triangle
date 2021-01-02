@@ -234,6 +234,16 @@
     <h2>News</h2>
     <hr>
 
+    <h3>January 1, 2021</h3>
+    <h3>Triangle Version 1.01.43 launched</h3>
+    This update includes quality of life improvements, as follows:
+    <ul>
+      <li>Editor loading speed improvements</li>
+      <li>Most styles under the colors tab were moved to their respective input field in their tabs, there is now a color swatch directly next to the input field</li>
+      <li>Color palette swatches now display their color code as a tooltip</li>
+    </ul>
+    <hr>
+
     <h3>December 31, 2020</h3>
     <h3>Triangle Version 1.01.42 launched</h3>
     Version 1.01.42 is live, mainly containing quality of life updates and user interface styling. The summary of changes is as follows:
@@ -247,7 +257,7 @@
       <li>The template editor now scrolls with you as you shift items up and down the page</li>
       <li>Various minor bug fixes</li>
     </ul>
-    Upcoming changes include an expansion to the item library, ability to delete FTP profiles, a redesign of the FTP profiles menu, and an expanded font list.
+    Upcoming changes include an expansion to the item library, ability to delete FTP profiles, a redesign of the FTP profiles menu, and an expanded/improved font list.
     <hr>
 
     <!--<h3>June 20, 2016</h3>

@@ -890,6 +890,7 @@ setColorBoxEvents : function setColorBoxEvents() {
   });
 
   document.getElementById("colorElementBg").addEventListener("click", function(){
+    if (!TRIANGLE.item) return;
     TRIANGLE.colors.fillCanvas(this.style.backgroundColor);
     TRIANGLE.colors.showCanvasMenu(this, function(){
       TRIANGLE.saveItem.createAnimation('background-color', TRIANGLE.item.bgColor, TRIANGLE.colors.canvasColorChoice, function(){TRIANGLE.importItem.single(TRIANGLE.item.index)});
@@ -899,6 +900,7 @@ setColorBoxEvents : function setColorBoxEvents() {
   });
 
   document.getElementById("colorListBorderL").addEventListener("click", function(){
+    if (!TRIANGLE.item) return;
     TRIANGLE.colors.fillCanvas(this.style.backgroundColor);
     TRIANGLE.colors.showCanvasMenu(this, function(){
       TRIANGLE.saveItem.createAnimation('border-left-color', TRIANGLE.item.borderLeftColor, TRIANGLE.colors.canvasColorChoice, function(){TRIANGLE.importItem.single(TRIANGLE.item.index)});
@@ -909,6 +911,7 @@ setColorBoxEvents : function setColorBoxEvents() {
   });
 
   document.getElementById("colorListBorderR").addEventListener("click", function(){
+    if (!TRIANGLE.item) return;
     TRIANGLE.colors.fillCanvas(this.style.backgroundColor);
     TRIANGLE.colors.showCanvasMenu(this, function(){
       TRIANGLE.saveItem.createAnimation('border-right-color', TRIANGLE.item.borderRightColor, TRIANGLE.colors.canvasColorChoice, function(){TRIANGLE.importItem.single(TRIANGLE.item.index)});
@@ -919,6 +922,7 @@ setColorBoxEvents : function setColorBoxEvents() {
   });
 
   document.getElementById("colorListBorderT").addEventListener("click", function(){
+    if (!TRIANGLE.item) return;
     TRIANGLE.colors.fillCanvas(this.style.backgroundColor);
     TRIANGLE.colors.showCanvasMenu(this, function(){
       TRIANGLE.saveItem.createAnimation('border-top-color', TRIANGLE.item.borderTopColor, TRIANGLE.colors.canvasColorChoice, function(){TRIANGLE.importItem.single(TRIANGLE.item.index)});
@@ -929,6 +933,7 @@ setColorBoxEvents : function setColorBoxEvents() {
   });
 
   document.getElementById("colorListBorderB").addEventListener("click", function(){
+    if (!TRIANGLE.item) return;
     TRIANGLE.colors.fillCanvas(this.style.backgroundColor);
     TRIANGLE.colors.showCanvasMenu(this, function(){
       TRIANGLE.saveItem.createAnimation('border-bottom-color', TRIANGLE.item.borderBottomColor, TRIANGLE.colors.canvasColorChoice, function(){TRIANGLE.importItem.single(TRIANGLE.item.index)});
@@ -939,6 +944,7 @@ setColorBoxEvents : function setColorBoxEvents() {
   });
 
   document.getElementById("colorBoxShadow").addEventListener("click", function(){
+    if (!TRIANGLE.item) return;
     TRIANGLE.colors.fillCanvas(TRIANGLE.colors.getBoxShadowColor(TRIANGLE.item.objRef));
     TRIANGLE.colors.showCanvasMenu(this, function(){
       var boxShadowHinput = document.getElementById("boxShadowH");
@@ -964,6 +970,7 @@ setColorBoxEvents : function setColorBoxEvents() {
   });
 
   document.getElementById("colorFont").addEventListener("click", function(){
+    if (!TRIANGLE.item) return;
     TRIANGLE.colors.showCanvasMenu(this, function(){
       TRIANGLE.saveItem.createAnimation('color', TRIANGLE.item.fontColor, TRIANGLE.colors.canvasColorChoice, function(){TRIANGLE.importItem.single(TRIANGLE.item.index)});
       TRIANGLE.item.objRef.style.color = TRIANGLE.colors.canvasColorChoice
@@ -1336,7 +1343,11 @@ createPalette : function(hidden, update) { // hidden is a boolean value to speci
 
     for (i = 0; i < bgColors.length; i++) {
       //bgColors[i].setAttribute("onClick", "(function(elem){if(TRIANGLE.item){TRIANGLE.item.objRef.style.backgroundColor = elem.style.backgroundColor;TRIANGLE.importItem.single(TRIANGLE.item.index)}})(this)")
-      bgColors[i].setAttribute("onClick", "TRIANGLE.colors.applyPaletteColor(this, 'backgroundColor')")
+      bgColors[i].setAttribute("onClick", "TRIANGLE.colors.applyPaletteColor(this, 'backgroundColor')");
+
+      bgColors[i].setAttribute("onMouseOver", "TRIANGLE.tooltip.show(TRIANGLE.colors.rgbToHex(this.style.backgroundColor));");
+      bgColors[i].setAttribute("onMouseOut", "TRIANGLE.tooltip.hide();");
+      bgColors[i].setAttribute("onMouseMove", "TRIANGLE.tooltip.update(event);");
     }
 
     // check if item is textbox?
@@ -1344,22 +1355,31 @@ createPalette : function(hidden, update) { // hidden is a boolean value to speci
 
     for (i = 0; i < fontColors.length; i++) {
       //fontColors[i].setAttribute("onClick", "(function(elem){if(TRIANGLE.item){TRIANGLE.item.objRef.style.color = elem.style.backgroundColor;TRIANGLE.importItem.single(TRIANGLE.item.index)}})(this)")
-      fontColors[i].setAttribute("onClick", "TRIANGLE.colors.applyPaletteColor(this, 'color')")
+      fontColors[i].setAttribute("onClick", "TRIANGLE.colors.applyPaletteColor(this, 'color')");
+
+      fontColors[i].setAttribute("onMouseOver", "TRIANGLE.tooltip.show(TRIANGLE.colors.rgbToHex(this.style.backgroundColor));");
+      fontColors[i].setAttribute("onMouseOut", "TRIANGLE.tooltip.hide();");
+      fontColors[i].setAttribute("onMouseMove", "TRIANGLE.tooltip.update(event);");
     }
 
     var borderColors = document.getElementById("paletteItemsBorder").getElementsByClassName("colorPaletteItem");
 
     for (i = 0; i < borderColors.length; i++) {
       //borderColors[i].setAttribute("onClick", "TRIANGLE.colors.applyPaletteColor(this, 'border')")
-      borderColors[i].setAttribute("onMouseOver", "TRIANGLE.colors.askBorderSide(this);");
-      borderColors[i].setAttribute("onMouseOut", "document.getElementById('askBorderSide').style.display = 'none';");
-    }
+      borderColors[i].setAttribute("onMouseOver", "TRIANGLE.colors.askBorderSide(this);TRIANGLE.tooltip.show(TRIANGLE.colors.rgbToHex(this.style.backgroundColor));");
+      borderColors[i].setAttribute("onMouseOut", "document.getElementById('askBorderSide').style.display = 'none';TRIANGLE.tooltip.hide();");
+      borderColors[i].setAttribute("onMouseMove", "TRIANGLE.tooltip.update(event);");
+    }//find this shit bruh
 
     var shadowColors = document.getElementById("paletteItemsShadow").getElementsByClassName("colorPaletteItem");
 
     for (i = 0; i < shadowColors.length; i++) {
       //shadowColors[i].setAttribute("onClick", "(function(elem){if(TRIANGLE.item){TRIANGLE.colors.setBoxShadowColor(TRIANGLE.item.objRef, elem.style.backgroundColor;TRIANGLE.importItem.single(TRIANGLE.item.index)})})(this)")
-      shadowColors[i].setAttribute("onClick", "TRIANGLE.colors.applyPaletteColor(this, 'shadow')")
+      shadowColors[i].setAttribute("onClick", "TRIANGLE.colors.applyPaletteColor(this, 'shadow')");
+
+      shadowColors[i].setAttribute("onMouseOver", "TRIANGLE.tooltip.show(TRIANGLE.colors.rgbToHex(this.style.backgroundColor));");
+      shadowColors[i].setAttribute("onMouseOut", "TRIANGLE.tooltip.hide();");
+      shadowColors[i].setAttribute("onMouseMove", "TRIANGLE.tooltip.update(event);");
     }
   }
   // if no template items, and therefore no colors
@@ -3534,7 +3554,7 @@ TRIANGLE.appendRow = function appendRow() {
   // default styles
   newDiv.className = "templateItem"; // add templateItem class to every generated element to be read by query
   //newDiv.style.backgroundColor = TRIANGLE.randomColor(); // set background color so div is visible
-  newDiv.style.backgroundColor = "#efefef";
+  newDiv.style.backgroundColor = "#508CA4";
   newDiv.style.minHeight = "100px"; // set default height so div is visible
   newDiv.style.height = "auto"; // set default height so div is visible
   newDiv.style.width = "100%"; // set default width so TRIANGLE.options.insertColumns() can divide it
@@ -3564,7 +3584,7 @@ TRIANGLE.insertNewChild = function insertNewChild() {
   var newChild = document.createElement("div");
   newChild.className = "templateItem childItem";
   //newChild.style.backgroundColor = TRIANGLE.randomColor();
-  newChild.style.backgroundColor = "gray";
+  newChild.style.backgroundColor = "#BFD7EA";
   newChild.style.minHeight = "100px";
   newChild.style.height = "auto";
   newChild.style.width = "100%";
@@ -3647,37 +3667,24 @@ show : function showHoverBorder(event) {
   var userID = this.getAttribute("user-id");
   var userClass = this.getAttribute("user-class");
   var linkHref = this.getAttribute("href") || this.getAttribute("link-to");
-  var newLabel;
-  var newDisplay;
 
   if (itemLabel) {
-    document.addEventListener("mousemove", TRIANGLE.hoverBorder.updateItemLabel);
-    newLabel = itemLabel;
-    newDisplay = "block";
+    document.addEventListener("mousemove", TRIANGLE.tooltip.update);
+    TRIANGLE.tooltip.show(itemLabel);
   } else if (userID) {
-    document.addEventListener("mousemove", TRIANGLE.hoverBorder.updateItemLabel);
-    newLabel = userID;
-    newDisplay = "block";
+    document.addEventListener("mousemove", TRIANGLE.tooltip.update);
+    TRIANGLE.tooltip.show(userID);
   } else if (userClass) {
-    document.addEventListener("mousemove", TRIANGLE.hoverBorder.updateItemLabel);
-    newLabel = userClass;
-    newDisplay = "block";
+    document.addEventListener("mousemove", TRIANGLE.tooltip.update);
+    TRIANGLE.tooltip.show(userClass);
   } else if (linkHref) {
-    document.addEventListener("mousemove", TRIANGLE.hoverBorder.updateItemLabel);
+    document.addEventListener("mousemove", TRIANGLE.tooltip.update);
     if (linkHref.length > 30) linkHref = linkHref.slice(0, 30) + "...";
-    newLabel = linkHref;
-    newDisplay = "block";
+    TRIANGLE.tooltip.show(linkHref);
   } else {
-    document.removeEventListener("mousemove", TRIANGLE.hoverBorder.updateItemLabel);
-    newDisplay = "none";
+    document.removeEventListener("mousemove", TRIANGLE.tooltip.update);
+    TRIANGLE.tooltip.hide();
   }
-  document.getElementById("itemTypeLabel").innerHTML = newLabel;
-  document.getElementById("itemTypeLabel").style.display = newDisplay;
-},
-
-updateItemLabel : function(event) {
-  document.getElementById("itemTypeLabel").style.top = (event.clientY + 15) + "px";
-  document.getElementById("itemTypeLabel").style.left = (event.clientX + 15) + "px";
 },
 
 /*
@@ -3688,13 +3695,28 @@ hide : function hideHoverBorder() {
   if (document.getElementById("showHoverBorder")) {
     document.getElementById("template").removeChild(document.getElementById("showHoverBorder"));
     TRIANGLE.hoveredElem = false;
-    document.getElementById("itemTypeLabel").style.display = "none";
-    document.removeEventListener("mousemove", TRIANGLE.hoverBorder.updateItemLabel);
+    TRIANGLE.tooltip.hide();
+    document.removeEventListener("mousemove", TRIANGLE.tooltip.update);
   }
 }
 
 
 } // end TRIANGLE.hoverBorder
+
+
+TRIANGLE.tooltip = {
+  show : function showTooltip(label) {
+    document.getElementById("tooltip").innerHTML = label;
+    document.getElementById("tooltip").style.display = "block";
+  },
+  update : function updateTooltipLocation(event) {
+    document.getElementById("tooltip").style.top = (event.clientY + 15) + "px";
+    document.getElementById("tooltip").style.left = (event.clientX + 15) + "px";
+  },
+  hide : function hideTooltip() {
+    document.getElementById("tooltip").style.display = "none";
+  }
+}
 
 
 TRIANGLE.selectionBorder = {
@@ -4864,16 +4886,8 @@ importColors : function importColors() {
   var colorListBorderR = document.getElementById("colorListBorderR");
   var colorListBorderT = document.getElementById("colorListBorderT");
   var colorListBorderB = document.getElementById("colorListBorderB");
-  var opColorElementBg = document.getElementById("opColorElementBg");
-  var opColorBorder = document.getElementById("opColorBorder");
-  var opColorBoxShadow = document.getElementById("opColorBoxShadow");
-
-  opColorElementBg.style.display = "none";
-  opColorBorder.style.display = "none";
-  opColorBoxShadow.style.display = "none";
 
   if (item.bgColor !== "") {
-    document.getElementById("opColorElementBg").style.display = "inline-block";
     if (item.bgColor == "inherit") {
       document.getElementById("colorElementBg").style.backgroundColor = item.parent.style.backgroundColor;
     } else {
@@ -4886,66 +4900,38 @@ importColors : function importColors() {
   || item.borderTopColor !== ""
   || item.borderBottomColor !== "") {
 
-    document.getElementById("opColorBorder").style.display = "inline-block";
-
-    var countAvail = 0;
     if (item.borderLeftColor !== "" && item.borderLeftWidth !== "" && item.borderLeftColor !== "") {
-      colorListBorderL.style.display = "inline-block";
       if (isBorderColorInitial(item.borderLeftColor)) {
         item.objRef.style.borderLeftColor = "black";
         item.borderLeftColor = "black";
       }
       colorListBorderL.style.backgroundColor = item.borderLeftColor;
-      countAvail++;
-    } else {
-      colorListBorderL.style.display = "none";
     }
 
     if (item.borderRightColor !== "" && item.borderRightWidth !== "" && item.borderRightColor !== "") {
-      colorListBorderR.style.display = "inline-block";
       if (isBorderColorInitial(item.borderRightColor)) {
         item.objRef.style.borderRightColor = "black";
         item.borderRightColor = "black";
       }
       colorListBorderR.style.backgroundColor = item.borderRightColor;
-      countAvail++;
-    } else {
-      colorListBorderR.style.display = "none";
     }
 
     if (item.borderTopColor !== "" && item.borderTopWidth !== "" && item.borderTopColor !== "") {
-      colorListBorderT.style.display = "inline-block";
       if (isBorderColorInitial(item.borderTopColor)) {
         item.objRef.style.borderTopColor = "black";
         item.borderTopColor = "black";
       }
       colorListBorderT.style.backgroundColor = item.borderTopColor;
-      countAvail++;
-    } else {
-      colorListBorderT.style.display = "none";
     }
 
     if (item.borderBottomColor !== "" && item.borderBottomWidth !== "" && item.borderBottomColor !== "") {
-      colorListBorderB.style.display = "inline-block";
       if (isBorderColorInitial(item.borderBottomColor)) {
         item.objRef.style.borderBottomColor = "black";
         item.borderBottomColor = "black";
       }
       colorListBorderB.style.backgroundColor = item.borderBottomColor;
-      countAvail++;
-    } else {
-      colorListBorderB.style.display = "none";
     }
 
-    colorListBorderL.style.width = 220 / countAvail + "px";
-    colorListBorderR.style.width = 220 / countAvail + "px";
-    colorListBorderT.style.width = 220 / countAvail + "px";
-    colorListBorderB.style.width = 220 / countAvail + "px";
-
-    document.getElementById("labelColorListBorderL").style.width = 220 / countAvail + "px";
-    document.getElementById("labelColorListBorderR").style.width = 220 / countAvail + "px";
-    document.getElementById("labelColorListBorderT").style.width = 220 / countAvail + "px";
-    document.getElementById("labelColorListBorderB").style.width = 220 / countAvail + "px";
   }
 
   function isBorderColorInitial(str) {
@@ -4959,7 +4945,6 @@ importColors : function importColors() {
   }
 
   if (item.boxShadow !== "") {
-    document.getElementById("opColorBoxShadow").style.display = "inline-block";
     var boxShadowColor = document.getElementById("colorBoxShadow");
     var boxShadowArray = item.boxShadow.split(" ");
 
@@ -4977,7 +4962,6 @@ importColors : function importColors() {
   }
 
   if (TRIANGLE.isType.textBox(item.objRef) && item.fontColor !== "") {
-    document.getElementById("opColorFont").style.display = "inline-block";
     if (item.fontColor == "inherit") {
       document.getElementById("colorFont").style.backgroundColor = item.parent.style.color;
     } else {
@@ -5663,14 +5647,6 @@ TRIANGLE.clearSelection = function() {
     document.getElementById("opDuplicateElement").style.display = "none";
     document.getElementById("opInsertNewChild").style.display = "none";
     document.getElementById("opHyperlink").style.display = "none";
-    document.getElementById("opColorElementBg").style.display = "none";
-    document.getElementById("opColorBorder").style.display = "none";
-    document.getElementById("opColorBoxShadow").style.display = "none";
-    document.getElementById("opColorFont").style.display = "none";
-    document.getElementById("colorListBorderL").style.display = "none";
-    document.getElementById("colorListBorderR").style.display = "none";
-    document.getElementById("colorListBorderT").style.display = "none";
-    document.getElementById("colorListBorderB").style.display = "none";
   }
 
   /*
