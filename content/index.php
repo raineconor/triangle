@@ -1300,8 +1300,6 @@ var TRIANGLE = TRIANGLE || {};
 TRIANGLE.enable = {
   animations : true
 };
-TRIANGLE.savedShippingSetup = <?php echo $shipping_setup; ?>;
-//console.log(TRIANGLE.savedShippingSetup);
 TRIANGLE.instance = parseInt(<?php echo $instanceNumber; ?>);
 console.log(TRIANGLE.instance);
 

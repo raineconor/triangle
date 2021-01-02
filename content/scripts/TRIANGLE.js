@@ -10,7 +10,7 @@ var x = 0;
 var y = 0;
 var z = 0;
 
-TRIANGLE.version = "1.01.41";
+TRIANGLE.version = "1.01.42";
 
 
 //==================================================================================================
@@ -3259,12 +3259,8 @@ bannedInsertion : function(obj) {
   }
 },
 
-preventDelete : function(obj) {
-  if (false) {
-    return false;
-  } else {
-    return true;
-  }
+preventDelete : function(obj) { // this might now be needed anymore, its a remnant from ecommerce
+  return false;
 },
 
 preventDrag : function(obj) {
@@ -5620,11 +5616,6 @@ TRIANGLE.clearSelection = function() {
     hideOnClear[i].style.display = "none";
   }
 
-  var shippingInputs = document.getElementById("USPSotherOptions").querySelectorAll("input[type=text]");
-  for (i = 0; i < shippingInputs.length; i++) {
-    shippingInputs[i].value = "";
-  }
-
   document.getElementById("fontType").selectedIndex = 0;
 
   TRIANGLE.colors.cancelCanvasMenu();
@@ -7078,10 +7069,7 @@ saveTemplate : function saveTemplate(templateName, pageName) {
              + "&instance=" + TRIANGLE.instance
              + "&content=" + content
              + "&globalStyle=" + globalStyle
-             + "&globalScript=" + globalScript
-             + "&cartPage=" + noCartPage
-             + "&busProfile=" + busProfile
-             + "&shippingSetup=" + shippingSetup;
+             + "&globalScript=" + globalScript;
 
   AJAX.post("scripts/saveTemplate.php", params, function(xmlhttp) {
     TRIANGLE.saveTemplate.saveUserIDs();
@@ -7135,9 +7123,6 @@ saveCurrent : function saveCurrent(callback) {
             + "&content=" + content
             + "&globalStyle=" + globalStyle
             + "&globalScript=" + globalScript
-            + "&cartPage=" + noCartPage
-            + "&busProfile=" + busProfile
-            + "&shippingSetup=" + shippingSetup
             + "&changesMade=" + TRIANGLE.changesMade;
 
   AJAX.post("scripts/saveCurrent.php", params, function(xmlhttp) {
