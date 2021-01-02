@@ -576,9 +576,9 @@
 
 - pressing D now duplicates the selected item
 - inserting multiple buttons into one form is not allowed anymore
-- added color palette access in teh canvas menu, which applies to whichever property the canvas menu
+- added color palette access in the canvas menu, which applies to whichever property the canvas menu
   is targeting
-- improved severa color functions by accessing style properties via bracket notation
+- improved several color functions by accessing style properties via bracket notation
 - imroved several color functions involving box shadow by simplifying the method in which the color
   is extracted from the style property string
 - the color palette now updates as elements change (may be removed in the future)
@@ -730,13 +730,13 @@
 05/25/16
 
 - the save current file and save as new page buttons are now revealed when loading a template
-- fixed a bug where the style tag was being removed from teh clear float elements upon export
+- fixed a bug where the style tag was being removed from the clear float elements upon export
 - fixed a bug where opening an empty editor and then saving as a new template would cause the entire
   template directory to be copied to the save destination
 
 05/26/16
 
-- fixed a bug where the session variables containing intances information about current templates
+- fixed a bug where the session variables containing instances information about current templates
   and pages was being manipulated as a string instead of an array
 - changed the name of postLoader.js to lazyLoader.js
 
@@ -1069,7 +1069,7 @@
 - business profiles can now be added and edited
 - fixed a bug where some items would not set a responsive style, and would throw an unset variable
   error in JSONtoHTML.php
-  
+
 07/27/16
 
 - added TRIANGLE.json object to hold the JSON methods such as encoding and decoding templates
@@ -1296,7 +1296,7 @@
 08/27/16
 
 - fixed a bug where saving as a new template would not work
-- fixed a bug where the template width style was not being saved correctly 
+- fixed a bug where the template width style was not being saved correctly
 - began moving the responsive algorithm to the backend
 - the export compression checkbox now maintains its state upon clearing selection
 - responsive algorithm is now backend
@@ -1486,22 +1486,3 @@
 2/20/17
 
 - images cropped within triangle are now truly cropped upon export
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

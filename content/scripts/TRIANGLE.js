@@ -3514,10 +3514,10 @@ displayLibraryCategory : function(id) {
   if (elem.style.display !== "none") {
     elem.style.display = "none";
   } else {
-    var categories = document.getElementsByClassName("libraryCategory");
+    /*var categories = document.getElementsByClassName("libraryCategory");
     for (i = 0; i < categories.length; i++) {
       categories[i].style.display = "none";
-    }
+    }*/
     elem.style.display = "block";
   }
 }
@@ -5489,11 +5489,13 @@ cssStyles : function(elem) {
 hoverStyles : function(elem) {
   if (TRIANGLE.item) {
     var findStyles = elem.value.match(/[^:]+:\s*[^;]+;\s*/g);
-    var newStyles = "";
-    for (i = 0; i < findStyles.length; i++) {
-      newStyles += findStyles[i];
+    if (findStyles != null) {
+      var newStyles = "";
+      for (i = 0; i < findStyles.length; i++) {
+        newStyles += findStyles[i];
+      }
+      TRIANGLE.item.objRef.setAttribute("hover-style", newStyles);
     }
-    TRIANGLE.item.objRef.setAttribute("hover-style", newStyles);
   }
 },
 

@@ -1112,8 +1112,8 @@
 
   <div class="sideSubMenu" id="userItemMenu">
     <span class="sideMenuH1">My Items</span>
-    <span class="sideMenuH3">IDs</span>
     <div id="echoUserLibrary">
+      <span class="sideMenuH3">IDs</span>
       <div id="echoUserIDs"></div>
       <br>
       <br>
@@ -1129,12 +1129,13 @@
       <div class="sideMenuListItem" onclick="TRIANGLE.menu.displayLibraryCategory('library-Templates');">Premade Templates</div>
         <div id="library-Templates" class="libraryCategory" style="display:none;">
         <?php
-          $premade_templates = db_query_all('SELECT template FROM templates WHERE username = ? AND page = ?', ['triangle', 'index']);
+          /*$premade_templates = db_query_all('SELECT template FROM templates WHERE username = ? AND page = ?', ['triangle', 'index']);
           for ($x = 0; $x < count($premade_templates); $x++) {
             $premade_template_name = $premade_templates[$x]["template"];
             echo '<span class="libraryItem" onClick="TRIANGLE.library.insertTemplate(\'' . $premade_template_name . '\');">' . $premade_template_name . '</span>';
-          }
+          }*/
         ?>
+        coming soon
         </div>
     </div>
     <div id="echoLibrary"></div>
