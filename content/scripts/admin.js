@@ -23,7 +23,7 @@ function deleteImage(elem, srcFile) {
     }
   });
 }
-    
+
 function uploadFont() {
   var fontName = encodeURIComponent(document.getElementById("fontName").value);
   var fontURL = encodeURIComponent(document.getElementById("fontURL").value);
@@ -33,26 +33,26 @@ function uploadFont() {
     document.getElementById("fontURL").value = "";
   });
 }
-    
+
 function addFTPprofile() {
   var ftpURL = encodeURIComponent(document.getElementById("ftpURL").value);
   var ftpUsr = encodeURIComponent(document.getElementById("ftpUsr").value);
   var ftpPwd = encodeURIComponent(document.getElementById("ftpPwd").value);
-  
+
   AJAX.post("scripts/addFTPprofile.php", "ftpURL=" + ftpURL + "&ftpUsr=" + ftpUsr + "&ftpPwd=" + ftpPwd, function(xmlhttp) {
     document.getElementById("echoFTPlist").innerHTML += xmlhttp.responseText;
-    
+
     document.getElementById("ftpURL").value =
     document.getElementById("ftpUsr").value =
     document.getElementById("ftpPwd").value = "";
   });
 }
-    
+
 function deleteTemplate(templateName, templateNum) {
   if (confirm("Are you sure you want to delete template '" + templateName + "'?")) {
     var deleteElem = document.getElementById("template-" + templateNum);
     //var deleteMenu = document.getElementById("details-" + templateNum);
-    
+
     AJAX.post("scripts/deleteTemplate.php", "templateName=" + templateName, function() {
       deleteElem.className += " fadeOut";
       //deleteMenu.className += " fadeOut";
@@ -90,7 +90,7 @@ function addBusinessProfile() {
             + "&address=" + address + "&postal=" + postal + "&sandboxID="
             + sandboxID + "&sandboxSecret=" + sandboxSecret + "&liveID=" + liveID
             + "&liveSecret=" + liveSecret;
-            
+
   AJAX.post("scripts/addBusinessProfile.php", params, function(xmlhttp) {
     closePopUp();
     location.href = "?tab=ecommerce";
@@ -113,7 +113,7 @@ function editBusinessProfile(id, name, country, state, city, address, postal, sa
 
 function deleteBusinessProfile(businessID, businessElem) {
   var deleteElem = document.getElementById("business-" + businessElem);
-  
+
   AJAX.post("scripts/deleteBusinessProfile.php", "profileID=" + businessID, function() {
     deleteElem.className += " fadeOut";
     //deleteMenu.className += " fadeOut";
@@ -206,7 +206,15 @@ function changePassword() {
   }
 }
 
-
-
-
-
+/*document.getElementById("right-column").addEventListener("scroll", lazyload);
+function lazyload() {
+  var images = document.querySelectorAll('img[lazyload]');
+  var screenHeight = window.innerHeight;
+  for (var i = 0; i < images.length; i++) {
+    if (images[i].getBoundingClientRect().top < screenHeight + 600) {
+      images[i].src = images[i].getAttribute("lazyload");
+      images[i].removeAttribute("lazyload");
+    }
+  }
+}
+lazyload();*/

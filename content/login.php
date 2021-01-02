@@ -3,7 +3,7 @@
   require "scripts/sanitize_string.php";
   require "scripts/db_query.php";
   if (isset($_SESSION["username"])) {
-    header("Location: admin.php");
+    header("Location: content/admin.php");
   }
 
 ?>
@@ -59,7 +59,7 @@
         $_SESSION["currentPage"] = [];
         //$_SESSION["pseudouser"] = [];
         // echo "<script>location.href = 'program/index.php';</script>";
-        echo "<script>location.href = 'admin.php';</script>";
+        echo "<script>location.href = 'content/admin.php';</script>";
 	    } else { // if username or password don't match, create an error
         $error = "<span class='error'>*Incorrect username or password</span>";
         $attempts = db_query('SELECT attempts FROM login_attempts WHERE username = ?', [$username]);

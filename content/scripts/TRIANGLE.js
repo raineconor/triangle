@@ -24,6 +24,7 @@ TRIANGLE.images = {
 load : function loadImages() {
   AJAX.get("scripts/imageList.php", "", function(xmlhttp) {
     document.getElementById("echoImageList").innerHTML = xmlhttp.responseText;
+    lazyload();
   });
 },
 
@@ -618,34 +619,21 @@ insertTemplate : function (templateName) {
 },
 
 insert : function insertLibraryItem(category, name) {
-  if (TRIANGLE.item && TRIANGLE.isType.bannedInsertion(TRIANGLE.item.objRef) && !TRIANGLE.item.ecomParent) return;
-
-  var isEcommerce = false;
-  if ((/ecommerce/i).test(category)) isEcommerce = true;
+  if (TRIANGLE.item && TRIANGLE.isType.bannedInsertion(TRIANGLE.item.objRef)) return;
 
   var params = "category=" + encodeURIComponent(category) + "&name=" + encodeURIComponent(name);
 
   AJAX.get("scripts/insertLibraryItem.php", params, function(xmlhttp) {
     var newItem = xmlhttp.responseText;
-    if (isEcommerce) {
-      if (TRIANGLE.item && !TRIANGLE.item.searchParentTree("catalog")) {
-        newItem = TRIANGLE.ecommerce.catalogTag + newItem + "</div>";
-      } else if (!TRIANGLE.item) {
-        newItem = TRIANGLE.ecommerce.catalogTag + newItem + "</div>";
-      }
-    }
     if (!TRIANGLE.item) {
       document.getElementById("template").innerHTML += newItem;
       //window.scrollTo(0, TRIANGLE.templateItems[TRIANGLE.templateItems.length - 1].getBoundingClientRect().top - 200);
       window.scrollTo(0, document.body.scrollHeight);
-    } else if (TRIANGLE.item.ecomParent) {
-      TRIANGLE.item.ecomParent.parentNode.innerHTML = newItem + TRIANGLE.item.ecomParent.parentNode.innerHTML;
     } else {
       TRIANGLE.checkPadding(TRIANGLE.item.objRef);
       TRIANGLE.item.objRef.innerHTML = newItem + TRIANGLE.item.objRef.innerHTML;
     }
     TRIANGLE.library.convertStandbyItems();
-    TRIANGLE.ecommerce.detectMyCart();
     setTimeout(function(){
       if (TRIANGLE.item) TRIANGLE.importItem.single(TRIANGLE.item.index);
     }, 50);
@@ -773,437 +761,6 @@ previewItem : function previewLibraryItem(index) {
 //====================================================================================================
 //====================================================================================================
 //====================================================================================================
-
-
-
-TRIANGLE.ecommerce = {
-
-
-
-  setDescription : function() {
-    if (TRIANGLE.item) {
-      TRIANGLE.saveItem.applyChanges();
-    }
-  },
-
-  catalogTag : '<div class="templateItem catalog" style="'
-             + 'height:auto;'
-             + 'min-height:100px;'
-             + 'width:100%;'
-             + 'background-color:inherit;'
-             + 'border:1px solid #333;'
-             + 'padding:10px;'
-             + '">',
-
-  createMyCartBtn : function() {
-    var myCartBtn = document.createElement("div");
-        myCartBtn.className = "templateItem childItem textBox myCartBtn";
-        myCartBtn.innerHTML = "<a href=\"cart.php\">My Cart</a>";
-        myCartBtn.style.width = "150px";
-        myCartBtn.style.height = "auto";
-        myCartBtn.style.minHeight = "auto";
-        myCartBtn.style.display = "block";
-        myCartBtn.style.padding = "8px";
-        //myCartBtn.style.backgroundColor = "#3e2ca1";
-        myCartBtn.style.backgroundColor = "black";
-        //myCartBtn.style.border = "1px solid white";
-        //myCartBtn.style.margin = "10px";
-        myCartBtn.style.marginBottom = "10px";
-        myCartBtn.style.marginLeft = "auto";
-        myCartBtn.style.color = "white";
-        myCartBtn.style.boxShadow = "0px 1px 2px gray";
-        myCartBtn.style.fontSize = "14px";
-        myCartBtn.style.fontFamily = "Arial";
-        myCartBtn.style.textAlign = "center";
-        myCartBtn.setAttribute("hover-style", "background-color:#333333;")
-
-    return myCartBtn;
-  },
-
-  detectMyCart : function() {
-    var catalogs = document.getElementById("template").getElementsByClassName("catalog");
-    if (catalogs[0]) {
-      if (catalogs[0].children[0] && !TRIANGLE.isType.myCartBtn(catalogs[0].children[0])) {
-
-        var myCartBtns = document.getElementById("template").getElementsByClassName("myCartBtn");
-
-        while (myCartBtns.length > 0) {
-          for (i = 0; i < myCartBtns.length; i++) {
-            myCartBtns[i].remove();
-          }
-          myCartBtns = document.getElementById("template").getElementsByClassName("myCartBtn");
-        }
-
-        var newCartBtn = TRIANGLE.ecommerce.createMyCartBtn();
-
-        catalogs[0].insertBefore(newCartBtn, catalogs[0].children[0]);
-      }
-    }
-  },
-
-  updateItemIDs : function() {
-    var ecomItems = document.getElementById("template").querySelectorAll(".ecommerceItem[replace-ecom-id]");
-
-    if (ecomItems[0]) {
-      TRIANGLE.ecommerce.setItemID(ecomItems[0], TRIANGLE.ecommerce.assignItemID());
-      ecomItems[0].removeAttribute("replace-ecom-id");
-    }
-  },
-
-  setItemID : function(obj, value) {
-    if (obj && obj.getAttribute("ecommerce")) {
-      var dataStr = obj.getAttribute("ecommerce");
-      var dataObj = JSON.parse(dataStr);
-      dataObj.itemID = value;
-      dataStr = JSON.stringify(dataObj);
-      obj.setAttribute("ecommerce", dataStr);
-    }
-  },
-
-  assignItemID : function() {
-    var ecomItems = document.getElementById("template").getElementsByClassName("ecommerceItem");
-
-    var newID = ecomItems.length;
-
-    while (TRIANGLE.ecomItems.indexOf(newID) > -1) {
-      newID++;
-    }
-
-    TRIANGLE.ecomItems.push(newID);
-
-    newID = newID.toString();
-
-    while (newID.length < 6) {
-      newID = "0" + newID;
-    }
-
-    return newID;
-  },
-
-  formatItemID : function(num) {
-    if (num && !isNaN(num) && TRIANGLE.ecomItems.indexOf(parseInt(num)) === -1) {
-      var itemID = parseInt(num);
-      itemID = itemID.toString();
-      while (itemID.length < 6) {
-        itemID = "0" + itemID;
-      }
-      return itemID;
-    } else if (parseInt(num) !== parseInt(TRIANGLE.item.ecom.itemID)) {
-      var newItemID = TRIANGLE.ecommerce.assignItemID();
-      document.getElementById("ecomItemID").value = newItemID;
-      return newItemID;
-    } else {
-      return num;
-    }
-  },
-
-  formatPercent : function(num) {
-    if (num && !isNaN(num)) {
-      var percent = parseFloat(num);
-      //percent = Math.round(percent * 100) / 10000;
-      percent /= 100;
-      return percent;
-    } else {
-      return '';
-    }
-  },
-
-  formatCurrency : function(num) {
-    if (num && !isNaN(num)) {
-      var price = parseFloat(num).toFixed(2);
-      return price;
-    } else {
-      return '';
-    }
-  },
-
-  generateCartPage : function() {
-
-    var noCartPage = true;
-
-    if (document.getElementById("template").querySelectorAll(".catalog").length > 0) {
-      TRIANGLE.pages.loadPages();
-      var pages = document.getElementById("echoPageList").getElementsByClassName("pageThumbnail");
-      for (i = 0; i < pages.length; i++) {
-        if (pages[i].innerHTML == "cart") {
-          noCartPage = false;
-        }
-      }
-    }
-
-    if (noCartPage) {
-
-      var originalTemplate = document.getElementById("templateWrapper").innerHTML;
-
-      var catalog = document.getElementById("template").querySelector(".catalog");
-
-      if (catalog) {
-        catalog.innerHTML = "%CART%";
-        catalog.className = catalog.className.replace(/catalog/g, "cart snippetItem");
-
-        while (catalog.id != "template") {
-          catalog.removeAttribute("user-id");
-          catalog = catalog.parentNode;
-        }
-
-        var catalogs = document.getElementById("template").querySelectorAll(".catalog");
-
-        while (catalogs.length > 0) {
-          catalogs[0].remove();
-          catalogs = document.getElementById("template").querySelectorAll(".catalog");
-        }
-
-        noCartPage = TRIANGLE.json.encode();
-        noCartPage = encodeURIComponent(noCartPage);
-
-        document.getElementById("templateWrapper").innerHTML = originalTemplate;
-      } else {
-        noCartPage = "";
-      }
-    } else {
-      noCartPage = "";
-    }
-
-    return noCartPage;
-
-  },
-
-  logEcomItems : function() {
-    var dataObj = {};
-    var ecomItems = document.getElementById("template").getElementsByClassName("ecommerceItem");
-    for (i = 0; i < ecomItems.length; i++) {
-      var index = ecomItems[i].getAttribute("index");
-      TRIANGLE.sv_item = new TRIANGLE.TemplateItem(index);
-      dataObj[TRIANGLE.sv_item.ecom.itemID] = TRIANGLE.sv_item.ecom;
-    }
-    var dataStr = JSON.stringify(dataObj);
-    return dataStr;
-  },
-
-  shipping : {
-
-    settings: {
-      type : null,
-      handling : null,
-      per : null,
-      fee : null
-    },
-
-    loadSetup : function(setupObj) {
-      var settings = setupObj;
-
-      var typeChoice = document.getElementsByName("shippingTypeRadio");
-
-      var chooseUSPS = document.getElementById("USPSdropdowns");
-
-      var askHandling = document.getElementById("askHandling");
-      var handlingChoice = document.getElementsByName("askHandlingRadio");
-
-      var askPerOrder = document.getElementById("askPerOrder");
-      var perOrderChoice = document.getElementsByName("askPerOrderRadio");
-
-      var getPerOrderFee = document.getElementById("getPerOrderFee");
-      var handlingFee = document.getElementById("handlingFee");
-
-      var getCustomFee = document.getElementById("getCustomFee");
-      var customFee = document.getElementById("customFee");
-
-      var feeLabel = document.getElementById("shippingFeeLabel");
-      var shippingPrice = document.getElementById("ecomShipping");
-
-      var level1, level2, level3, level4;
-
-      //==================================================
-      // clear setup form
-
-      typeChoice[0].checked = false;
-      typeChoice[1].checked = false;
-
-      handlingChoice[0].checked = false;
-      handlingChoice[1].checked = false;
-
-      perOrderChoice[0].checked = false;
-      perOrderChoice[1].checked = false;
-
-      handlingFee.value = "";
-      customFee.value = "";
-
-      chooseUSPS.style.display = "none";
-      askHandling.style.display = "none";
-      askPerOrder.style.display = "none";
-      getPerOrderFee.style.display = "none";
-      getCustomFee.style.display = "none";
-
-      feeLabel.innerHTML = "";
-      shippingPrice.style.display = "none";
-
-      //==================================================
-
-      if (settings.type === "auto") {
-
-        typeChoice[0].checked = true;
-        chooseUSPS.style.display = "block";
-        askHandling.style.display = "block";
-
-        if (settings.handling === "yes") {
-
-          handlingChoice[0].checked = true;
-          askPerOrder.style.display = "block";
-
-          if (settings.per === "order") {
-
-            perOrderChoice[0].checked = true;
-            getPerOrderFee.style.display = "block";
-
-            if (!isNaN(settings.fee)) {
-              handlingFee.value = settings.fee;
-            }
-
-          } else if (settings.per === "item") {
-            perOrderChoice[1].checked = true;
-            feeLabel.innerHTML = "Handling: ";
-            shippingPrice.style.display = "";
-          }
-        } else if (settings.handling === "no") {
-          handlingChoice[1].checked = true;
-        }
-      } else if (settings.type === "custom") {
-        typeChoice[1].checked = true;
-        /*feeLabel.innerHTML = "Shipping: ";
-        shippingPrice.style.display = "";*/
-        getCustomFee.style.display = "";
-
-        if (!isNaN(settings.fee)) {
-          customFee.value = settings.fee;
-        }
-      }
-    },
-
-    setup : function() {
-      TRIANGLE.ecommerce.shipping.loadSetup(TRIANGLE.ecommerce.shipping.settings);
-      TRIANGLE.popUp.open("shippingCell");
-    },
-
-    type : function(elem) {
-      var type = elem.value;
-      if (type === "auto") {
-        document.getElementById("USPSdropdowns").style.display = "block";
-        document.getElementById("askHandling").style.display = "block";
-        TRIANGLE.ecommerce.shipping.settings.type = "auto";
-        document.getElementById("shippingFeeLabel").innerHTML = "";
-        document.getElementById("ecomShipping").style.display = "none";
-        document.getElementById("getCustomFee").style.display = "none";
-      } else {
-        document.getElementById("USPSdropdowns").style.display = "none";
-        document.getElementById("askHandling").style.display = "none";
-        TRIANGLE.ecommerce.shipping.settings.type = "custom";
-        document.getElementById("shippingFeeLabel").innerHTML = "";
-        document.getElementById("ecomShipping").style.display = "none";
-        document.getElementById("getCustomFee").style.display = "";
-      }
-    },
-
-    handling : function(elem) {
-      var choice = elem.value;
-      if (choice === "yes") {
-        document.getElementById("askPerOrder").style.display = "block";
-        TRIANGLE.ecommerce.shipping.settings.handling = "yes";
-      } else {
-        document.getElementById("askPerOrder").style.display = "none";
-        TRIANGLE.ecommerce.shipping.settings.handling = "no";
-      }
-    },
-
-    perOrderItem : function(elem) {
-      var choice = elem.value;
-      if (choice === "order") {
-        document.getElementById("getPerOrderFee").style.display = "block";
-        TRIANGLE.ecommerce.shipping.settings.per = "order";
-        document.getElementById("shippingFeeLabel").innerHTML = "";
-        document.getElementById("ecomShipping").style.display = "none";
-      } else {
-        document.getElementById("getPerOrderFee").style.display = "none";
-        TRIANGLE.ecommerce.shipping.settings.per = "item";
-        document.getElementById("shippingFeeLabel").innerHTML = "Handling: ";
-        document.getElementById("ecomShipping").style.display = "";
-      }
-    },
-
-    cancelSetup : function() {
-      TRIANGLE.ecommerce.shipping.settings = TRIANGLE.savedShippingSetup;
-      TRIANGLE.popUp.close();
-    },
-
-    applySetup : function() {
-      if (TRIANGLE.ecommerce.shipping.settings.type === "auto") {
-        TRIANGLE.ecommerce.shipping.settings.fee = parseFloat(document.getElementById("handlingFee").value);
-      } else if (TRIANGLE.ecommerce.shipping.settings.type === "custom") {
-        TRIANGLE.ecommerce.shipping.settings.fee = parseFloat(document.getElementById("customFee").value);
-      }
-      //console.log(TRIANGLE.ecommerce.shipping.settings);
-      TRIANGLE.popUp.close();
-    },
-
-    USPSflatRate : function() {
-      if (TRIANGLE.item && TRIANGLE.item.ecomParent) {
-        TRIANGLE.popUp.open("USPSflatRateCell");
-      } else {
-        TRIANGLE.error("Please select an ecommerce item to apply this feature");
-      }
-    },
-
-    flatRateSelect : function() {
-      var flatRateSelect = document.getElementById("USPSflatRateSelect");
-      if (flatRateSelect.selectedIndex > 0) document.getElementById("USPSshapeSelect").selectedIndex = 0;
-    },
-
-    USPSother : function() {
-      if (TRIANGLE.item && TRIANGLE.item.ecomParent) {
-        TRIANGLE.popUp.open("USPSotherOptionsCell");
-      } else {
-        TRIANGLE.error("Please select an ecommerce item to apply this feature");
-      }
-    },
-
-    askWeight : function() {
-      var shapeSelect = document.getElementById("USPSshapeSelect");
-      if (shapeSelect.selectedIndex > 0) document.getElementById("USPSflatRateSelect").selectedIndex = 0;
-
-      if (shapeSelect.selectedIndex > 0) {
-        document.getElementById("USPSweight").style.display = "block";
-
-        if (shapeSelect.selectedIndex === 5) {
-          document.getElementById("USPSdimensions").style.display = "block";
-        } else {
-          document.getElementById("USPSdimensions").style.display = "none";
-        }
-      } else {
-        document.getElementById("USPSweight").style.display = "none";
-        document.getElementById("USPSdimensions").style.display = "none";
-      }
-    },
-
-    applyUSPS : function() {
-      if (TRIANGLE.item && TRIANGLE.item.ecomParent) {
-        //TRIANGLE.saveItem.applyChanges("saveEcomData();");
-        TRIANGLE.saveItem.saveEcomData();
-        TRIANGLE.popUp.close();
-      } else {
-        TRIANGLE.error("Please select an ecommerce item to apply this feature.");
-      }
-    }
-
-  }
-
-
-
-}
-
-
-
-//==================================================================================================
-//==================================================================================================
-//==================================================================================================
 
 
 
@@ -2628,6 +2185,31 @@ changeFontSize : function() {
   }
 },
 
+changeFontWeight : function(weight) {
+  /*if (TRIANGLE.item && TRIANGLE.isType.textBox(TRIANGLE.item.objRef)) {
+    var currentSize = document.getElementById("fontSize").value;
+    var unit = TRIANGLE.getUnit(TRIANGLE.item.fontSize);
+    var newSize = parseFloat(currentSize) + unit;
+
+    TRIANGLE.item.objRef.style.fontSize = newSize;
+
+    TRIANGLE.selectionBorder.update();
+  } else {
+    return;
+  }
+
+  var item = TRIANGLE.item;
+  if (!TRIANGLE.isType.textBox(item.objRef)) return;
+  TRIANGLE.text.replaceTextSelection();
+  if (item.objRef.isContentEditable) {
+    document.execCommand("styleWithCSS", null, true);
+    document.execCommand("foreColor", null, fontColor);
+    document.execCommand("styleWithCSS", null, false);
+  } else {
+    item.objRef.style.color = fontColor;
+  }*/
+},
+
 
 getSelectionCoords : function getSelectionCoords(win) {
   win = win || window;
@@ -2900,18 +2482,6 @@ TRIANGLE.TemplateItem = function(index) {
   //============================================================
   this.hoverObj = document.getElementById(this.id + "hover");
   this.hoverVersion = this.hoverObj ? true : false;
-  //============================================================
-  this.ecomParent = this.getEcomParent();
-  this.readEcomData = this.ecomParent ? this.readEcomData() : false;
-  this.ecom = {};
-  this.ecom.itemName = this.readEcomData ? this.readEcomData.name : null;
-  this.ecom.itemID = this.readEcomData ? this.readEcomData.itemID : null;
-  this.ecom.price = this.readEcomData ? this.readEcomData.price : null;
-  this.ecom.quantity = this.readEcomData ? this.readEcomData.quantity : null;
-  this.ecom.description = this.readEcomData ? this.readEcomData.description : null;
-  this.ecom.tax = this.readEcomData ? this.readEcomData.tax : null;
-  this.ecom.shipping = this.readEcomData ? this.readEcomData.shipping : null;
-  this.ecom.usps = this.readEcomData ? this.readEcomData.usps : null;
 }
 
 // pass an object as an argument to be appended to the selected item
@@ -3035,37 +2605,6 @@ TRIANGLE.TemplateItem.prototype.searchParentTree = function(classNameSearch) {
     return true;
   } else {
     return false
-  }
-}
-
-TRIANGLE.TemplateItem.prototype.getEcomParent = function() {
-  var elem = this.objRef;
-
-  while (elem.id != "template") {
-    if (TRIANGLE.isType.ecommerceItem(elem)) {
-      break;
-    } else {
-      elem = elem.parentNode;
-    }
-  }
-
-  if (elem.id != "template") {
-    return elem;
-  } else {
-    return false
-  }
-}
-
-TRIANGLE.TemplateItem.prototype.readEcomData = function() {
-  if (this.ecomParent && this.ecomParent.getAttribute("ecommerce")) {
-
-     var str = this.ecomParent.getAttribute("ecommerce");
-     var data = JSON.parse(str);
-
-     return data;
-
-  } else {
-    return false;
   }
 }
 
@@ -3566,16 +3105,8 @@ TRIANGLE.updateTemplateItems = function updateTemplateItems(repeat) { // boolean
       TRIANGLE.sv_item.objRef.removeAttribute("name");
     }
 
-    if (TRIANGLE.isType.catalog(TRIANGLE.sv_item.objRef)) {
-      if (TRIANGLE.sv_item.objRef.querySelectorAll(".ecommerceItem").length === 0) {
-        TRIANGLE.sv_item.removeClass("catalog");
-      }
-    }
-
     TRIANGLE.insertClearFloats();
   }
-
-  TRIANGLE.ecommerce.updateItemIDs();
   //document.getElementById("template").innerHTML = document.getElementById("template").innerHTML.replace(/(<div[^>]*style="[^"]*display:\s*inline-block[^"]*"[^>]*><\/div>)/gi, "$1<!---->");
   TRIANGLE.dragDrop.updateItemMap();
   //setTimeout(function(){TRIANGLE.colors.createPalette(true, true)}, 5); // delaying the function allows for the user to click a color
@@ -3714,80 +3245,6 @@ verticalAlign : function(obj) {
   }
 },
 
-ecommerceItem : function(obj) {
-  if (obj) {
-    var getItemClass = obj.className;
-    if ((/ecommerceItem/g).test(getItemClass)) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-},
-
-ecommerceComponent : function(obj) {
-  //console.log(obj);
-  if (obj) {
-    var getItemClass = obj.className;
-    if ((/ecomName/g).test(getItemClass)
-    || (/ecomPrice/g).test(getItemClass)
-    || (/addToCartBtn/g).test(getItemClass)) {
-      return true;
-    } else if (!TRIANGLE.isType.ecommerceItem(obj)
-           && !obj.querySelectorAll(".ecommerceItem").length
-           && obj.querySelectorAll(".addToCartBtn").length > 0) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-},
-
-catalog : function(obj) {
-  if (obj) {
-    var getItemClass = obj.className;
-    if ((/catalog/g).test(getItemClass)) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-},
-
-cart : function(obj) {
-  if (obj) {
-    var getItemClass = obj.className;
-    if ((/cart/g).test(getItemClass)
-    || obj.querySelectorAll(".cart").length > 0) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-},
-
-myCartBtn : function(obj) {
-  if (obj) {
-    var getItemClass = obj.className;
-    if ((/myCartBtn/g).test(getItemClass)) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-},
-
-addToCartBtn : function(obj) {
-  if (obj) {
-    var getItemClass = obj.className;
-    if ((/addToCartBtn/g).test(getItemClass)) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-},
-
 bannedInsertion : function(obj) {
   if (!TRIANGLE.isType.textBox(obj)
   && !TRIANGLE.isType.imageItem(obj)
@@ -3803,9 +3260,7 @@ bannedInsertion : function(obj) {
 },
 
 preventDelete : function(obj) {
-  if (!TRIANGLE.isType.ecommerceComponent(obj)
-  && !TRIANGLE.isType.myCartBtn(obj)
-  && !TRIANGLE.isType.cart(obj)) {
+  if (false) {
     return false;
   } else {
     return true;
@@ -3815,9 +3270,7 @@ preventDelete : function(obj) {
 preventDrag : function(obj) {
   if (!TRIANGLE.isType.textBox(obj)
   && !TRIANGLE.isType.formField(obj)
-  && !TRIANGLE.isType.imageItem(obj)
-  && !TRIANGLE.isType.ecommerceItem(obj)
-  && !TRIANGLE.isType.ecommerceComponent(obj)) {
+  && !TRIANGLE.isType.imageItem(obj)) {
     return false;
   } else {
     return true;
@@ -3828,8 +3281,6 @@ itemLabel : function(obj) {
   if (obj) {
     if (obj.tagName.toLowerCase() === "form") {
       return "Form";
-    } else if (TRIANGLE.isType.ecommerceItem(obj)) {
-      return "Ecommerce";
     } else if (TRIANGLE.isType.snippetItem(obj)) {
       return "Code Snippet";
     } else {
@@ -4115,7 +3566,8 @@ TRIANGLE.insertNewChild = function insertNewChild() {
 
   var newChild = document.createElement("div");
   newChild.className = "templateItem childItem";
-  newChild.style.backgroundColor = TRIANGLE.randomColor();
+  //newChild.style.backgroundColor = TRIANGLE.randomColor();
+  newChild.style.backgroundColor = "gray";
   newChild.style.minHeight = "100px";
   newChild.style.height = "auto";
   newChild.style.width = "100%";
@@ -4989,7 +4441,6 @@ single : function importItem(index, event) {
   importHyperlink(); // imports hyperlink string from anchor tag
   importLinkTarget(); // imports hyperlink target from anchor tag
   importSnippet(); // imports user-inserted code snippet
-  importEcomData(); // imports ecommerce item details
   importFormEmail(); // imports custom form email
   importCSSstyles(); // imports CSS styles
   importHoverStyles(); // imports hover styles
@@ -5249,9 +4700,12 @@ function importFont() {
   var fontLineHeight = TRIANGLE.item.lineHeight;
   var fontLineHeightInput = document.getElementById("fontLineHeight");
   var fontFamilyInput = document.getElementById("fontType");
+  var fontWeight = TRIANGLE.item.fontWeight;
+  var fontWeightInput = document.getElementById("fontWeight");
   fontColorInput.value = fontColor;
   fontSizeInput.value = isNaN(parseFloat(fontSize)) ? null : parseFloat(fontSize);
   fontLineHeightInput.value = fontLineHeight;
+  fontWeightInput.value = fontWeight;
   for (i = 0; i < fontFamilyInput.options.length; i++) {
     var optionText = fontFamilyInput.options[i].text;
     if (optionText == TRIANGLE.item.fontFamily.replace(/'|"/g, "")) {
@@ -5350,46 +4804,6 @@ function importSnippet() {
   } else {
     document.getElementById("snippetInsertion").value = "";
     if (TRIANGLE.developer.currentCode === "snippetInsertion") document.getElementById("codeEditor").value = "";
-  }
-}
-
-function importEcomData() {
-  if (TRIANGLE.item.readEcomData) {
-    document.getElementById("ecomItemName").value = TRIANGLE.item.ecom.itemName ? TRIANGLE.item.ecom.itemName : "";
-    document.getElementById("ecomItemID").value = TRIANGLE.item.ecom.itemID ? TRIANGLE.item.ecom.itemID : "";
-    document.getElementById("ecomPrice").value = TRIANGLE.item.ecom.price ? TRIANGLE.item.ecom.price : "";
-    document.getElementById("ecomQuantity").value = TRIANGLE.item.ecom.quantity ? TRIANGLE.item.ecom.quantity : "";
-    document.getElementById("ecomDesc").value = TRIANGLE.item.ecom.description ? TRIANGLE.item.ecom.description : "";
-    document.getElementById("ecomShipping").value = TRIANGLE.item.ecom.shipping ? TRIANGLE.item.ecom.shipping : "";
-    document.getElementById("ecomTax").checked = TRIANGLE.item.ecom.tax;
-    // start blank
-    document.getElementById("USPSflatRateSelect").selectedIndex = 0;
-    document.getElementById("USPSshapeSelect").selectedIndex = 0;
-    document.getElementById("USPSweight").style.display = "none";
-    document.getElementById("USPSdimensions").style.display = "none";
-    // now set the details
-    if (TRIANGLE.item.ecom.usps && (/PRIORITY/).test(TRIANGLE.item.ecom.usps.service)) {
-      document.getElementById("USPSflatRateSelect").value = TRIANGLE.item.ecom.usps.value;
-    } else if (TRIANGLE.item.ecom.usps && TRIANGLE.item.ecom.usps.service === "FIRST CLASS") {
-      document.getElementById("USPSshapeSelect").value = TRIANGLE.item.ecom.usps.value;
-
-      if (document.getElementById("USPSshapeSelect").selectedIndex > 0) {
-        document.getElementById("USPSweight").style.display = "block";
-        document.getElementById("USPSpounds").value = TRIANGLE.item.ecom.usps.pounds ? TRIANGLE.item.ecom.usps.pounds : "";
-        document.getElementById("USPSounces").value = TRIANGLE.item.ecom.usps.ounces ? TRIANGLE.item.ecom.usps.ounces : "";
-
-        if (TRIANGLE.item.ecom.usps.size === "LARGE") {
-          document.getElementById("USPSdimensions").style.display = "block";
-
-          document.getElementById("USPSlength").value = TRIANGLE.item.ecom.usps.length ? TRIANGLE.item.ecom.usps.length : "";
-          document.getElementById("USPSwidth").value = TRIANGLE.item.ecom.usps.width ? TRIANGLE.item.ecom.usps.width : "";
-          document.getElementById("USPSheight").value = TRIANGLE.item.ecom.usps.height ? TRIANGLE.item.ecom.usps.height : "";
-        }//shit
-      }
-    }
-
-  } else {
-    document.getElementById("ecomTax").checked = false;
   }
 }
 
@@ -5614,8 +5028,6 @@ applyChanges : function applyChanges(specificFunc) {
     saveUserID(); // saves item name from user entry
     saveUserClass(); // saves item class from user entry
     saveHyperlink(); // saves hyperlink data
-    //saveEcomData(); // saves price for an ecommerce item
-    TRIANGLE.saveItem.saveEcomData();
     saveFormEmail(); // saves specific email for a form
   } else {
     eval(specificFunc);
@@ -5971,6 +5383,7 @@ function saveFont() {
   var fontColorInput = document.getElementById("fontColor");
   var fontSizeInput = document.getElementById("fontSize");
   var fontLineHeightInput = document.getElementById("fontLineHeight");
+  var fontWeightInput = document.getElementById("fontWeight");
   TRIANGLE.saveItem.createAnimation("color", TRIANGLE.item.fontColor, fontColorInput.value, function(){TRIANGLE.selectionBorder.create()});
   TRIANGLE.item.objRef.style.color = fontColorInput.value;
   if ((/\D/g).test(fontSizeInput.value)) {
@@ -5981,6 +5394,8 @@ function saveFont() {
     TRIANGLE.item.objRef.style.fontSize = fontSizeInput.value + "px";
   }
   TRIANGLE.item.objRef.style.lineHeight = fontLineHeightInput.value;
+  //TRIANGLE.saveItem.createAnimation("font-weight", TRIANGLE.item.fontWeight, fontWeightInput.value, function(){TRIANGLE.selectionBorder.create()});
+  TRIANGLE.item.objRef.style.fontWeight = fontWeightInput.value;
 }
 
 function saveUserID() {
@@ -6053,93 +5468,6 @@ applyAll : function(srcID, noApply) {
     document.getElementById(srcID[i]).value = srcValue;
   }
   if (!noApply) TRIANGLE.saveItem.applyChanges();
-},
-
-saveEcomData : function saveEcomData() {
-  if (TRIANGLE.item.ecomParent) {
-    var ecomItemNameInput = document.getElementById("ecomItemName");
-    var ecomItemIDinput = document.getElementById("ecomItemID");
-    var ecomPriceInput = document.getElementById("ecomPrice");
-    var ecomQuantityInput = document.getElementById("ecomQuantity");
-    var ecomDescInput = document.getElementById("ecomDesc");
-    var ecomTaxInput = document.getElementById("ecomTax");
-    var shippingRadio = document.getElementsByName("ecomShippingType");
-    var ecomShippingInput = document.getElementById("ecomShipping");
-    var flatRateSelect = document.getElementById("USPSflatRateSelect");
-    var shapeSelect = document.getElementById("USPSshapeSelect");
-
-    var dataObj = {};
-    dataObj.name = ecomItemNameInput.value;
-    dataObj.itemID = TRIANGLE.ecommerce.formatItemID(ecomItemIDinput.value);
-    dataObj.price = TRIANGLE.ecommerce.formatCurrency(ecomPriceInput.value);
-    dataObj.quantity = parseFloat(ecomQuantityInput.value);
-    dataObj.description = ecomDescInput.value;
-    dataObj.tax = ecomTaxInput.checked ? 1 : 0;
-    dataObj.shipping = TRIANGLE.ecommerce.formatCurrency(ecomShippingInput.value);
-    dataObj.usps = "";
-
-    if (flatRateSelect.selectedIndex > 0) {
-      var uspsDetails = flatRateSelect.value.split(',');
-      dataObj.usps = {
-        value : flatRateSelect.value,
-        service : uspsDetails[0],
-        container : uspsDetails[1],
-        size : "REGULAR",
-        pounds : 0,
-        ounces : 1
-      }
-    } else if (shapeSelect.selectedIndex > 0) {
-      var uspsDetails = shapeSelect.value.split(',');
-      dataObj.usps = {
-        value : shapeSelect.value,
-        service : uspsDetails[0],
-        mailType : uspsDetails[1]
-      }
-      if (shapeSelect.selectedIndex > 0) {//shit
-        var pounds = parseFloat(document.getElementById("USPSpounds").value);
-        var ounces = parseFloat(document.getElementById("USPSounces").value);
-
-        if (isNaN(pounds)) pounds = 0;
-        if (isNaN(ounces)) ounces = 0;
-
-        dataObj.usps.pounds = pounds;
-        dataObj.usps.ounces = ounces;
-
-        var sumOz = 16 * dataObj.usps.pounds + dataObj.usps.ounces;
-        if (sumOz > 13) dataObj.usps.service = "PRIORITY";
-
-        if (uspsDetails[2]) {
-          dataObj.usps.size = uspsDetails[2];
-
-          if (uspsDetails[2] === "LARGE") {
-            var isRect = document.getElementsByName("packageRect");
-            if (isRect[0].checked) {
-              dataObj.usps.container = isRect[0].value;
-            } else {
-              dataObj.usps.container = isRect[1].value;
-            }
-
-            dataObj.usps.length = parseFloat(document.getElementById("USPSlength").value);
-            dataObj.usps.width = parseFloat(document.getElementById("USPSwidth").value);
-            dataObj.usps.height = parseFloat(document.getElementById("USPSheight").value);
-          }
-        }
-      }
-
-    }
-
-    var nameLabel = TRIANGLE.item.ecomParent.querySelector(".ecomName");
-    if (nameLabel) nameLabel.innerHTML = "<b>" + dataObj.name + "</b>";
-
-    var priceLabel = TRIANGLE.item.ecomParent.querySelector(".ecomPrice");
-    if (priceLabel) priceLabel.innerHTML = '$' + dataObj.price;
-
-    var dataStr = JSON.stringify(dataObj);
-
-    TRIANGLE.item.ecomParent.setAttribute("ecommerce", dataStr);
-
-    setTimeout(TRIANGLE.selectionBorder.create, TRIANGLE.saveItem.animationTime);
-  }
 },
 
 codeSnippet : function(elem) {
@@ -6788,7 +6116,6 @@ function duplicate() duplicates the selected element
 */
 
 duplicate : function duplicate() {
-  if (TRIANGLE.isType.ecommerceComponent(TRIANGLE.item.objRef)) return;
   var item = TRIANGLE.item;
   var parentItem = item.parent;
   var identifier = "";
@@ -6806,10 +6133,6 @@ duplicate : function duplicate() {
   }*/
   duplicate.removeAttribute("user-id");
   duplicate.innerHTML = duplicate.innerHTML.replace(/user\-class="[^"]*"/g, "");
-
-  if (TRIANGLE.isType.ecommerceItem(TRIANGLE.item.objRef)) {
-    TRIANGLE.item.objRef.setAttribute("replace-ecom-id", "true");
-  }
 
   if (parentItem.childNodes.length === 1) {
     parentItem.appendChild(duplicate);
@@ -6859,10 +6182,6 @@ pasteStyles : function pasteStyles(index) {
 
   pasteItem.removeAttribute("user-id");
   pasteItem.innerHTML = pasteItem.innerHTML.replace(/user\-class="[^"]*"/g, "");
-
-  if (TRIANGLE.isType.ecommerceItem(pasteItem)) {
-    pasteItem.setAttribute("replace-ecom-id", "true");
-  }
 
   if (TRIANGLE.item) {
     if (!index) index = TRIANGLE.item.index;
@@ -7260,7 +6579,6 @@ TRIANGLE.styleFunctions = [
   function (id, value) {if (value) id.setAttribute("crop-ratio", value);},
   function (id, value) {if (value) id.setAttribute("target", value);},
   function (id, value) {if (value) id.setAttribute("user-class", value);},
-  function (id, value) {if (value) id.setAttribute("ecommerce", value);},
   function (id, value) {if (value) id.setAttribute("form-email", value);}
 ];
 
@@ -7326,7 +6644,6 @@ TRIANGLE.getStyles = function getStyles(element) {
   element.getAttribute("crop-ratio"),
   element.getAttribute("target"),
   element.getAttribute("user-class"),
-  element.getAttribute("ecommerce"),
   element.getAttribute("form-email")
   ];
   return elementStyles;
@@ -7396,7 +6713,7 @@ verticalMiddle : function verticalMiddle() {
 
   TRIANGLE.selectionBorder.remove();
   TRIANGLE.checkPadding(item.parent);
-  item.parent.style.display = "table";
+  /*item.parent.style.display = "table";
   item.parent.style.height = item.parent.style.minHeight;
 
   var tableCell = document.createElement("div");
@@ -7407,12 +6724,16 @@ verticalMiddle : function verticalMiddle() {
   tableCell.style.minHeight = "auto";
   tableCell.style.height = "auto";
   tableCell.className = "templateItem childItem";
-  tableCell.innerHTML = item.parent.innerHTML;
+  tableCell.innerHTML = item.parent.innerHTML;*/
 
-  item.parent.removeChild(item.objRef);
-  item.parent.innerHTML = "";
+  /*item.parent.removeChild(item.objRef);
+  item.parent.innerHTML = "";*/
 
-  item.parent.appendChild(tableCell);
+  item.parent.style.display = "flex";
+  item.parent.style.alignItems = "center";
+  item.parent.style.flexFlow = "row wrap";
+
+  //item.parent.appendChild(flexBox);
 
   TRIANGLE.updateTemplateItems(true);
   //TRIANGLE.updateTemplateItems(); // yes this is called twice. Literally retarded. The table-cell won't show its hover border unless this is double called
@@ -7750,16 +7071,7 @@ saveTemplate : function saveTemplate(templateName, pageName) {
   var globalStyle = encodeURIComponent(TRIANGLE.developer.globalStyleTagContent);
   var globalScript = encodeURIComponent(TRIANGLE.developer.globalScriptTagContent);
   //========================================================================
-  var noCartPage = TRIANGLE.ecommerce.generateCartPage();
-  //========================================================================
-  var ecomItems = TRIANGLE.ecommerce.logEcomItems();
-  ecomItems = encodeURIComponent(ecomItems);
-  //========================================================================
   var busProfile = document.getElementById("businessProfile").value;
-  //========================================================================
-  var shippingSetup = TRIANGLE.ecommerce.shipping.settings;
-  shippingSetup = JSON.stringify(shippingSetup);
-  shippingSetup = encodeURIComponent(shippingSetup);
   //========================================================================
   var params = "templateName=" + templateName
              + "&pageName=" + pageName
@@ -7768,7 +7080,6 @@ saveTemplate : function saveTemplate(templateName, pageName) {
              + "&globalStyle=" + globalStyle
              + "&globalScript=" + globalScript
              + "&cartPage=" + noCartPage
-             + "&ecomItems=" + ecomItems
              + "&busProfile=" + busProfile
              + "&shippingSetup=" + shippingSetup;
 
@@ -7818,23 +7129,13 @@ saveCurrent : function saveCurrent(callback) {
   var globalStyle = encodeURIComponent(TRIANGLE.developer.globalStyleTagContent);
   var globalScript = encodeURIComponent(TRIANGLE.developer.globalScriptTagContent);
   //========================================================================
-  var noCartPage = TRIANGLE.ecommerce.generateCartPage();
-  //========================================================================
-  var ecomItems = TRIANGLE.ecommerce.logEcomItems();
-  ecomItems = encodeURIComponent(ecomItems);
-  //========================================================================
   var busProfile = document.getElementById("businessProfile").value;
-  //========================================================================
-  var shippingSetup = TRIANGLE.ecommerce.shipping.settings;
-  shippingSetup = JSON.stringify(shippingSetup);
-  shippingSetup = encodeURIComponent(shippingSetup);
   //========================================================================
   var params = "instance=" + TRIANGLE.instance
             + "&content=" + content
             + "&globalStyle=" + globalStyle
             + "&globalScript=" + globalScript
             + "&cartPage=" + noCartPage
-            + "&ecomItems=" + ecomItems
             + "&busProfile=" + busProfile
             + "&shippingSetup=" + shippingSetup
             + "&changesMade=" + TRIANGLE.changesMade;
@@ -7898,8 +7199,6 @@ saveUserIDs : function() {
     userIDobj[userIDtitle]["crop-map"] = userIDs[i].getAttribute("crop-map");
     userIDobj[userIDtitle]["crop-ratio"] = userIDs[i].getAttribute("crop-ratio");
     userIDobj[userIDtitle]["target"] = userIDs[i].getAttribute("target");
-    //userIDobj[userIDtitle]["ecommerce"] = TRIANGLE.json.toNVP(userIDs[i].getAttribute("ecommerce"));
-    userIDobj[userIDtitle]["ecommerce"] = encodeURIComponent(userIDs[i].getAttribute("ecommerce"));
     userIDobj[userIDtitle]["form-email"] = userIDs[i].getAttribute("form-email");
     userIDobj[userIDtitle]["responsive"] = [userIDs[i].style.width, userIDs[i].getBoundingClientRect().width, userIDs[i].getBoundingClientRect().top];
 
@@ -7948,7 +7247,6 @@ saveUserIDs : function() {
       userIDobj[userIDtitle]["children"][childIndex]["crop-map"] = childList[x].getAttribute("crop-map");
       userIDobj[userIDtitle]["children"][childIndex]["crop-ratio"] = childList[x].getAttribute("crop-ratio");
       userIDobj[userIDtitle]["children"][childIndex]["target"] = childList[x].getAttribute("target");
-      userIDobj[userIDtitle]["children"][childIndex]["ecommerce"] = encodeURIComponent(childList[x].getAttribute("ecommerce"));
       userIDobj[userIDtitle]["children"][childIndex]["form-email"] = childList[x].getAttribute("form-email");
       userIDobj[userIDtitle]["children"][childIndex]["responsive"] = [childList[x].style.width, childList[x].getBoundingClientRect().width, childList[x].getBoundingClientRect().top];
     }
@@ -8000,7 +7298,7 @@ saveAll : function() {
   //TRIANGLE.popUp.open("savingCell");
   for (i = 0; i < pages.length; i++) {
     var pagename = pages[i].innerHTML;
-    console.log(pagename);
+    //console.log(pagename);
     setTimeout(function(pagename){
       TRIANGLE.loadTemplate.loadTemplate(TRIANGLE.currentTemplate, pagename);
       console.log(pagename);
@@ -8052,7 +7350,7 @@ getLoadList : function getLoadList() {
     var listThumbs = document.getElementById("echoLoadList").querySelectorAll(".loadListItem");
     for (i = 0; i < listThumbs.length; i++) {
       if (TRIANGLE.currentTemplate !== "" && listThumbs[i].innerHTML == TRIANGLE.currentTemplate) {
-        listThumbs[i].style.backgroundColor = "#cce6ff";
+        listThumbs[i].style.backgroundColor = "#ccdef6";
       } else {
         listThumbs[i].style.backgroundColor = "";
       }
@@ -8391,8 +7689,6 @@ encode : function() {
     template.items[itemID]["crop-map"] = TRIANGLE.sv_item.cropMap;
     template.items[itemID]["crop-ratio"] = TRIANGLE.sv_item.cropRatio;
     template.items[itemID]["target"] = TRIANGLE.sv_item.objRef.getAttribute("target");
-    template.items[itemID]["ecommerce"] = encodeURIComponent(TRIANGLE.sv_item.objRef.getAttribute("ecommerce"));
-    if (TRIANGLE.isType.addToCartBtn(TRIANGLE.sv_item.objRef)) template.items[itemID]["addToCart"] = TRIANGLE.sv_item.ecom.itemID;
     template.items[itemID]["form-email"] = TRIANGLE.sv_item.objRef.getAttribute("form-email");
   }
 
@@ -8534,8 +7830,6 @@ convertItem : function(itemSrc, createItem) {
   itemSrc["crop-map"] ? createItem.setAttribute("crop-map", itemSrc["crop-map"]) : null;
   itemSrc["crop-ratio"] ? createItem.setAttribute("crop-ratio", itemSrc["crop-ratio"]) : null;
   itemSrc["target"] ? createItem.setAttribute("target", itemSrc["target"]) : null;
-  //itemSrc["ecommerce"] ? createItem.setAttribute("ecommerce", TRIANGLE.json.readNVP(itemSrc["ecommerce"])) : null;
-  itemSrc["ecommerce"] && itemSrc["ecommerce"] !== "null" ? createItem.setAttribute("ecommerce", decodeURIComponent(itemSrc["ecommerce"])) : null;
   itemSrc["form-email"] ? createItem.setAttribute("form-email", itemSrc["form-email"]) : null;
   return createItem;
 },
@@ -8696,7 +7990,7 @@ loadPages : function loadPages(template, listType) {
       var pageThumbs = document.getElementById("echoPageList").querySelectorAll(".pageThumbnail");
       for (i = 0; i < pageThumbs.length; i++) {
         if (TRIANGLE.currentPage !== "" && pageThumbs[i].innerHTML == TRIANGLE.currentPage) {
-          pageThumbs[i].style.backgroundColor = "#cce6ff";
+          pageThumbs[i].style.backgroundColor = "#ccdef6";
         } else {
           pageThumbs[i].style.backgroundColor = "";
         }
@@ -8791,8 +8085,6 @@ TRIANGLE.defaultSettings = function defaultSettings() {
   document.getElementById("templateWrapper").addEventListener("mouseup", TRIANGLE.text.checkTextEditing, true); // if text is not being edited, destroy the dialogue
   document.getElementById("bottomMarker").addEventListener("mouseup", TRIANGLE.text.checkTextEditing, true); // if text is not being edited, destroy the dialogue
   document.body.addEventListener("mouseover", TRIANGLE.hoverBorder.hide, true); // remove hover border if not hovering
-  TRIANGLE.ecommerce.shipping.settings = TRIANGLE.savedShippingSetup;
-  TRIANGLE.ecommerce.shipping.loadSetup(TRIANGLE.ecommerce.shipping.settings);
 
   /*document.addEventListener("scroll", TRIANGLE.hoverBorder.hide);
   document.addEventListener("scroll", TRIANGLE.selectionBorder.update);

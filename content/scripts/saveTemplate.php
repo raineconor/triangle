@@ -4,9 +4,9 @@
   require "admin_check.php";
   require "sanitize_string.php";
   require "db_query.php";
-  
+
   if ($_SESSION["usertype"] != "admin" && db_query('SELECT COUNT(id) FROM templates WHERE username = ? AND page = ?', [$username, 'index'])["COUNT(id)"] >= 20) exit(1);
-  
+
   $templateName;
   $pageName;
   $content = $_POST["content"];
@@ -15,29 +15,25 @@
   //$content = preg_replace("#<script[^>]*>[\s\S]*<\/script>#i", "", $content);
   $globalStyle = $_POST["globalStyle"];
   $globalScript = $_POST["globalScript"];
-  $cartPage = $_POST["cartPage"];
-  $ecomItems = $_POST["ecomItems"] === "{}" ? "" : $_POST["ecomItems"];
-  $shippingSetup = $_POST["shippingSetup"] === "{}" ? "" : $_POST["shippingSetup"];
-  $businessID = intval(sanitize($_POST["busProfile"]));
   $instance = intval(sanitize($_POST["instance"]));
-  
+
   if (!empty($_POST["templateName"]) && isset($_POST["templateName"])) {
     $templateName = preg_replace("/[^\w\s\-]+/", "_", sanitize(substr($_POST["templateName"], 0, 32)));
   } else {
     $templateName = $_SESSION["currentTemplate"][$instance];
-  }  
-  
+  }
+
   if (!empty($_POST["pageName"]) && isset($_POST["pageName"])) {
     $pageName = preg_replace("/[^\w\s\-]+/", "_", sanitize(substr($_POST["pageName"], 0, 64)));
   } else {
     $pageName = $_SESSION["currentPage"][$instance];
   }
-  
+
   if (template_exists($username, $templateName)) {
     if (page_exists($username, $templateName, $pageName)) {
-      update_page($username, $templateName, $pageName, $content, $ecomItems);
+      update_page($username, $templateName, $pageName, $content);
     } else {
-      create_page($username, $templateName, $pageName, $content, $ecomItems);
+      create_page($username, $templateName, $pageName, $content);
     }
   } else {
     $currentTemplate = $_SESSION["currentTemplate"][$instance];
@@ -70,30 +66,18 @@
       }
     }
     if (page_exists($username, $templateName, $pageName)) {
-      update_page($username, $templateName, $pageName, $content, $ecomItems);
+      update_page($username, $templateName, $pageName, $content);
     } else {
-      create_page($username, $templateName, $pageName, $content, $ecomItems);
+      create_page($username, $templateName, $pageName, $content);
     }
   }
-  
+
   if ($globalTags = db_query('SELECT style_tag, script_tag FROM global_tags WHERE username = ? AND template = ?', [$username, $templateName])) {
     db_query('UPDATE global_tags SET style_tag = ?, script_tag = ? WHERE username = ? AND template = ?', [$globalStyle, $globalScript, $username, $templateName]);
   } else {
     db_query('INSERT INTO global_tags (username, template, style_tag, script_tag) VALUES (?, ?, ?, ?)', [$username, $templateName, $globalStyle, $globalScript]);
   }
   
-  create_cart_page($username, $templateName, $cartPage);
-  create_checkout_page($username, $templateName, $cartPage);
-  create_receipt_page($username, $templateName, $cartPage);
-  update_ecommerce_items($username, $templateName, $shippingSetup);
-  edit_business_profile($username, $templateName, $businessID);
-  
   // reset the current template/page
   $_SESSION["currentPage"][$instance] = $pageName;
   $_SESSION["currentTemplate"][$instance] = $templateName;
-
-
-
-
-
-

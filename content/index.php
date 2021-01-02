@@ -66,15 +66,6 @@
               . "</script>";
   }
 
-  $read_ecom = db_query('SELECT item_ids, shipping_setup FROM ecommerce_items WHERE username = ? AND template = ?', [$username, $templateName]);
-  if ($read_ecom) {
-    $ecomItems = !empty($read_ecom["item_ids"]) ? '[' . $read_ecom["item_ids"] . ']' : "[]";
-    $shipping_setup = !empty($read_ecom["shipping_setup"]) ? $read_ecom["shipping_setup"] : "{}";
-  } else {
-    $ecomItems = "[]";
-    $shipping_setup = "{}";
-  }
-
   $max_templates = "";
   if ($_SESSION["usertype"] != "admin" && $count_templates = db_query('SELECT COUNT(id) FROM templates WHERE username = ? AND page = ?', [$username, 'index'])) {
     if ($count_templates["COUNT(id)"] >= 20) $max_templates = '<script type="text/javascript">TRIANGLE.error("Warning", "You have reached the maximum template count of 20.<br>Saving to a new template will not be applied.");</script>';
@@ -111,7 +102,6 @@
     <div class="mainOption" id="opImages" onClick="TRIANGLE.menu.displaySubMenu('displayImages');">Images</div>
     <div class="mainOptionImmune" id="opPages" onClick="TRIANGLE.clearSelection();TRIANGLE.pages.loadPages('', 'menu');TRIANGLE.menu.openSideMenu('pagesMenuOptions');">Pages</div>
     <div class="mainOption" id="opPresetElements" onClick="TRIANGLE.menu.displaySubMenu('displayPremadeElements');"><!--Premade-->Library</div>
-    <!--<div class="mainOption" id="opEcommerce" onClick="TRIANGLE.menu.displaySubMenu('displayEcommerce');">Ecommerce</div>-->
     <!--<div class="mainOption" id="opEffects" onClick="TRIANGLE.menu.displaySubMenu('displayEffects');">Effects</div>-->
     <div class="mainOption" id="opDeveloper" onClick="TRIANGLE.menu.displaySubMenu('displayDeveloper');">Developer</div>
 
@@ -523,10 +513,16 @@
       <input type="text" id="fontColor"><br>
       Size:
       <input type="number" id="fontSize" min="0" onChange="TRIANGLE.text.changeFontSize();"><br>
+    </div>
+
+    <div class="menuSection">
+      <div class="menuSectionTitle">Style</div>
       Style:
       <div class="smSqBtn" onmousedown="TRIANGLE.text.bold();"><img src="images/opBoldText.svg"></div>
       <div class="smSqBtn" onmousedown="TRIANGLE.text.italic();"><img src="images/opItalicText.svg"></div>
       <div class="smSqBtn" onmousedown="TRIANGLE.text.underline();"><img src="images/opUnderlineText.svg"></div><br>
+      Weight:
+      <input type="text" id="fontWeight">
     </div>
 
     <div class="menuSection">
@@ -693,70 +689,6 @@
       <div class="menuSectionTitle">Premade Items</div>
       <div id="echoLibrary"></div>
     </div>-->
-  </div>
-
-  <!-- Ecommerce -->
-  <div class="subMenu" id="displayEcommerce">
-    <div class="subMenuOption" id="itemLibrary" onClick="TRIANGLE.menu.openSideMenu('libraryMenu');document.getElementById('library-Ecommerce').style.display = 'block';">
-      <div style="border:1px dotted gray;height:88px;">
-        <img class="optionImage" src="images/opInsertEcomItem.gif">
-      </div>
-      <div class="optionLabel" id="labelInsertEcomItem">New Item</div>
-    </div>
-
-    <div class="menuSection">
-      <div class="menuSectionTitle">Business Profile</div>
-      <select type="text" id="businessProfile" style="width:150px;">
-        <option selected="selected" value="0">-- Choose a Profile --</option>
-        <?php
-          $business_profiles = db_query_all('SELECT id, name FROM business_profiles WHERE username = ?',
-                                                                                    [$username]);
-          $business_html = "";
-          for ($x = 0; $x < count($business_profiles); $x++) {
-            $business_html .= '<option value="' . $business_profiles[$x]["id"] . '">'
-                            . $business_profiles[$x]["name"]
-                            . '</option>';
-          }
-          echo $business_html;
-        ?>
-      </select>
-    </div>
-
-    <div class="menuSection">
-      <div class="menuSectionTitle">Inventory Details</div>
-      Name:
-      <input type="text" id="ecomItemName" style="width:100px;" maxlength="32"><br>
-      SKU:
-      <span style="display:inline-block;text-align:center;width:20px;">#</span><input type="text" id="ecomItemID" style="width:80px;"><br>
-      Price:
-      <input type="text" id="ecomPrice" style="width:100px;"><br>
-      Stock:
-      <input type="text" id="ecomQuantity" style="width:100px;" maxlength="11">
-    </div>
-
-    <div class="menuSection">
-      <div class="menuSectionTitle">Description</div>
-      <textarea type="text" id="ecomDesc" style="width:250px;" onKeyUp="TRIANGLE.ecommerce.setDescription();"></textarea>
-    </div>
-
-    <div class="menuSection">
-      <div class="menuSectionTitle">Tax</div>
-      <input type="checkbox" id="ecomTax" onChange="TRIANGLE.saveItem.applyChanges();"> Charge Tax<br>
-      <br><br><br><br><br>
-    </div>
-
-    <div class="menuSection">
-      <div class="menuSectionTitle">Shipping</div>
-      <div class="menuDropdown" onClick="TRIANGLE.ecommerce.shipping.setup();">Shipping Setup</div><br>
-
-      <div id="USPSdropdowns" style="display:none;">
-        <div class="menuDropdown" onClick="TRIANGLE.ecommerce.shipping.USPSflatRate();">Flat Rate Options</div><br>
-        <div class="menuDropdown" onClick="TRIANGLE.ecommerce.shipping.USPSother();">Other Options</div>
-      </div>
-
-      <span id="shippingFeeLabel"></span>
-      <input type="text" id="ecomShipping" style="display:none;">
-    </div>
   </div>
 
   <!-- Effects -->
@@ -1131,8 +1063,7 @@
   </div>
 
   <div class="sideSubMenu" id="saveMenuOptions">
-    <span class="sideMenuTitle">Save</span>
-    <hr>
+    <span class="sideMenuH1">Save</span>
     <div class="saveMenuOption">
       <img class="sideMenuIcon" src="images/save-current-template.gif" onClick="TRIANGLE.clearSelection();TRIANGLE.saveTemplate.saveCurrent();" id="saveCurrentTemplate"> Save over current file
     </div>
@@ -1151,19 +1082,16 @@
   </div>
 
   <div class="sideSubMenu" id="openMenuOptions">
-    <span class="sideMenuTitle">Open</span>
-    <hr>
+    <span class="sideMenuH1">Open</span>
     <div class="sideMenuOption" style="display:none;">
       <img class="sideMenuIcon" src="images/opImportSite.svg" onClick="TRIANGLE.popUp.open('importWebsiteCell');TRIANGLE.menu.closeSideMenu();document.getElementById('importWebsiteURL').focus();"> Import Website (Beta)
     </div>
-    <h3>My Templates</h3>
-    <hr>
+    <span class="sideMenuH2">My Templates</span>
     <div id="echoLoadList"></div>
   </div>
 
   <div class="sideSubMenu" id="pagesMenuOptions">
-    <span class="sideMenuTitle">Pages</span>
-    <hr>
+    <span class="sideMenuH1">Pages</span>
     <div class="sideMenuListItem" onClick="document.getElementById('createNewPage').style.display = 'block';document.getElementById('newPageNameInput').focus();">+ New Page</div>
     <div id="createNewPage" style="display:none;">
       <div id="cancelNewPage" onClick="document.getElementById('createNewPage').style.display = 'none';document.getElementById('newPageNameInput').value = '';">&#8864;</div>
@@ -1177,28 +1105,25 @@
   </div>
 
   <div class="sideSubMenu" id="imageLibraryMenu">
-    <span class="sideMenuTitle">Images</span>
-    <hr>
+    <span class="sideMenuH1">Images</span>
 
     <div id="echoImageList"></div>
   </div>
 
   <div class="sideSubMenu" id="userItemMenu">
-    <span class="sideMenuTitle">My Items</span>
-    <hr>
-    <h3>IDs</h3>
-    <hr>
+    <span class="sideMenuH1">My Items</span>
+    <span class="sideMenuH3">IDs</span>
     <div id="echoUserLibrary">
       <div id="echoUserIDs"></div>
-      <h3>Classes</h3>
-      <hr>
+      <br>
+      <br>
+      <span class="sideMenuH3">Classes</span>
       <div id="echoUserClasses"></div>
     </div>
   </div>
 
   <div class="sideSubMenu" id="libraryMenu">
-    <span class="sideMenuTitle">Library</span>
-    <hr>
+    <span class="sideMenuH1">Library</span>
 
     <div id="echoPremadeTemplates">
       <div class="sideMenuListItem" onclick="TRIANGLE.menu.displayLibraryCategory('library-Templates');">Premade Templates</div>
@@ -1216,12 +1141,12 @@
   </div>
 
   <!--<div class="sideSubMenu" id="openMenuOptions">
-    <span class="sideMenuTitle">Open</span>
+    <span class="sideMenuH1">Open</span>
     <hr>
 
     <div id="echoLoadList"></div>
 
-    <span class="sideMenuTitle">Pages</span>
+    <span class="sideMenuH1">Pages</span>
     <hr>
 
     <div id="echoPageList"></div>
@@ -1345,117 +1270,6 @@
       <button id="confirmDeletePageBtn">Delete</button><button onClick="TRIANGLE.popUp.close();">Cancel</button>
     </div>
   </div>
-  <!-- Shipping Setup -->
-  <div class="popUp" id="shippingCell" style="display:none">
-    <div class="popUpInner" id="shippingSetup">
-      <h3>Shipping Setup</h3>
-      Choose a shipping option:<br>
-      <div id="shippingType">
-        <input type="radio" name="shippingTypeRadio" value="auto" onChange="TRIANGLE.ecommerce.shipping.type(this);"> USPS
-        <input type="radio" name="shippingTypeRadio" value="custom" onChange="TRIANGLE.ecommerce.shipping.type(this);"> Custom
-      </div>
-      <br>
-      <div id="askHandling" style="display:none;">
-        Add a handling fee?<br>
-        <input type="radio" name="askHandlingRadio" value="yes" onChange="TRIANGLE.ecommerce.shipping.handling(this);"> Yes
-        <input type="radio" name="askHandlingRadio" value="no" onChange="TRIANGLE.ecommerce.shipping.handling(this);"> No
-
-        <br><br>
-        <div id="askPerOrder" style="display:none;">
-          Charge handling per order, or per item?<br>
-          <input type="radio" name="askPerOrderRadio" value="order" onChange="TRIANGLE.ecommerce.shipping.perOrderItem(this);"> Per Order
-          <input type="radio" name="askPerOrderRadio" value="item" onChange="TRIANGLE.ecommerce.shipping.perOrderItem(this);"> Per Item
-
-          <br><br>
-          <div id="getPerOrderFee" style="display:none;">
-            Handling Fee: $ <input type="text" size="7" maxlength="12" id="handlingFee">
-          </div>
-        </div>
-      </div>
-      <div id="getCustomFee" style="display:none;">
-        Shipping Fee: $ <input type="text" size="7" maxlength="12" id="customFee">
-      </div>
-      <br>
-      <button onClick="TRIANGLE.ecommerce.shipping.applySetup();">Apply</button>
-      <button onClick="TRIANGLE.ecommerce.shipping.cancelSetup();">Cancel</button>
-    </div>
-  </div>
-  <!-- USPS Flat Rate -->
-  <div class="popUp" id="USPSflatRateCell" style="display:none">
-    <div class="popUpInner" id="USPSflatRateOptions">
-      <h3>USPS Flat Rate Options</h3>
-      <a href="https://postcalc.usps.com/" target="_blank">Click here for more information about USPS options</a>
-
-      <div style="margin-top:20px;">
-        Choose a flat rate service:<br>
-        <select id="USPSflatRateSelect" style="margin:10px 0;" onChange="TRIANGLE.ecommerce.shipping.flatRateSelect();">
-          <option value="0" selected>-- Select a Service --</option>
-          <option value="PRIORITY MAIL EXPRESS,FLAT RATE ENVELOPE">Priority Mail Express Flat Rate Envelope</option>
-          <option value="PRIORITY MAIL EXPRESS,LEGAL FLAT RATE ENVELOPE">Priority Mail Express Legal Flat Rate Envelope</option>
-          <option value="PRIORITY MAIL EXPRESS,PADDED FLAT RATE ENVELOPE">Priority Mail Express Padded Flat Rate Envelope</option>
-          <option value="PRIORITY,LG FLAT RATE BOX">Priority Mail Large Flat Rate Box</option>
-          <option value="PRIORITY,MD FLAT RATE BOX">Priority Mail Medium Flat Rate Box</option>
-          <option value="PRIORITY,SM FLAT RATE BOX">Priority Mail Small Flat Rate Box</option>
-          <option value="PRIORITY,FLAT RATE ENVELOPE">Priority Mail Flat Rate Envelope</option>
-          <option value="PRIORITY,LEGAL FLAT RATE ENVELOPE">Priority Mail Legal Flat Rate Envelope</option>
-          <option value="PRIORITY,PADDED FLAT RATE ENVELOPE">Priority Mail Padded Flat Rate Envelope</option>
-          <option value="PRIORITY,GIFT CARD FLAT RATE ENVELOPE">Priority Mail Gift Card Flat Rate Envelope</option>
-          <option value="PRIORITY,SM FLAT RATE ENVELOPE">Priority Mail Small Flat Rate Envelope</option>
-          <option value="PRIORITY,WINDOW FLAT RATE ENVELOPE">Priority Mail Window Flat Rate Envelope</option>
-        </select>
-      </div>
-
-      <br>
-      <button onClick="TRIANGLE.ecommerce.shipping.applyUSPS();">Apply</button>
-      <button onClick="TRIANGLE.popUp.close();">Cancel</button>
-    </div>
-  </div>
-  <!-- USPS Other -->
-  <div class="popUp" id="USPSotherOptionsCell" style="display:none">
-    <div class="popUpInner" id="USPSotherOptions">
-      <h3>USPS Other Options</h3>
-      <a href="https://postcalc.usps.com/" target="_blank">Click here for more information about USPS options</a>
-
-      <div style="margin-top:20px;">
-        Choose a shape:<br>
-        <select id="USPSshapeSelect" style="margin:10px 0;" onChange="TRIANGLE.ecommerce.shipping.askWeight();">
-          <option value="0" selected>-- Select a Shape --</option>
-          <option value="FIRST CLASS,POSTCARD">Postcard</option>
-          <option value="FIRST CLASS,LETTER">Letter</option>
-          <option value="FIRST CLASS,FLAT">Large Envelope</option>
-          <option value="FIRST CLASS,PARCEL,REGULAR">Package</option>
-          <option value="FIRST CLASS,PARCEL,LARGE">Large Package (over 12 inches)</option>
-        </select>
-      </div>
-
-      <div id="USPSweight" style="display:none;">
-        <br>
-        Weight:<br>
-        <div style="margin:10px 0;">
-          Pounds: <input type="text" size="7" id="USPSpounds">
-          Ounces: <input type="text" size="7" id="USPSounces">
-        </div>
-
-        <div id="USPSdimensions" style="display:none;">
-          <br>
-          <input type="radio" name="packageRect" value="RECTANGULAR" checked="checked"> Rectangular/Square
-          <input type="radio" name="packageRect" value="NONRECTANGULAR"> Non-Rectangular
-          <br><br>
-          Dimensions (inches):<br>
-          <div style="margin:10px 0;">
-            Length (longest side): <input type="text" size="7" id="USPSlength">
-            Width: <input type="text" size="7" id="USPSwidth">
-            Height: <input type="text" size="7" id="USPSheight">
-          </div>
-        </div>
-      </div>
-
-      <br>
-      <button onClick="TRIANGLE.ecommerce.shipping.applyUSPS();">Apply</button>
-      <button onClick="TRIANGLE.popUp.close();">Cancel</button>
-    </div>
-  </div>
-
 </div>
 
 <div id="cropImageMenu" style="display:none;" class="no-select">
@@ -1486,12 +1300,24 @@ var TRIANGLE = TRIANGLE || {};
 TRIANGLE.enable = {
   animations : true
 };
-TRIANGLE.ecomItems = <?php echo $ecomItems; ?>;
-//console.log(TRIANGLE.ecomItems);
 TRIANGLE.savedShippingSetup = <?php echo $shipping_setup; ?>;
 //console.log(TRIANGLE.savedShippingSetup);
 TRIANGLE.instance = parseInt(<?php echo $instanceNumber; ?>);
 console.log(TRIANGLE.instance);
+
+document.getElementById("echoImageList").addEventListener("scroll", lazyload);
+function lazyload() {
+  var images = document.querySelectorAll('img[lazyload]');
+  var screenHeight = window.innerHeight;
+  for (var i = 0; i < images.length; i++) {
+    if (images[i].getBoundingClientRect().top < screenHeight + 600) {
+      images[i].src = images[i].getAttribute("lazyload");
+      images[i].removeAttribute("lazyload");
+    }
+  }
+}
+lazyload();
+
 </script>
 <script type="text/javascript" src="scripts/AJAX.js"></script>
 <script type="text/javascript" src="scripts/TRIANGLE<?php if ($_SERVER["HTTP_HOST"] === "trianglecms.com" || $_SERVER["HTTP_HOST"] === "www.trianglecms.com") echo str_replace(".", "", $latestVersion); ?>.<?php if ($_SERVER["HTTP_HOST"] === "trianglecms.com" || $_SERVER["HTTP_HOST"] === "www.trianglecms.com") echo "min."; ?>js"></script>

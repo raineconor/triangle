@@ -24,7 +24,7 @@ function formatCode($data, $templateName, $pageName, $compress = false, $cropped
   $deferFonts = "";
   if (!empty($data["fontData"]) && $data["fontData"] !== "") {
     $fonts = "<!--========= Font Include: =========-->\n"
-           . "<link rel='preconnect' href='https://fonts.gstatic.com'>"
+           . "<link rel='preconnect' href='https://fonts.gstatic.com'>\n"
            . str_replace("><", ">\n<", trim(str_replace("href=\"", "defer=\"", $data["fontData"])))
            . "\n<!--=================================-->\n";
     $deferFonts = "<script type=\"text/javascript\">\n" . file_get_contents(__DIR__ . "/../resources/lazyload/defer.js") . "\n</script>\n\n";
