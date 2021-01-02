@@ -149,6 +149,17 @@
       <input type="checkbox" id="exportCompress" no-clear="true"> Compress code for faster loading
     </div>
 
+    <?php
+    if ($_SESSION["usertype"] === "admin") {
+      echo '<div class="subMenuOption" id="exportLibraryItemCode" onClick="TRIANGLE.saveItem.exportLibraryItemCode();">
+        <div style="border:1px dotted gray;height:88px;">
+          <img class="optionImage" src="images/opExportRaw.gif">
+        </div>
+        <div class="optionLabel" id="labelExportLibraryItemCode">Library Item</div>
+      </div>';
+    }
+    ?>
+
     <div style="clear:both;"></div>
   </div>
 
@@ -1309,13 +1320,12 @@ function lazyload() {
   var images = document.querySelectorAll('img[lazyload]');
   var screenHeight = window.innerHeight;
   for (var i = 0; i < images.length; i++) {
-    if (images[i].getBoundingClientRect().top < screenHeight + 600) {
+    if (images[i].getBoundingClientRect().top < screenHeight + 300) {
       images[i].src = images[i].getAttribute("lazyload");
       images[i].removeAttribute("lazyload");
     }
   }
-}
-lazyload();
+};
 
 </script>
 <script type="text/javascript" src="scripts/AJAX.js"></script>

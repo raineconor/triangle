@@ -4,7 +4,7 @@
   require "getDirectory.php";
   require "db_query.php";
 
-  $categories = ["Test", "Headers", "Buttons", "Forms"];
+  $categories = ["Test", "Headers", "Sections", "Buttons", "Forms"];
   $html = '';
   $error = "No items listed.";
 

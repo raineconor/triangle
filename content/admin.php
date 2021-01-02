@@ -44,7 +44,7 @@
 <div id="container-fluid" style="padding:0;">
   <header>
     <img id="dashboard-logo" src="images/blue-triangle-small.png">
-    <span style="font-weight:700;color:#333333;font-size:22px;padding-left:5px;">Triangle</span>
+    <span style="font-weight:700;color:#222222;font-size:22px;padding-left:5px;">Triangle</span>
   </header>
 
   <div id="left-column">
@@ -56,10 +56,10 @@
     <a class="left-col-btn" href="#" onClick="toggleMenu('myImages');lazyload();">My Images</a>
     <a class="left-col-btn" href="#" onClick="toggleMenu('myFonts')">My Fonts</a>
     <!--<a class="left-col-btn" href="#" onClick="">Community</a>-->
-    <!--<a class="left-col-btn" href="#" onClick="toggleMenu('news')">News</a>-->
     <!--<a class="left-col-btn" href="index.php" target="_blank">Blank Editor</a>-->
     <a class="left-col-btn" href="#" onClick="toggleMenu('ftpProfiles')">FTP Profiles</a>
     <a class="left-col-btn" href="#" onClick="toggleMenu('settings')">Settings</a>
+    <a class="left-col-btn" href="#" onClick="toggleMenu('news')">News</a>
     <a class="left-col-btn" href="logout.php">Logout</a>
 
     <div id="version">
@@ -234,10 +234,28 @@
     <h2>News</h2>
     <hr>
 
-    <h3>Triangle Version 1.02 Beta Under Construction</h3>
-    The next version, 1.02 Beta, is now in development.
+    <h3>December 31, 2020</h3>
+    <h3>Triangle Version 1.01.42 launched</h3>
+    Version 1.01.42 is live, mainly containing quality of life updates and user interface styling. The summary of changes is as follows:
+    <ul>
+      <li>The login page has been moved to the Triangle homepage</li>
+      <li>The dashboard is now sporting a new color scheme and button animations</li>
+      <li>The template editor is also sporting a new color scheme and button animations</li>
+      <li>Vertically aligning template items now makes use of the flex property instead of table-cells</li>
+      <li>Font weight has been added to the text tab in the template editor menu, under a new "Style" category</li>
+      <li>The images side menu now lazy-loads images while scrolling</li>
+      <li>The template editor now scrolls with you as you shift items up and down the page</li>
+      <li>Various minor bug fixes</li>
+    </ul>
+    Upcoming changes include an expansion to the item library, ability to delete FTP profiles, a redesign of the FTP profiles menu, and an expanded font list.
     <hr>
 
+    <!--<h3>June 20, 2016</h3>
+    <h3>User Classes</h3>
+    Various bug fixes, and user classes have been added. Items with the same class name as specified under the library tab in the editor menu will all update, if one is updated.
+    <hr>-->
+
+    <h3>May 18, 2016</h3>
     <h3>Triangle Version 1.01 Completed</h3>
     The first version of Triangle has officially been completed.
     <hr>

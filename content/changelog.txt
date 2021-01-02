@@ -974,7 +974,7 @@
 
 - began transferring from a flatfile database system to mySQL
 - added db_query.php
-- added session vairable "email", which is defined upon login, and used in createPostForms.php
+- added session variable "email", which is defined upon login, and used in createPostForms.php
 - defined the maximum length for username, password, template names, page names, and use class names
   as 32 characters
 - added an optional max length integer parameter to the sanitize string function
@@ -1056,7 +1056,7 @@
 07/25/16
 
 - fixed a bug where URLs were being split in the CSS formatting function in JSONtoHTML.php
-- 1's aand 0's are now passed as boolean values in POST and GET data in order to boolval them
+- 1's and 0's are now passed as boolean values in POST and GET data in order to boolval them
 - text boxes that are editable now have a dashed border
 - inserting a textbox now checks if the background is black and adjusts the font color accordingly
 
@@ -1344,7 +1344,7 @@
 - underline is now removed when deleting hyperlinks
 - user classes are now insertable from the side menu with My Items
 - hyperlinks on images are now displayed as the mouse label
-- began converting mennu icons to SVG
+- began converting menu icons to SVG
 - added margin dragging
 
 09/09/16
@@ -1398,7 +1398,7 @@
 
 12/14/16
 
-- added a limit of 100 templates loaded from the database to administator accounts
+- added a limit of 100 templates loaded from the database to administrator accounts
 - added a larger and more convenient code editor
 - added support for inserting tabs into textareas
 - disabled browser spellchecking on text input elements

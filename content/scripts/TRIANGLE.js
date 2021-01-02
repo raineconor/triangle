@@ -24,7 +24,7 @@ TRIANGLE.images = {
 load : function loadImages() {
   AJAX.get("scripts/imageList.php", "", function(xmlhttp) {
     document.getElementById("echoImageList").innerHTML = xmlhttp.responseText;
-    lazyload();
+    //lazyload();
   });
 },
 
@@ -2364,6 +2364,7 @@ blank : function blankTemplate() {
   document.getElementById("fontData").style.backgroundColor = "#FFFFFF";
   TRIANGLE.colors.updateBodyBg();
   //checkBottomMarker();
+  TRIANGLE.clearSelection();
 },
 
 increaseOpacity : function() {
@@ -3780,170 +3781,168 @@ showHandles : function showResizeHandles() {
   if (TRIANGLE.item.display !== "table-cell"
   && !TRIANGLE.item.objRef.isContentEditable) { // find flag
 
-  var handleWidth = 8;
-  var handleHeight = 8;
-  var overflowGap = TRIANGLE.scrollbarWidth;
-  var rect = TRIANGLE.item.objRef.getBoundingClientRect();
-  var selBorder = document.getElementById("selectionBorder");
-  var classType = "resizeHandle";
-  var marginClass = "marginHandle";
-  var isImage = TRIANGLE.isType.imageItem(TRIANGLE.item.objRef);
+    var handleWidth = 8;
+    var handleHeight = 8;
+    var overflowGap = TRIANGLE.scrollbarWidth;
+    var rect = TRIANGLE.item.objRef.getBoundingClientRect();
+    var selBorder = document.getElementById("selectionBorder");
+    var classType = "resizeHandle";
+    var marginClass = "marginHandle";
+    var isImage = TRIANGLE.isType.imageItem(TRIANGLE.item.objRef);
 
-  //================================================================================================
+    //================================================================================================
 
-  var topMid = document.createElement("div");
-  topMid.style.width = handleWidth + "px";
-  topMid.style.height = handleHeight + "px";
-  topMid.style.cursor = "row-resize";
-  topMid.className = marginClass;
-  topMid.style.top = rect.top - handleHeight / 2 - 2 + "px";
-  topMid.style.left = rect.left + (rect.width / 2 - handleWidth / 2) + "px";
-  selBorder.appendChild(topMid);
-  topMid.addEventListener("mouseover", TRIANGLE.resize.margin.top);
-  topMid.addEventListener("mousedown", TRIANGLE.resize.margin.initiate);
+    var topMid = document.createElement("div");
+    topMid.style.width = handleWidth + "px";
+    topMid.style.height = handleHeight + "px";
+    topMid.style.cursor = "row-resize";
+    topMid.className = marginClass;
+    topMid.style.top = rect.top - handleHeight / 2 - 2 + "px";
+    topMid.style.left = rect.left + (rect.width / 2 - handleWidth / 2) + "px";
+    selBorder.appendChild(topMid);
+    topMid.addEventListener("mouseover", TRIANGLE.resize.margin.top);
+    topMid.addEventListener("mousedown", TRIANGLE.resize.margin.initiate);
 
-  if (!isImage) {
-    var botMid = document.createElement("div");
-    botMid.style.width = handleWidth + "px";
-    botMid.style.height = handleHeight + "px";
-    botMid.style.cursor = "s-resize";
-    botMid.className = classType;
-    botMid.style.top = rect.bottom - 2 + "px";
-    botMid.style.left = rect.left + (rect.width / 2 - handleWidth / 2) + "px";
-    selBorder.appendChild(botMid);
-    //isImage ? botMid.addEventListener("mouseover", TRIANGLE.resize.XY) : botMid.addEventListener("mouseover", TRIANGLE.resize.Y);
-    botMid.addEventListener("mouseover", TRIANGLE.resize.Y);
-    botMid.addEventListener("mousedown", TRIANGLE.resize.initiate);
-  }
+    if (!isImage) {
+      var botMid = document.createElement("div");
+      botMid.style.width = handleWidth + "px";
+      botMid.style.height = handleHeight + "px";
+      botMid.style.cursor = "s-resize";
+      botMid.className = classType;
+      botMid.style.top = rect.bottom - 2 + "px";
+      botMid.style.left = rect.left + (rect.width / 2 - handleWidth / 2) + "px";
+      selBorder.appendChild(botMid);
+      //isImage ? botMid.addEventListener("mouseover", TRIANGLE.resize.XY) : botMid.addEventListener("mouseover", TRIANGLE.resize.Y);
+      botMid.addEventListener("mouseover", TRIANGLE.resize.Y);
+      botMid.addEventListener("mousedown", TRIANGLE.resize.initiate);
 
-  if (isImage) {
+    } else {
 
-    if (TRIANGLE.item.align != "right") {
-      var topRight = document.createElement("div");
-      topRight.style.width = handleWidth + "px";
-      topRight.style.height = handleHeight + "px";
-      topRight.style.cursor = "ne-resize";
-      topRight.className = classType;
-      topRight.style.top = rect.top - handleHeight + 2 + "px";
+      if (TRIANGLE.item.align != "right") {
+        var topRight = document.createElement("div");
+        topRight.style.width = handleWidth + "px";
+        topRight.style.height = handleHeight + "px";
+        topRight.style.cursor = "ne-resize";
+        topRight.className = classType;
+        topRight.style.top = rect.top - handleHeight + 2 + "px";
+        if (rect.right >= window.innerWidth - overflowGap) {
+          topRight.style.left = window.innerWidth - overflowGap - handleWidth + "px";
+        } else {
+          topRight.style.left = rect.right - 2 + "px";
+        }
+        selBorder.appendChild(topRight);
+        topRight.addEventListener("mouseover", TRIANGLE.resize.XY);
+        topRight.addEventListener("mousedown", TRIANGLE.resize.initiate);
+
+        var botRight = document.createElement("div");
+        botRight.style.width = handleWidth + "px";
+        botRight.style.height = handleHeight + "px";
+        botRight.style.cursor = "se-resize";
+        botRight.className = classType;
+        botRight.style.top = rect.bottom - 2 + "px";
+        if (rect.right >= window.innerWidth - overflowGap) {
+          botRight.style.left = window.innerWidth - overflowGap - handleWidth + "px";
+        } else {
+          botRight.style.left = rect.right - 2 + "px";
+        }
+        selBorder.appendChild(botRight);
+        botRight.addEventListener("mouseover", TRIANGLE.resize.XY);
+        botRight.addEventListener("mousedown", TRIANGLE.resize.initiate);
+      } else {
+        var topLeft = document.createElement("div");
+        topLeft.style.width = handleWidth + "px";
+        topLeft.style.height = handleHeight + "px";
+        topLeft.style.cursor = "nw-resize";
+        topLeft.className = classType;
+        topLeft.style.top = rect.top - handleHeight + 2 + "px";
+        if (rect.left <= 0) {
+          topLeft.style.left = 5 + "px";
+        } else {
+          topLeft.style.left = rect.left - handleWidth / 2 - 2 + "px";
+        }
+        selBorder.appendChild(topLeft);
+        topLeft.addEventListener("mouseover", TRIANGLE.resize.XY);
+        topLeft.addEventListener("mousedown", TRIANGLE.resize.initiate);
+
+        var botLeft = document.createElement("div");
+        botLeft.style.width = handleWidth + "px";
+        botLeft.style.height = handleHeight + "px";
+        botLeft.style.cursor = "sw-resize";
+        botLeft.className = classType;
+        botLeft.style.top = rect.bottom - 2 + "px";
+        if (rect.left <= 0) {
+          botLeft.style.left = 5 + "px";
+        } else {
+          botLeft.style.left = rect.left - handleWidth / 2 - 2 + "px";
+        }
+        selBorder.appendChild(botLeft);
+        botLeft.addEventListener("mouseover", TRIANGLE.resize.XY);
+        botLeft.addEventListener("mousedown", TRIANGLE.resize.initiate);
+      }
+    }
+
+    if (TRIANGLE.item.align !== "right") {
+      var rightMid = document.createElement("div");
+      rightMid.style.width = handleWidth + "px";
+      rightMid.style.height = handleHeight + "px";
+      rightMid.style.cursor = "e-resize";
+      rightMid.className = classType;
+      rightMid.style.top = rect.top + (rect.height / 2 - handleHeight / 2) + "px";
       if (rect.right >= window.innerWidth - overflowGap) {
-        topRight.style.left = window.innerWidth - overflowGap - handleWidth + "px";
+        rightMid.style.left = window.innerWidth - overflowGap - handleWidth + "px";
       } else {
-        topRight.style.left = rect.right - 2 + "px";
+        rightMid.style.left = rect.right - 2 + "px";
       }
-      selBorder.appendChild(topRight);
-      topRight.addEventListener("mouseover", TRIANGLE.resize.XY);
-      topRight.addEventListener("mousedown", TRIANGLE.resize.initiate);
+      selBorder.appendChild(rightMid);
+      isImage ? rightMid.addEventListener("mouseover", TRIANGLE.resize.XY) : rightMid.addEventListener("mouseover", TRIANGLE.resize.X);
+      rightMid.addEventListener("mousedown", TRIANGLE.resize.initiate);
 
-      var botRight = document.createElement("div");
-      botRight.style.width = handleWidth + "px";
-      botRight.style.height = handleHeight + "px";
-      botRight.style.cursor = "se-resize";
-      botRight.className = classType;
-      botRight.style.top = rect.bottom - 2 + "px";
+      var leftMid = document.createElement("div");
+      leftMid.style.width = handleWidth + "px";
+      leftMid.style.height = handleHeight + "px";
+      leftMid.style.cursor = "col-resize";
+      leftMid.className = marginClass;
+      leftMid.style.top = rect.top + (rect.height / 2 - handleHeight / 2) + "px";
+      if (rect.left <= 0) {
+        leftMid.style.left = 5 + "px";
+      } else {
+        leftMid.style.left = rect.left - handleWidth / 2 - 2 + "px";
+      }
+      selBorder.appendChild(leftMid);
+      leftMid.addEventListener("mouseover", TRIANGLE.resize.margin.left);
+      leftMid.addEventListener("mousedown", TRIANGLE.resize.margin.initiate);
+
+    } else {
+      var leftMid = document.createElement("div");
+      leftMid.style.width = handleWidth + "px";
+      leftMid.style.height = handleHeight + "px";
+      leftMid.style.cursor = "e-resize";
+      leftMid.className = classType;
+      leftMid.style.top = rect.top + (rect.height / 2 - handleHeight / 2) + "px";
+      if (rect.left <= 0) {
+        leftMid.style.left = 5 + "px";
+      } else {
+        leftMid.style.left = rect.left - handleWidth / 2 - 2 + "px";
+      }
+      selBorder.appendChild(leftMid);
+      isImage ? leftMid.addEventListener("mouseover", TRIANGLE.resize.XY) : leftMid.addEventListener("mouseover", TRIANGLE.resize.X);
+      leftMid.addEventListener("mousedown", TRIANGLE.resize.initiate);
+
+      var rightMid = document.createElement("div");
+      rightMid.style.width = handleWidth + "px";
+      rightMid.style.height = handleHeight + "px";
+      rightMid.style.cursor = "col-resize";
+      rightMid.className = marginClass;
+      rightMid.style.top = rect.top + (rect.height / 2 - handleHeight / 2) + "px";
       if (rect.right >= window.innerWidth - overflowGap) {
-        botRight.style.left = window.innerWidth - overflowGap - handleWidth + "px";
+        rightMid.style.left = window.innerWidth - overflowGap - handleWidth + "px";
       } else {
-        botRight.style.left = rect.right - 2 + "px";
+        rightMid.style.left = rect.right - 2 + "px";
       }
-      selBorder.appendChild(botRight);
-      botRight.addEventListener("mouseover", TRIANGLE.resize.XY);
-      botRight.addEventListener("mousedown", TRIANGLE.resize.initiate);
-    } else {
-      var topLeft = document.createElement("div");
-      topLeft.style.width = handleWidth + "px";
-      topLeft.style.height = handleHeight + "px";
-      topLeft.style.cursor = "nw-resize";
-      topLeft.className = classType;
-      topLeft.style.top = rect.top - handleHeight + 2 + "px";
-      if (rect.left <= 0) {
-        topLeft.style.left = 5 + "px";
-      } else {
-        topLeft.style.left = rect.left - handleWidth / 2 - 2 + "px";
-      }
-      selBorder.appendChild(topLeft);
-      topLeft.addEventListener("mouseover", TRIANGLE.resize.XY);
-      topLeft.addEventListener("mousedown", TRIANGLE.resize.initiate);
-
-      var botLeft = document.createElement("div");
-      botLeft.style.width = handleWidth + "px";
-      botLeft.style.height = handleHeight + "px";
-      botLeft.style.cursor = "sw-resize";
-      botLeft.className = classType;
-      botLeft.style.top = rect.bottom - 2 + "px";
-      if (rect.left <= 0) {
-        botLeft.style.left = 5 + "px";
-      } else {
-        botLeft.style.left = rect.left - handleWidth / 2 - 2 + "px";
-      }
-      selBorder.appendChild(botLeft);
-      botLeft.addEventListener("mouseover", TRIANGLE.resize.XY);
-      botLeft.addEventListener("mousedown", TRIANGLE.resize.initiate);
+      selBorder.appendChild(rightMid);
+      rightMid.addEventListener("mouseover", TRIANGLE.resize.margin.right);
+      rightMid.addEventListener("mousedown", TRIANGLE.resize.margin.initiate);
     }
-  }
-
-  if (TRIANGLE.item.align !== "right") {
-    var rightMid = document.createElement("div");
-    rightMid.style.width = handleWidth + "px";
-    rightMid.style.height = handleHeight + "px";
-    rightMid.style.cursor = "e-resize";
-    rightMid.className = classType;
-    rightMid.style.top = rect.top + (rect.height / 2 - handleHeight / 2) + "px";
-    if (rect.right >= window.innerWidth - overflowGap) {
-      rightMid.style.left = window.innerWidth - overflowGap - handleWidth + "px";
-    } else {
-      rightMid.style.left = rect.right - 2 + "px";
-    }
-    selBorder.appendChild(rightMid);
-    isImage ? rightMid.addEventListener("mouseover", TRIANGLE.resize.XY) : rightMid.addEventListener("mouseover", TRIANGLE.resize.X);
-    rightMid.addEventListener("mousedown", TRIANGLE.resize.initiate);
-
-    var leftMid = document.createElement("div");
-    leftMid.style.width = handleWidth + "px";
-    leftMid.style.height = handleHeight + "px";
-    leftMid.style.cursor = "col-resize";
-    leftMid.className = marginClass;
-    leftMid.style.top = rect.top + (rect.height / 2 - handleHeight / 2) + "px";
-    if (rect.left <= 0) {
-      leftMid.style.left = 5 + "px";
-    } else {
-      leftMid.style.left = rect.left - handleWidth / 2 - 2 + "px";
-    }
-    selBorder.appendChild(leftMid);
-    leftMid.addEventListener("mouseover", TRIANGLE.resize.margin.left);
-    leftMid.addEventListener("mousedown", TRIANGLE.resize.margin.initiate);
-
-  } else {
-    var leftMid = document.createElement("div");
-    leftMid.style.width = handleWidth + "px";
-    leftMid.style.height = handleHeight + "px";
-    leftMid.style.cursor = "e-resize";
-    leftMid.className = classType;
-    leftMid.style.top = rect.top + (rect.height / 2 - handleHeight / 2) + "px";
-    if (rect.left <= 0) {
-      leftMid.style.left = 5 + "px";
-    } else {
-      leftMid.style.left = rect.left - handleWidth / 2 - 2 + "px";
-    }
-    selBorder.appendChild(leftMid);
-    isImage ? leftMid.addEventListener("mouseover", TRIANGLE.resize.XY) : leftMid.addEventListener("mouseover", TRIANGLE.resize.X);
-    leftMid.addEventListener("mousedown", TRIANGLE.resize.initiate);
-
-    var rightMid = document.createElement("div");
-    rightMid.style.width = handleWidth + "px";
-    rightMid.style.height = handleHeight + "px";
-    rightMid.style.cursor = "col-resize";
-    rightMid.className = marginClass;
-    rightMid.style.top = rect.top + (rect.height / 2 - handleHeight / 2) + "px";
-    if (rect.right >= window.innerWidth - overflowGap) {
-      rightMid.style.left = window.innerWidth - overflowGap - handleWidth + "px";
-    } else {
-      rightMid.style.left = rect.right - 2 + "px";
-    }
-    selBorder.appendChild(rightMid);
-    rightMid.addEventListener("mouseover", TRIANGLE.resize.margin.right);
-    rightMid.addEventListener("mousedown", TRIANGLE.resize.margin.initiate);
-  }
-
 
   }
 },
@@ -5535,6 +5534,12 @@ createAnimation : function createAnimation(styleType, originalStyle, styleValue,
   }
 },
 
+exportLibraryItemCode : function exportLibraryItemCode() {
+  if (TRIANGLE.item) {
+    alert(TRIANGLE.item.objRef.outerHTML);
+  }
+}
+
 
 } // end TRIANGLE.saveItem
 
@@ -6698,29 +6703,12 @@ itemAlignRight : function itemAlignRight() {
 
 verticalMiddle : function verticalMiddle() {
   var item = TRIANGLE.item;
-  if (item.display == "table-cell"
-  || item.parent.style.display == "table-cell"
-  || item.parent.getAttribute("id") == "template") {
+  if (item.parent.getAttribute("id") == "template") {
     return;
   }
 
   TRIANGLE.selectionBorder.remove();
   TRIANGLE.checkPadding(item.parent);
-  /*item.parent.style.display = "table";
-  item.parent.style.height = item.parent.style.minHeight;
-
-  var tableCell = document.createElement("div");
-  tableCell.style.display = "table-cell";
-  tableCell.style.verticalAlign = "middle";
-  tableCell.style.backgroundColor = "inherit";
-  tableCell.style.width = "100%";
-  tableCell.style.minHeight = "auto";
-  tableCell.style.height = "auto";
-  tableCell.className = "templateItem childItem";
-  tableCell.innerHTML = item.parent.innerHTML;*/
-
-  /*item.parent.removeChild(item.objRef);
-  item.parent.innerHTML = "";*/
 
   item.parent.style.display = "flex";
   item.parent.style.alignItems = "center";
@@ -6765,6 +6753,9 @@ itemAlignDefault : function() {
     table.removeChild(tableCell);
     table.innerHTML += cloneChildren;
     table.style.display = "block";
+  } else if (TRIANGLE.item.parent.style.display === "flex") {
+    TRIANGLE.item.parent.style.alignItems = "";
+    TRIANGLE.item.parent.style.display = "block";
   }
   TRIANGLE.item.objRef.removeAttribute("item-align");
   TRIANGLE.importItem.single(TRIANGLE.item.index);
@@ -7362,6 +7353,7 @@ loadTemplate : function loadTemplate(templateName, pageName) {
     //===============================================================================
     //console.log(xmlhttp.responseText);
     var content = TRIANGLE.json.decompress(xmlhttp.responseText);
+    //console.log(content);
     TRIANGLE.json.decode(content);
     //===============================================================================
 
@@ -7370,7 +7362,7 @@ loadTemplate : function loadTemplate(templateName, pageName) {
 
     TRIANGLE.loadTemplate.updateUserIDs();
 
-    if (location.host == "trianglecms.com") document.getElementById("template").innerHTML = document.getElementById("template").innerHTML.replace(/http:\/\/(localhost|braydengregerson\.com)\/triangle/g, "http://trianglecms.com");
+    if (location.host == "trianglecms.com") document.getElementById("template").innerHTML = document.getElementById("template").innerHTML.replace(/http:\/\/trianglecms\.com/g, "https://trianglecms.com");
 
     TRIANGLE.updateTemplateItems();
     TRIANGLE.loadTemplate.updateUserClasses();
@@ -7427,50 +7419,6 @@ updateUserIDs : function() {
       }
       /*var originalItem = TRIANGLE.getElementByUserId(prop);
       if (!originalItem) continue;*/
-
-      var createItem = document.createElement(userIDs[prop]["tagName"]);
-      createItem.id = userIDs[prop]["id"];
-      createItem.setAttribute("user-id", prop);
-      createItem = TRIANGLE.json.convertItem(userIDs[prop], createItem);
-
-      originalItem.parentNode.insertBefore(createItem, originalItem);
-      originalItem.parentNode.removeChild(originalItem);
-
-      var children = userIDs[prop]["children"];
-
-      for (var child in children) {
-        var createChild = document.createElement(children[child]["tagName"]);
-        createChild.id = child;
-        children[child]["user-id"] ? createChild.setAttribute("user-id", children[child]["user-id"]) : null;
-        createChild = TRIANGLE.json.convertItem(children[child], createChild);
-
-        var childof = children[child]["childof"];
-        if (childof) {
-          document.getElementById(childof).appendChild(createChild);
-        } else {
-          createChild = null;
-        }
-      }
-      TRIANGLE.updateTemplateItems();
-    }
-
-    TRIANGLE.updateTemplateItems();
-  });
-},
-
-updateUserIDsOld : function() {
-  var params = "instance=" + TRIANGLE.instance;
-
-  AJAX.post("scripts/readUserIDs.php", params, function(xmlhttp) {
-    if (!xmlhttp.responseText) return;
-    //console.log(xmlhttp.responseText);
-
-    var userIDs = JSON.parse(xmlhttp.responseText);
-
-    for (var prop in userIDs) {
-
-      var originalItem = TRIANGLE.getElementByUserId(prop);
-      if (!originalItem) continue;
 
       var createItem = document.createElement(userIDs[prop]["tagName"]);
       createItem.id = userIDs[prop]["id"];
@@ -7713,28 +7661,6 @@ decode : function(templateStr) {
       document.getElementById(childof).appendChild(createItem);
     } else if (childof && !document.getElementById(childof)) {
       continue;
-    } else {
-      document.getElementById("template").appendChild(createItem);
-    }
-  }
-},
-
-decodeOld : function(templateStr) {
-  var templateFile = JSON.parse(templateStr);
-
-  TRIANGLE.json.convertTemplateData(templateFile);
-
-  var items = templateFile.items;
-
-  for (var prop in items) {
-    var createItem = document.createElement(items[prop]["tagName"]);
-    createItem.id = prop;
-    items[prop]["user-id"] ? createItem.setAttribute("user-id", items[prop]["user-id"]) : null;
-    createItem = TRIANGLE.json.convertItem(items[prop], createItem);
-
-    var childof = items[prop]["childof"];
-    if (childof) {
-      document.getElementById(childof).appendChild(createItem);
     } else {
       document.getElementById("template").appendChild(createItem);
     }
