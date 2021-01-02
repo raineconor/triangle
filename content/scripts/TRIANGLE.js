@@ -7062,8 +7062,6 @@ saveTemplate : function saveTemplate(templateName, pageName) {
   var globalStyle = encodeURIComponent(TRIANGLE.developer.globalStyleTagContent);
   var globalScript = encodeURIComponent(TRIANGLE.developer.globalScriptTagContent);
   //========================================================================
-  var busProfile = document.getElementById("businessProfile").value;
-  //========================================================================
   var params = "templateName=" + templateName
              + "&pageName=" + pageName
              + "&instance=" + TRIANGLE.instance
@@ -7116,8 +7114,6 @@ saveCurrent : function saveCurrent(callback) {
   //========================================================================
   var globalStyle = encodeURIComponent(TRIANGLE.developer.globalStyleTagContent);
   var globalScript = encodeURIComponent(TRIANGLE.developer.globalScriptTagContent);
-  //========================================================================
-  var busProfile = document.getElementById("businessProfile").value;
   //========================================================================
   var params = "instance=" + TRIANGLE.instance
             + "&content=" + content
@@ -7592,7 +7588,6 @@ encode : function() {
   template.metaKeywords = TRIANGLE.metaData.keywords;
   template.metaDescription = TRIANGLE.metaData.description;
   template.fixedWidth = document.getElementById("template").style.width;
-  template.businessProfile = document.getElementById("businessProfile").value;
   template.exportCompress = document.getElementById("exportCompress").checked;
   template.importWebsiteURL = TRIANGLE.importWebsiteURL;
   template.styleTag = TRIANGLE.developer.styleTagContent;
@@ -7792,7 +7787,6 @@ convertTemplateData : function(templateData) {
   TRIANGLE.metaData.keywords = document.getElementById("metaKeywords").value;
   document.getElementById("metaDescription").value = templateData.metaDescription ? templateData.metaDescription : "";
   TRIANGLE.metaData.description = document.getElementById("metaDescription").value;
-  if (templateData.businessProfile) document.getElementById("businessProfile").value = templateData.businessProfile;
   document.getElementById("exportCompress").checked = templateData.exportCompress;
   if (templateData.importWebsiteURL) TRIANGLE.loadTemplate.importWebsite(templateData.importWebsiteURL);
   TRIANGLE.developer.styleTagContent = document.getElementById("styleTag").value = templateData.styleTag ? templateData.styleTag : "";
