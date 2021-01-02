@@ -1112,8 +1112,8 @@
 
   <div class="sideSubMenu" id="userItemMenu">
     <span class="sideMenuH1">My Items</span>
-    <span class="sideMenuH3">IDs</span>
     <div id="echoUserLibrary">
+      <span class="sideMenuH3">IDs</span>
       <div id="echoUserIDs"></div>
       <br>
       <br>
