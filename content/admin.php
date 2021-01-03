@@ -234,6 +234,18 @@
     <h2>News</h2>
     <hr>
 
+    <h3>January X, 2021</h3>
+    <h3>Triangle Version 1.01.44 launched</h3>
+    This update includes quality of life improvements and aesthetic improvements, as follows:
+    <ul>
+      <li>Holding the shift key while resizing an element with a percentage-width now snaps strongly to the 33.33%, 50%, and 66.66% marks</li>
+      <li>The selection indicator when hovering over and selecting items is now more pleasing to the eye</li>
+      <li>Resizing the margin with the blue drag-handle is now correctly rounded to the nearest integer</li>
+      <li>Holding shift while resizing the margin with the blue drag-handle now changes in increments of 5px</li>
+      <li>Resizing items using the handles now displays a tooltip</li>
+    </ul>
+    <hr>
+
     <h3>January 1, 2021</h3>
     <h3>Triangle Version 1.01.43 launched</h3>
     This update includes quality of life improvements, as follows:

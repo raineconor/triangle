@@ -3622,6 +3622,20 @@ TRIANGLE.checkPadding = function checkPadding(obj) {
   }
 }
 
+TRIANGLE.tooltip = {
+  show : function showTooltip(label) {
+    document.getElementById("tooltip").innerHTML = label;
+    document.getElementById("tooltip").style.display = "block";
+  },
+  update : function updateTooltipLocation(event) {
+    document.getElementById("tooltip").style.top = (event.clientY + 15) + "px";
+    document.getElementById("tooltip").style.left = (event.clientX + 15) + "px";
+  },
+  hide : function hideTooltip() {
+    document.getElementById("tooltip").style.display = "none";
+  }
+}
+
 /*
 function generateBorder() returns a DIV object to be appended to the body as a visual for hovering/selecting elements
 */
@@ -3629,7 +3643,7 @@ function generateBorder() returns a DIV object to be appended to the body as a v
 TRIANGLE.generateBorder = function generateBorder(rectangle) {
   var borderSpace = 6; // space between border and hovered/selected element, use an even number
   var borderElem = document.createElement("div");
-  borderElem.style.border = "1px solid orange";
+  borderElem.style.border = "1px solid #478BE3";
   borderElem.setAttribute("id", "showHoverBorder");
   borderElem.style.position = "fixed";
   borderElem.style.height = rectangle.height + borderSpace + "px";
@@ -3641,7 +3655,7 @@ TRIANGLE.generateBorder = function generateBorder(rectangle) {
   var secondBorder = document.createElement("div");
   secondBorder.style.height = "100%";
   secondBorder.style.width = "100%";
-  secondBorder.style.border = "1px solid blue";
+  secondBorder.style.border = "1px solid #478BE3";
   secondBorder.style.padding = "1px";
   secondBorder.setAttribute("id", "noClickThru");
   borderElem.appendChild(secondBorder);
@@ -3673,14 +3687,14 @@ show : function showHoverBorder(event) {
     TRIANGLE.tooltip.show(itemLabel);
   } else if (userID) {
     document.addEventListener("mousemove", TRIANGLE.tooltip.update);
-    TRIANGLE.tooltip.show(userID);
+    TRIANGLE.tooltip.show("ID: " + userID);
   } else if (userClass) {
     document.addEventListener("mousemove", TRIANGLE.tooltip.update);
-    TRIANGLE.tooltip.show(userClass);
+    TRIANGLE.tooltip.show("Class: " + userClass);
   } else if (linkHref) {
     document.addEventListener("mousemove", TRIANGLE.tooltip.update);
     if (linkHref.length > 30) linkHref = linkHref.slice(0, 30) + "...";
-    TRIANGLE.tooltip.show(linkHref);
+    TRIANGLE.tooltip.show("Link: " + linkHref);
   } else {
     document.removeEventListener("mousemove", TRIANGLE.tooltip.update);
     TRIANGLE.tooltip.hide();
@@ -3703,23 +3717,9 @@ hide : function hideHoverBorder() {
 
 } // end TRIANGLE.hoverBorder
 
-
-TRIANGLE.tooltip = {
-  show : function showTooltip(label) {
-    document.getElementById("tooltip").innerHTML = label;
-    document.getElementById("tooltip").style.display = "block";
-  },
-  update : function updateTooltipLocation(event) {
-    document.getElementById("tooltip").style.top = (event.clientY + 15) + "px";
-    document.getElementById("tooltip").style.left = (event.clientX + 15) + "px";
-  },
-  hide : function hideTooltip() {
-    document.getElementById("tooltip").style.display = "none";
-  }
-}
-
-
 TRIANGLE.selectionBorder = {
+
+  style : "1px solid #90F3FF",
 
 /*
 function lockSelectionBorder() is called by TRIANGLE.importItem.single() to lock the selection border in place
@@ -3761,14 +3761,14 @@ create : function createSelectionBorder() {
     if (TRIANGLE.item.objRef.isContentEditable) {
       selBorder.style.border = "1px dashed black";
     } else {
-      selBorder.style.border = "1px solid #00ff00";
+      selBorder.style.border = TRIANGLE.selectionBorder.style;
     }
     selBorder.style.zIndex = 2;
     TRIANGLE.resize.showHandles();
   } else if (document.getElementById("showHoverBorder")) {
     document.getElementById("showHoverBorder").id = "selectionBorder";
     var selBorder = document.getElementById("selectionBorder");
-    selBorder.style.border = "1px solid #00ff00";
+    selBorder.style.border = TRIANGLE.selectionBorder.style;
     TRIANGLE.resize.showHandles();
   }
   TRIANGLE.unsaved = true;
@@ -4035,6 +4035,7 @@ stop : function removeResize() {
   TRIANGLE.text.clearTextSelection();
   TRIANGLE.saveItem.equalizeUserClasses(TRIANGLE.item.userClass);
   TRIANGLE.text.allowTextSelect();
+  TRIANGLE.tooltip.hide();
 },
 
 start : function resizeItem(event) {
@@ -4048,6 +4049,7 @@ start : function resizeItem(event) {
     var minSize = 2; // minimum size allowed for resizing
     var widthLabel = document.getElementById("widthLabel");
     var heightLabel = document.getElementById("heightLabel");
+    var snapThreshold = event.shiftKey ? 30 : 3;
 
     if (TRIANGLE.resize.direction === "X") {
       if (item.align !== "right" && posX > (rect.left + minSize)) {
@@ -4062,11 +4064,11 @@ start : function resizeItem(event) {
         }
 
         if (TRIANGLE.getUnit(item.width) === "%") {
-          if (posX <= rect.left + (TRIANGLE.resize.contentWidth / 2) + 3 && posX >= rect.left + (TRIANGLE.resize.contentWidth / 2) - 3) {
+          if (posX <= rect.left + (TRIANGLE.resize.contentWidth / 2) + snapThreshold && posX >= rect.left + (TRIANGLE.resize.contentWidth / 2) - snapThreshold) {
             item.objRef.style.width = "50%";
-          } else if (posX <= rect.left + (TRIANGLE.resize.contentWidth / 3) + 3 && posX >= rect.left + (TRIANGLE.resize.contentWidth / 3) - 3) {
+          } else if (posX <= rect.left + (TRIANGLE.resize.contentWidth / 3) + snapThreshold && posX >= rect.left + (TRIANGLE.resize.contentWidth / 3) - snapThreshold) {
             item.objRef.style.width = "33.33%";
-          } else if (posX <= rect.left + (2 * TRIANGLE.resize.contentWidth / 3) + 3 && posX >= rect.left + (2 * TRIANGLE.resize.contentWidth / 3) - 3) {
+          } else if (posX <= rect.left + (2 * TRIANGLE.resize.contentWidth / 3) + snapThreshold && posX >= rect.left + (2 * TRIANGLE.resize.contentWidth / 3) - snapThreshold) {
             item.objRef.style.width = "66.66%";
           } else {
             item.objRef.style.width = Math.ceil(((posX - rect.left) / TRIANGLE.resize.contentWidth) * 10000) / 100 + "%";
@@ -4104,11 +4106,11 @@ start : function resizeItem(event) {
         }
 
         if (TRIANGLE.getUnit(item.width) === "%") {
-          if (posX <= rect.right - (TRIANGLE.resize.contentWidth / 2) + 3 && posX >= rect.right - (TRIANGLE.resize.contentWidth / 2) - 3) {
+          if (posX <= rect.right - (TRIANGLE.resize.contentWidth / 2) + snapThreshold && posX >= rect.right - (TRIANGLE.resize.contentWidth / 2) - snapThreshold) {
             item.objRef.style.width = "50%";
-          } else if (posX <= rect.right - (TRIANGLE.resize.contentWidth / 3) + 3 && posX >= rect.right - (TRIANGLE.resize.contentWidth / 3) - 3) {
+          } else if (posX <= rect.right - (TRIANGLE.resize.contentWidth / 3) + snapThreshold && posX >= rect.right - (TRIANGLE.resize.contentWidth / 3) - snapThreshold) {
             item.objRef.style.width = "33.33%";
-          } else if (posX <= rect.right - (2 * TRIANGLE.resize.contentWidth / 3) + 3 && posX >= rect.right - (2 * TRIANGLE.resize.contentWidth / 3) - 3) {
+          } else if (posX <= rect.right - (2 * TRIANGLE.resize.contentWidth / 3) + snapThreshold && posX >= rect.right - (2 * TRIANGLE.resize.contentWidth / 3) - snapThreshold) {
             item.objRef.style.width = "66.66%";
           } else {
             item.objRef.style.width = Math.ceil(((rect.right - posX) / TRIANGLE.resize.contentWidth) * 10000) / 100 + "%";
@@ -4132,6 +4134,8 @@ start : function resizeItem(event) {
         return;
       }
       TRIANGLE.selectionBorder.update();
+      TRIANGLE.tooltip.update(event);
+      TRIANGLE.tooltip.show(widthLabel.innerHTML);
 
     } else if (TRIANGLE.resize.direction === "Y") {
       if (posY > (rect.top + minSize)) {
@@ -4146,6 +4150,10 @@ start : function resizeItem(event) {
       }
       TRIANGLE.selectionBorder.update();
       heightLabel.innerHTML = "H: " + item.objRef.style.minHeight;
+
+      TRIANGLE.selectionBorder.update();
+      TRIANGLE.tooltip.update(event);
+      TRIANGLE.tooltip.show(heightLabel.innerHTML);
       //heightLabel.innerHTML = item.objRef.style.minHeight ? "H: " + item.objRef.style.minHeight : "H: " + item.objRef.getBoundingClientRect().height + "px";
       //heightLabel.innerHTML = item.objRef.style.minHeight ? "H: " + item.objRef.style.minHeight : "H: " + "auto";
 
@@ -4318,6 +4326,7 @@ margin : {
     TRIANGLE.text.clearTextSelection();
     TRIANGLE.text.allowTextSelect();
     TRIANGLE.saveItem.equalizeUserClasses(TRIANGLE.item.userClass);
+    TRIANGLE.tooltip.hide();
   },
 
   start : function(event) {
@@ -4328,6 +4337,7 @@ margin : {
       var compare;
       var rect = item.objRef.getBoundingClientRect();
       var widthLabel = document.getElementById("widthLabel");
+      var snapThreshold = event.shiftKey ? 5 : 1;
 
       if (TRIANGLE.resize.direction === "marginTop" || TRIANGLE.resize.direction === "marginBottom") {
         opposite = TRIANGLE.resize.direction === "marginTop" ? "marginBottom" : "marginTop";
@@ -4348,13 +4358,17 @@ margin : {
       if (TRIANGLE.getUnit(item[TRIANGLE.resize.direction]) === '%') {
         item.objRef.style[TRIANGLE.resize.direction] = Math.abs((Math.ceil((mousePos - TRIANGLE.resize.margin.currentMargin) / item.parent.getBoundingClientRect().width * 10000) / 100)) + "%";
       } else {
-        item.objRef.style[TRIANGLE.resize.direction] = Math.abs((mousePos - TRIANGLE.resize.margin.currentMargin)) + "px";
+        item.objRef.style[TRIANGLE.resize.direction] = (Math.floor(Math.abs(mousePos - TRIANGLE.resize.margin.currentMargin) / snapThreshold) * snapThreshold) + "px";
       }
       //if (parseFloat(item.objRef.style[TRIANGLE.resize.direction]) < 0) item.objRef.style[TRIANGLE.resize.direction] = 0;
       if (compare) item.objRef.style[TRIANGLE.resize.direction] = 0;
       snapMargin();
       if (event.altKey) item.objRef.style[opposite] = item.objRef.style[TRIANGLE.resize.direction];
       widthLabel.innerHTML = "M: " + item.objRef.style[TRIANGLE.resize.direction];
+      
+      TRIANGLE.selectionBorder.update();
+      TRIANGLE.tooltip.update(event);
+      TRIANGLE.tooltip.show(widthLabel.innerHTML);
     }
 
     function snapMargin() {
