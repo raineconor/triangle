@@ -234,7 +234,7 @@
     <h2>News</h2>
     <hr>
 
-    <h3>January X, 2021</h3>
+    <h3>January 2, 2021</h3>
     <h3>Triangle Version 1.01.44 launched</h3>
     This update includes quality of life improvements and aesthetic improvements, as follows:
     <ul>
@@ -243,6 +243,7 @@
       <li>Resizing the margin with the blue drag-handle is now correctly rounded to the nearest integer</li>
       <li>Holding shift while resizing the margin with the blue drag-handle now changes in increments of 5px</li>
       <li>Resizing items using the handles now displays a tooltip</li>
+      <li>When loading templates, the entire templates now appear at once instead of piece by piece</li>
     </ul>
     <hr>
 

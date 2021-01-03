@@ -10,7 +10,7 @@ var x = 0;
 var y = 0;
 var z = 0;
 
-TRIANGLE.version = "1.01.43";
+TRIANGLE.version = "1.01.44";
 
 
 //==================================================================================================
@@ -4365,7 +4365,7 @@ margin : {
       snapMargin();
       if (event.altKey) item.objRef.style[opposite] = item.objRef.style[TRIANGLE.resize.direction];
       widthLabel.innerHTML = "M: " + item.objRef.style[TRIANGLE.resize.direction];
-      
+
       TRIANGLE.selectionBorder.update();
       TRIANGLE.tooltip.update(event);
       TRIANGLE.tooltip.show(widthLabel.innerHTML);
@@ -7306,6 +7306,17 @@ createNewPage : function(pageName) {
 
 TRIANGLE.loadTemplate = {
 
+hide : function hideTemplate() {
+  var template = document.getElementById("template");
+  template.style.opacity = 0;
+  template.style.visibility = "hidden";
+},
+
+show : function showTemplate() {
+  var template = document.getElementById("template");
+  template.style.visibility = "visible";
+  template.style.opacity = 1;
+},
 
 getLoadList : function getLoadList() {
   AJAX.get("scripts/loadList.php", "", function(xmlhttp) {
@@ -7385,7 +7396,10 @@ updateUserIDs : function() {
   var params = "instance=" + TRIANGLE.instance;
 
   AJAX.post("scripts/readUserIDs.php", params, function(xmlhttp) {
-    if (!xmlhttp.responseText) return;
+    if (!xmlhttp.responseText) {
+      TRIANGLE.loadTemplate.show();
+      return;
+    }
     //console.log(xmlhttp.responseText);
 
     var userIDs = JSON.parse(xmlhttp.responseText);
@@ -7437,6 +7451,7 @@ updateUserIDs : function() {
     }
 
     TRIANGLE.updateTemplateItems();
+    TRIANGLE.loadTemplate.show();
   });
 },
 

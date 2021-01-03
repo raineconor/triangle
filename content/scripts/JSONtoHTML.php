@@ -678,7 +678,7 @@ function formatCSStext($cssStr, $isCropped = "") {
     "text-align", "text-decoration", "text-dcoration-color", "text-shadow",
     "letter-spacing",
     "cursor",
-    "opacity",
+    "opacity", "visibility",
     "z-index",
     "-webkit-transition", "transition", "animation",
     "transform",
