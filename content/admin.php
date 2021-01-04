@@ -242,7 +242,6 @@
       <li>Added a "Select Parent" button under the options tab, which is helpful if the parent has no padding and is therefore unclickable</li>
       <li>Fixed a bug where it was impossible to delete hover styles</li>
       <li>Fixed a bug where new blank templates caused inserted items to be invisible</li>
-      <li></li>
     </ul>
     <hr>
 
