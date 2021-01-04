@@ -10,7 +10,7 @@ var x = 0;
 var y = 0;
 var z = 0;
 
-TRIANGLE.version = "1.01.44";
+TRIANGLE.version = "1.01.45";
 
 
 //==================================================================================================
@@ -2769,10 +2769,13 @@ updateItemMap : function updateItemMap() {
     TRIANGLE.dragDrop.itemMap.height[i] = itemMapRect.height;
     TRIANGLE.dragDrop.itemMap.width[i] = itemMapRect.width;
 
-    TRIANGLE.dragDrop.itemMap.minY[i] = itemMapRect.top + 10;
-    TRIANGLE.dragDrop.itemMap.maxY[i] = itemMapRect.bottom - 10;
-    TRIANGLE.dragDrop.itemMap.minX[i] = itemMapRect.left + 10;
-    TRIANGLE.dragDrop.itemMap.maxX[i] = itemMapRect.right - 10;
+    var dragThreshold = (itemMapRect.height / 3);
+    //var dragThreshold = 10;
+
+    TRIANGLE.dragDrop.itemMap.minY[i] = itemMapRect.top + dragThreshold;
+    TRIANGLE.dragDrop.itemMap.maxY[i] = itemMapRect.bottom - dragThreshold;
+    TRIANGLE.dragDrop.itemMap.minX[i] = itemMapRect.left + dragThreshold;
+    TRIANGLE.dragDrop.itemMap.maxX[i] = itemMapRect.right - dragThreshold;
   }
 },
 
@@ -2815,17 +2818,17 @@ dragVis : function dragVis(event) {
   // if mouse is before all items
   if (event.clientY < TRIANGLE.dragDrop.itemMap.top[0] && draggingIndex != 0) {
     TRIANGLE.dragDrop.createVisBox("before", TRIANGLE.templateItems[0]);
-    console.log("before all");
+    console.log("Drag and drop: before all");
 
   // if mouse is below all items
   } else if (event.clientY > TRIANGLE.dragDrop.itemMap.bottom[templateLastChildIndex] && draggingIndex != templateLastChildIndex) {
     TRIANGLE.dragDrop.createVisBox("inside", template);
-    console.log("after all");
+    console.log("Drag and drop: after all");
 
   // if mouse is at the top of an element and before its first child
   } else if (firstChildIndex && event.clientY >= TRIANGLE.dragDrop.itemMap.top[hoveredIndex] && event.clientY <= TRIANGLE.dragDrop.itemMap.minY[firstChildIndex] && draggingIndex != firstChildIndex) {
     TRIANGLE.dragDrop.createVisBox("before", TRIANGLE.hoveredElem.children[0]);
-    console.log("first child");
+    console.log("Drag and drop: first child");
 
   // if mouse is after the hovered element and before its next sibling
   } /*else if (nextIndex && event.clientY >= TRIANGLE.dragDrop.itemMap.maxY[hoveredIndex] && event.clientY <= TRIANGLE.dragDrop.itemMap.minY[nextIndex] && draggingIndex != nextIndex) {
@@ -2834,12 +2837,12 @@ dragVis : function dragVis(event) {
 
   }*/ else if (event.clientY <= TRIANGLE.dragDrop.itemMap.minY[hoveredIndex] && event.clientY >= TRIANGLE.dragDrop.itemMap.maxY[prevIndex] && draggingIndex != hoveredIndex) {
     TRIANGLE.dragDrop.createVisBox("before", TRIANGLE.hoveredElem);
-    console.log("before hovered, after previous row");
+    console.log("Drag and drop: before hovered, after previous row");
 
   // if mouse is below the last child element and at the bottom of its parent
   } else if (event.clientY >= TRIANGLE.dragDrop.itemMap.maxY[hoveredIndex] && event.clientY <= TRIANGLE.dragDrop.itemMap.bottom[parentIndex] && draggingIndex != lastChildIndex) {
     TRIANGLE.dragDrop.createVisBox("after", TRIANGLE.hoveredElem);
-    console.log("last child");
+    console.log("Drag and drop: last child");
 
   // if mouse is in the middle of an element
   } else if (event.clientY < TRIANGLE.dragDrop.itemMap.maxY[hoveredIndex] && event.clientY > TRIANGLE.dragDrop.itemMap.minY[hoveredIndex]) {
@@ -3560,13 +3563,21 @@ TRIANGLE.appendRow = function appendRow() {
   newDiv.style.width = "100%"; // set default width so TRIANGLE.options.insertColumns() can divide it
   newDiv.style.position = "relative";
 
-  document.getElementById("template").appendChild(newDiv);
-  //window.scrollTo(0, TRIANGLE.templateItems[TRIANGLE.templateItems.length - 1].getBoundingClientRect().top - 200);
-  window.scrollTo(0, document.body.scrollHeight);
+  var newIndex;
+  if (TRIANGLE.item) {
+    document.getElementById("template").insertBefore(newDiv, TRIANGLE.item.objRef.nextSibling);
+    newIndex = TRIANGLE.item.index + 1;
+  } else {
+    document.getElementById("template").appendChild(newDiv);
+    //window.scrollTo(0, TRIANGLE.templateItems[TRIANGLE.templateItems.length - 1].getBoundingClientRect().top - 200);
+    window.scrollTo(0, document.body.scrollHeight);
+    newIndex = TRIANGLE.templateItems.length - 1;
+  }
+
   TRIANGLE.updateTemplateItems();
   TRIANGLE.clearSelection();
   //TRIANGLE.importItem.single(TRIANGLE.templateItems.length - 1);
-  TRIANGLE.selectItem(TRIANGLE.templateItems.length - 1);
+  TRIANGLE.selectItem(newIndex);
   TRIANGLE.saveItem.createAnimation("min-height", 0, "100px", function(){TRIANGLE.importItem.single(TRIANGLE.item.index)});
 }
 
@@ -3604,6 +3615,22 @@ TRIANGLE.insertNewChild = function insertNewChild() {
   TRIANGLE.saveItem.createAnimation("min-height", 0, "100px", function(){TRIANGLE.importItem.single(TRIANGLE.item.index)});
 
   TRIANGLE.updateTemplateItems();
+}
+
+/*
+function selectParent()
+*/
+
+TRIANGLE.selectParent = function selectParent() {
+  if (TRIANGLE.item) {
+    var parentItem = TRIANGLE.item.objRef.parentElement;
+    if (parentItem.id == "template") {
+      return;
+    } else {
+      var getParentIndex = parseInt(parentItem.getAttribute("index"));
+      TRIANGLE.importItem.single(getParentIndex);
+    }
+  }
 }
 
 /*
@@ -4882,6 +4909,7 @@ function displayButtons() {
   document.getElementById("insert3columns").style.display = "inline-block";
   document.getElementById("opDuplicateElement").style.display = "inline-block";
   document.getElementById("opInsertNewChild").style.display = "inline-block";
+  document.getElementById("opSelectParent").style.display = "inline-block";
   document.getElementById("opHyperlink").style.display = "inline-block";
 }
 
@@ -5474,11 +5502,13 @@ codeSnippet : function(elem) {
 cssStyles : function(elem) {
   if (TRIANGLE.item) {
     var findStyles = elem.value.match(/[^:]+:\s*[^;]+;\s*/g);
-    var newStyles = "";
-    for (i = 0; i < findStyles.length; i++) {
-      newStyles += findStyles[i];
+    if (findStyles != null) {
+      var newStyles = "";
+      for (i = 0; i < findStyles.length; i++) {
+        newStyles += findStyles[i];
+      }
+      TRIANGLE.item.objRef.style.cssText = newStyles;
     }
-    TRIANGLE.item.objRef.style.cssText = newStyles;
     TRIANGLE.selectionBorder.update();
   }
 },
@@ -5486,12 +5516,15 @@ cssStyles : function(elem) {
 hoverStyles : function(elem) {
   if (TRIANGLE.item) {
     var findStyles = elem.value.match(/[^:]+:\s*[^;]+;\s*/g);
+    console.log(findStyles);
     if (findStyles != null) {
       var newStyles = "";
       for (i = 0; i < findStyles.length; i++) {
         newStyles += findStyles[i];
       }
       TRIANGLE.item.objRef.setAttribute("hover-style", newStyles);
+    } else {
+      TRIANGLE.item.objRef.removeAttribute("hover-style");
     }
   }
 },
@@ -5660,6 +5693,7 @@ TRIANGLE.clearSelection = function() {
     document.getElementById("insert3columns").style.display = "none";
     document.getElementById("opDuplicateElement").style.display = "none";
     document.getElementById("opInsertNewChild").style.display = "none";
+    document.getElementById("opSelectParent").style.display = "none";
     document.getElementById("opHyperlink").style.display = "none";
   }
 
@@ -6815,9 +6849,6 @@ createHoverVersion : function(obj) {
 //find
 addStyle : function() {
   if (!TRIANGLE.item.hoverVersion) TRIANGLE.effects.hover.createHoverVersion(TRIANGLE.item.objRef);
-
-
-
   TRIANGLE.updateTemplateItems();
 }
 
@@ -7353,7 +7384,8 @@ loadTemplate : function loadTemplate(templateName, pageName) {
 
     //===============================================================================
     //console.log(xmlhttp.responseText);
-    var content = TRIANGLE.json.decompress(xmlhttp.responseText);
+    //var content = TRIANGLE.json.decompress(xmlhttp.responseText);
+    var content = TRIANGLE.json.decompress(xmlhttp.responseText.replace(/http:\/\/trianglecms\.com/g, "https://trianglecms.com"));
     //console.log(content);
     TRIANGLE.json.decode(content);
     //===============================================================================
@@ -7362,8 +7394,6 @@ loadTemplate : function loadTemplate(templateName, pageName) {
     TRIANGLE.updateTemplateItems();
 
     TRIANGLE.loadTemplate.updateUserIDs();
-
-    if (location.host == "trianglecms.com") document.getElementById("template").innerHTML = document.getElementById("template").innerHTML.replace(/http:\/\/trianglecms\.com/g, "https://trianglecms.com");
 
     TRIANGLE.updateTemplateItems();
     TRIANGLE.loadTemplate.updateUserClasses();

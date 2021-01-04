@@ -144,21 +144,22 @@
       <div class="optionLabel" id="labelPreviewTemplate">Preview</div>
     </div>
 
-    <div class="menuSection">
-      <div class="menuSectionTitle">Compression</div>
-      <input type="checkbox" id="exportCompress" no-clear="true"> Compress code for faster loading
-    </div>
-
     <?php
     if ($_SESSION["usertype"] === "admin") {
       echo '<div class="subMenuOption" id="exportLibraryItemCode" onClick="TRIANGLE.saveItem.exportLibraryItemCode();">
         <div style="border:1px dotted gray;height:88px;">
-          <img class="optionImage" src="images/opExportRaw.gif">
+          <div style="background-color:#f1f1f1;height:100%;display:flex;align-items:center;justify-content:center;">Library Item</div>
         </div>
         <div class="optionLabel" id="labelExportLibraryItemCode">Library Item</div>
       </div>';
     }
     ?>
+
+    <div class="menuSection">
+      <div class="menuSectionTitle">Compression</div>
+      <input type="checkbox" id="exportCompress" no-clear="true"> Minify HTML
+      <br><br><br><br><br>
+    </div>
 
     <div style="clear:both;"></div>
   </div>
@@ -220,6 +221,14 @@
         <img class="optionImage" src="images/opInsertNewChild.svg">
       </div>
       <div class="optionLabel" id="labelInsertNewChild">Insert Child</div>
+    </div>
+
+    <div class="subMenuOption" id="opSelectParent" style="display:none;" onClick="TRIANGLE.selectParent();">
+      <div style="border:1px dotted gray;height:88px;">
+        <div style="background-color:#f1f1f1;height:100%;display:flex;align-items:center;justify-content:center;">Select<br>Parent</div>
+        <!--<img class="optionImage" src="images/opInsertNewChild.svg">-->
+      </div>
+      <div class="optionLabel" id="labelSelectParent">Select Parent</div>
     </div>
 
     <div class="subMenuOption" id="opHyperlink" style="display:none;" onClick="TRIANGLE.text.createHyperlink();">
@@ -580,12 +589,12 @@
       <div class="optionLabel" id="labelRemoveImgBg">Remove Background</div>
     </div>
 
-    <div class="subMenuOption" id="cropImg" onClick="TRIANGLE.images.crop.createBorder();">
+    <!--<div class="subMenuOption" id="cropImg" onClick="TRIANGLE.images.crop.createBorder();">
       <div style="border:1px dotted gray;height:88px;">
         <img class="optionImage" src="images/opCropImage.svg">
       </div>
       <div class="optionLabel" id="labelCropImg">Crop Image</div>
-    </div>
+    </div>-->
 
     <div class="subMenuOption" id="autoSizeImg" onClick="TRIANGLE.images.autoSize();">
       <div style="border:1px dotted gray;height:88px;">

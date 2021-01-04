@@ -430,7 +430,7 @@ hr {
 }
 
 #visBoxInner {
-  border:2px dashed blue;
+  border:1px dashed #2170D6;
   height:100%;
   background-color:white;
 }

@@ -234,6 +234,18 @@
     <h2>News</h2>
     <hr>
 
+    <h3>January 3, 2021</h3>
+    <h3>Triangle Version 1.01.45 launched</h3>
+    This update includes quality of life improvements and bug fixes, as follows:
+    <ul>
+      <li>The "New Row" button now inserts a row after the selected item, or at the end of the page if no item is selected</li>
+      <li>Added a "Select Parent" button under the options tab, which is helpful if the parent has no padding and is therefore unclickable</li>
+      <li>Fixed a bug where it was impossible to delete hover styles</li>
+      <li>Fixed a bug where new blank templates caused inserted items to be invisible</li>
+      <li></li>
+    </ul>
+    <hr>
+
     <h3>January 2, 2021</h3>
     <h3>Triangle Version 1.01.44 launched</h3>
     This update includes quality of life improvements and aesthetic improvements, as follows:
@@ -287,6 +299,8 @@
 
   <section class="menu" id="ftpProfiles">
     <h2>FTP Profiles</h2>
+    <hr>
+    <h3>All FTP profiles are securely encrypted on our servers using AES-256.</h3>
     <hr>
     <h4>Add Profile</h4>
     Host URL: <input type="text" size="40" id="ftpURL">
@@ -345,7 +359,7 @@
         <!--<a class="templateChoice" target="_blank" onClick="closePopUp();" href="index.php?premadeTemplate=default">Multipurpose</a>
         <a class="templateChoice" target="_blank" onClick="closePopUp();" href="index.php?premadeTemplate=railroad">Personal Blog</a>
         <a class="templateChoice" target="_blank" onClick="closePopUp();" href="index.php?premadeTemplate=Skybound">Photography</a>-->
-        <a class="templateChoice" target="_blank" onClick="closePopUp();" href="index.php">Blank template</a>
+        <a class="templateChoice" target="_blank" onClick="closePopUp();" href="index.php?premadeTemplate=blank">Blank template</a>
         <div style="clear:both;"></div>
         <br>
         <button onClick="closePopUp();">Cancel</button>
