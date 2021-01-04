@@ -235,7 +235,7 @@
     <hr>
 
     <h3>January 3, 2021</h3>
-    <h3>Triangle Version 1.01.45 launched</h3>
+    <h3>Triangle Version 1.01.45</h3>
     This update includes quality of life improvements and bug fixes, as follows:
     <ul>
       <li>The "New Row" button now inserts a row after the selected item, or at the end of the page if no item is selected</li>
