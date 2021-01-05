@@ -1661,10 +1661,10 @@ insertTextBox : function insertTextBox(text) {
 
 originalTextPosition : null,
 
-clearPastedStyles : function(event) {
+clearPastedStyles : function(event) { // &amp; inside textboxes bugs this out FIND FLAG
   if (TRIANGLE.item && TRIANGLE.item.objRef.isContentEditable) {
 
-    setTimeout(function(){
+    setTimeout(function() {
 
       var newRange = TRIANGLE.text.getSelectionCoords().r;
 
@@ -3565,8 +3565,12 @@ TRIANGLE.appendRow = function appendRow() {
 
   var newIndex;
   if (TRIANGLE.item) {
-    document.getElementById("template").insertBefore(newDiv, TRIANGLE.item.objRef.nextSibling);
-    newIndex = TRIANGLE.item.index + 1;
+    //if (TRIANGLE.item.objRef.nextSibling) {
+      TRIANGLE.item.objRef.parentElement.insertBefore(newDiv, TRIANGLE.item.objRef.nextSibling);
+      newIndex = TRIANGLE.item.index + 1;
+    /*} else {
+
+    }*/
   } else {
     document.getElementById("template").appendChild(newDiv);
     //window.scrollTo(0, TRIANGLE.templateItems[TRIANGLE.templateItems.length - 1].getBoundingClientRect().top - 200);
@@ -4500,7 +4504,8 @@ single : function importItem(index, event) {
   importLinkTarget(); // imports hyperlink target from anchor tag
   importSnippet(); // imports user-inserted code snippet
   importFormEmail(); // imports custom form email
-  importCSSstyles(); // imports CSS styles
+  //importCSSstyles(); // imports CSS styles
+  TRIANGLE.importItem.importCSSText();
   importHoverStyles(); // imports hover styles
 
   // adds onClick attribute to specified element id
@@ -4922,6 +4927,12 @@ function addOnClick(id, functionName, args) {
 //====================================================
 },
 
+importCSSText : function importCSSText() {
+  var importCSSText = TRIANGLE.item.objRef.style.cssText.replace(/;\s*/g, ";\n");
+  document.getElementById("cssStyles").value = importCSSText;
+  if (TRIANGLE.developer.currentCode === "cssStyles") document.getElementById("codeEditor").value = importCSSText;
+},
+
 importColors : function importColors() {
   var item = TRIANGLE.item;
   var colorListBorderL = document.getElementById("colorListBorderL");
@@ -5056,6 +5067,7 @@ applyChanges : function applyChanges(specificFunc) {
   //}
   TRIANGLE.selectItem(TRIANGLE.item.index); // re-select the current item to reset its properties
   TRIANGLE.importItem.importColors(); // imports colors again
+  TRIANGLE.importItem.importCSSText();//FUCKIN SHIT
   TRIANGLE.updateTemplateItems();
   //TRIANGLE.saveItem.equalizeUserClasses(TRIANGLE.item.userClass);
   //TRIANGLE.selectionBorder.update();
@@ -5808,6 +5820,8 @@ item : function(event) {
   if (TRIANGLE.keyEvents.countActiveInputs() > 0) return;
   //==================================================================
 
+  if (event.ctrlKey && event.keyCode === 219) TRIANGLE.keyEvents.keyCtrlBracketLeft();
+
   if (event.keyCode === 13) TRIANGLE.keyEvents.keyEnter();
 
   if (event.keyCode === 46 || event.charCode === 46) TRIANGLE.keyEvents.keyDelete();
@@ -5922,6 +5936,10 @@ keyCtrlX : function() {
     TRIANGLE.item.remove();
     TRIANGLE.updateTemplateItems();
   }
+},
+
+keyCtrlBracketLeft : function() {
+  TRIANGLE.selectParent();
 },
 
 keyShiftT : function() {

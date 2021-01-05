@@ -27,9 +27,14 @@
       if ($listType === "menu") {
         $deleteBtn = '<span class="deletePage" onClick="TRIANGLE.pages.confirmDeletePage(this.previousSibling.innerHTML);">&#8864;</span><div style="clear:both;"></div>';
         if ($pages[$x]["page"] === "index") $deleteBtn = "";
-        $html = '<div class="pageThumbnail" onClick="TRIANGLE.menu.closeSideMenu();TRIANGLE.loadTemplate.loadTemplate(\''
+        /*$html = '<div class="pageThumbnail" onClick="TRIANGLE.menu.closeSideMenu();TRIANGLE.loadTemplate.loadTemplate(\''
               . $templateName . '\', \'' . $pages[$x]["page"]
               . '\');">' . $pages[$x]["page"] . '</div>'
+              . $deleteBtn;*/
+
+        $html = '<div class="pageThumbnail" onClick="location.href=\'index.php?pagename=' . $pages[$x]["page"] . '&loadTemplate=' . $templateName . '&username=' . $username . '\';">'
+              . $pages[$x]["page"]
+              . '</div>'
               . $deleteBtn;
       } else {
         $html = '<option value="' . $pages[$x]["page"] . '">'
