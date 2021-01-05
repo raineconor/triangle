@@ -658,7 +658,7 @@ function formatCSStext($cssStr, $isCropped = "") {
     "display",
     "position",
     "float",
-    "overflow",
+    "overflow", "overflow-x", "overflow-y",
     "vertical-align",
     "padding", "padding-top", "padding-right", "padding-bottom", "padding-left",
     "margin", "margin-top", "margin-right", "margin-bottom", "margin-left",
