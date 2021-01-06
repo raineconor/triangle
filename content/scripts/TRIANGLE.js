@@ -5067,7 +5067,7 @@ applyChanges : function applyChanges(specificFunc) {
   //}
   TRIANGLE.selectItem(TRIANGLE.item.index); // re-select the current item to reset its properties
   TRIANGLE.importItem.importColors(); // imports colors again
-  TRIANGLE.importItem.importCSSText();//FUCKIN SHIT
+  TRIANGLE.importItem.importCSSText();
   TRIANGLE.updateTemplateItems();
   //TRIANGLE.saveItem.equalizeUserClasses(TRIANGLE.item.userClass);
   //TRIANGLE.selectionBorder.update();
@@ -7198,7 +7198,7 @@ saveUserIDs : function() {
     if (TRIANGLE.isType.textBox(userIDs[i])
     || TRIANGLE.isType.imageItem(userIDs[i])
     || TRIANGLE.isType.formBtn(userIDs[i])
-    || TRIANGLE.isType.snippetItem(userIDs[i])) userIDobj[userIDtitle]["innerHTML"] = userIDs[i].innerHTML.replace(/&nbsp;/g, encodeURIComponent("&nbsp;"));
+    || TRIANGLE.isType.snippetItem(userIDs[i])) userIDobj[userIDtitle]["innerHTML"] = userIDs[i].innerHTML.replace(/&/g, encodeURIComponent("&"));
 
     userIDobj[userIDtitle]["src"] = userIDs[i].src;
     userIDobj[userIDtitle]["childof"] = 0;
@@ -7245,7 +7245,7 @@ saveUserIDs : function() {
       if (TRIANGLE.isType.textBox(childList[x])
       || TRIANGLE.isType.imageItem(childList[x])
       || TRIANGLE.isType.formBtn(childList[x])
-      || TRIANGLE.isType.snippetItem(childList[x])) userIDobj[userIDtitle]["children"][childIndex]["innerHTML"] = childList[x].innerHTML.replace(/&nbsp;/g, encodeURIComponent("&nbsp;"));
+      || TRIANGLE.isType.snippetItem(childList[x])) userIDobj[userIDtitle]["children"][childIndex]["innerHTML"] = childList[x].innerHTML.replace(/&/g, encodeURIComponent("&"));
 
       userIDobj[userIDtitle]["children"][childIndex]["src"] = childList[x].src;
       userIDobj[userIDtitle]["children"][childIndex]["children"] = childList[x].querySelector(".templateItem") ? 1 : 0;
@@ -7657,7 +7657,7 @@ encode : function() {
     if (TRIANGLE.isType.textBox(TRIANGLE.sv_item.objRef)
     || TRIANGLE.isType.imageItem(TRIANGLE.sv_item.objRef)
     || TRIANGLE.isType.formBtn(TRIANGLE.sv_item.objRef)
-    || TRIANGLE.isType.snippetItem(TRIANGLE.sv_item.objRef)) template.items[itemID]["innerHTML"] = TRIANGLE.sv_item.objRef.innerHTML.replace(/&nbsp;/g, " ");
+    || TRIANGLE.isType.snippetItem(TRIANGLE.sv_item.objRef)) template.items[itemID]["innerHTML"] = TRIANGLE.sv_item.objRef.innerHTML.replace(/&nbsp;/g, " ");//find flag
 
     template.items[itemID]["src"] = TRIANGLE.sv_item.objRef.src;
     template.items[itemID]["children"] = TRIANGLE.sv_item.objRef.querySelector(".templateItem") ? 1 : 0;
