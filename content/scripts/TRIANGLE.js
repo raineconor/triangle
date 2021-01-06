@@ -10,7 +10,7 @@ var x = 0;
 var y = 0;
 var z = 0;
 
-TRIANGLE.version = "1.01.46";
+TRIANGLE.version = "1.01.47";
 
 
 //==================================================================================================
@@ -7198,7 +7198,11 @@ saveUserIDs : function() {
     if (TRIANGLE.isType.textBox(userIDs[i])
     || TRIANGLE.isType.imageItem(userIDs[i])
     || TRIANGLE.isType.formBtn(userIDs[i])
-    || TRIANGLE.isType.snippetItem(userIDs[i])) userIDobj[userIDtitle]["innerHTML"] = userIDs[i].innerHTML.replace(/&nbsp;/g, encodeURIComponent("&nbsp;"));
+    || TRIANGLE.isType.snippetItem(userIDs[i])) {
+      /*userIDobj[userIDtitle]["innerHTML"] = userIDs[i].innerHTML.replace(/&nbsp;/g, encodeURIComponent("&nbsp;"));
+      userIDobj[userIDtitle]["innerHTML"] = userIDs[i].innerHTML.replace(/&amp;/g, encodeURIComponent("&amp;"));*/
+      userIDobj[userIDtitle]["innerHTML"] = userIDs[i].innerHTML.replace(/&/g, encodeURIComponent("&"));
+    }
 
     userIDobj[userIDtitle]["src"] = userIDs[i].src;
     userIDobj[userIDtitle]["childof"] = 0;
@@ -7245,7 +7249,11 @@ saveUserIDs : function() {
       if (TRIANGLE.isType.textBox(childList[x])
       || TRIANGLE.isType.imageItem(childList[x])
       || TRIANGLE.isType.formBtn(childList[x])
-      || TRIANGLE.isType.snippetItem(childList[x])) userIDobj[userIDtitle]["children"][childIndex]["innerHTML"] = childList[x].innerHTML.replace(/&nbsp;/g, encodeURIComponent("&nbsp;"));
+      || TRIANGLE.isType.snippetItem(childList[x])) {
+        /*userIDobj[userIDtitle]["children"][childIndex]["innerHTML"] = childList[x].innerHTML.replace(/&nbsp;/g, encodeURIComponent("&nbsp;"));
+        userIDobj[userIDtitle]["children"][childIndex]["innerHTML"] = childList[x].innerHTML.replace(/&amp;/g, encodeURIComponent("&amp;"));*/
+        userIDobj[userIDtitle]["children"][childIndex]["innerHTML"] = childList[x].innerHTML.replace(/&/g, encodeURIComponent("&"));
+      }
 
       userIDobj[userIDtitle]["children"][childIndex]["src"] = childList[x].src;
       userIDobj[userIDtitle]["children"][childIndex]["children"] = childList[x].querySelector(".templateItem") ? 1 : 0;
