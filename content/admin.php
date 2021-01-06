@@ -234,7 +234,7 @@
     <h2>News</h2>
     <hr>
 
-    <h3>January 5, 2021</h3>
+    <h3>January 6, 2021</h3>
     <h3>1.01.46 Hotfix</h3>
     Ampersand symbols (&amp;) now save when inside an item with an ID.
     <hr>
