@@ -234,6 +234,17 @@
     <h2>News</h2>
     <hr>
 
+    <h3>January 5, 2021</h3>
+    <h3>Triangle Version 1.01.46</h3>
+    This update includes new features and bug fixes, as follows:
+    <ul>
+      <li>Shortcut Ctrl+[ selects the parent of a selected item</li>
+      <li>The CSS styles editor under the Developer tab now updates correctly when changing styles elsewhere in the menu</li>
+      <li>Opening pages from the Pages tab now fades in correctly like opening a template</li>
+      <li>Using overflow-x and overflow-y in the CSS menu now works correctly</li>
+    </ul>
+    <hr>
+
     <h3>January 3, 2021</h3>
     <h3>Triangle Version 1.01.45</h3>
     This update includes quality of life improvements and bug fixes, as follows:
