@@ -5067,7 +5067,7 @@ applyChanges : function applyChanges(specificFunc) {
   //}
   TRIANGLE.selectItem(TRIANGLE.item.index); // re-select the current item to reset its properties
   TRIANGLE.importItem.importColors(); // imports colors again
-  TRIANGLE.importItem.importCSSText();//FUCKIN SHIT
+  TRIANGLE.importItem.importCSSText();
   TRIANGLE.updateTemplateItems();
   //TRIANGLE.saveItem.equalizeUserClasses(TRIANGLE.item.userClass);
   //TRIANGLE.selectionBorder.update();
@@ -5777,7 +5777,7 @@ TRIANGLE.deleteItem = function deleteElement(index) {
   }
 }
 
-TRIANGLE.keyEvents = {
+TRIANGLE.keyEvents = { // keyboard shortcuts
 
 shiftKey : false,
 
@@ -5785,8 +5785,13 @@ whichKey : {
 
 document : function(event) {
 
+  if (event.keyCode === 27 || event.charCode === 27) {
+    /*if ((/sideMenuOpen/g).test(document.getElementById("sideMenu").className))*/ TRIANGLE.menu.closeSideMenu();
+  }
+
   //==================================================================
-  // anything above this line does not need to check for active inputs
+  // anything above this line does not need to check for active inputs like
+  // focused textboxes
   if (TRIANGLE.keyEvents.countActiveInputs() > 0) return;
   //==================================================================
 
@@ -5804,9 +5809,11 @@ document : function(event) {
 
   if (event.keyCode === 77) TRIANGLE.keyEvents.keyM();
 
-  if (event.ctrlKey && (event.keyCode === 38 || event.charCode === 38 || event.keyCode === 37 || event.charCode === 37)) TRIANGLE.template.decreaseOpacity();
+  if (event.keyCode === 78) TRIANGLE.appendRow();
 
-  if (event.ctrlKey && (event.keyCode === 40 || event.charCode === 40 || event.keyCode === 39 || event.charCode === 39)) TRIANGLE.template.increaseOpacity();
+  if (event.ctrlKey && (event.keyCode === 37 || event.charCode === 37 || event.keyCode === 40 || event.charCode === 40)) TRIANGLE.template.decreaseOpacity();
+
+  if (event.ctrlKey && (event.keyCode === 38 || event.charCode === 38 || event.keyCode === 39 || event.charCode === 39)) TRIANGLE.template.increaseOpacity();
 
 },
 
@@ -5816,7 +5823,8 @@ item : function(event) {
   if (event.keyCode === 27 || event.charCode === 27) TRIANGLE.keyEvents.keyEsc();
 
   //==================================================================
-  // anything above this line does not need to check for active inputs
+  // anything above this line does not need to check for active inputs like
+  // focused textboxes
   if (TRIANGLE.keyEvents.countActiveInputs() > 0) return;
   //==================================================================
 
@@ -5824,7 +5832,7 @@ item : function(event) {
 
   if (event.keyCode === 13) TRIANGLE.keyEvents.keyEnter();
 
-  if (event.keyCode === 46 || event.charCode === 46) TRIANGLE.keyEvents.keyDelete();
+  if (event.keyCode === 46 || event.charCode === 46 || event.keyCode === 8 || event.charCode === 8) TRIANGLE.keyEvents.keyDelete();
 
   if (!event.ctrlKey && (event.keyCode === 38 || event.charCode === 38 || event.keyCode === 37 || event.charCode === 37)) TRIANGLE.keyEvents.keyUpArrow();
 
@@ -5897,7 +5905,6 @@ keyEsc : function escKey(event) {
   if (document.getElementById("cropImgBorder")) TRIANGLE.images.crop.cancel();
   if (TRIANGLE.colors.colorDropIndex > -1) TRIANGLE.colors.cancelColorDropper();
   TRIANGLE.clearSelection();
-  if ((/sideMenuOpen/g).test(document.getElementById("sideMenu").className)) TRIANGLE.menu.closeSideMenu();
 },
 
 keyEnter : function(event) {
