@@ -423,3 +423,16 @@ input {
   color:#161616;
   border-left:10px solid #2170D6;
 }
+
+.helpEntry {
+  padding:10px;
+}
+.keyboardShortcut {
+  padding:2px 5px;
+  border:1px solid lightgray;
+  border-radius:2px;
+  background-color:#eeeeee;
+  display:inline-block;
+  font-family:'Courier New', monospace;
+  margin-right:10px;
+}

@@ -60,6 +60,7 @@
     <a class="left-col-btn" href="#" onClick="toggleMenu('ftpProfiles')">FTP Profiles</a>
     <a class="left-col-btn" href="#" onClick="toggleMenu('settings')">Settings</a>
     <a class="left-col-btn" href="#" onClick="toggleMenu('news')">News</a>
+    <a class="left-col-btn" href="#" onClick="toggleMenu('help')">Help</a>
     <a class="left-col-btn" href="logout.php">Logout</a>
 
     <div id="version">
@@ -234,6 +235,15 @@
     <h2>News</h2>
     <hr>
 
+    <h3>January 15, 2021</h3>
+    <h3>Triangle Version 1.01.47</h3>
+    This update includes new features as follows:
+    <ul>
+      <li>Added a help page to the dashboard, where a list of keyboard shortcuts can be found</li>
+      <li>Added keyboard shortcut "N" to add a new row</li>
+    </ul>
+    <hr>
+
     <h3>January 6, 2021</h3>
     <h3>1.01.46 Hotfix</h3>
     Ampersand symbols (&amp;) now save when inside an item with an ID.
@@ -355,6 +365,28 @@
     </div><br><br>
     <span class="error" id="changePasswordError"></span>
     <span id="changePasswordSuccess" style="color:green;display:none;">- Your password has been changed</span>
+  </section>
+
+  <section class="menu" id="help">
+    <h2>Help</h2>
+    <hr>
+    <h3>Keyboard Shortcuts</h3>
+    <div class="helpEntry"><span class="keyboardShortcut">Esc</span>Deselect selected item and close open menus</div>
+    <div class="helpEntry"><span class="keyboardShortcut">Delete or Backspace</span>Delete selected item</div>
+    <div class="helpEntry"><span class="keyboardShortcut">Ctrl+S</span>Save</div>
+    <div class="helpEntry"><span class="keyboardShortcut">Ctrl+C</span>Copy selected item</div>
+    <div class="helpEntry"><span class="keyboardShortcut">Ctrl+V</span>Paste selected item</div>
+    <div class="helpEntry"><span class="keyboardShortcut">Ctrl+X</span>Cut selected item</div>
+    <div class="helpEntry"><span class="keyboardShortcut">Ctrl+[</span>Select parent of selected item</div>
+    <div class="helpEntry"><span class="keyboardShortcut">Shift+P</span>Preview template</div>
+    <div class="helpEntry"><span class="keyboardShortcut">Shift+T</span>Insert textbox into selected item</div>
+    <div class="helpEntry"><span class="keyboardShortcut">N</span>New Row</div>
+    <div class="helpEntry"><span class="keyboardShortcut">D</span>Duplicate selected item</div>
+    <div class="helpEntry"><span class="keyboardShortcut">M</span>Open images menu</div>
+    <div class="helpEntry"><span class="keyboardShortcut">L</span>Open library menu</div>
+    <div class="helpEntry"><span class="keyboardShortcut">I</span>Activate color dropper</div>
+    <div class="helpEntry"><span class="keyboardShortcut">&uarr; or &larr;</span>Shift selected item up or left</div>
+    <div class="helpEntry"><span class="keyboardShortcut">&darr; or &rarr;</span>Shift selected item down or right</div>
   </section>
 
   </div>

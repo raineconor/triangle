@@ -133,7 +133,7 @@
       "mp3": "./sounds/barney.mp3"
     },
     {
-      "name": "WHY DONT I HAVE A PENIS!",
+      "name": "PENIS",
       "artist": "",
       "duration": "0:02",
       "mp3": "./sounds/penis.mp3"
@@ -149,6 +149,18 @@
       "artist": "",
       "duration": "0:40",
       "mp3": "./sounds/penis-deluxe.mp3"
+    },
+    {
+      "name": "Wednesday",
+      "artist": "",
+      "duration": "0:07",
+      "mp3": "./sounds/Meme sound effects 2020/It is Wednesday my Dudes (Vine Meme Sound) - Sound Effect .mp3"
+    },
+    {
+      "name": "Welcome to Chili's",
+      "artist": "",
+      "duration": "0:03",
+      "mp3": "./sounds/Meme sound effects 2020/Hi Welcome to Chili's (Vine Meme Sound) - Sound Effect .mp3"
     }
   ]
 }
