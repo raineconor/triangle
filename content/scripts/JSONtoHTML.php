@@ -37,9 +37,12 @@ function formatCode($data, $templateName, $pageName, $compress = false, $cropped
   if ($compress) {
     $CSSinclude = "<style><css></style>";
   } else {
-    $CSSinclude = "<!--========== CSS Include: =========-->\n"
+    /*$CSSinclude = "<!--========== CSS Include: =========-->\n"
                 . "<link rel=\"stylesheet\" href=\"" . $pageName .".css\" type=\"text/css\" media=\"screen\">\n"
-                . "<!--=================================-->\n\n";
+                . "<!--=================================-->\n\n";*/
+                $CSSinclude = "<!--========== CSS Include: =========-->\n"
+                            . "<style><css></style>"
+                            . "<!--=================================-->\n\n";
   }
 
   // PHP 7 logic
@@ -77,7 +80,6 @@ function formatCode($data, $templateName, $pageName, $compress = false, $cropped
   $itemHTML = "";
   $itemTags = [];
   $formFieldNames = '';
-  $cartScript = false;
   $imgCount = 0;
   $userClassList = [];
   reset($data["items"]);
@@ -91,12 +93,13 @@ function formatCode($data, $templateName, $pageName, $compress = false, $cropped
     $item = $data["items"][$key];
 
     $userIDparent = false;
-    if (is_string($item)) {
+    if (is_string($item)) { // if item is a user-id
       $splitUserID = explode(' ', $item);
       $userID = $splitUserID[0];
       $userIDparent = isset($splitUserID[1]) ? $splitUserID[1] : false;
       $item = db_query('SELECT content FROM user_ids WHERE username = ? AND template = ? AND user_id = ?', [$username, $templateName, $userID])["content"];
       $item = json_decode($item, true)[$userID];
+
       $new_keys = [];
       $track = $x;
       for ($y = 0; $y < $len; $y++) {
@@ -193,15 +196,11 @@ function formatCode($data, $templateName, $pageName, $compress = false, $cropped
     $openLink = !empty($item["link-to"]) ? "\n<a href=\"" . $item["link-to"] . "\"" . $target . ">" : "";
     $closeLink = !empty($openLink) ? "</a>" : "";
     $form = $tag === "form" ? " method=\"post\" enctype=\"application/x-www-form-urlencoded\" action=\"" . $pageName . "-" . $itemTitle . "form.php\"" : "";
-    $addToCart = !empty($item["addToCart"]) ? " itemID=\"" . $item["addToCart"] . "\" onClick=\"addToCart(this);\"" : "";
-    if (!empty($addToCart)) $cartScript = true;
     /*$htmlStr = "<" . $tag . " id=\"" . $id . "\"" . $name . $src . $form . ">" . $innerHTML . "</" . $tag . ">\n" . $clearFloat;
     $itemHTML .= $htmlStr;*/
 
     $closeTag = $innerHTML . "</" . $tag . ">\n" . $clearFloat;
 
-    /*$itemTags[$key]["openTag"] = $openLink . "<" . $tag . $id . $name . $src . $form . $addToCart . ">";
-    $itemTags[$key]["closeTag"] = $closeTag . $closeLink;*/
     $itemTags[$key]["openTag"] = $openLink . "<" . $tag . $id . $class /* . $style */. $name . $src . $form . $addToCart . ">";
     $itemTags[$key]["closeTag"] = $closeTag . $closeLink;
     $itemTags[$key]["children"] = boolval($item["children"]);
@@ -218,20 +217,12 @@ function formatCode($data, $templateName, $pageName, $compress = false, $cropped
   $scriptTag = $data["scriptTag"];
   $globalTags;
 
-  if ($cartScript || !empty($data["scriptTag"])) {
-    $cartScript = $cartScript ? file_get_contents(__DIR__ . "/../resources/cart/addToCart.js") : "";
-    //if (!empty($data["scriptTag"])) $scriptTag = $data["scriptTag"];
-    //$scriptTag = $openScript . $cartScript . "\n" . $scriptTag . $closeScript;
-  } else {
-    $cartScript = "";
-  }
-
   if ($globalTags = db_query('SELECT style_tag, script_tag FROM global_tags WHERE username = ? AND template = ?', [$username, $templateName])) {
     $globalScript = !empty($globalTags["script_tag"]) ? $globalTags["script_tag"] . "\n\n" : "";
     $scriptTag = $globalScript . $data["scriptTag"] . "\n";
   }
 
-  $scriptTag = $openScript . $cartScript . "\n" . $scriptTag . $closeScript;
+  $scriptTag = $openScript . "\n" . $scriptTag . $closeScript;
 
   //echo $scriptTag;
 
@@ -338,7 +329,6 @@ function formatCode($data, $templateName, $pageName, $compress = false, $cropped
 
   $html .= "\n\n</div><!-- end class=\"container\" -->\n\n"
          . $deferFonts
-         //. $cartScript
          . $imgCount
          . $scriptTag
          . "</body>\n\n"
@@ -491,11 +481,13 @@ function formatCode($data, $templateName, $pageName, $compress = false, $cropped
       $itemStyle = json_decode($readUserID["content"], true)[$itemTitle]["style"];
     } else {
       $itemStyle = $item["style"];
+
       if (isset($data["items"][$itemStyle])) $itemStyle = $data["items"][$itemStyle]["style"];
       reset($compression_map);
       foreach ($compression_map as $mapStyle => $mapCode) {
         $itemStyle = str_replace('%' . $mapCode, $mapStyle . ':', $itemStyle);
       }
+      //var_dump($item);
     }
 
     if ($userClass) {
@@ -588,6 +580,8 @@ function formatCode($data, $templateName, $pageName, $compress = false, $cropped
     $css = preg_replace("/\n|\r/", "", $css);
     $css = preg_replace("/\s*({|}|;|,|\(|\))\s*/", "$1", $css);
     $html = str_replace("<style><css></style>", "<style>" . $css . "</style>", $html);
+  } else {
+    $html = str_replace("<style><css></style>", "<style>\n" . $css . "\n</style>\n", $html);
   }
 
   str_replace("<?php", "<!--<?php", $html);
