@@ -6507,7 +6507,7 @@ postTemplateAJAX : function(type, params) { // not currently in use
 
 previewTemplate : function previewTemplate() {
 
-  if (!TRIANGLE.unsavedPremade) {
+  if (!TRIANGLE.unsavedPremade) { // normal user-made template
 
     TRIANGLE.exportCode.callbackAfterSave = function() {
       var compress = document.getElementById("exportCompress").checked ? 1 : 0;
@@ -6520,7 +6520,7 @@ previewTemplate : function previewTemplate() {
 
     TRIANGLE.saveTemplate.saveCurrent();
 
-  } else {
+  } else { // unsaved premade template from Triangle
 
     TRIANGLE.exportCode.callbackAfterSave = function() {
       setTimeout(TRIANGLE.exportCode.previewTemplate, 100);
@@ -7209,9 +7209,35 @@ saveUserIDs : function() {
 
     userIDobj[userIDtitle]["src"] = userIDs[i].src;
     userIDobj[userIDtitle]["childof"] = 0;
-    userIDobj[userIDtitle]["nextSib"] = nextSib && TRIANGLE.isType.templateItem(nextSib) ? nextSib.id : 0;
-    userIDobj[userIDtitle]["prevSib"] = prevSib && TRIANGLE.isType.templateItem(prevSib) ? prevSib.id : 0;
-    userIDobj[userIDtitle]["isLastChild"] = !nextSib || (nextSib && !TRIANGLE.isType.templateItem(nextSib)) ? 1 : 0;
+    /*userIDobj[userIDtitle]["nextSib"] = nextSib && TRIANGLE.isType.templateItem(nextSib) ? nextSib.id : 0;
+    userIDobj[userIDtitle]["prevSib"] = prevSib && TRIANGLE.isType.templateItem(prevSib) ? prevSib.id : 0;*/
+    if (nextSib && TRIANGLE.isType.templateItem(nextSib)) {
+      userIDobj[userIDtitle]["nextSib"] = nextSib.id;
+    } else if (nextSib && TRIANGLE.isType.clearFloat(nextSib)) {
+      userIDobj[userIDtitle]["nextSib"] = nextSib.nextSibling && TRIANGLE.isType.templateItem(nextSib.nextSibling) ? nextSib.nextSibling.id : 0;
+    } else {
+      userIDobj[userIDtitle]["nextSib"] = 0;
+    }
+
+    if (prevSib && TRIANGLE.isType.templateItem(prevSib)) {
+      userIDobj[userIDtitle]["prevSib"] = prevSib.id;
+    } else if (prevSib && TRIANGLE.isType.clearFloat(prevSib)) {
+      userIDobj[userIDtitle]["prevSib"] = prevSib.previousSibling && TRIANGLE.isType.templateItem(prevSib.previousSibling) ? prevSib.previousSibling.id : 0;
+    } else {
+      userIDobj[userIDtitle]["prevSib"] = 0;
+    }
+
+    //userIDobj[userIDtitle]["isLastChild"] = !nextSib || (nextSib && !TRIANGLE.isType.templateItem(nextSib)) ? 1 : 0;
+    if (!nextSib) {
+      userIDobj[userIDtitle]["isLastChild"] = 1;
+    } else if (nextSib && TRIANGLE.isType.clearFloat(nextSib)) {
+      userIDobj[userIDtitle]["isLastChild"] = nextSib.nextSibling && TRIANGLE.isType.templateItem(nextSib.nextSibling) ? 0 : 1;
+    } else {
+      userIDobj[userIDtitle]["isLastChild"] = 0;
+    }
+
+    //console.log(userIDobj[userIDtitle]);
+
     userIDobj[userIDtitle]["item-align"] = userIDs[i].getAttribute("item-align");
     userIDobj[userIDtitle]["hover-style"] = userIDs[i].getAttribute("hover-style");
     userIDobj[userIDtitle]["link-to"] = userIDs[i].getAttribute("link-to");
@@ -7257,9 +7283,37 @@ saveUserIDs : function() {
       userIDobj[userIDtitle]["children"][childIndex]["src"] = childList[x].src;
       userIDobj[userIDtitle]["children"][childIndex]["children"] = childList[x].querySelector(".templateItem") ? 1 : 0;
       userIDobj[userIDtitle]["children"][childIndex]["childof"] = idMap[childList[x].getAttribute("childof")];
-      userIDobj[userIDtitle]["children"][childIndex]["nextSib"] = nextSib && TRIANGLE.isType.templateItem(nextSib) ? userIDtitle + (x + 1) : 0;
-      userIDobj[userIDtitle]["children"][childIndex]["prevSib"] = prevSib && TRIANGLE.isType.templateItem(prevSib) ? idMap[prevSib.id] : 0;
-      userIDobj[userIDtitle]["children"][childIndex]["isLastChild"] = !nextSib || (nextSib && !TRIANGLE.isType.templateItem(nextSib)) ? 1 : 0;
+      /*userIDobj[userIDtitle]["children"][childIndex]["nextSib"] = nextSib && TRIANGLE.isType.templateItem(nextSib) ? userIDtitle + (x + 1) : 0;
+      userIDobj[userIDtitle]["children"][childIndex]["prevSib"] = prevSib && TRIANGLE.isType.templateItem(prevSib) ? idMap[prevSib.id] : 0;*/
+
+      if (nextSib && TRIANGLE.isType.templateItem(nextSib)) {
+        userIDobj[userIDtitle]["children"][childIndex]["nextSib"] = userIDtitle + (x + 1);
+      } else if (nextSib && TRIANGLE.isType.clearFloat(nextSib)) {
+        userIDobj[userIDtitle]["children"][childIndex]["nextSib"] = nextSib.nextSibling && TRIANGLE.isType.templateItem(nextSib.nextSibling) ? userIDtitle + (x + 1) : 0;
+      } else {
+        userIDobj[userIDtitle]["children"][childIndex]["nextSib"] = 0;
+      }
+
+      if (prevSib && TRIANGLE.isType.templateItem(prevSib)) {
+        userIDobj[userIDtitle]["children"][childIndex]["prevSib"] = idMap[prevSib.id];
+      } else if (prevSib && TRIANGLE.isType.clearFloat(prevSib)) {
+        userIDobj[userIDtitle]["children"][childIndex]["prevSib"] = prevSib.previousSibling && TRIANGLE.isType.templateItem(prevSib.previousSibling) ? idMap[prevSib.id] : 0;
+      } else {
+        userIDobj[userIDtitle]["children"][childIndex]["prevSib"] = 0;//SHIT
+      }
+
+      //userIDobj[userIDtitle]["children"][childIndex]["isLastChild"] = !nextSib || (nextSib && !TRIANGLE.isType.templateItem(nextSib)) ? 1 : 0;
+      userIDobj[userIDtitle]["isLastChild"] = !nextSib || (nextSib && !TRIANGLE.isType.templateItem(nextSib)) ? 1 : 0;
+      if (!nextSib) {
+        userIDobj[userIDtitle]["children"][childIndex]["isLastChild"] = 1;
+      } else if (nextSib && TRIANGLE.isType.clearFloat(nextSib)) {
+        userIDobj[userIDtitle]["children"][childIndex]["isLastChild"] = nextSib.nextSibling && TRIANGLE.isType.templateItem(nextSib.nextSibling) ? 0 : 1;
+      } else {
+        userIDobj[userIDtitle]["children"][childIndex]["isLastChild"] = 0;
+      }
+
+      //console.log(userIDobj[userIDtitle]["children"][childIndex]);
+
       userIDobj[userIDtitle]["children"][childIndex]["item-align"] = childList[x].getAttribute("item-align");
       userIDobj[userIDtitle]["children"][childIndex]["hover-style"] = childList[x].getAttribute("hover-style");
       userIDobj[userIDtitle]["children"][childIndex]["link-to"] = childList[x].getAttribute("link-to");

@@ -85,6 +85,8 @@
     //var_dump($croppedImgPaths);
     $code = formatCode($JSON_arr, $templateName, $pageName, $compress, $croppedImgPaths);
 
+    //var_dump($code);
+
     preg_match_all("@(src|lazyload)\=\"([^\"]*\/images\/[^\"]+)\"@", $code[0], $HTMLimages); // this can be made much faster if a list of images are stored with the template
     /*$HTMLimages[2] = array_diff($HTMLimages[2], $croppedImgPaths["new"]);
     var_dump($HTMLimages[2]);
@@ -125,10 +127,6 @@
                                       //"http://trianglecms.com",
                                       "/home/tcadmin/public_html",
                                       $CSSimages[1][$y]);
-      $CSSimages[1][$y] = str_replace("http://braydengregerson.com/triangle",
-                                      //"http://trianglecms.com",
-                                      "/home/tcadmin/public_html",
-                                      $CSSimages[1][$y]);
       $CSSimages[1][$y] = str_replace("http://trianglecms.com",
                                       //"http://trianglecms.com",
                                       "/home/tcadmin/public_html",
@@ -144,7 +142,14 @@
     $code[1] = preg_replace("@url\(\"[^\"]*\/(images\/[^\"]+)\"\)@", "url(\"$1\")", $code[1]);
 
     file_put_contents($filedest . "/" . $pageName . ".php", $code[0]);
-    if (!$compress) file_put_contents($filedest . "/" . $pageName . ".css", $code[1]);
+    if (!$compress) {
+      /*if (file_put_contents($filedest . "/" . $pageName . ".css", $code[1])) {
+          echo "YES";
+      } else {
+          echo "NO";
+      }*/
+      file_put_contents($filedest . "/" . $pageName . ".css", $code[1]);
+    }
   }
 
   $unusedPages = $existingPages ? array_flip($existingPages) : [];

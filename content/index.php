@@ -1159,7 +1159,15 @@ function lazyload() {
 
 </script>
 <script type="text/javascript" src="scripts/AJAX.js"></script>
-<script type="text/javascript" src="scripts/TRIANGLE<?php if ($_SERVER["HTTP_HOST"] === "trianglecms.com" || $_SERVER["HTTP_HOST"] === "www.trianglecms.com") echo str_replace(".", "", $latestVersion); ?>.<?php if ($_SERVER["HTTP_HOST"] === "trianglecms.com" || $_SERVER["HTTP_HOST"] === "www.trianglecms.com") echo "min."; ?>js"></script>
+<script type="text/javascript" src="scripts/<?php
+if ($_SERVER["HTTP_HOST"] === "trianglecms.com"
+|| $_SERVER["HTTP_HOST"] === "www.trianglecms.com") {
+  echo "TRIANGLE" . str_replace(".", "", $latestVersion) . ".min.js";
+} else {
+  echo "TRIANGLE.js";
+}
+?>"></script>
+
 
 <?php echo $callLoad; ?>
 <?php echo $max_templates; ?>

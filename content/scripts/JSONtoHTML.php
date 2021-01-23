@@ -88,7 +88,7 @@ function formatCode($data, $templateName, $pageName, $compress = false, $cropped
   $len = count($keys);
   reset($keys);
 
-  for ($x = 0; $x < $len; $x++) {
+  for ($x = 0; $x < $len; $x++) { // iterate through all items
     $key = $keys[$x];
     $item = $data["items"][$key];
 
@@ -241,7 +241,7 @@ function formatCode($data, $templateName, $pageName, $compress = false, $cropped
   $layer = 0;
   reset($itemTags);
 
-  foreach ($itemTags as $key => $item) {
+  foreach ($itemTags as $key => $item) { // iterate through all items and create HTML nesting structure
     $itemHTML .= $item["openTag"];
 
     if (!$item["children"] && $item["isLastChild"]) {
@@ -298,7 +298,7 @@ function formatCode($data, $templateName, $pageName, $compress = false, $cropped
   $len = count($itemHTML);
   reset($itemHTML);
 
-  for ($x = 0; $x < $len; $x++) {
+  for ($x = 0; $x < $len; $x++) { // iterate through all HTML tags and indent with tabs
     if (preg_match($openTag, $itemHTML[$x]) && preg_match($openTag, $itemHTML[$x + 1])) {
       $layer .= "  ";
       $space = $compress ? "" : "\n" . $layer;
