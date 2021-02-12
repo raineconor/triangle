@@ -1703,6 +1703,7 @@ editText : function editText() {
   || item.objRef.innerHTML == "Field Label") item.objRef.innerHTML = "&nbsp;";
   document.getElementById("selectionBorder").style.border = "1px dashed black";
   TRIANGLE.resize.removeHandles();
+  TRIANGLE.menu.displaySubMenu('displayTextStyles');
 },
 
 /*
@@ -7404,7 +7405,7 @@ createNewPage : function(pageName) {
   TRIANGLE.menu.closeSideMenu();
 
   TRIANGLE.saveTemplate.newPage = pageName;
-  setTimeout(function(){TRIANGLE.loadTemplate.loadTemplate(TRIANGLE.currentTemplate, TRIANGLE.saveTemplate.newPage)}, 500);
+  setTimeout(function(){TRIANGLE.loadTemplate.loadTemplate(TRIANGLE.currentTemplate, TRIANGLE.saveTemplate.newPage)}, 500); // find flag
 }
 
 
