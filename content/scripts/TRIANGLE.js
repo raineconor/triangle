@@ -10,7 +10,7 @@ var x = 0;
 var y = 0;
 var z = 0;
 
-TRIANGLE.version = "1.01.48";
+TRIANGLE.version = "1.01.49";
 
 
 //==================================================================================================
@@ -6028,7 +6028,7 @@ insertColumns : function insertColumns(columnNum) {
   for (i = 0; i < columnNum; i++) {
     var newColumn = document.createElement("div");
 
-    newColumn.style.backgroundColor = TRIANGLE.randomColor();
+    newColumn.style.backgroundColor = "#ffffff";
     newColumn.style.minHeight = item.minHeight;
     newColumn.style.height = "auto"; // or item.height
     newColumn.style.width = columnWidth + TRIANGLE.getUnit(item.width);
