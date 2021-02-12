@@ -98,7 +98,7 @@
     <div class="mainOption" id="opElementStyles" onClick="TRIANGLE.menu.displaySubMenu('displayElementStyles');">Style</div>
     <a class="mainOption" id="opColor" href="javascript:void(0)" onClick="TRIANGLE.menu.displaySubMenu('displayColor');">Colors</a>
     <a class="mainOption" id="opTextStyles" href="javascript:void(0)" onClick="TRIANGLE.menu.displaySubMenu('displayTextStyles');">Text</a>
-    <div class="mainOption" id="opForms" onClick="TRIANGLE.menu.displaySubMenu('displayForms');">Forms</div>
+    <!-- <div class="mainOption" id="opForms" onClick="TRIANGLE.menu.displaySubMenu('displayForms');">Forms</div> -->
     <div class="mainOption" id="opImages" onClick="TRIANGLE.menu.displaySubMenu('displayImages');">Images</div>
     <div class="mainOptionImmune" id="opPages" onClick="TRIANGLE.clearSelection();TRIANGLE.pages.loadPages('', 'menu');TRIANGLE.menu.openSideMenu('pagesMenuOptions');">Pages</div>
     <div class="mainOption" id="opPresetElements" onClick="TRIANGLE.menu.displaySubMenu('displayPremadeElements');"><!--Premade-->Library</div>
