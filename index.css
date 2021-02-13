@@ -121,35 +121,11 @@ textarea {
 }
 
 #item9, #item7 {
-  -webkit-appearance:none;
   height:auto;
   min-height:20px;
   width:200px;
   position:relative;
-  border:none;
-  background:none;
-  color:white;
   border-bottom:1px solid white;
-}
-
-#item9:focus, #item7:focus {
-  outline: none;
-}
-
-#loginSubmit {
-  border:1px solid white;
-  background:none;
-  color:white;
-  font-size:14px;
-  margin:0 15px;
-  transition:all 80ms;
-}
-#loginSubmit:hover {
-  background-color:white;
-  color:#333333;
-}
-.error {
-  color:#E1341E;
 }
 
 .home-banner {
@@ -187,6 +163,58 @@ textarea {
   color:white;
   line-height:1;
   text-align:center;
+}
+
+#item13 {
+  background-color:white;
+  height:auto;
+  min-height:90vh;
+  width:100%;
+  display:flex;
+  position:relative;
+}
+
+#item14 {
+  height:auto;
+  min-height:100px;
+  width:100%;
+  display:flex;
+  position:relative;
+  padding:40px;
+  justify-content:center;
+  align-items:center;
+}
+
+#item15 {
+  background-color:inherit;
+  height:auto;
+  width:100%;
+  padding-bottom:20px;
+  border-bottom:2px solid rgb(53, 138, 234);
+  font-family:Roboto;
+  font-weight:bold;
+  font-size:56px;
+  color:rgb(9, 24, 43);
+  line-height:1;
+  text-align:center;
+}
+
+#item16 {
+  background-color:rgb(191, 215, 234);
+  height:auto;
+  min-height:100px;
+  width:100%;
+  display:flex;
+  position:relative;
+  padding:40px;
+  justify-content:center;
+  align-items:center;
+}
+
+#item17 {
+  background-color:inherit;
+  height:auto;
+  min-height:1px;
 }
 
 .banner-text {
@@ -233,11 +261,14 @@ textarea {
 
 
 @media (min-width: 768px) {
-  #item1 {
+  #item16, #item1 {
     width:100%;
   }
   #item2 {
     width:30%;
+  }
+  #item14 {
+    width:50%;
   }
 }
 
@@ -250,6 +281,12 @@ textarea {
   }
   #item9, #item7 {
     width:200px;
+  }
+  #item14 {
+    width:40%;
+  }
+  #item16 {
+    width:60%;
   }
 }
 

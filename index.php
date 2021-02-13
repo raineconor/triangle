@@ -48,7 +48,7 @@
         </div>
         <div style="clear: both;"></div>
         <div id="item4">
-          <b>Triangle </b>
+          <strong>Triangle</strong>
         </div>
       </div>
       <form id="item5" method="post" action="<?php $_SERVER['PHP_SELF']; ?>">
@@ -122,6 +122,18 @@
       (C) Copyright 2020 Raine Conor. All rights reserved. <br>
     </div>
   </div>
+  <div id="item13">
+    <div id="item14">
+      <div id="item15">
+        Build Websites Fast<br>
+      </div>
+    </div>
+    <div id="item16">
+      <div id="item17">
+        <video id="videoPlayer" src="https://trianglecms.com/video/triangle-preview-720p.mov" type="video/mp4" loop="" width="100%" height="auto"></video>
+      </div>
+    </div>
+  </div>
 
 </div><!-- end class="container" -->
 
@@ -135,6 +147,16 @@ function deferFonts() {
     defer[i].setAttribute("href", defer[i].getAttribute("defer"));
   }
 }
+
+</script>
+<script type="text/javascript">
+
+document.addEventListener("scroll", function() {
+    var vid = document.getElementById("videoPlayer");
+    if (vid.getBoundingClientRect().top < window.innerHeight - window.innerHeight / 7) {
+        vid.setAttribute("autoplay", true);
+    }
+});
 
 </script>
 
