@@ -968,6 +968,11 @@ hr {
   border-color: gray;
 }
 
+.subMenuOption .subMenuOptionBox {
+  border:1px dotted gray;
+  height:88px;
+}
+
 .optionImage {
   width:100%;
 }
@@ -1464,4 +1469,8 @@ hr.clearFloat {
   width:12px;
   margin:0;
   vertical-align:bottom;
+}
+
+*[triangle="templateItem"] {
+  border:2px solid red;
 }

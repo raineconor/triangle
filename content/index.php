@@ -117,28 +117,28 @@
   <!-- Export -->
   <div class="subMenu" id="displayExportOptions">
     <div class="subMenuOption" id="publishSite" onClick="TRIANGLE.publish.prompt();">
-      <div style="border:1px dotted gray;height:88px;">
+      <div class="subMenuOptionBox">
         <img class="optionImage" src="images/opPublish.svg">
       </div>
       <div class="optionLabel" id="labelPublishSite">Publish Site</div>
     </div>
 
     <div class="subMenuOption" id="exportZip" onClick="TRIANGLE.loading.start(TRIANGLE.exportCode.exportZip);">
-      <div style="border:1px dotted gray;height:88px;">
+      <div class="subMenuOptionBox">
         <img class="optionImage" src="images/opExportZip.svg">
       </div>
       <div class="optionLabel" id="labelExportZip">Download ZIP</div>
     </div>
 
     <div class="subMenuOption" id="exportRaw" onClick="TRIANGLE.loading.start(function(){TRIANGLE.exportCode.format('raw')});">
-      <div style="border:1px dotted gray;height:88px;">
+      <div class="subMenuOptionBox">
         <img class="optionImage" src="images/opExportRaw.gif">
       </div>
       <div class="optionLabel" id="labelExportRaw">Raw Code</div>
     </div>
 
     <div class="subMenuOption" id="previewTemplate" onClick="TRIANGLE.loading.start(TRIANGLE.exportCode.previewTemplate);">
-      <div style="border:1px dotted gray;height:88px;">
+      <div class="subMenuOptionBox">
         <img class="optionImage" src="images/opPreviewTemplate.svg">
       </div>
       <div class="optionLabel" id="labelPreviewTemplate">Preview</div>
@@ -147,7 +147,7 @@
     <?php
     if ($_SESSION["usertype"] === "admin") {
       echo '<div class="subMenuOption" id="exportLibraryItemCode" onClick="TRIANGLE.saveItem.exportLibraryItemCode();">
-        <div style="border:1px dotted gray;height:88px;">
+        <div class="subMenuOptionBox">
           <div style="background-color:#f1f1f1;height:100%;display:flex;align-items:center;justify-content:center;">Library Item</div>
         </div>
         <div class="optionLabel" id="labelExportLibraryItemCode">Library Item</div>
@@ -168,63 +168,63 @@
   <div class="subMenu" id="displayGeneralOptions">
 
     <div class="subMenuOption" id="fixedWidth" onClick="TRIANGLE.template.getFixedWidth();">
-      <div style="border:1px dotted gray;height:88px;">
+      <div class="subMenuOptionBox">
         <img class="optionImage" src="images/opFixedWidth.svg">
       </div>
       <div class="optionLabel" id="labelFixedWidth">Fixed Width</div>
     </div>
 
     <div class="subMenuOption" id="fluidWidth" onClick="TRIANGLE.template.fluidWidth();">
-      <div style="border:1px dotted gray;height:88px;">
+      <div class="subMenuOptionBox">
         <img class="optionImage" src="images/opFluidWidth.svg">
       </div>
       <div class="optionLabel" id="labelFluidWidth">Fluid Width</div>
     </div>
 
     <div class="subMenuOption" id="newRow" onClick="TRIANGLE.appendRow();">
-      <div style="border:1px dotted gray;height:88px;">
+      <div class="subMenuOptionBox">
         <img class="optionImage" src="images/opNewRow.svg">
       </div>
       <div class="optionLabel" id="labelNewRow">New Row</div>
     </div>
 
     <div class="subMenuOption" id="blankTemplate" onClick="TRIANGLE.template.blank();">
-      <div style="border:1px dotted gray;height:88px;">
+      <div class="subMenuOptionBox">
         <img class="optionImage" src="images/opBlankTemplate.svg">
       </div>
       <div class="optionLabel" id="labelBlankTemplate">Blank Template</div>
     </div>
 
     <div class="subMenuOption" id="insert2columns" style="display:none;">
-      <div style="border:1px dotted gray;height:88px;">
+      <div class="subMenuOptionBox">
         <img class="optionImage" src="images/opInsert2columns.svg">
       </div>
       <div class="optionLabel" id="labelInsert2columns">Split 2 Columns</div>
     </div>
 
     <div class="subMenuOption" id="insert3columns" style="display:none;">
-      <div style="border:1px dotted gray;height:88px;">
+      <div class="subMenuOptionBox">
         <img class="optionImage" src="images/opInsert3columns.svg">
       </div>
       <div class="optionLabel" id="labelInsert3columns">Split 3 Columns</div>
     </div>
 
     <div class="subMenuOption" id="opDuplicateElement" style="display:none;">
-      <div style="border:1px dotted gray;height:88px;">
+      <div class="subMenuOptionBox">
         <img class="optionImage" src="images/opDuplicateElement.svg">
       </div>
       <div class="optionLabel" id="labelDuplicateElement">Duplicate</div>
     </div>
 
     <div class="subMenuOption" id="opInsertNewChild" style="display:none;">
-      <div style="border:1px dotted gray;height:88px;">
+      <div class="subMenuOptionBox">
         <img class="optionImage" src="images/opInsertNewChild.svg">
       </div>
       <div class="optionLabel" id="labelInsertNewChild">Insert Child</div>
     </div>
 
     <div class="subMenuOption" id="opSelectParent" style="display:none;" onClick="TRIANGLE.selectParent();">
-      <div style="border:1px dotted gray;height:88px;">
+      <div class="subMenuOptionBox">
         <div style="background-color:#f1f1f1;height:100%;display:flex;align-items:center;justify-content:center;">Select<br>Parent</div>
         <!--<img class="optionImage" src="images/opInsertNewChild.svg">-->
       </div>
@@ -232,7 +232,7 @@
     </div>
 
     <div class="subMenuOption" id="opHyperlink" style="display:none;" onClick="TRIANGLE.text.createHyperlink();">
-      <div style="border:1px dotted gray;height:88px;">
+      <div class="subMenuOptionBox">
         <img class="optionImage" src="images/opHyperlink.svg">
       </div>
       <div class="optionLabel" id="labelHyperlink">Create Hyperlink</div>
@@ -353,35 +353,35 @@
     </div>
 
     <div class="subMenuOption" id="itemAlignLeft" onClick="TRIANGLE.style.itemAlignLeft();" style="margin-left:10px;">
-      <div style="border:1px dotted gray;height:88px;">
+      <div class="subMenuOptionBox">
         <img class="optionImage" src="images/opItemAlignLeft.gif">
       </div>
       <div class="optionLabel" id="labelItemAlignLeft">Align Left</div>
     </div>
 
     <div class="subMenuOption" id="itemAlignCenter" onClick="TRIANGLE.style.itemAlignCenter();">
-      <div style="border:1px dotted gray;height:88px;">
+      <div class="subMenuOptionBox">
         <img class="optionImage" src="images/opItemAlignCenter.gif">
       </div>
       <div class="optionLabel" id="labelItemAlignCenter">Align Center</div>
     </div>
 
     <div class="subMenuOption" id="itemAlignRight" onClick="TRIANGLE.style.itemAlignRight();">
-      <div style="border:1px dotted gray;height:88px;">
+      <div class="subMenuOptionBox">
         <img class="optionImage" src="images/opItemAlignRight.gif">
       </div>
       <div class="optionLabel" id="labelItemAlignRight">Align Right</div>
     </div>
 
     <div class="subMenuOption" id="itemVerticalMiddle" onClick="TRIANGLE.style.verticalMiddle();">
-      <div style="border:1px dotted gray;height:88px;">
+      <div class="subMenuOptionBox">
         <img class="optionImage" src="images/opItemAlignVertical.gif">
       </div>
       <div class="optionLabel" id="labelVerticalMiddle">Vertical Middle</div>
     </div>
 
     <div class="subMenuOption" id="itemAlignDefault" onClick="TRIANGLE.style.itemAlignDefault();">
-      <div style="border:1px dotted gray;height:88px;">
+      <div class="subMenuOptionBox">
         <img class="optionImage" src="images/opItemAlignDefault.gif">
       </div>
       <div class="optionLabel" id="labelItemAlignDefault">No Alignment</div>
@@ -393,14 +393,14 @@
   <!-- Colors -->
   <div class="subMenu" id="displayColor">
     <div class="subMenuOption" id="colorDropper" onClick="TRIANGLE.colors.colorDropper();">
-      <div style="border:1px dotted gray;height:88px;">
+      <div class="subMenuOptionBox">
         <img class="optionImage" src="images/opColorDropper.svg">
       </div>
       <div class="optionLabel" id="labelColorDropper">Color Dropper</div>
     </div>
 
     <div class="subMenuOption" id="createPalette" onClick="TRIANGLE.colors.createPalette();">
-      <div style="border:1px dotted gray;height:88px;">
+      <div class="subMenuOptionBox">
         <img class="optionImage" src="images/opCreatePalette.svg">
       </div>
       <div class="optionLabel" id="labelCreatePalette">Color Palette</div>
@@ -427,7 +427,7 @@
   -->
 
     <div class="subMenuOption" id="textBox" onClick="TRIANGLE.text.insertTextBox();">
-      <div style="border:1px dotted gray;height:88px;">
+      <div class="subMenuOptionBox">
         <img class="optionImage" src="images/opTextBox.svg">
       </div>
       <div class="optionLabel" id="labelTextBox">Insert Textbox</div>
@@ -539,21 +539,21 @@
   <!-- Forms -->
   <div class="subMenu" id="displayForms">
     <div class="subMenuOption" id="newForm" onClick="TRIANGLE.forms.insertForm();">
-      <div style="border:1px dotted gray;height:88px;">
+      <div class="subMenuOptionBox">
         <img class="optionImage" src="images/opInsertForm.gif">
       </div>
       <div class="optionLabel" id="labelNewForm">Insert Form</div>
     </div>
 
     <div class="subMenuOption" id="insertField" onClick="TRIANGLE.forms.insertField();">
-      <div style="border:1px dotted gray;height:88px;">
+      <div class="subMenuOptionBox">
         <img class="optionImage" src="images/opInsertFormField.gif">
       </div>
       <div class="optionLabel" id="labelInsertFormField">Insert Field</div>
     </div>
 
     <div class="subMenuOption" id="insertFormBtn" onClick="TRIANGLE.forms.insertButton();">
-      <div style="border:1px dotted gray;height:88px;">
+      <div class="subMenuOptionBox">
         <img class="optionImage" src="images/opInsertFormBtn.gif">
       </div>
       <div class="optionLabel" id="labelInsertFormBtn">Submit Button</div>
@@ -569,35 +569,35 @@
   <!-- Images -->
   <div class="subMenu" id="displayImages">
     <div class="subMenuOption" id="imgLibrary" onClick="TRIANGLE.images.load();TRIANGLE.menu.openSideMenu('imageLibraryMenu');">
-      <div style="border:1px dotted gray;height:88px;">
+      <div class="subMenuOptionBox">
         <img class="optionImage" src="images/opInsertImage.svg">
       </div>
       <div class="optionLabel" id="labelImgLibrary">Insert Image</div>
     </div>
 
     <div class="subMenuOption" id="setImageBg" onClick="TRIANGLE.images.load();TRIANGLE.menu.openSideMenu('imageLibraryMenu');TRIANGLE.images.setBackground = true;">
-      <div style="border:1px dotted gray;height:88px;">
+      <div class="subMenuOptionBox">
         <img class="optionImage" src="images/opSetImageBg.svg">
       </div>
       <div class="optionLabel" id="labelSetImgBg">Set Background</div>
     </div>
 
     <div class="subMenuOption" id="removeImageBg" onClick="TRIANGLE.images.removeBackground();">
-      <div style="border:1px dotted gray;height:88px;">
+      <div class="subMenuOptionBox">
         <img class="optionImage" src="images/opRemoveImageBg.svg">
       </div>
       <div class="optionLabel" id="labelRemoveImgBg">Remove Background</div>
     </div>
 
     <!--<div class="subMenuOption" id="cropImg" onClick="TRIANGLE.images.crop.createBorder();">
-      <div style="border:1px dotted gray;height:88px;">
+      <div class="subMenuOptionBox">
         <img class="optionImage" src="images/opCropImage.svg">
       </div>
       <div class="optionLabel" id="labelCropImg">Crop Image</div>
     </div>-->
 
     <div class="subMenuOption" id="autoSizeImg" onClick="TRIANGLE.images.autoSize();">
-      <div style="border:1px dotted gray;height:88px;">
+      <div class="subMenuOptionBox">
         <img class="optionImage" src="images/opExpandFitImg.svg">
       </div>
       <div class="optionLabel" id="labelAutoSizeImg">Expand to Fit</div>
@@ -640,14 +640,14 @@
   <!-- Premade Elements -->
   <div class="subMenu" id="displayPremadeElements">
     <div class="subMenuOption" id="itemLibrary" onClick="TRIANGLE.menu.openSideMenu('libraryMenu');">
-      <div style="border:1px dotted gray;height:88px;">
+      <div class="subMenuOptionBox">
         <img class="optionImage" src="images/opLibrary.svg">
       </div>
       <div class="optionLabel" id="labelItemLibrary">Item Library</div>
     </div>
 
     <div class="subMenuOption" id="userIDlibrary" onClick="TRIANGLE.library.loadUserIDs();TRIANGLE.library.loadUserClasses();TRIANGLE.menu.openSideMenu('userItemMenu');">
-      <div style="border:1px dotted gray;height:88px;">
+      <div class="subMenuOptionBox">
         <img class="optionImage" src="images/opUserClasses.svg">
       </div>
       <div class="optionLabel" id="labelUserIDlibrary">My Items</div>
