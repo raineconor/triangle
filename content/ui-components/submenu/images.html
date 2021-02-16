@@ -1,0 +1,36 @@
+<div class="subMenu" id="displayImages">
+  <div class="subMenuOption" id="imgLibrary" onClick="TRIANGLE.images.load();TRIANGLE.menu.openSideMenu('imageLibraryMenu');">
+    <div class="subMenuOptionBox">
+      <img class="optionImage" src="images/opInsertImage.svg">
+    </div>
+    <div class="optionLabel" id="labelImgLibrary">Insert Image</div>
+  </div>
+
+  <div class="subMenuOption" id="setImageBg" onClick="TRIANGLE.images.load();TRIANGLE.menu.openSideMenu('imageLibraryMenu');TRIANGLE.images.setBackground = true;">
+    <div class="subMenuOptionBox">
+      <img class="optionImage" src="images/opSetImageBg.svg">
+    </div>
+    <div class="optionLabel" id="labelSetImgBg">Set Background</div>
+  </div>
+
+  <div class="subMenuOption" id="removeImageBg" onClick="TRIANGLE.images.removeBackground();">
+    <div class="subMenuOptionBox">
+      <img class="optionImage" src="images/opRemoveImageBg.svg">
+    </div>
+    <div class="optionLabel" id="labelRemoveImgBg">Remove Background</div>
+  </div>
+
+  <!--<div class="subMenuOption" id="cropImg" onClick="TRIANGLE.images.crop.createBorder();">
+    <div class="subMenuOptionBox">
+      <img class="optionImage" src="images/opCropImage.svg">
+    </div>
+    <div class="optionLabel" id="labelCropImg">Crop Image</div>
+  </div>-->
+
+  <div class="subMenuOption" id="autoSizeImg" onClick="TRIANGLE.images.autoSize();">
+    <div class="subMenuOptionBox">
+      <img class="optionImage" src="images/opExpandFitImg.svg">
+    </div>
+    <div class="optionLabel" id="labelAutoSizeImg">Expand to Fit</div>
+  </div>
+</div>

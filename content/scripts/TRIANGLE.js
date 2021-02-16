@@ -3,7 +3,6 @@
 var TRIANGLE = TRIANGLE || {};
 TRIANGLE.version = "1.01.49";
 
-
 //==================================================================================================
 //==================================================================================================
 //==================================================================================================
@@ -1586,6 +1585,32 @@ oppositeColor : function oppositeColor(color) {
   color = color.replace(/#/g, "");
   var opposite = ('000000' + (('0xffffff' ^ ('0x' + color)).toString(16))).slice(-6);
   return "#" + opposite;
+},
+
+colorToRGBA : function(color) {
+    // Returns the color as an array of [r, g, b, a] -- all range from 0 - 255
+    // color must be a valid canvas fillStyle. This will cover most anything
+    // you'd want to use.
+    // Examples:
+    // colorToRGBA('red')  # [255, 0, 0, 255]
+    // colorToRGBA('#f00') # [255, 0, 0, 255]
+    var cvs, ctx;
+    cvs = document.createElement('canvas');
+    cvs.height = 1;
+    cvs.width = 1;
+    ctx = cvs.getContext('2d');
+    ctx.fillStyle = color;
+    ctx.fillRect(0, 0, 1, 1);
+    return ctx.getImageData(0, 0, 1, 1).data;
+},
+
+isColorLight : function(color) {
+  var rgba = TRIANGLE.colors.colorToRGBA(color);
+  var r = rgba[0];
+  var g = rgba[1];
+  var b = rgba[2];
+  var perceptiveLuminance = 1 - (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+  return (perceptiveLuminance < 0.5);
 }
 
 
@@ -1609,17 +1634,12 @@ TRIANGLE.text = {
     newTextBox.style.lineHeight = 1;
     newTextBox.style.fontFamily = "Arial";
     newTextBox.className = "templateItem textBox";
+    newTextBox.setAttribute("triangle-class", "templateItem textbox");
     newTextBox.innerHTML = text ? text : "New text box";
 
     if (TRIANGLE.item && !TRIANGLE.isType.bannedInsertion(TRIANGLE.item.objRef)) {
 
-      if (TRIANGLE.item.objRef.style.backgroundColor === "black"
-      ||  TRIANGLE.item.objRef.style.backgroundColor === "#000000"
-      ||  TRIANGLE.item.objRef.style.backgroundColor === "rgb(0, 0, 0)") {
-        newTextBox.style.color = "white";
-      } else {
-        newTextBox.style.color = "black";
-      }
+      newTextBox.style.color = TRIANGLE.colors.isColorLight(TRIANGLE.item.objRef.style.backgroundColor) ? "black" : "white";
 
       if (TRIANGLE.isType.containsNbsp(TRIANGLE.item.objRef)) {
         TRIANGLE.stripNbsp(TRIANGLE.item.objRef);
@@ -1633,13 +1653,7 @@ TRIANGLE.text = {
 
     } else if (!TRIANGLE.item) {
 
-      if (document.body.style.backgroundColor === "black"
-      ||  document.body.style.backgroundColor === "#000000"
-      ||  document.body.style.backgroundColor === "rgb(0, 0, 0)") {
-        newTextBox.style.color = "white";
-      } else {
-        newTextBox.style.color = "black";
-      }
+      newTextBox.style.color = TRIANGLE.colors.isColorLight(TRIANGLE.item.objRef.style.backgroundColor) ? "black" : "white";
 
       document.getElementById("template").appendChild(newTextBox);
       TRIANGLE.selectionBorder.update();
@@ -2316,7 +2330,7 @@ TRIANGLE.refreshTemplateItems = function() {
 }
 
 TRIANGLE.item;
-TRIANGLE.sv_item; // used as a scratch variable by TRIANGLE.updateTemplateItems()
+TRIANGLE.itemStyles; // shorter than typing TRIANGLE.item.objRef.style
 TRIANGLE.scrollbarWidth; // contains the width of the scrollbar for the browser being used
 
 TRIANGLE.template = {
@@ -2413,10 +2427,13 @@ TRIANGLE.TemplateItem = function(index) {
   this.prevItem = document.getElementById("item" + (index - 1)) || TRIANGLE.templateItems[index - 1];
   this.nextItem = document.getElementById("item" + (index + 1)) || TRIANGLE.templateItems[index + 1];
   this.parent = this.objRef.parentNode;
-  this.childOf = this.objRef.getAttribute("childof") ? this.objRef.getAttribute("childof") : null;
+  this.childOf = this.objRef.getAttribute("childof") || null;
   this.id = this.objRef.id;
   this.parentId = this.objRef.parentNode.id;
   this.className = this.objRef.className;
+  this.triangleId = this.objRef.getAttribute("triangle-id") || null;
+  this.triangleClass = this.objRef.getAttribute("triangle-class") || null;
+  this.triangleClassList = this.triangleClass ? this.triangleClass.split(" ") : [];
   this.textNodes = this.objRef.getElementsByClassName("textBox").length;
   this.tag = this.objRef.tagName;
   this.resizing = false;
@@ -2496,6 +2513,18 @@ TRIANGLE.TemplateItem = function(index) {
   //============================================================
   this.hoverObj = document.getElementById(this.id + "hover");
   this.hoverVersion = this.hoverObj ? true : false;
+}
+
+TRIANGLE.TemplateItem.prototype.insertBeforeMe = function(obj) {
+  this.parent.insertBefore(obj, this.objRef);
+}
+
+TRIANGLE.TemplateItem.prototype.insertAfterMe = function(obj) {
+  if (this.isLastChild) {
+    this.parent.appendChild(obj);
+  } else {
+    this.parent.insertBefore(obj, this.objRef.nextSibling);
+  }
 }
 
 // pass an object as an argument to be appended to the selected item
@@ -2662,7 +2691,7 @@ TRIANGLE.dragDrop = {
       TRIANGLE.dragDrop.active = true;
       TRIANGLE.dragDrop.draggingElem = TRIANGLE.item.objRef;
       TRIANGLE.dragDrop.draggingElem.style.opacity = "0.5";
-      TRIANGLE.dragDrop.draggingCopy = TRIANGLE.createAnother(TRIANGLE.dragDrop.draggingElem);
+      TRIANGLE.dragDrop.draggingCopy = TRIANGLE.dragDrop.draggingElem.cloneNode(true);
       var draggingRect = TRIANGLE.dragDrop.draggingElem.getBoundingClientRect();
       TRIANGLE.dragDrop.draggingCopy.style.width = draggingRect.width + "px";
       TRIANGLE.dragDrop.draggingCopy.style.height =
@@ -2696,7 +2725,7 @@ TRIANGLE.dragDrop = {
         if (document.getElementById("draggingCopy")) document.body.removeChild("draggingCopy");
 
         if (TRIANGLE.hoveredElem !== TRIANGLE.dragDrop.draggingElem && TRIANGLE.hoveredElem !== TRIANGLE.dragDrop.draggingElem.parentNode) {
-          var droppedElem = TRIANGLE.createAnother(TRIANGLE.item.objRef);
+          var droppedElem = TRIANGLE.item.objRef.cloneNode(true);
 
           if (document.getElementById("visBox")) {
             TRIANGLE.dragDrop.draggingElem.remove();
@@ -2718,7 +2747,7 @@ TRIANGLE.dragDrop = {
           TRIANGLE.updateTemplateItems();
           TRIANGLE.text.clearTextSelection();
         } else if (TRIANGLE.hoveredElem == TRIANGLE.dragDrop.draggingElem.parentNode && document.getElementById("visBox")) {
-          var droppedElem = TRIANGLE.createAnother(item.objRef);
+          var droppedElem = item.objRef.cloneNode(true);
 
           TRIANGLE.dragDrop.draggingElem.remove();
           if (document.getElementById("visBox").style.cssFloat) {
@@ -3025,19 +3054,19 @@ TRIANGLE.resetClearFloat = function resetClearFloat() {
 function insterClearFloats() finds all templateItems that have a float style that needs to be cleared, and inserts an element with the clear style in the correct place
 */
 
-TRIANGLE.insertClearFloats = function insertClearFloats() {
-  if (TRIANGLE.sv_item.cssFloat) {
+TRIANGLE.insertClearFloats = function insertClearFloats(item) {
+  if (item.cssFloat) {
 
     var clearFloat = document.createElement("div");
     clearFloat.className = "clearFloat";
     clearFloat.style.clear = "both";
 
-    if (TRIANGLE.sv_item.nextSibling() && TRIANGLE.sv_item.nextSibling().style.cssFloat) {
+    if (item.nextSibling() && item.nextSibling().style.cssFloat) {
       return;
-    } else if (TRIANGLE.sv_item.nextSibling() && !TRIANGLE.sv_item.nextSibling().style.cssFloat) {
-      TRIANGLE.sv_item.parent.insertBefore(clearFloat, TRIANGLE.sv_item.nextSibling());
-    } else if (!TRIANGLE.sv_item.nextSibling()) {
-      TRIANGLE.sv_item.parent.appendChild(clearFloat);
+    } else if (item.nextSibling() && !item.nextSibling().style.cssFloat) {
+      item.parent.insertBefore(clearFloat, item.nextSibling());
+    } else if (!item.nextSibling()) {
+      item.parent.appendChild(clearFloat);
     }
 
     if (document.getElementById("visBox") && !document.getElementById("visBox").style.cssFloat) {
@@ -3045,8 +3074,8 @@ TRIANGLE.insertClearFloats = function insertClearFloats() {
     }
 
     // remove duplicate clearFloats
-    for (var x = 0; x < TRIANGLE.sv_item.parent.children.length; x++) {
-      var childItem = TRIANGLE.sv_item.parent.children[x];
+    for (var x = 0; x < item.parent.children.length; x++) {
+      var childItem = item.parent.children[x];
       var nextChildItem = childItem.nextSibling;
 
       if (TRIANGLE.isType.clearFloat(childItem) && nextChildItem && TRIANGLE.isType.clearFloat(nextChildItem)) {
@@ -3074,55 +3103,55 @@ TRIANGLE.updateTemplateItems = function updateTemplateItems(repeat) { // boolean
   TRIANGLE.dragDrop.removeVisBox();
   TRIANGLE.resetClearFloat();
   for (var i = 0; i < TRIANGLE.templateItems.length; i++) {
-    TRIANGLE.sv_item = new TRIANGLE.TemplateItem(i);
+    var sv_item = new TRIANGLE.TemplateItem(i);
 
-    TRIANGLE.sv_item.objRef.removeEventListener("mousedown", TRIANGLE.importItem.single, true);
-    TRIANGLE.sv_item.objRef.addEventListener("mousedown", TRIANGLE.importItem.single, true);
+    sv_item.objRef.removeEventListener("mousedown", TRIANGLE.importItem.single, true);
+    sv_item.objRef.addEventListener("mousedown", TRIANGLE.importItem.single, true);
 
-    //if (!(/templateItem/g).test(TRIANGLE.sv_item.parent.className)) {
-    if (!(/templateItem/g).test(TRIANGLE.sv_item.parent.className)) {
-      TRIANGLE.sv_item.objRef.addEventListener("mousedown", TRIANGLE.dragDrop.applyDrag, true);
+    //if (!(/templateItem/g).test(sv_item.parent.className)) {
+    if (!(/templateItem/g).test(sv_item.parent.className)) {
+      sv_item.objRef.addEventListener("mousedown", TRIANGLE.dragDrop.applyDrag, true);
     } else {
-      if (!(/childItem/g).test(TRIANGLE.sv_item.className)) {
-        TRIANGLE.sv_item.objRef.className += " childItem";
+      if (!(/childItem/g).test(sv_item.className)) {
+        sv_item.objRef.className += " childItem";
       }
     }
 
-    TRIANGLE.sv_item.objRef.removeEventListener("mouseover", TRIANGLE.hoverBorder.show, true);
-    TRIANGLE.sv_item.objRef.addEventListener("mouseover", TRIANGLE.hoverBorder.show, true);
+    sv_item.objRef.removeEventListener("mouseover", TRIANGLE.hoverBorder.show, true);
+    sv_item.objRef.addEventListener("mouseover", TRIANGLE.hoverBorder.show, true);
 
-    if (TRIANGLE.isType.textBox(TRIANGLE.sv_item.objRef)) {
-      TRIANGLE.sv_item.objRef.removeEventListener("dblclick", TRIANGLE.text.editText);
-      TRIANGLE.sv_item.objRef.addEventListener("dblclick", TRIANGLE.text.editText); // add event listeners to text boxes
+    if (TRIANGLE.isType.textBox(sv_item.objRef)) {
+      sv_item.objRef.removeEventListener("dblclick", TRIANGLE.text.editText);
+      sv_item.objRef.addEventListener("dblclick", TRIANGLE.text.editText); // add event listeners to text boxes
     } else {
-      TRIANGLE.sv_item.objRef.removeEventListener("dblclick", TRIANGLE.text.editText);
+      sv_item.objRef.removeEventListener("dblclick", TRIANGLE.text.editText);
     }
 
     TRIANGLE.templateItems[i].setAttribute("id", "item" + i);
     TRIANGLE.templateItems[i].setAttribute("index", i);
 
-    if (TRIANGLE.isType.childItem(TRIANGLE.sv_item.objRef)) {
-      var parentId = TRIANGLE.sv_item.parent.getAttribute("id");
-      TRIANGLE.sv_item.objRef.setAttribute("childof", parentId);
+    if (TRIANGLE.isType.childItem(sv_item.objRef)) {
+      var parentId = sv_item.parent.getAttribute("id");
+      sv_item.objRef.setAttribute("childof", parentId);
       if (parentId === "template") {
-        TRIANGLE.sv_item.removeClass("childItem");
-        /*var newClass = TRIANGLE.sv_item.className.replace(" childItem", "");
-        TRIANGLE.sv_item.objRef.className = newClass;*/
+        sv_item.removeClass("childItem");
+        /*var newClass = sv_item.className.replace(" childItem", "");
+        sv_item.objRef.className = newClass;*/
       }
     }
 
-    if (TRIANGLE.sv_item.display === "table" && !TRIANGLE.sv_item.objRef.innerHTML) {
-      TRIANGLE.sv_item.objRef.style.display = ""; // remove the table display from empty table elements
-      TRIANGLE.sv_item.objRef.style.height = "auto";
+    if (sv_item.display === "table" && !sv_item.objRef.innerHTML) {
+      sv_item.objRef.style.display = ""; // remove the table display from empty table elements
+      sv_item.objRef.style.height = "auto";
     }
 
-    if (TRIANGLE.isType.formField(TRIANGLE.sv_item.objRef)) {
-      TRIANGLE.sv_item.objRef.setAttribute("name", "item" + i);
+    if (TRIANGLE.isType.formField(sv_item.objRef)) {
+      sv_item.objRef.setAttribute("name", "item" + i);
     } else {
-      TRIANGLE.sv_item.objRef.removeAttribute("name");
+      sv_item.objRef.removeAttribute("name");
     }
 
-    TRIANGLE.insertClearFloats();
+    TRIANGLE.insertClearFloats(sv_item);
   }
   //document.getElementById("template").innerHTML = document.getElementById("template").innerHTML.replace(/(<div[^>]*style="[^"]*display:\s*inline-block[^"]*"[^>]*><\/div>)/gi, "$1<!---->");
   TRIANGLE.dragDrop.updateItemMap();
@@ -3138,6 +3167,7 @@ function selectItem() selects a specific element by instantiating an object, tak
 
 TRIANGLE.selectItem = function selectItem(index) {
   TRIANGLE.item = new TRIANGLE.TemplateItem(index);
+  TRIANGLE.itemStyles = TRIANGLE.item.objRef.style;
 }
 
 /*
@@ -3544,13 +3574,14 @@ TRIANGLE.menu = {
 
 
 
-TRIANGLE.appendRow = function appendRow() {
+TRIANGLE.newRow = function() {
   TRIANGLE.selectionBorder.remove();
   var newDiv = document.createElement("div");
   // default styles
   newDiv.className = "templateItem"; // add templateItem class to every generated element to be read by query
+  newDiv.setAttribute("triangle-class", "templateItem");
   //newDiv.style.backgroundColor = TRIANGLE.randomColor(); // set background color so div is visible
-  newDiv.style.backgroundColor = "#508CA4";
+  newDiv.style.backgroundColor = "#f5f2f0";
   newDiv.style.minHeight = "100px"; // set default height so div is visible
   newDiv.style.height = "auto"; // set default height so div is visible
   newDiv.style.width = "100%"; // set default width so TRIANGLE.options.insertColumns() can divide it
@@ -3577,6 +3608,7 @@ TRIANGLE.clearSelection();
 TRIANGLE.selectItem(newIndex);
 TRIANGLE.saveItem.createAnimation("min-height", 0, "100px", function(){TRIANGLE.importItem.single(TRIANGLE.item.index)});
 }
+document.getElementById("newRow").addEventListener("click", TRIANGLE.newRow);
 
 /*
 function insertNewChild() appends a new element to the selected element. Similar to function appendRow().
@@ -3620,7 +3652,7 @@ function selectParent()
 
 TRIANGLE.selectParent = function selectParent() {
   if (TRIANGLE.item) {
-    var parentItem = TRIANGLE.item.objRef.parentElement;
+    var parentItem = TRIANGLE.item.parent;
     if (parentItem.id == "template") {
       return;
     } else {
@@ -5735,10 +5767,10 @@ TRIANGLE.deleteItem = function deleteElement(index) {
     TRIANGLE.item.objRef.removeEventListener("mousedown", TRIANGLE.importItem.single, true);
     TRIANGLE.item.objRef.removeEventListener("mouseover", TRIANGLE.hoverBorder.show, true);
 
-    if (TRIANGLE.isType.textBox(TRIANGLE.sv_item.objRef)) {
-      TRIANGLE.sv_item.objRef.removeEventListener("dblclick", TRIANGLE.text.editText);
-      TRIANGLE.sv_item.objRef.removeEventListener("paste", TRIANGLE.text.clearPastedStyles);
-    }
+    // if (TRIANGLE.isType.textBox(TRIANGLE.sv_item.objRef)) {
+    //   TRIANGLE.sv_item.objRef.removeEventListener("dblclick", TRIANGLE.text.editText);
+    //   TRIANGLE.sv_item.objRef.removeEventListener("paste", TRIANGLE.text.clearPastedStyles);
+    // }
 
     if (TRIANGLE.item.hoverVersion) document.getElementById("hoverItems").removeChild(TRIANGLE.item.hoverObj);
 
@@ -5802,7 +5834,7 @@ TRIANGLE.keyEvents = { // keyboard shortcuts
 
       if (event.keyCode === 77) TRIANGLE.keyEvents.keyM();
 
-      if (event.keyCode === 78) TRIANGLE.appendRow();
+      if (event.keyCode === 78) TRIANGLE.newRow();
 
       if (event.ctrlKey && (event.keyCode === 37 || event.charCode === 37 || event.keyCode === 40 || event.charCode === 40)) TRIANGLE.template.decreaseOpacity();
 
@@ -6011,7 +6043,7 @@ TRIANGLE.options = {
     TRIANGLE.selectItem(TRIANGLE.item.index); // this reestablishes the properties in case the user moves directly from style changing to inserting columns
 
     if (TRIANGLE.item.objRef.children.length > 0
-      || TRIANGLE.isType.bannedInsertion(TRIANGLE.item.objRef)) return;
+    || TRIANGLE.isType.bannedInsertion(TRIANGLE.item.objRef)) return;
 
       var item = TRIANGLE.item;
 
@@ -6021,10 +6053,10 @@ TRIANGLE.options = {
       for (var i = 0; i < columnNum; i++) {
         var newColumn = document.createElement("div");
 
-        newColumn.style.backgroundColor = "#ffffff";
-        newColumn.style.minHeight = item.minHeight;
+        newColumn.style.backgroundColor = TRIANGLE.itemStyles.backgroundColor;
+        newColumn.style.minHeight = TRIANGLE.itemStyles.minHeight;
         newColumn.style.height = "auto"; // or item.height
-        newColumn.style.width = columnWidth + TRIANGLE.getUnit(item.width);
+        newColumn.style.width = columnWidth + TRIANGLE.getUnit(TRIANGLE.itemStyles.width);
         newColumn.style.position = "relative";
 
         newColumn.setAttribute("item-align", item.align);
@@ -6038,10 +6070,10 @@ TRIANGLE.options = {
           var oppositeSide = "Right";
         }
 
-        newColumn.style.paddingLeft = item.paddingLeft;
-        newColumn.style.paddingRight = item.paddingRight;
-        newColumn.style.paddingTop = item.paddingTop;
-        newColumn.style.paddingBottom = item.paddingBottom;
+        newColumn.style.paddingLeft = TRIANGLE.itemStyles.paddingLeft;
+        newColumn.style.paddingRight = TRIANGLE.itemStyles.paddingRight;
+        newColumn.style.paddingTop = TRIANGLE.itemStyles.paddingTop;
+        newColumn.style.paddingBottom = TRIANGLE.itemStyles.paddingBottom;
         if (counter === 1) {
           newColumn.style["margin" + side] = item["margin" + side];
           newColumn.style["border" + side + "Width"] = item["border" + side + "Width"];
@@ -6053,17 +6085,18 @@ TRIANGLE.options = {
           newColumn.style["border" + oppositeSide + "Style"] = item["border" + oppositeSide + "Style"];
           newColumn.style["border" + oppositeSide + "Color"] = item["border" + oppositeSide + "Color"];
         }
-        newColumn.style.marginTop = item.marginTop;
-        newColumn.style.marginBottom = item.marginBottom;
-        newColumn.style.borderTopWidth = item.borderTopWidth;
-        newColumn.style.borderTopStyle = item.borderTopStyle;
-        newColumn.style.borderTopColor = item.borderTopColor;
-        newColumn.style.borderBottomWidth = item.borderBottomWidth;
-        newColumn.style.borderBottomStyle = item.borderBottomStyle;
-        newColumn.style.borderBottomColor = item.borderBottomColor;
-        newColumn.style.boxShadow = item.boxShadow;
+        newColumn.style.marginTop = TRIANGLE.itemStyles.marginTop;
+        newColumn.style.marginBottom = TRIANGLE.itemStyles.marginBottom;
+        newColumn.style.borderTopWidth = TRIANGLE.itemStyles.borderTopWidth;
+        newColumn.style.borderTopStyle = TRIANGLE.itemStyles.borderTopStyle;
+        newColumn.style.borderTopColor = TRIANGLE.itemStyles.borderTopColor;
+        newColumn.style.borderBottomWidth = TRIANGLE.itemStyles.borderBottomWidth;
+        newColumn.style.borderBottomStyle = TRIANGLE.itemStyles.borderBottomStyle;
+        newColumn.style.borderBottomColor = TRIANGLE.itemStyles.borderBottomColor;
+        newColumn.style.boxShadow = TRIANGLE.itemStyles.boxShadow;
         newColumn.className = item.className;
-        item.parent.insertBefore(newColumn, TRIANGLE.templateItems[item.index]);
+        newColumn.setAttribute("triangle-class", item.triangleClass);
+        item.insertBeforeMe(newColumn);
         counter++;
       }
       TRIANGLE.deleteItem(item.index);
@@ -6085,7 +6118,7 @@ TRIANGLE.options = {
         var itemSrc = item.objRef;
         var itemTarget = item.prevSibling();
         var trackIndex = itemTarget.getAttribute("index");
-        var newElem = TRIANGLE.createAnother(item.objRef);
+        var newElem = item.objRef.cloneNode(true);
 
         item.parent.insertBefore(newElem, itemTarget);
         TRIANGLE.deleteItem(item.index);
@@ -6115,20 +6148,18 @@ TRIANGLE.options = {
       TRIANGLE.resetClearFloat();
 
       TRIANGLE.selectItem(index);
-      var sv_insertionPoint;
-      if (item.nextSibling()) sv_insertionPoint = new TRIANGLE.TemplateItem(item.nextSibling().getAttribute("index"));
 
       if (item.isLastChild) {
         TRIANGLE.updateTemplateItems();
         return;
       } else {
         var itemSrc = item.objRef;
-        var itemTarget = item.nextSibling();
         var trackIndex = item.index;
-        var newElem = TRIANGLE.createAnother(item.objRef);
+        var newElem = item.objRef.cloneNode(true);
 
-        if (sv_insertionPoint && sv_insertionPoint.nextSibling()) {
-          item.parent.insertBefore(newElem, sv_insertionPoint.nextSibling());
+        var targetItem = item.nextSibling() ? new TRIANGLE.TemplateItem(item.nextSibling().getAttribute("index")) : false;
+        if (targetItem) {
+          targetItem.insertAfterMe(newElem);
         } else {
           item.parent.appendChild(newElem);
         }
@@ -6166,7 +6197,7 @@ TRIANGLE.options = {
           continue;
         }
       }
-      var duplicate = TRIANGLE.createAnother(item.objRef);
+      var duplicate = item.objRef.cloneNode(true);
 
       /*if (duplicate.getAttribute("user-id")) {
       duplicate.setAttribute("user-id", TRIANGLE.library.removeDuplicateUserIDs(duplicate.getAttribute("user-id")));
@@ -6205,6 +6236,7 @@ TRIANGLE.options = {
     TRIANGLE.options.clipboard.tag = TRIANGLE.item.tag;
     TRIANGLE.options.clipboard.src = TRIANGLE.item.objRef.src;
     TRIANGLE.options.clipboard.itemStyles = TRIANGLE.getStyles(TRIANGLE.item.objRef);
+    TRIANGLE.options.clipboard.itemCopy = TRIANGLE.item.objRef.cloneNode(true);
     TRIANGLE.options.isClipboardFull = true;
   },
 
@@ -6213,13 +6245,7 @@ TRIANGLE.options = {
   */
 
   pasteStyles : function pasteStyles(index) {
-    var pasteItem = document.createElement(TRIANGLE.options.clipboard.tag);
-    for (var i = 0; i < TRIANGLE.options.clipboard.itemStyles.length; i++) {
-      //TRIANGLE.styleFunctions[i](TRIANGLE.item.objRef, TRIANGLE.options.clipboard[i]);
-      TRIANGLE.styleFunctions[i](pasteItem, TRIANGLE.options.clipboard.itemStyles[i]);
-    }
-    if (TRIANGLE.options.clipboard.src) pasteItem.src = TRIANGLE.options.clipboard.src;
-
+    var pasteItem = TRIANGLE.options.clipboard.itemCopy;
     pasteItem.removeAttribute("user-id");
     pasteItem.innerHTML = pasteItem.innerHTML.replace(/user\-class="[^"]*"/g, "");
 
@@ -6228,13 +6254,15 @@ TRIANGLE.options = {
       TRIANGLE.checkPadding(TRIANGLE.item.objRef);
       TRIANGLE.item.append(pasteItem);
       TRIANGLE.importItem.single(index);
-      setTimeout(TRIANGLE.selectionBorder.update, 50);
-      TRIANGLE.updateTemplateItems(true);
+      // setTimeout(TRIANGLE.selectionBorder.update, 50);
+      TRIANGLE.selectionBorder.update();
+      TRIANGLE.updateTemplateItems();
     } else {
       document.getElementById("template").appendChild(pasteItem);
       TRIANGLE.importItem.single(TRIANGLE.templateItems.length - 1);
-      setTimeout(TRIANGLE.selectionBorder.update, 50);
-      TRIANGLE.updateTemplateItems(true);
+      // setTimeout(TRIANGLE.selectionBorder.update, 50);
+      TRIANGLE.selectionBorder.update();
+      TRIANGLE.updateTemplateItems();
     }
   },
 
@@ -6693,24 +6721,8 @@ TRIANGLE.getStyles = function getStyles(element) {
   return elementStyles;
 }
 
-/*
-createAnother() takes an object as an argument, duplicates it, and returns it
-*/
-
-TRIANGLE.createAnother = function createAnother(obj) {
-  var duplicate = document.createElement(obj.tagName);
-  var itemSrcStyles = TRIANGLE.getStyles(obj);
-  for (var x = 0; x < itemSrcStyles.length; x++) {
-    TRIANGLE.styleFunctions[x](duplicate, itemSrcStyles[x]);
-  }
-  if (TRIANGLE.isType.imageItem(obj)) duplicate.src = obj.src;
-
-  return duplicate;
-}
-
 
 TRIANGLE.style = {
-
 
   convertWidth : function convertWidth(obj) {
     if (obj.style.display == "inline" || obj.style.display == "inline-block" || obj.style.display == "inline-table") {
@@ -6908,7 +6920,7 @@ TRIANGLE.forms = {
       TRIANGLE.checkPadding(item.objRef);
       item.append(newForm);
     } else {
-      TRIANGLE.appendRow();
+      TRIANGLE.newRow();
       TRIANGLE.updateTemplateItems();
       TRIANGLE.selectItem(TRIANGLE.templateItems[TRIANGLE.templateItems.length - 1].getAttribute("index"));
       item = TRIANGLE.item;
@@ -6935,12 +6947,13 @@ TRIANGLE.forms = {
 
   insertField : function insertFormField() {
     for (var i = 0; i < TRIANGLE.templateItems.length; i++) {
-      if (i === 0) TRIANGLE.sv_item = new TRIANGLE.TemplateItem(TRIANGLE.item.index);
-      if (TRIANGLE.sv_item.parent.getAttribute("id") === "template") return;
-      if (TRIANGLE.sv_item.parent.tagName.toUpperCase() === "FORM" || TRIANGLE.item.tag.toUpperCase() === "FORM") {
+      var sv_item;
+      if (i === 0) sv_item = new TRIANGLE.TemplateItem(TRIANGLE.item.index);
+      if (sv_item.parent.getAttribute("id") === "template") return;
+      if (sv_item.parent.tagName.toUpperCase() === "FORM" || TRIANGLE.item.tag.toUpperCase() === "FORM") {
         break;
       } else {
-        TRIANGLE.sv_item = new TRIANGLE.TemplateItem(TRIANGLE.sv_item.parent.getAttribute("index"));
+        sv_item = new TRIANGLE.TemplateItem(sv_item.parent.getAttribute("index"));
       }
     }
     TRIANGLE.text.insertTextBox("Field Label");
@@ -7664,7 +7677,7 @@ TRIANGLE.json = {
     var len = imgList.length;
 
     for (var i = 0; i < len; i++) {
-      TRIANGLE.sv_item = new TRIANGLE.TemplateItem(imgList[i].getAttribute("index"));
+      var sv_item = new TRIANGLE.TemplateItem(imgList[i].getAttribute("index"));
 
       template.imageList["itemNums"][i] = TRIANGLE.sv_item.index;
       template.imageList["paths"][i] = TRIANGLE.sv_item.image.src;
@@ -7683,18 +7696,18 @@ TRIANGLE.json = {
     var skipItems = [];
 
     for (var i = 0; i < TRIANGLE.templateItems.length; i++) {
-      TRIANGLE.sv_item = new TRIANGLE.TemplateItem(i);
+      var sv_item = new TRIANGLE.TemplateItem(i);
 
-      if (skipItems.indexOf(TRIANGLE.sv_item.id) > -1) continue;
+      if (skipItems.indexOf(sv_item.id) > -1) continue;
 
       var itemID = "item" + i;
 
-      if (TRIANGLE.sv_item.userID) {
-        //template.items[itemID] = TRIANGLE.sv_item.userID + ' ' + TRIANGLE.sv_item.parent.id;
-        template.items[itemID] = TRIANGLE.sv_item.userID;
-        if (TRIANGLE.sv_item.parent.id !== "template") template.items[itemID] += ' ' + TRIANGLE.sv_item.parent.id;
+      if (sv_item.userID) {
+        //template.items[itemID] = sv_item.userID + ' ' + sv_item.parent.id;
+        template.items[itemID] = sv_item.userID;
+        if (sv_item.parent.id !== "template") template.items[itemID] += ' ' + sv_item.parent.id;
 
-        var itemIDchildren = TRIANGLE.sv_item.objRef.querySelectorAll("*");
+        var itemIDchildren = sv_item.objRef.querySelectorAll("*");
         for (var x = 0; x < itemIDchildren.length; x++) {
           skipItems.push(itemIDchildren[x].getAttribute("id"));
         }
@@ -7704,33 +7717,33 @@ TRIANGLE.json = {
 
       template.items[itemID] = {};
 
-      //template.items[itemID]["user-id"] = TRIANGLE.sv_item.userID;
-      template.items[itemID]["user-class"] = TRIANGLE.sv_item.userClass;
-      template.items[itemID]["tagName"] = TRIANGLE.sv_item.tag;
-      template.items[itemID]["className"] = TRIANGLE.sv_item.className;
-      template.items[itemID]["name"] = TRIANGLE.sv_item.objRef.getAttribute("name");
-      template.items[itemID]["style"] = TRIANGLE.sv_item.objRef.style.cssText;
-      template.items[itemID]["clearFloat"] = TRIANGLE.isType.clearFloat(TRIANGLE.sv_item.objRef.nextSibling) ? 1 : 0;
+      //template.items[itemID]["user-id"] = sv_item.userID;
+      template.items[itemID]["user-class"] = sv_item.userClass;
+      template.items[itemID]["tagName"] = sv_item.tag;
+      template.items[itemID]["className"] = sv_item.className;
+      template.items[itemID]["name"] = sv_item.objRef.getAttribute("name");
+      template.items[itemID]["style"] = sv_item.objRef.style.cssText;
+      template.items[itemID]["clearFloat"] = TRIANGLE.isType.clearFloat(sv_item.objRef.nextSibling) ? 1 : 0;
 
-      if (TRIANGLE.isType.textBox(TRIANGLE.sv_item.objRef)
-      || TRIANGLE.isType.imageItem(TRIANGLE.sv_item.objRef)
-      || TRIANGLE.isType.formBtn(TRIANGLE.sv_item.objRef)
-      || TRIANGLE.isType.snippetItem(TRIANGLE.sv_item.objRef)) template.items[itemID]["innerHTML"] = TRIANGLE.sv_item.objRef.innerHTML.replace(/&nbsp;/g, " ");//find flag
+      if (TRIANGLE.isType.textBox(sv_item.objRef)
+      || TRIANGLE.isType.imageItem(sv_item.objRef)
+      || TRIANGLE.isType.formBtn(sv_item.objRef)
+      || TRIANGLE.isType.snippetItem(sv_item.objRef)) template.items[itemID]["innerHTML"] = sv_item.objRef.innerHTML.replace(/&nbsp;/g, " ");//find flag
 
-      template.items[itemID]["src"] = TRIANGLE.sv_item.objRef.src;
-      template.items[itemID]["children"] = TRIANGLE.sv_item.objRef.querySelector(".templateItem") ? 1 : 0;
-      template.items[itemID]["childof"] = TRIANGLE.sv_item.childOf;
-      template.items[itemID]["nextSib"] = TRIANGLE.sv_item.nextSibling() ? TRIANGLE.sv_item.nextSibling().id : 0;
-      template.items[itemID]["prevSib"] = TRIANGLE.sv_item.prevSibling() ? TRIANGLE.sv_item.prevSibling().id : 0;
-      template.items[itemID]["isLastChild"] = TRIANGLE.sv_item.isLastChild;
-      template.items[itemID]["item-align"] = TRIANGLE.sv_item.align;
-      template.items[itemID]["hover-style"] = TRIANGLE.sv_item.hover.cssText;
-      template.items[itemID]["link-to"] = TRIANGLE.sv_item.linkTo;
-      template.items[itemID]["onClick"] = TRIANGLE.sv_item.objRef.getAttribute("onclick");
-      template.items[itemID]["crop-map"] = TRIANGLE.sv_item.cropMap;
-      template.items[itemID]["crop-ratio"] = TRIANGLE.sv_item.cropRatio;
-      template.items[itemID]["target"] = TRIANGLE.sv_item.objRef.getAttribute("target");
-      template.items[itemID]["form-email"] = TRIANGLE.sv_item.objRef.getAttribute("form-email");
+      template.items[itemID]["src"] = sv_item.objRef.src;
+      template.items[itemID]["children"] = sv_item.objRef.querySelector(".templateItem") ? 1 : 0;
+      template.items[itemID]["childof"] = sv_item.childOf;
+      template.items[itemID]["nextSib"] = sv_item.nextSibling() ? sv_item.nextSibling().id : 0;
+      template.items[itemID]["prevSib"] = sv_item.prevSibling() ? sv_item.prevSibling().id : 0;
+      template.items[itemID]["isLastChild"] = sv_item.isLastChild;
+      template.items[itemID]["item-align"] = sv_item.align;
+      template.items[itemID]["hover-style"] = sv_item.hover.cssText;
+      template.items[itemID]["link-to"] = sv_item.linkTo;
+      template.items[itemID]["onClick"] = sv_item.objRef.getAttribute("onclick");
+      template.items[itemID]["crop-map"] = sv_item.cropMap;
+      template.items[itemID]["crop-ratio"] = sv_item.cropRatio;
+      template.items[itemID]["target"] = sv_item.objRef.getAttribute("target");
+      template.items[itemID]["form-email"] = sv_item.objRef.getAttribute("form-email");
     }
 
     //template.responsiveTemplate = TRIANGLE.responsive.create(document.getElementById("template"));

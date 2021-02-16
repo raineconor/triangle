@@ -54,7 +54,7 @@
     </div>
     <a class="left-col-btn" href="#" onClick="toggleMenu('myTemplates')">My Templates</a>
     <a class="left-col-btn" href="#" onClick="toggleMenu('myImages');lazyload();">My Images</a>
-    <a class="left-col-btn" href="#" onClick="toggleMenu('myFonts')">My Fonts</a>
+    <!-- <a class="left-col-btn" href="#" onClick="toggleMenu('myFonts')">My Fonts</a> -->
     <!--<a class="left-col-btn" href="#" onClick="">Community</a>-->
     <!--<a class="left-col-btn" href="index.php" target="_blank">Blank Editor</a>-->
     <a class="left-col-btn" href="#" onClick="toggleMenu('ftpProfiles')">FTP Profiles</a>
@@ -116,7 +116,7 @@
           $template_html .= '<div id="template-' . $x . '" user="' . $user . '"><a class="menuLink" href="index.php?pagename=index&loadTemplate='
                          . urlencode($templates[$x]["template"])
                          . $userGetParam
-                         . '" target="_blank">'
+                         . '" target="">'
                          . $templates[$x]["template"]
                          /*. "<span class=\"templateDate\">"
                          . date ("M d, Y", filemtime($template_dir . $template_files[$x] . "/."))
@@ -406,7 +406,7 @@
         <!--<a class="templateChoice" target="_blank" onClick="closePopUp();" href="index.php?premadeTemplate=default">Multipurpose</a>
         <a class="templateChoice" target="_blank" onClick="closePopUp();" href="index.php?premadeTemplate=railroad">Personal Blog</a>
         <a class="templateChoice" target="_blank" onClick="closePopUp();" href="index.php?premadeTemplate=Skybound">Photography</a>-->
-        <a class="templateChoice" target="_blank" onClick="closePopUp();" href="index.php?premadeTemplate=blank">Blank template</a>
+        <a class="templateChoice" target="" onClick="closePopUp();" href="index.php?premadeTemplate=blank">Blank template</a>
         <div style="clear:both;"></div>
         <br>
         <button onClick="closePopUp();">Cancel</button>

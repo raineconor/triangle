@@ -1,0 +1,22 @@
+<div id="canvasWrapper">
+  <div id="canvasCrosshair"></div>
+  <div id="saturationMarker"></div>
+  <canvas id="canvasColorMenu" width="200" height="200"></canvas>
+  <canvas id="canvasSaturationBar" width="20" height="200"></canvas>
+  <canvas id="canvasHueBar" width="20" height="200"></canvas>
+  <div id="canvasRightCol">
+    <div id="canvasPreviewColor"></div>
+    <div id="canvasColorChoice"></div>
+    <!--<div id="canvasApply" onClick="applyCanvasColor();">Apply</div>
+    <div id="canvasCancel" onClick="cancelCanvasMenu();"></div>-->
+    <button id="canvasApply" onClick="TRIANGLE.colors.applyCanvasColor();">Apply</button><br>
+    <button id="canvasCancel" onClick="TRIANGLE.colors.cancelCanvasMenu();">Cancel</button>
+    <!--<button onClick="applyCanvasColor();">Apply</button>
+    <button onClick="cancelCanvasMenu();">Cancel</button>-->
+    <div id="canvasBlack" onClick="TRIANGLE.colors.fillCanvas('black');"></div><!--
+    --><div id="canvasWhite" onClick="TRIANGLE.colors.fillCanvas('white');"></div>
+    <div id="toggleCanvasPalette" onClick="TRIANGLE.colors.toggleCanvasPalette();">Palette</div>
+  </div>
+  <div class="clear"></div>
+  <div id="canvasPalette" style="display:none;"></div>
+</div>

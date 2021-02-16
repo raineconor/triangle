@@ -1,0 +1,94 @@
+<div class="subMenu" id="displayDeveloper">
+  <div class="menuSection">
+    <div class="menuSectionTitle">Insert Code Snippet</div>
+    <textarea class="codeBox" id="snippetInsertion" onkeyup="this.onchange();" onchange="TRIANGLE.saveItem.codeSnippet(this);" style="background-color:#1d1f20;color:#f8f8f8;"></textarea>
+    <div style="display:inline-block;">
+      <button onClick="TRIANGLE.developer.editCode('snippetInsertion', 'Code Snippet');">Expand</button><br>
+      <button onClick="TRIANGLE.developer.insertSnippet();">Insert</button>
+    </div>
+  </div>
+
+  <!--======================================-->
+
+  <div class="menuSection">
+    <div class="menuSectionTitle">Meta Data</div>
+    <div class="menuDropdown" onClick="TRIANGLE.menu.toggleMenuDisplay('metaTitleMenu','inline-block');">Page Title</div><br>
+    <div class="menuDropdown" onClick="TRIANGLE.menu.toggleMenuDisplay('metaKeywordsMenu','inline-block');">Keywords</div><br>
+    <div class="menuDropdown" onClick="TRIANGLE.menu.toggleMenuDisplay('metaDescMenu','inline-block');">Description</div><br>
+    <!--<div class="menuDropdown" onClick="TRIANGLE.menu.toggleMenuDisplay('insertSnippetMenu','inline-block');">Shadow</div>-->
+  </div>
+
+  <!--Mobile-Optimize: <input type="checkbox" id="mobileOptimize" checked="true">-->
+  <div class="menuSection hidden" style="display:none;" id="metaTitleMenu">
+    <div class="menuSectionTitle">Page Title</div>
+    <!--<input type="text" id="metaTitle" style="width:300px;" onKeyUp="TRIANGLE.metaData.title = this.value;" no-clear="true">-->
+    <textarea id="metaTitle" onKeyUp="TRIANGLE.metaData.title = this.value;" no-clear="true"></textarea>
+  </div>
+
+  <div class="menuSection hidden" style="display:none;" id="metaKeywordsMenu">
+    <div class="menuSectionTitle">Page Keywords</div>
+    <textarea id="metaKeywords" onKeyUp="TRIANGLE.metaData.commaSplit(this);TRIANGLE.metaData.keywords = this.value;" onfocusout="TRIANGLE.metaData.fixCommas(this);" no-clear="true"></textarea>
+  </div>
+
+  <div class="menuSection hidden" style="display:none;" id="metaDescMenu">
+    <div class="menuSectionTitle">Page Description</div>
+    <textarea id="metaDescription" onKeyUp="TRIANGLE.metaData.description = this.value;" no-clear="true"></textarea>
+  </div>
+
+  <!--======================================-->
+
+  <div class="menuSection">
+    <div class="menuSectionTitle">CSS Styles</div>
+    <div class="menuDropdown" onClick="TRIANGLE.menu.toggleMenuDisplay('cssStylesMenu','inline-block');">CSS Styles</div><br>
+    <div class="menuDropdown" onClick="TRIANGLE.menu.toggleMenuDisplay('hoverStylesMenu','inline-block');">Hover Styles</div><br>
+    <!--<div class="menuDropdown" onClick="TRIANGLE.menu.toggleMenuDisplay('styleTagMenu','inline-block');">Style Tag</div><br>
+    <div class="menuDropdown" onClick="TRIANGLE.menu.toggleMenuDisplay('scriptTagMenu','inline-block');">Script Tag</div><br>-->
+    <div class="menuDropdown" onClick="TRIANGLE.developer.editCode('styleTag', 'Style Tag');">Style Tag</div><br>
+    <div class="menuDropdown" onClick="TRIANGLE.developer.editCode('scriptTag', 'Script Tag');">Script Tag</div><br>
+  </div>
+
+  <div class="menuSection hidden" style="display:none;" id="cssStylesMenu">
+    <div class="menuSectionTitle">CSS Styles</div>
+    <textarea class="codeBox" id="cssStyles" onKeyUp="this.onchange();" onChange="TRIANGLE.saveItem.cssStyles(this);" style="background-color:#1d1f20;color:#f8f8f8;"></textarea>
+    <button onClick="TRIANGLE.developer.editCode('cssStyles', 'CSS Styles');">Expand</button>
+  </div>
+
+  <div class="menuSection hidden" style="display:none;" id="hoverStylesMenu">
+    <div class="menuSectionTitle">Hover Styles</div>
+    <textarea class="codeBox" id="hoverStyles" onKeyUp="this.onchange();" onChange="TRIANGLE.saveItem.hoverStyles(this);" style="background-color:#1d1f20;color:#f8f8f8;"></textarea>
+    <button onClick="TRIANGLE.developer.editCode('hoverStyles', 'Hover Styles');">Expand</button>
+  </div>
+
+  <div class="menuSection hidden" style="display:none;" id="styleTagMenu">
+    <div class="menuSectionTitle">Style Tag</div>
+    <textarea class="codeBox" id="styleTag" onChange="TRIANGLE.developer.saveStyleTag(this.value);" onKeyDown="TRIANGLE.developer.handleTabs(this, event);" style="background-color:#1d1f20;color:#f8f8f8;" no-clear="true"></textarea>
+    <button onClick="TRIANGLE.developer.editCode('styleTag', 'Style Tag');">Expand</button>
+  </div>
+
+  <div class="menuSection hidden" style="display:none;" id="scriptTagMenu">
+    <div class="menuSectionTitle">Script Tag</div>
+    <textarea class="codeBox" id="scriptTag" onChange="TRIANGLE.developer.saveScriptTag(this.value);" onKeyDown="TRIANGLE.developer.handleTabs(this, event);" style="background-color:#1d1f20;color:#f8f8f8;" no-clear="true"></textarea>
+    <button onClick="TRIANGLE.developer.editCode('scriptTag', 'Script Tag');">Expand</button>
+  </div>
+
+  <!--======================================-->
+
+  <div class="menuSection">
+    <div class="menuSectionTitle">Global Tags</div>
+    <div class="menuDropdown" onClick="TRIANGLE.developer.editCode('globalStyleTag', 'Global Style Tag');">Global Style Tag</div><br>
+    <div class="menuDropdown" onClick="TRIANGLE.developer.editCode('globalScriptTag', 'Global Script Tag');">Global Script Tag</div><br>
+  </div>
+
+  <div class="menuSection hidden" style="display:none;" id="styleTagMenu">
+    <div class="menuSectionTitle">Style Tag</div>
+    <textarea class="codeBox" id="globalStyleTag" onChange="TRIANGLE.developer.saveGlobalStyleTag(this.value);" onKeyDown="TRIANGLE.developer.handleTabs(this, event);" style="background-color:#1d1f20;color:#f8f8f8;" no-clear="true"></textarea>
+    <button onClick="TRIANGLE.developer.editCode('globalStyleTag', 'Global Style Tag');">Expand</button>
+  </div>
+
+  <div class="menuSection hidden" style="display:none;" id="scriptTagMenu">
+    <div class="menuSectionTitle">Script Tag</div>
+    <textarea class="codeBox" id="globalScriptTag" onChange="TRIANGLE.developer.saveGlobalScriptTag(this.value);" onKeyDown="TRIANGLE.developer.handleTabs(this, event);" style="background-color:#1d1f20;color:#f8f8f8;" no-clear="true"></textarea>
+    <button onClick="TRIANGLE.developer.editCode('globalScriptTag', 'Global Script Tag');">Expand</button>
+  </div>
+
+</div>

@@ -1,0 +1,146 @@
+<div class="subMenu" id="displayElementStyles">
+
+  <!-- General -->
+  <div class="menuSection" class="input-group-text">
+    <div class="menuSectionTitle">General</div>
+    Background:
+    <input type="text" id="bgColor"><div class="tinyColorBox" id="colorElementBg"></div><br>
+    Height:
+    <input type="text" id="height"><div class="tinyColorBoxSpacing"></div><br>
+    Width:
+    <input type="text" id="width"><div class="tinyColorBoxSpacing"></div><br>
+    Display:
+    <input type="text" id="display"><div class="tinyColorBoxSpacing"></div><br>
+  </div>
+
+  <!-- Dropdowns -->
+  <div class="menuSection">
+    <div class="menuSectionTitle">Edges</div>
+    <div class="menuDropdown" onClick="TRIANGLE.menu.toggleMenuDisplay('paddingMenu','inline-block');">Padding</div><br>
+    <div class="menuDropdown" onClick="TRIANGLE.menu.toggleMenuDisplay('marginMenu','inline-block');">Margin</div><br>
+    <div class="menuDropdown" onClick="TRIANGLE.menu.toggleMenuDisplay('borderMenu','inline-block');">Border</div><br>
+    <div class="menuDropdown" onClick="TRIANGLE.menu.toggleMenuDisplay('boxShadowMenu','inline-block');">Shadow</div>
+  </div>
+
+  <!-- Padding -->
+  <div class="menuSection hidden" id="paddingMenu" style="display:none;">
+    <div class="menuSectionTitle">Padding</div>
+    Left:
+    <input type="text" id="paddingL" size="7"><span class="applyAllBtn" onClick="TRIANGLE.saveItem.applyAll(['paddingL', 'paddingR', 'paddingT', 'paddingB']);">&#9662;</span><br>
+    Right:
+    <input type="text" id="paddingR" size="7"><span class="applyAllSpacing"></span><br>
+    Top:
+    <input type="text" id="paddingT" size="7"><span class="applyAllSpacing"></span><br>
+    Bottom:
+    <input type="text" id="paddingB" size="7"><span class="applyAllSpacing"></span>
+  </div>
+
+  <!-- Margin -->
+  <div class="menuSection hidden" id="marginMenu" style="display:none;">
+    <div class="menuSectionTitle">Margin</div>
+    Left:
+    <input type="text" id="marginL" size="7"><span class="applyAllBtn" onClick="TRIANGLE.saveItem.applyAll(['marginL', 'marginR', 'marginT', 'marginB']);">&#9662;</span><br>
+    Right:
+    <input type="text" id="marginR" size="7"><span class="applyAllSpacing"></span><br>
+    Top:
+    <input type="text" id="marginT" size="7"><span class="applyAllSpacing"></span><br>
+    Bottom:
+    <input type="text" id="marginB" size="7"><span class="applyAllSpacing"></span>
+  </div>
+
+  <!-- Border -->
+  <div class="menuSection hidden" id="borderMenu" style="display:none;">
+    <div class="menuSectionTitle">Border</div>
+
+    Left:
+    <input type="text" id="borderLwidth" size="7">
+    <select id="borderLtype" class="form-select form-select-sm" onChange="TRIANGLE.saveItem.applyChanges();">
+      <option value="1">solid</option>
+      <option value="2">dashed</option>
+      <option value="3">dotted</option>
+    </select>
+    Color:
+    <input type="text" id="borderLcolor"><div class="tinyColorBox" id="colorListBorderL"></div><span class="applyAllBtn" onClick="TRIANGLE.saveItem.applyAll(['borderLwidth', 'borderRwidth', 'borderTwidth', 'borderBwidth'], true);TRIANGLE.saveItem.applyAll(['borderLtype', 'borderRtype', 'borderTtype', 'borderBtype'], true);TRIANGLE.saveItem.applyAll(['borderLcolor', 'borderRcolor', 'borderTcolor', 'borderBcolor']);">&#9662;</span><br>
+
+    Right:
+    <input type="text" id="borderRwidth" size="7">
+    <select id="borderRtype" class="form-select form-select-sm" onChange="TRIANGLE.saveItem.applyChanges();">
+      <option value="1">solid</option>
+      <option value="2">dashed</option>
+      <option value="3">dotted</option>
+    </select>
+    Color:
+    <input type="text" id="borderRcolor"><div class="tinyColorBox" id="colorListBorderR"></div><span class="applyAllSpacing"></span><br>
+
+    Top:
+    <input type="text" id="borderTwidth" size="7">
+    <select id="borderTtype" class="form-select form-select-sm" onChange="TRIANGLE.saveItem.applyChanges();">
+      <option value="1">solid</option>
+      <option value="2">dashed</option>
+      <option value="3">dotted</option>
+    </select>
+    Color:
+    <input type="text" id="borderTcolor"><div class="tinyColorBox" id="colorListBorderT"></div><span class="applyAllSpacing"></span><br>
+
+    Bottom:
+    <input type="text" id="borderBwidth" size="7">
+    <select id="borderBtype" class="form-select form-select-sm" onChange="TRIANGLE.saveItem.applyChanges();">
+      <option value="1">solid</option>
+      <option value="2">dashed</option>
+      <option value="3">dotted</option>
+    </select>
+    Color:
+    <input type="text" id="borderBcolor"><div class="tinyColorBox" id="colorListBorderB"></div><span class="applyAllSpacing"></span>
+
+  </div>
+
+  <!-- Box Shadow -->
+  <div class="menuSection hidden" id="boxShadowMenu" style="display:none;">
+    <div class="menuSectionTitle">Box Shadow</div>
+    Horizontal Distance:<!-- Shadow Right: -->
+    <input type="text" id="boxShadowH" size="7"><div class="tinyColorBoxSpacing"></div><br>
+    Vertical Distance:<!-- Shadow Bottom: -->
+    <input type="text" id="boxShadowV" size="7"><div class="tinyColorBoxSpacing"></div><br>
+    Blur:
+    <input type="text" id="boxShadowBlur" size="7"><div class="tinyColorBoxSpacing"></div><br>
+    Color:
+    <input type="text" id="boxShadowColor" size="7"><div class="tinyColorBox" id="colorBoxShadow"></div>
+  </div>
+
+  <div class="subMenuOption" id="itemAlignLeft" onClick="TRIANGLE.style.itemAlignLeft();" style="margin-left:10px;">
+    <div class="subMenuOptionBox">
+      <img class="optionImage" src="images/opItemAlignLeft.gif">
+    </div>
+    <div class="optionLabel" id="labelItemAlignLeft">Align Left</div>
+  </div>
+
+  <div class="subMenuOption" id="itemAlignCenter" onClick="TRIANGLE.style.itemAlignCenter();">
+    <div class="subMenuOptionBox">
+      <img class="optionImage" src="images/opItemAlignCenter.gif">
+    </div>
+    <div class="optionLabel" id="labelItemAlignCenter">Align Center</div>
+  </div>
+
+  <div class="subMenuOption" id="itemAlignRight" onClick="TRIANGLE.style.itemAlignRight();">
+    <div class="subMenuOptionBox">
+      <img class="optionImage" src="images/opItemAlignRight.gif">
+    </div>
+    <div class="optionLabel" id="labelItemAlignRight">Align Right</div>
+  </div>
+
+  <div class="subMenuOption" id="itemVerticalMiddle" onClick="TRIANGLE.style.verticalMiddle();">
+    <div class="subMenuOptionBox">
+      <img class="optionImage" src="images/opItemAlignVertical.gif">
+    </div>
+    <div class="optionLabel" id="labelVerticalMiddle">Vertical Middle</div>
+  </div>
+
+  <div class="subMenuOption" id="itemAlignDefault" onClick="TRIANGLE.style.itemAlignDefault();">
+    <div class="subMenuOptionBox">
+      <img class="optionImage" src="images/opItemAlignDefault.gif">
+    </div>
+    <div class="optionLabel" id="labelItemAlignDefault">No Alignment</div>
+  </div>
+
+  <div style="clear:both;"></div>
+</div>

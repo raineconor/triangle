@@ -60,7 +60,7 @@ function formatCode($data, $templateName, $pageName, $compress = false, $cropped
          . "<!--=================================-->\n\n"
 
          . "<!--============ Favicon: ===========-->\n"
-         . "<link rel=\"shortcut icon\" href=\"/favicon.ico\" />\n"
+         . "<link rel=\"shortcut icon\" href=\"/favicon.png\" />\n"
          . "<!--=================================-->\n\n"
 
          . "<!--=========== Meta Tags: ==========-->\n"

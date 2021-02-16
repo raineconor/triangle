@@ -27,9 +27,10 @@ img {
 }
 
 body {
-  font-family:'Arial', sans-serif !important;
-  font-size:14px !important;
-  margin:0 !important;
+  font-family: 'Arial', sans-serif;
+  font-size:14px;
+  margin:0;
+  background-color:white;
   /* prevent selection highlighting */
   -webkit-touch-callout:none;
   -webkit-user-select:none;
@@ -70,8 +71,6 @@ hr {
 
 #mainOptionsBar {
   background-color: #323a47;
-  /*background-color: #85A3C2;*/
-  /*background-color: #EA3555;*/
   height:30px;
   overflow-x:hidden;
 }
@@ -97,11 +96,29 @@ hr {
 #menu select {
   width:80px;
   height:22px;
+  padding:0;
+  display:inline-block;
   margin:0;
   border-radius:0;
+  /* border-top:1px solid gray;
+  border-left:1px solid gray;
+  border-right:1px solid gray;
+  border-bottom:1px solid white; */
   border:1px solid gray;
   background-color:white;
 }
+#menu input[type="text"]:first-of-type,
+#menu input[type="number"]:first-of-type,
+#menu select:first-of-type {
+  /* border-top-left-radius: 3px; */
+}
+#menu input[type="text"]:last-of-type,
+#menu input[type="number"]:last-of-type,
+#menu select:last-of-type {
+  /* border-bottom-left-radius: 3px; */
+  /* border-bottom:1px solid gray; */
+}
+
 
 #menu button {
   -webkit-appearance:none;
@@ -224,6 +241,10 @@ hr {
 
 #template button {
   /*pointer-events:none;*/
+}
+
+#fontData {
+  display:none;
 }
 
 #topMarker {
@@ -877,6 +898,12 @@ hr {
   color:#FFFFFF;
 }
 
+#dummyDiv {
+  display:block;
+  height:0;
+  position:fixed;
+}
+
 /*============================================
                  Class Styles
 ============================================*/
@@ -894,14 +921,14 @@ hr {
   color:white;
   padding:5px 0;
   /*border-left:1px solid black;*/
-  font-size:90%;
+  font-size:12px;
 }
 
 .sideOptionSmall {
   text-align:center;
   color:white;
   padding:5px 0;
-  font-size:90%;
+  font-size:12px;
   width:50%;
   float:left;
 }
@@ -916,6 +943,7 @@ hr {
 .templateItem {
   /*cursor:default;*/
   cursor:pointer;
+  /* transition:all 200ms ease 10ms; */
 }
 
 /*.templateItem:hover {
@@ -929,7 +957,7 @@ hr {
 .mainOption,
 .mainOptionImmune {
   display: inline-block;
-  padding:6px 10px;
+  padding:4px 10px;
   background-color:#323a47;
   /*background-color:#85A3C2;*/
   /*background-color:#EA3555;*/
@@ -1016,7 +1044,7 @@ hr {
   margin-bottom:7px;
   font-weight:bold;
   /*border-bottom:1px solid gray;*/
-  /*border-radius:4px;*/
+  border-radius:2px;
 }
 
 .templateItem input,
@@ -1471,6 +1499,18 @@ hr.clearFloat {
   vertical-align:bottom;
 }
 
-*[triangle="templateItem"] {
-  border:2px solid red;
+[triangle-class~=templateItem] {
+  border-top:2px dotted #3F88C5;
+  border-right:2px dotted #3F88C5;
+  cursor:pointer;
+  /* transition:all 300ms ease 0s; */
+}
+
+/* [triangle-class~=templateItem]:hover {
+  outline:2px solid blue;
+} */
+
+[triangle-class~=templateItem]:last-of-type {
+  border-bottom:2px dotted #3F88C5;
+  border-right:none;
 }
