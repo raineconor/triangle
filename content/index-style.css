@@ -81,7 +81,7 @@ hr {
 
 #menu {
   height: 170px;
-  background-color:#E6E6E6;
+  background-color:#f5f8fa;
   position: fixed;
   top: 0;
   left: 0;
@@ -985,15 +985,20 @@ hr {
   float:left;
   padding: 5px;
   background-color: #CFCFCF;
+  /* background-color: #556073; */
+  /* background-color: #818994; */
+  border-radius:4px;
   margin: 9px 3px 9px 3px;
-  border: 1px solid #E6E6E6;
+  /* border: 1px solid #E6E6E6; */
+  border: 1px solid #CFCFCF;
   cursor: pointer;
   height:100px;
   width:100px;
 }
 
 .subMenuOption:hover {
-  border-color: gray;
+  /* border-color: gray; */
+  border:1px solid gray;
 }
 
 .subMenuOption .subMenuOptionBox {

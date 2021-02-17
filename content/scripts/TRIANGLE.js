@@ -3491,7 +3491,7 @@ TRIANGLE.menu = {
       mainOptions[i].style.backgroundColor = "";
       mainOptions[i].style.color = "";
     }
-    btn.style.backgroundColor = "#E6E6E6";
+    btn.style.backgroundColor = "#f5f8fa";
     btn.style.color = "#000000";
   },
 

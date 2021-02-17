@@ -20,22 +20,18 @@
 <link rel="shortcut icon" href="/favicon.ico" />
 <meta name="description" content="Log in to Triangle CMS online visual website builder and content management system.">
 <meta name="keywords" content="triangle, cms, online, visual, website, builder, alternative, software">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <!--=================================-->
 
 <!--========== CSS Include: =========-->
-<!--<link rel="stylesheet" href="login-style.css" type="text/css" media="screen">
-<link rel="stylesheet" href="shortcodes.css" type="text/css" media="screen">-->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+<link rel="stylesheet" href="login-style.css" type="text/css" media="screen">
 <!--=================================-->
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
-<style>
-<?php echo str_replace("\n", "", file_get_contents("login-style.css")) . str_replace("\n", "", file_get_contents("shortcodes.css")); ?>
-</style>
 
 </head>
 
-<body>
-<div class="container-fluid" style="padding:0;">
+<body class="text-center">
+
   <?php
   $error = "";
 	if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -59,7 +55,7 @@
         $_SESSION["currentPage"] = [];
         //$_SESSION["pseudouser"] = [];
         // echo "<script>location.href = 'program/index.php';</script>";
-        echo "<script>location.href = 'content/admin.php';</script>";
+        echo "<script>location.href = 'admin.php';</script>";
 	    } else { // if username or password don't match, create an error
         $error = "<span class='error'>*Incorrect username or password</span>";
         $attempts = db_query('SELECT attempts FROM login_attempts WHERE username = ?', [$username]);
@@ -84,7 +80,7 @@
 	  }
 	}
   ?>
-  <div id="content">
+  <!-- <div id="content">
     <div id="loginBox">
       <img class="img-responsive" id="logo" src="images/blue-triangle-medium.png">
       <form id="loginForm" method="post" action="<?php $_SERVER['PHP_SELF']; ?>">
@@ -100,12 +96,23 @@
       </form><br>
       <?php echo $error; ?>
     </div>
-  </div>
-  <div id="footer">
-    (C) Copyright 2020 Raine Conor. All rights reserved.
-  </div>
+  </div> -->
 
-</div><!-- end class="container" -->
+  <main class="form-signin">
+    <form method="post" action="<?php $_SERVER['PHP_SELF']; ?>">
+      <img class="mb-4" src="../images/triangle-logo-text.svg" alt="" width="256" height="72">
+      <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
+      <label for="inputUsername" class="visually-hidden">Email address</label>
+      <input type="username" name="username" id="inputUsername" class="form-control" placeholder="Email address" required autofocus>
+      <label for="inputPassword" class="visually-hidden">Password</label>
+      <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required>
+      <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
+      <!-- <p class="mt-5 mb-3 text-muted">&copy; <?php echo date("Y", time()); ?> Raine Conor. All rights reserved.</p> -->
+      <?php echo $error; ?>
+    </form>
+  </main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
 </body>
 
 </html>
