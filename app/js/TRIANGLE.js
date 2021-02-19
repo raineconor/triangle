@@ -576,14 +576,14 @@ AJAX.get("php/library_list.php", "", function(xmlhttp) {
 
 loadUserIDs : function() {
   var params = "instance=" + TRIANGLE.instance;
-  AJAX.get("php/userIDlist.php", params, function(xmlhttp) {
+  AJAX.get("php/user_id_list.php", params, function(xmlhttp) {
     document.getElementById("echoUserIDs").innerHTML = xmlhttp.responseText;
   });
 },
 
 loadUserClasses : function() {
   var params = "instance=" + TRIANGLE.instance;
-  AJAX.get("php/userClassList.php", params, function(xmlhttp) {
+  AJAX.get("php/user_class_list.php", params, function(xmlhttp) {
     //console.log(xmlhttp.responseText);
     document.getElementById("echoUserClasses").innerHTML = xmlhttp.responseText;
   });
@@ -7114,7 +7114,7 @@ TRIANGLE.saveTemplate = {
     + "&globalStyle=" + globalStyle
     + "&globalScript=" + globalScript;
 
-    AJAX.post("php/saveTemplate.php", params, function(xmlhttp) {
+    AJAX.post("php/save_template.php", params, function(xmlhttp) {
       TRIANGLE.saveTemplate.saveUserIDs();
       TRIANGLE.saveTemplate.saveUserClasses();
 
@@ -7169,7 +7169,7 @@ TRIANGLE.saveTemplate = {
     + "&globalScript=" + globalScript
     + "&changesMade=" + TRIANGLE.changesMade;
 
-    AJAX.post("php/saveCurrent.php", params, function(xmlhttp) {
+    AJAX.post("php/save_current.php", params, function(xmlhttp) {
       TRIANGLE.saveTemplate.saveUserIDs();
       TRIANGLE.saveTemplate.saveUserClasses();
       document.getElementById("sideMenu").display != "none" ? TRIANGLE.menu.closeSideMenu() : null;
@@ -7345,7 +7345,7 @@ TRIANGLE.saveTemplate = {
 
   var params = "instance=" + TRIANGLE.instance + "&content=" + userIDstr;
 
-  AJAX.post("php/saveUserIDs.php", params, function(xmlhttp) {
+  AJAX.post("php/save_user_ids.php", params, function(xmlhttp) {
     //console.log(xmlhttp.responseText);
   });
 
@@ -7371,7 +7371,7 @@ saveUserClasses : function() {
 
     var userClassStr = JSON.stringify(userClassObj);
     var params = "instance=" + TRIANGLE.instance + "&content=" + userClassStr;
-    AJAX.post("php/saveUserClasses.php", params, function(xmlhttp) {
+    AJAX.post("php/save_user_classes.php", params, function(xmlhttp) {
       //console.log(xmlhttp.responseText);
     });
   }

@@ -371,7 +371,7 @@
 
 01/28/16
 
-- added a RegExp in uploadFont.php for security and syntax checking
+- added a RegExp in upload_font.php for security and syntax checking
 - fixed a bug where hovering over an element during an active animation would create a selection
   border on the wrong element
 - fixed a bug where the wrong width was being displayed in the menu after resizing with a handle
@@ -1148,7 +1148,7 @@
 - loaded templates are now gzipped before being sent to the client
 - custom shipping is now one global price applied per order
 - added vertical-align to the CSS styles processed by json_to_html.php
-- fixed a bug where uploadFont.php would not take subdomains
+- fixed a bug where upload_font.php would not take subdomains
 - cleaned up publish.php and fixed a big where the images directory was not being created on the
   FTP server
 - default fonts are now loaded on all accounts from the triangle profile in the database

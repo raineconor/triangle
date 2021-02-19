@@ -27,7 +27,7 @@ function deleteImage(elem, srcFile) {
 function uploadFont() {
   var fontName = encodeURIComponent(document.getElementById("fontName").value);
   var fontURL = encodeURIComponent(document.getElementById("fontURL").value);
-  AJAX.get("php/uploadFont.php", "fontURL=" + fontURL + "&fontName=" + fontName, function(xmlhttp) {
+  AJAX.get("php/upload_font.php", "fontURL=" + fontURL + "&fontName=" + fontName, function(xmlhttp) {
     document.getElementById("echoFontList").innerHTML = xmlhttp.responseText + document.getElementById("echoFontList").innerHTML;
     document.getElementById("fontName").value = "";
     document.getElementById("fontURL").value = "";

@@ -174,7 +174,7 @@
   <section class="menu" id="myImages">
     <h2>My Images</h2>
     <hr>
-    <form action="php/uploadImage.php" method="post" enctype="multipart/form-data" target="_blank" style="margin-bottom:15px;">
+    <form action="php/upload_image.php" method="post" enctype="multipart/form-data" target="_blank" style="margin-bottom:15px;">
       <h4>Upload an Image</h4>
       <input type="file" name="uploadImage[]" style="border:1px solid gray; padding:5px;" multiple="multiple" accept="image/*" /> <input type="submit" value="Upload" />
     </form>
