@@ -1,0 +1,28 @@
+<div class="subMenu" id="displayPremadeElements">
+  <div class="subMenuOption" id="itemLibrary" onClick="TRIANGLE.menu.openSideMenu('libraryMenu');">
+    <div class="subMenuOptionBox">
+      <img class="optionImage" src="images/opLibrary.svg">
+    </div>
+    <div class="optionLabel" id="labelItemLibrary">Item Library</div>
+  </div>
+
+  <div class="subMenuOption" id="userIDlibrary" onClick="TRIANGLE.library.loadUserIDs();TRIANGLE.library.loadUserClasses();TRIANGLE.menu.openSideMenu('userItemMenu');">
+    <div class="subMenuOptionBox">
+      <img class="optionImage" src="images/opUserClasses.svg">
+    </div>
+    <div class="optionLabel" id="labelUserIDlibrary">My Items</div>
+  </div>
+
+  <div class="menuSection">
+    <div class="menuSectionTitle">My Item</div>
+    Item ID:
+    <input type="text" id="userID" style="width:100px;"><br>
+    Item Class:
+    <input type="text" id="userClass" style="width:100px;"><br>
+  </div>
+
+  <!--<div class="menuSection">
+    <div class="menuSectionTitle">Premade Items</div>
+    <div id="echoLibrary"></div>
+  </div>-->
+</div>

@@ -1,0 +1,21 @@
+<div id="mainOptionsBar" class="clearfix">
+  <div class="mainOptionImmune" id="opSaveBtn" onClick="TRIANGLE.clearSelection();TRIANGLE.menu.openSideMenu('saveMenuOptions');">Save</div>
+  <div class="mainOptionImmune" id="opLoadBtn" onClick="TRIANGLE.clearSelection();TRIANGLE.loadTemplate.getLoadList();TRIANGLE.menu.openSideMenu('openMenuOptions');">Open</div>
+  <div class="mainOption" id="opExport" onClick="TRIANGLE.menu.displaySubMenu('displayExportOptions');">Export</div>
+  <div class="mainOption" id="opGeneralOptions" onClick="TRIANGLE.menu.displaySubMenu('displayGeneralOptions');">Options</div>
+  <div class="mainOption" id="opElementStyles" onClick="TRIANGLE.menu.displaySubMenu('displayElementStyles');">Style</div>
+  <div class="mainOption" id="opColor" onClick="TRIANGLE.menu.displaySubMenu('displayColor');">Colors</div>
+  <div class="mainOption" id="opTextStyles" onClick="TRIANGLE.menu.displaySubMenu('displayTextStyles');">Text</div>
+  <!-- <div class="mainOption" id="opForms" onClick="TRIANGLE.menu.displaySubMenu('displayForms');">Forms</div> -->
+  <div class="mainOption" id="opImages" onClick="TRIANGLE.menu.displaySubMenu('displayImages');">Images</div>
+  <div class="mainOptionImmune" id="opPages" onClick="TRIANGLE.clearSelection();TRIANGLE.pages.loadPages('', 'menu');TRIANGLE.menu.openSideMenu('pagesMenuOptions');">Pages</div>
+  <div class="mainOption" id="opPresetElements" onClick="TRIANGLE.menu.displaySubMenu('displayPremadeElements');">Library</div>
+  <!--<div class="mainOption" id="opEffects" onClick="TRIANGLE.menu.displaySubMenu('displayEffects');">Effects</div>-->
+  <div class="mainOption" id="opDeveloper" onClick="TRIANGLE.menu.displaySubMenu('displayDeveloper');">Developer</div>
+  <div class="mainOption" id="opDashboard" onClick=""><a href="admin.php" style="color:white;">Dashboard</a></div>
+
+  <div id="dimensionLabels">
+    <div id="widthLabel"></div>
+    <div id="heightLabel"></div>
+  </div>
+</div>
