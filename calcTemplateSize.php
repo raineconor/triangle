@@ -9,8 +9,8 @@ body {
 <body>
 <?php
 
-require_once "app/scripts/sessionCheck.php";
-require_once "app/scripts/db_query.php";
+require_once "app/php/sessionCheck.php";
+require_once "app/php/db_query.php";
 
 if ($_SESSION["usertype"] != "admin") exit(1);
 

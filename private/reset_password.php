@@ -1,7 +1,7 @@
 <?php
 
 session_start();
-require "app/scripts/db_query.php";
+require "app/php/db_query.php";
 require "app/crypt/aes256.php";
 
 $new_surrogate = openssl_random_pseudo_bytes(60);

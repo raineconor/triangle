@@ -1,7 +1,7 @@
 <?php
   session_start();
-  require "app/scripts/sanitize_string.php";
-  require "app/scripts/db_query.php";
+  require "app/php/sanitize_string.php";
+  require "app/php/db_query.php";
   if (isset($_SESSION["username"])) {
     header("Location: app/admin.php");
   }

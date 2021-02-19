@@ -1,11 +1,11 @@
 <?php
   session_start();
-  require "scripts/sessionCheck.php";
-  require "scripts/instanceNumber.php";
-  require "scripts/sanitize_string.php";
-  require "scripts/db_query.php";
+  require "php/sessionCheck.php";
+  require "php/instanceNumber.php";
+  require "php/sanitize_string.php";
+  require "php/db_query.php";
   require "crypt/aes256.php";
-  require "scripts/version.php";
+  require "php/version.php";
 
   $instanceNumber = intval(getInstance());
 
@@ -382,8 +382,8 @@ function lazyload() {
 };
 
 </script>
-<script type="text/javascript" src="scripts/AJAX.js"></script>
-<script type="text/javascript" src="scripts/<?php
+<script type="text/javascript" src="js/AJAX.js"></script>
+<script type="text/javascript" src="js/<?php
 if ($_SERVER["HTTP_HOST"] === "trianglecms.com"
 || $_SERVER["HTTP_HOST"] === "www.trianglecms.com") {
   echo "TRIANGLE" . str_replace(".", "", $latestVersion) . ".min.js";

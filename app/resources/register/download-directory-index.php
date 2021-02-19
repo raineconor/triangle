@@ -3,8 +3,8 @@
 (C) Copyright 2020 Raine Conor. All rights reserved.
 */
 session_start();
-require "../../../scripts/sessionCheck.php";
-require "../../../scripts/sanitize_string.php";
+require "../../../php/sessionCheck.php";
+require "../../../php/sanitize_string.php";
 $templateName = sanitize($_GET["file"]);
 $file = "TRIANGLE-" . $templateName . ".zip";
 if (file_exists($file)) {

@@ -11,7 +11,7 @@ function toggleMenu(elemId) {
 }
 
 function deleteImage(elem, srcFile) {
-  AJAX.get("scripts/deleteImage.php", "srcFile=" + srcFile, function(xmlhttp) {
+  AJAX.get("php/deleteImage.php", "srcFile=" + srcFile, function(xmlhttp) {
     if (parseInt(xmlhttp.responseText)) {
       elem.nextSibling.className += "fadeOut";
       setTimeout(function(){
@@ -27,7 +27,7 @@ function deleteImage(elem, srcFile) {
 function uploadFont() {
   var fontName = encodeURIComponent(document.getElementById("fontName").value);
   var fontURL = encodeURIComponent(document.getElementById("fontURL").value);
-  AJAX.get("scripts/uploadFont.php", "fontURL=" + fontURL + "&fontName=" + fontName, function(xmlhttp) {
+  AJAX.get("php/uploadFont.php", "fontURL=" + fontURL + "&fontName=" + fontName, function(xmlhttp) {
     document.getElementById("echoFontList").innerHTML = xmlhttp.responseText + document.getElementById("echoFontList").innerHTML;
     document.getElementById("fontName").value = "";
     document.getElementById("fontURL").value = "";
@@ -39,7 +39,7 @@ function addFTPprofile() {
   var ftpUsr = encodeURIComponent(document.getElementById("ftpUsr").value);
   var ftpPwd = encodeURIComponent(document.getElementById("ftpPwd").value);
 
-  AJAX.post("scripts/addFTPprofile.php", "ftpURL=" + ftpURL + "&ftpUsr=" + ftpUsr + "&ftpPwd=" + ftpPwd, function(xmlhttp) {
+  AJAX.post("php/addFTPprofile.php", "ftpURL=" + ftpURL + "&ftpUsr=" + ftpUsr + "&ftpPwd=" + ftpPwd, function(xmlhttp) {
     document.getElementById("echoFTPlist").innerHTML += xmlhttp.responseText;
 
     document.getElementById("ftpURL").value =
@@ -53,7 +53,7 @@ function deleteTemplate(templateName, templateNum) {
     var deleteElem = document.getElementById("template-" + templateNum);
     //var deleteMenu = document.getElementById("details-" + templateNum);
 
-    AJAX.post("scripts/deleteTemplate.php", "templateName=" + templateName, function() {
+    AJAX.post("php/deleteTemplate.php", "templateName=" + templateName, function() {
       deleteElem.className += " fadeOut";
       //deleteMenu.className += " fadeOut";
       setTimeout(function() {
@@ -91,7 +91,7 @@ function addBusinessProfile() {
             + sandboxID + "&sandboxSecret=" + sandboxSecret + "&liveID=" + liveID
             + "&liveSecret=" + liveSecret;
 
-  AJAX.post("scripts/addBusinessProfile.php", params, function(xmlhttp) {
+  AJAX.post("php/addBusinessProfile.php", params, function(xmlhttp) {
     closePopUp();
     location.href = "?tab=ecommerce";
   });
@@ -114,7 +114,7 @@ function editBusinessProfile(id, name, country, state, city, address, postal, sa
 function deleteBusinessProfile(businessID, businessElem) {
   var deleteElem = document.getElementById("business-" + businessElem);
 
-  AJAX.post("scripts/deleteBusinessProfile.php", "profileID=" + businessID, function() {
+  AJAX.post("php/deleteBusinessProfile.php", "profileID=" + businessID, function() {
     deleteElem.className += " fadeOut";
     //deleteMenu.className += " fadeOut";
     setTimeout(function() {
@@ -191,7 +191,7 @@ function changePassword() {
     error.innerHTML = "*Passwords may only contain characters A-Z, a-z, 0-9,<br>and these special characters: !  \"  #  $  %  &  '  (  )  *  +  ,  -  .  :  ;  <  =  >  ?  @  [  ]  ^  _  '  {  |  }  ~";
   } else if (changePass === confirmPass) {
     var params = "password=" + changePass;
-    AJAX.post("scripts/changePassword.php", params, function(xmlhttp) {
+    AJAX.post("php/changePassword.php", params, function(xmlhttp) {
       if (parseInt(xmlhttp.responseText) != 0) {
         document.getElementById("changePassword").value = "";
         document.getElementById("changePasswordConfirm").value = "";

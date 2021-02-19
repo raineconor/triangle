@@ -1,9 +1,9 @@
 <?php
   session_start();
-  require "scripts/sessionCheck.php";
-  require "scripts/sanitize_string.php";
-  require "scripts/getDirectory.php";
-  require "scripts/db_query.php";
+  require "php/sessionCheck.php";
+  require "php/sanitize_string.php";
+  require "php/getDirectory.php";
+  require "php/db_query.php";
   require "crypt/aes256.php";
 
   if (isset($_GET["tab"])) {
@@ -63,7 +63,7 @@
     <a class="left-col-btn" href="logout.php">Logout</a>
 
     <div id="version">
-      v <?php include "scripts/version.php"; echo $latestVersion; ?>
+      v <?php include "php/version.php"; echo $latestVersion; ?>
       <br>
       <span style="font-size:10px;">&copy; Copyright <?php echo date("Y", time()); ?> Raine Conor. All rights reserved.</span>
     </div>
@@ -174,7 +174,7 @@
   <section class="menu" id="myImages">
     <h2>My Images</h2>
     <hr>
-    <form action="scripts/uploadImage.php" method="post" enctype="multipart/form-data" target="_blank" style="margin-bottom:15px;">
+    <form action="php/uploadImage.php" method="post" enctype="multipart/form-data" target="_blank" style="margin-bottom:15px;">
       <h4>Upload an Image</h4>
       <input type="file" name="uploadImage[]" style="border:1px solid gray; padding:5px;" multiple="multiple" accept="image/*" /> <input type="submit" value="Upload" />
     </form>
@@ -414,9 +414,9 @@
     </div>
   </div>
 
-  <script type="text/javascript" src="scripts/AJAX.js"></script>
-  <script type="text/javascript" src="scripts/admin.js"></script>
-  <script type="text/javascript" src="scripts/lazyLoader.js"></script>
+  <script type="text/javascript" src="js/AJAX.js"></script>
+  <script type="text/javascript" src="js/admin.js"></script>
+  <script type="text/javascript" src="js/lazyLoader.js"></script>
   <?php echo $tab; ?>
   <?php echo $searchUser; ?>
 </body>

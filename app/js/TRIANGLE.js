@@ -12,7 +12,7 @@ TRIANGLE.images = {
 
 
   load : function loadImages() {
-    AJAX.get("scripts/imageList.php", "", function(xmlhttp) {
+    AJAX.get("php/imageList.php", "", function(xmlhttp) {
       document.getElementById("echoImageList").innerHTML = xmlhttp.responseText;
       //lazyload();
     });
@@ -566,24 +566,24 @@ TRIANGLE.library = {
     document.getElementById("echoLibrary").innerHTML = xmlhttp.responseText;
   }
 }
-xmlhttp.open("GET", "scripts/libraryList.php", true);
+xmlhttp.open("GET", "php/libraryList.php", true);
 xmlhttp.send();*/
 
-AJAX.get("scripts/libraryList.php", "", function(xmlhttp) {
+AJAX.get("php/libraryList.php", "", function(xmlhttp) {
   document.getElementById("echoLibrary").innerHTML = xmlhttp.responseText;
 });
 },
 
 loadUserIDs : function() {
   var params = "instance=" + TRIANGLE.instance;
-  AJAX.get("scripts/userIDlist.php", params, function(xmlhttp) {
+  AJAX.get("php/userIDlist.php", params, function(xmlhttp) {
     document.getElementById("echoUserIDs").innerHTML = xmlhttp.responseText;
   });
 },
 
 loadUserClasses : function() {
   var params = "instance=" + TRIANGLE.instance;
-  AJAX.get("scripts/userClassList.php", params, function(xmlhttp) {
+  AJAX.get("php/userClassList.php", params, function(xmlhttp) {
     //console.log(xmlhttp.responseText);
     document.getElementById("echoUserClasses").innerHTML = xmlhttp.responseText;
   });
@@ -591,7 +591,7 @@ loadUserClasses : function() {
 
 insertTemplate : function (templateName) {
   var params = "instance=" + TRIANGLE.instance + "&templateName=" + templateName;
-  AJAX.get("scripts/insertPremadeTemplate.php", params, function(xmlhttp) {
+  AJAX.get("php/insertPremadeTemplate.php", params, function(xmlhttp) {
     //console.log(xmlhttp.responseText);
     TRIANGLE.template.blank();
     var content = TRIANGLE.json.decompress(xmlhttp.responseText);
@@ -613,7 +613,7 @@ insert : function insertLibraryItem(category, name) {
 
   var params = "category=" + encodeURIComponent(category) + "&name=" + encodeURIComponent(name);
 
-  AJAX.get("scripts/insertLibraryItem.php", params, function(xmlhttp) {
+  AJAX.get("php/insertLibraryItem.php", params, function(xmlhttp) {
     var newItem = xmlhttp.responseText;
     if (!TRIANGLE.item) {
       document.getElementById("template").innerHTML += newItem;
@@ -645,7 +645,7 @@ insertUserID : function(name) {
 
   var params = "instance=" + TRIANGLE.instance + "&name=" + name;
 
-  AJAX.get("scripts/insertUserID.php", params, function(xmlhttp) {
+  AJAX.get("php/insertUserID.php", params, function(xmlhttp) {
     //console.log(xmlhttp.responseText);
     var itemContent = TRIANGLE.json.toHTML(xmlhttp.responseText);
     var checkSameClass = TRIANGLE.getElementByUserId(name);
@@ -669,7 +669,7 @@ insertUserClass : function(name) {
 
   var params = "instance=" + TRIANGLE.instance + "&name=" + name;
 
-  AJAX.get("scripts/insertUserClass.php", params, function(xmlhttp) {
+  AJAX.get("php/insertUserClass.php", params, function(xmlhttp) {
     /*console.log(xmlhttp.responseText);*/
     var userClass = JSON.parse(xmlhttp.responseText);
     var newItem = document.createElement("div");
@@ -6450,7 +6450,7 @@ postZip : function(askZip) {
   var params = "askZip=" + askZip + "&instance=" + TRIANGLE.instance + "&compress=" + compress;
 
   setTimeout(function(){
-    AJAX.post("scripts/exportZip.php", params, function(xmlhttp) {
+    AJAX.post("php/exportZip.php", params, function(xmlhttp) {
       console.log(xmlhttp.responseText);
       if (askZip) {
         window.open(xmlhttp.responseText);
@@ -6468,7 +6468,7 @@ to receive the $_GET values for the URL.
 postTemplate : function postTemplate(type, params) {
   var form = document.getElementById("exportRawPost");
   form.innerHTML = "";
-  form.setAttribute("action", "scripts/" + type + ".php");
+  form.setAttribute("action", "php/" + type + ".php");
 
   /*if (document.getElementById("pagename")) {
   var pagenameValue = document.getElementById("pagename").value;
@@ -6516,7 +6516,7 @@ postTemplateAJAX : function(type, params) { // not currently in use
 
   postData = postData.slice(0, -1);
 
-  AJAX.post("scripts/" + type + ".php", postData, function(xmlhttp) {
+  AJAX.post("php/" + type + ".php", postData, function(xmlhttp) {
     TRIANGLE.loading.stop();
   });
 },
@@ -6528,7 +6528,7 @@ previewTemplate : function previewTemplate() {
     TRIANGLE.exportCode.callbackAfterSave = function() {
       var compress = document.getElementById("exportCompress").checked ? 1 : 0;
       var params = "askZip=0&instance=" + TRIANGLE.instance + "&compress=" + compress;
-      AJAX.post("scripts/exportZip.php", params, function(xmlhttp) {
+      AJAX.post("php/exportZip.php", params, function(xmlhttp) {
         console.log(xmlhttp.responseText);//find flag
         TRIANGLE.exportCode.postTemplate("previewTemplate", {"instance":TRIANGLE.instance});
       });
@@ -6568,11 +6568,11 @@ clearZip : function() {
   //console.log(xmlhttp.responseText);
 }
 }
-xmlhttp.open("POST", "scripts/clearZip.php", true);
+xmlhttp.open("POST", "php/clearZip.php", true);
 xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
 xmlhttp.send();*/
 
-AJAX.get("scripts/clearZip.php", "", function(xmlhttp) {
+AJAX.get("php/clearZip.php", "", function(xmlhttp) {
   //console.log(xmlhttp.responseText);
 });
 }
@@ -7114,7 +7114,7 @@ TRIANGLE.saveTemplate = {
     + "&globalStyle=" + globalStyle
     + "&globalScript=" + globalScript;
 
-    AJAX.post("scripts/saveTemplate.php", params, function(xmlhttp) {
+    AJAX.post("php/saveTemplate.php", params, function(xmlhttp) {
       TRIANGLE.saveTemplate.saveUserIDs();
       TRIANGLE.saveTemplate.saveUserClasses();
 
@@ -7169,7 +7169,7 @@ TRIANGLE.saveTemplate = {
     + "&globalScript=" + globalScript
     + "&changesMade=" + TRIANGLE.changesMade;
 
-    AJAX.post("scripts/saveCurrent.php", params, function(xmlhttp) {
+    AJAX.post("php/saveCurrent.php", params, function(xmlhttp) {
       TRIANGLE.saveTemplate.saveUserIDs();
       TRIANGLE.saveTemplate.saveUserClasses();
       document.getElementById("sideMenu").display != "none" ? TRIANGLE.menu.closeSideMenu() : null;
@@ -7345,7 +7345,7 @@ TRIANGLE.saveTemplate = {
 
   var params = "instance=" + TRIANGLE.instance + "&content=" + userIDstr;
 
-  AJAX.post("scripts/saveUserIDs.php", params, function(xmlhttp) {
+  AJAX.post("php/saveUserIDs.php", params, function(xmlhttp) {
     //console.log(xmlhttp.responseText);
   });
 
@@ -7371,7 +7371,7 @@ saveUserClasses : function() {
 
     var userClassStr = JSON.stringify(userClassObj);
     var params = "instance=" + TRIANGLE.instance + "&content=" + userClassStr;
-    AJAX.post("scripts/saveUserClasses.php", params, function(xmlhttp) {
+    AJAX.post("php/saveUserClasses.php", params, function(xmlhttp) {
       //console.log(xmlhttp.responseText);
     });
   }
@@ -7406,7 +7406,7 @@ createNewPage : function(pageName) {
   }
   TRIANGLE.saveTemplate.saveCurrent();
 
-  AJAX.get("scripts/createPage.php", "instance=" + TRIANGLE.instance + "&pageName=" + pageName, function(xmlhttp) {
+  AJAX.get("php/createPage.php", "instance=" + TRIANGLE.instance + "&pageName=" + pageName, function(xmlhttp) {
     console.log(xmlhttp.responseText);
   });
 
@@ -7440,7 +7440,7 @@ TRIANGLE.loadTemplate = {
   },
 
   getLoadList : function getLoadList() {
-    AJAX.get("scripts/loadList.php", "", function(xmlhttp) {
+    AJAX.get("php/loadList.php", "", function(xmlhttp) {
       document.getElementById("echoLoadList").innerHTML = xmlhttp.responseText;
 
       var listThumbs = document.getElementById("echoLoadList").querySelectorAll(".loadListItem");
@@ -7467,7 +7467,7 @@ TRIANGLE.loadTemplate = {
 
     var params = "templateName=" + templateName + page + "&instance=" + TRIANGLE.instance;
 
-    AJAX.post("scripts/loadTemplate.php", params, function(xmlhttp) {
+    AJAX.post("php/loadTemplate.php", params, function(xmlhttp) {
       if (document.getElementById("loadingCell").style.display === "none") TRIANGLE.popUp.close();
       document.getElementById("loadTemplatesCell").style.display = "none";
       TRIANGLE.template.blank();
@@ -7515,7 +7515,7 @@ TRIANGLE.loadTemplate = {
   updateUserIDs : function() {
     var params = "instance=" + TRIANGLE.instance;
 
-    AJAX.post("scripts/readUserIDs.php", params, function(xmlhttp) {
+    AJAX.post("php/readUserIDs.php", params, function(xmlhttp) {
       if (!xmlhttp.responseText) {
         TRIANGLE.loadTemplate.show();
         return;
@@ -7577,7 +7577,7 @@ TRIANGLE.loadTemplate = {
 
   updateUserClasses : function() {
     var params = "instance=" + TRIANGLE.instance;
-    AJAX.post("scripts/readUserClasses.php", params, function(xmlhttp) {
+    AJAX.post("php/readUserClasses.php", params, function(xmlhttp) {
       if (!xmlhttp.responseText) return;
       //console.log(xmlhttp.responseText);
 
@@ -7600,7 +7600,7 @@ TRIANGLE.loadTemplate = {
     }
     TRIANGLE.importWebsiteURL = url;
     //nerd
-    AJAX.get("scripts/importWebsite.php", "url=" + encodeURIComponent(url), function(xmlhttp) {
+    AJAX.get("php/importWebsite.php", "url=" + encodeURIComponent(url), function(xmlhttp) {
       if (xmlhttp.responseText) {
         var content = xmlhttp.responseText;
 
@@ -8015,7 +8015,7 @@ TRIANGLE.pages = {
 
     var params = "templateName=" + encodeURIComponent(template) + "&listType=" + listType + "&instance=" + TRIANGLE.instance;
 
-    AJAX.get("scripts/pageList.php", params, function(xmlhttp) {
+    AJAX.get("php/pageList.php", params, function(xmlhttp) {
       if (listType == "menu") {
         document.getElementById("echoPageList").innerHTML = xmlhttp.responseText;
 
@@ -8044,7 +8044,7 @@ TRIANGLE.pages = {
   },
 
   deletePage : function(page) {
-    AJAX.get("scripts/deletePage.php", "instance=" + TRIANGLE.instance + "&page=" + page, function(xmlhttp) {
+    AJAX.get("php/deletePage.php", "instance=" + TRIANGLE.instance + "&page=" + page, function(xmlhttp) {
       //console.log(xmlhttp.responseText);
       if (parseInt(xmlhttp.responseText)) {
         var pagelist = document.getElementsByClassName("pageThumbnail");
