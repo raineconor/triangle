@@ -1,7 +1,7 @@
 <?php
   session_start();
   require "php/session_check.php";
-  require "php/instanceNumber.php";
+  require "php/instance_number.php";
   require "php/sanitize_string.php";
   require "php/db_query.php";
   require "crypt/aes256.php";

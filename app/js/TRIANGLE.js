@@ -566,10 +566,10 @@ TRIANGLE.library = {
     document.getElementById("echoLibrary").innerHTML = xmlhttp.responseText;
   }
 }
-xmlhttp.open("GET", "php/libraryList.php", true);
+xmlhttp.open("GET", "php/library_list.php", true);
 xmlhttp.send();*/
 
-AJAX.get("php/libraryList.php", "", function(xmlhttp) {
+AJAX.get("php/library_list.php", "", function(xmlhttp) {
   document.getElementById("echoLibrary").innerHTML = xmlhttp.responseText;
 });
 },
@@ -7440,7 +7440,7 @@ TRIANGLE.loadTemplate = {
   },
 
   getLoadList : function getLoadList() {
-    AJAX.get("php/loadList.php", "", function(xmlhttp) {
+    AJAX.get("php/load_list.php", "", function(xmlhttp) {
       document.getElementById("echoLoadList").innerHTML = xmlhttp.responseText;
 
       var listThumbs = document.getElementById("echoLoadList").querySelectorAll(".loadListItem");
@@ -7467,7 +7467,7 @@ TRIANGLE.loadTemplate = {
 
     var params = "templateName=" + templateName + page + "&instance=" + TRIANGLE.instance;
 
-    AJAX.post("php/loadTemplate.php", params, function(xmlhttp) {
+    AJAX.post("php/load_template.php", params, function(xmlhttp) {
       if (document.getElementById("loadingCell").style.display === "none") TRIANGLE.popUp.close();
       document.getElementById("loadTemplatesCell").style.display = "none";
       TRIANGLE.template.blank();
@@ -7515,7 +7515,7 @@ TRIANGLE.loadTemplate = {
   updateUserIDs : function() {
     var params = "instance=" + TRIANGLE.instance;
 
-    AJAX.post("php/readUserIDs.php", params, function(xmlhttp) {
+    AJAX.post("php/read_user_ids.php", params, function(xmlhttp) {
       if (!xmlhttp.responseText) {
         TRIANGLE.loadTemplate.show();
         return;
@@ -7577,7 +7577,7 @@ TRIANGLE.loadTemplate = {
 
   updateUserClasses : function() {
     var params = "instance=" + TRIANGLE.instance;
-    AJAX.post("php/readUserClasses.php", params, function(xmlhttp) {
+    AJAX.post("php/read_user_classes.php", params, function(xmlhttp) {
       if (!xmlhttp.responseText) return;
       //console.log(xmlhttp.responseText);
 
@@ -8015,7 +8015,7 @@ TRIANGLE.pages = {
 
     var params = "templateName=" + encodeURIComponent(template) + "&listType=" + listType + "&instance=" + TRIANGLE.instance;
 
-    AJAX.get("php/pageList.php", params, function(xmlhttp) {
+    AJAX.get("php/page_list.php", params, function(xmlhttp) {
       if (listType == "menu") {
         document.getElementById("echoPageList").innerHTML = xmlhttp.responseText;
 

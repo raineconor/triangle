@@ -4,7 +4,7 @@
   require "admin_check.php";
   require "sanitize_string.php";
   require "db_query.php";
-  require "JSONtoHTML.php";
+  require "json_to_html.php";
   require "crop_images.php";
 
   $templateName;

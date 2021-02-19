@@ -60,7 +60,7 @@
 12/10/15
 
 - added pagination
-- new JS file called loadPages.js, new PHP file called pageList.php
+- new JS file called loadPages.js, new PHP file called page_list.php
 - removed leftover code from an old child node managing function
 - fixed the clearSelection function to set the z-index of elements back to 0
 - updated exportRaw.php to receive and format the position and float CSS styles
@@ -355,7 +355,7 @@
   into one line
 - added fixed template responsiveness to createResponsive and exportRaw.php
 - created a new, simpler method of exporting templates to raw code and previewing, using
-  formatCode.php, exportRaw.php, and previewTemplate.php
+  formatCode.php, exportRaw.php, and preview_template.php
 - added support for fonts in exportTemplate() and formatCode.php
 - moved the style tags in templateWrapper above the other tags
 - fixed a bug in Internet Explorer where changing the font color from the color menu was broken
@@ -570,7 +570,7 @@
 - added support for exportCode() and formatCode.php to handle background-image style
 - fixed a bug where resizing elements in the X direction could go outside of the template fixed
   width
-- previewTemplate.php now removes the CSS include for style.css
+- preview_template.php now removes the CSS include for style.css
 
 04/27/16
 
@@ -843,7 +843,7 @@
   from receiving children from other methods
 - fixed a bug where dragging items into an imageItem would actually work, when it is supposed to be
   prevented
-- disabled XSS protection in previewTemplate.php in order to allow code snippets to execute
+- disabled XSS protection in preview_template.php in order to allow code snippets to execute
 
 06/25/16
 
@@ -916,10 +916,10 @@
 07/11/16
 
 - the HTML of nested elements are now formatted correctly when converting from JSON using
-  JSONtoHTML.php
+  json_to_html.php
 - the CSS is now formatted in a specific order and is now combined correctly when converting from
-  JSON using JSONtoHTML.php
-- forms are now generated from JSON templates usinge JSONtoHTML.php
+  JSON using json_to_html.php
+- forms are now generated from JSON templates usinge json_to_html.php
 - HTML, CSS, images, and forms are all compiled into one directory when exporting as ZIP
 - added a catch-all else block in the X-axis drag drop section that inserts the visBox when the
   mouse is in the middle of an element
@@ -1010,7 +1010,7 @@
   into the menu
 - passwords are now checked for banned characters when registering
 - removed the gray border from the register button
-- fixed a bug in JSONtoHTML.php where the children were not being nested correctly
+- fixed a bug in json_to_html.php where the children were not being nested correctly
 - fixed a bug where saving an existing template as a new template would not export correctly in the
   same instance
 - the correct page is now loaded when refreshing after saving a new template
@@ -1029,7 +1029,7 @@
 - the ecommerce resources are only added to the zip folder if the cart page exists
 - publishing sites now split the FTP profile URL into 2 parts based on the first occurrence of a '/'
   character, using the first half as the host and the seocnd half as the directory root
-- previewTemplate.php now sleeps if the preview URL is not done compiling
+- preview_template.php now sleeps if the preview URL is not done compiling
 - zip files are now deleted after being downloaded
 - added .htaccess files throughout the users directory to prevent directory tree exploration
 
@@ -1055,7 +1055,7 @@
 
 07/25/16
 
-- fixed a bug where URLs were being split in the CSS formatting function in JSONtoHTML.php
+- fixed a bug where URLs were being split in the CSS formatting function in json_to_html.php
 - 1's and 0's are now passed as boolean values in POST and GET data in order to boolval them
 - text boxes that are editable now have a dashed border
 - inserting a textbox now checks if the background is black and adjusts the font color accordingly
@@ -1068,7 +1068,7 @@
 - changed the admin page font to Roboto
 - business profiles can now be added and edited
 - fixed a bug where some items would not set a responsive style, and would throw an unset variable
-  error in JSONtoHTML.php
+  error in json_to_html.php
 
 07/27/16
 
@@ -1138,7 +1138,7 @@
 08/07/16
 
 - improved the compression algorithm
-- fixed a bug where JSONtoHTML.php would check for the wrong value type in an isset function
+- fixed a bug where json_to_html.php would check for the wrong value type in an isset function
 - exported templates that are unsaved are now named 'untitled'
 - fixed a bug where ctrl+S would not read the display style of the current template button correctly
 - ctrl+S now saves as new template if saving current is not an option
@@ -1147,7 +1147,7 @@
   correctly set up
 - loaded templates are now gzipped before being sent to the client
 - custom shipping is now one global price applied per order
-- added vertical-align to the CSS styles processed by JSONtoHTML.php
+- added vertical-align to the CSS styles processed by json_to_html.php
 - fixed a bug where uploadFont.php would not take subdomains
 - cleaned up publish.php and fixed a big where the images directory was not being created on the
   FTP server
@@ -1225,7 +1225,7 @@
 
 - fixed a bug where lazyload was being applied to tags other than img, causing loading issues
 - added ctrl+Z to undo
-- added a favicon.ico include into JSONtoHTML.php
+- added a favicon.ico include into json_to_html.php
 - the canvas menu is now closed on deselect
 - repositioned the crop apply/cancel buttons
 
