@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 
 <!--========== Page Title: ==========-->
-<title>Triangle</title>
+<title>Triangle - Build Websites Fast</title>
 <!--=================================-->
 
 <!--============ Favicon: ===========-->
@@ -12,7 +12,7 @@
 <!--=================================-->
 
 <!--=========== Meta Tags: ==========-->
-<meta name="description" content="Write description here.">
+<meta name="description" content="Triangle is a web application that allows you to build modern, elegant websites without code.">
 <meta name="keywords" content="insert, keywords, here">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <!--=================================-->
@@ -63,7 +63,7 @@ textarea {
   min-height:auto;
   width:100%;
   position:relative;
-  padding:30px 10px 10px;
+  padding:30px 15px 10px;
   margin-right:auto;
   margin-left:auto;
   align-items:center;
@@ -72,7 +72,7 @@ textarea {
 #item1 {
   height:auto;
   min-height:auto;
-  width:180px;
+  width:160px;
   max-width:100%;
   display:inline-block;
   float:left;
@@ -84,10 +84,9 @@ textarea {
   width:auto;
   display:inline-block;
   position:absolute;
-  float:right;
   padding:10px 30px;
   margin-top:10px;
-  right:10px;
+  right:15px;
   bottom:15px;
   border-radius:2px;
   font-family:Lato;
@@ -102,7 +101,7 @@ textarea {
   background-color:#a0c3f0;
 }
 
-#item9, #item15, #item22, #item3 {
+#item9, #item15, #item3 {
   background-color:white;
   height:auto;
   min-height:auto;
@@ -134,7 +133,9 @@ textarea {
   min-height:auto;
   width:100%;
   position:relative;
-  padding:15px;
+  padding-top:15px;
+  padding-right:15px;
+  padding-bottom:15px;
 }
 
 #item12, #item18, #item24, #item6 {
@@ -207,21 +208,34 @@ textarea {
 #item20 {
   background-color:rgb(29, 31, 33);
   height:auto;
-  min-height:100px;
+  min-height:auto;
   width:100%;
   position:relative;
-  padding:25px;
+  padding:25px 60px;
   border-radius:2px;
   text-align:center;
 }
 
 #item21 {
-  height:362px;
-  min-height:362px;
+  height:auto;
+  min-height:auto;
   width:100%;
   max-width:100%;
   display:inline-block;
   border-right:5px solid rgb(41, 44, 47);
+}
+
+#item22 {
+  background-color:white;
+  height:auto;
+  min-height:auto;
+  width:100%;
+  display:flex;
+  position:relative;
+  padding:60px 15px;
+  margin-bottom:60px;
+  justify-content:center;
+  align-items:center;
 }
 
 #item23 {
@@ -230,68 +244,13 @@ textarea {
   width:100%;
   display:flex;
   position:relative;
-  padding-top:40px;
-  padding-bottom:40px;
+  padding:40px 15px;
   border-radius:2px;
   flex-flow:column nowrap;
   justify-content:center;
 }
 
 #item25 {
-  height:auto;
-  min-height:100px;
-  width:100%;
-  position:relative;
-  padding:10px;
-  margin-top:25px;
-}
-
-.website-card {
-  background-color:rgb(255, 255, 255);
-  height:auto;
-  min-height:300px;
-  width:100%;
-  display:flex;
-  position:relative;
-  float:left;
-  padding:30px;
-  border:1px solid white;
-  border-radius:2px;
-  text-align:center;
-  transition:border 80ms ease 0s;
-  justify-content:center;
-  align-items:center;
-}
-
-.website-card:hover {
-  border:1px solid #80afec;
-}
-
-#item27 {
-  height:auto;
-  min-height:auto;
-  width:271px;
-  max-width:100%;
-  display:inline-block;
-}
-
-#item29 {
-  height:auto;
-  min-height:auto;
-  width:130px;
-  max-width:100%;
-  display:inline-block;
-}
-
-#item31 {
-  height:auto;
-  min-height:auto;
-  width:233px;
-  max-width:100%;
-  display:inline-block;
-}
-
-#item32 {
   background-image:linear-gradient(to right bottom, rgb(33, 112, 214), rgb(71, 139, 227));
   height:auto;
   min-height:auto;
@@ -300,7 +259,7 @@ textarea {
   padding:10px;
 }
 
-#item33 {
+#item26 {
   height:auto;
   min-height:auto;
   width:100%;
@@ -363,10 +322,7 @@ textarea {
     width:58.12%;
   }
   #item21 {
-    width:447px;
-  }
-  .website-card {
-    width:50%;
+    width:400px;
   }
 }
 
@@ -375,7 +331,7 @@ textarea {
     width:100%;
   }
   #item1 {
-    width:180px;
+    width:160px;
   }
   #item5 {
     width:45%;
@@ -385,18 +341,6 @@ textarea {
   }
   #item14, #item17, #item20, #item11 {
     width:50%;
-  }
-  .website-card {
-    width:33.33%;
-  }
-  #item27 {
-    width:271px;
-  }
-  #item29 {
-    width:130px;
-  }
-  #item31 {
-    width:233px;
   }
 }
 
@@ -421,13 +365,13 @@ textarea {
 
   <div id="item0">
     <div id="item1">
-      <img src="data:image/gif;base64,R0lGODlhQABAAIAAAMXFxQAAACH5BAAAAAAALAAAAABAAEAAAAJFhI+py+0Po5y02ouz3rz7D4biSJbmiabqyrbuC8fyTNf2jef6zvf+DwwKh8Si8YhMKpfMpvMJjUqn1Kr1is1qt9yuF1AAADs=" lazyload="images/triangle-logo-text.svg" style="width: 100%; height: auto;">
+      <img src="images/triangle-logo-text.svg" style="width: 100%; height: auto;">
     </div>
-    <a href="https://trianglecms.com/content/login.php">
+    <div style="clear: both;"></div>
+    <a href="app/login.php">
       <div id="item2">
         Login <br>
       </div>
-      <div style="clear: both;"></div>
       </a>
     </div>
     <div id="item3">
@@ -456,7 +400,7 @@ textarea {
           </div>
         </div>
         <div id="item14">
-          <img src="data:image/gif;base64,R0lGODlhQABAAIAAAMXFxQAAACH5BAAAAAAALAAAAABAAEAAAAJFhI+py+0Po5y02ouz3rz7D4biSJbmiabqyrbuC8fyTNf2jef6zvf+DwwKh8Si8YhMKpfMpvMJjUqn1Kr1is1qt9yuF1AAADs=" lazyload="images/triangle-home-background-2000.jpg" style="width: 100%; height: auto;">
+          <img src="images/triangle-home-background-2000.jpg" style="width: 100%; height: auto;">
         </div>
       </div>
     </div>
@@ -472,7 +416,7 @@ textarea {
         </div>
         <div id="item20">
           <div id="item21">
-            <img src="data:image/gif;base64,R0lGODlhQABAAIAAAMXFxQAAACH5BAAAAAAALAAAAABAAEAAAAJFhI+py+0Po5y02ouz3rz7D4biSJbmiabqyrbuC8fyTNf2jef6zvf+DwwKh8Si8YhMKpfMpvMJjUqn1Kr1is1qt9yuF1AAADs=" lazyload="images/triangle-css.png" style="width: 100%; height: auto;">
+            <img src="images/triangle-css.png" style="width: 100%; height: auto;">
           </div>
         </div>
       </div>
@@ -480,39 +424,15 @@ textarea {
     <div id="item22">
       <div id="item23">
         <div id="item24">
-          Websites Designed With Triangle<br>
-        </div>
-        <div id="item25">
-          <a href="https://conorbuilt.com" target="_blank">
-            <div class="website-card">
-              <div id="item27">
-                <img src="data:image/gif;base64,R0lGODlhQABAAIAAAMXFxQAAACH5BAAAAAAALAAAAABAAEAAAAJFhI+py+0Po5y02ouz3rz7D4biSJbmiabqyrbuC8fyTNf2jef6zvf+DwwKh8Si8YhMKpfMpvMJjUqn1Kr1is1qt9yuF1AAADs=" lazyload="images/ccdc-logo.svg" style="width: 100%; height: auto;">
-              </div>
-            </div>
-          </a>
-          <a href="https://conorroofing.com" target="_blank">
-            <div class="website-card">
-              <div id="item29">
-                <img src="data:image/gif;base64,R0lGODlhQABAAIAAAMXFxQAAACH5BAAAAAAALAAAAABAAEAAAAJFhI+py+0Po5y02ouz3rz7D4biSJbmiabqyrbuC8fyTNf2jef6zvf+DwwKh8Si8YhMKpfMpvMJjUqn1Kr1is1qt9yuF1AAADs=" lazyload="images/crc-logo.svg" style="width: 100%; height: auto;">
-              </div>
-            </div>
-          </a>
-          <a href="https://pan-pasta.com" target="_blank">
-            <div class="website-card">
-              <div id="item31">
-                <img src="data:image/gif;base64,R0lGODlhQABAAIAAAMXFxQAAACH5BAAAAAAALAAAAABAAEAAAAJFhI+py+0Po5y02ouz3rz7D4biSJbmiabqyrbuC8fyTNf2jef6zvf+DwwKh8Si8YhMKpfMpvMJjUqn1Kr1is1qt9yuF1AAADs=" lazyload="images/pp-logo.svg" style="width: 100%; height: auto;">
-              </div>
-            </div>
-            <div style="clear: both;"></div>
-            </a>
-          </div>
+          This website was made with Triangle.<br>
         </div>
       </div>
-      <div id="item32">
-        <div id="item33">
-          © Copyright 2020 Raine Conor. All rights reserved. <br>
-        </div>
+    </div>
+    <div id="item25">
+      <div id="item26">
+        © Copyright 2021 Raine Conor. All rights reserved. <br>
       </div>
+    </div>
 
 </div><!-- end class="container" -->
 
@@ -526,22 +446,6 @@ function deferFonts() {
     defer[i].setAttribute("href", defer[i].getAttribute("defer"));
   }
 }
-
-</script>
-
-<script type="text/javascript">
-document.addEventListener("scroll", lazyload);
-function lazyload() {
-  var images = document.querySelectorAll('img[lazyload]');
-  var screenHeight = window.innerHeight;
-  for (var i = 0; i < images.length; i++) {
-    if (images[i].getBoundingClientRect().top < screenHeight + 600) {
-      images[i].src = images[i].getAttribute("lazyload");
-      images[i].removeAttribute("lazyload");
-    }
-  }
-}
-lazyload();
 
 </script>
 

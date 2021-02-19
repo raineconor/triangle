@@ -1,9 +1,9 @@
 <?php
   session_start();
-  require "content/scripts/sanitize_string.php";
-  require "content/scripts/db_query.php";
+  require "app/scripts/sanitize_string.php";
+  require "app/scripts/db_query.php";
   if (isset($_SESSION["username"])) {
-    header("Location: content/admin.php");
+    header("Location: app/admin.php");
   }
 ?>
 <!DOCTYPE HTML>
@@ -22,14 +22,9 @@
 <!--=================================-->
 
 <!--========== CSS Include: =========-->
-<!--<link rel="stylesheet" href="register-style.css" type="text/css" media="screen">
-<link rel="stylesheet" href="content/shortcodes.css" type="text/css" media="screen">-->
+<link rel="stylesheet" href="register-style.css" type="text/css" media="screen">
 <!--=================================-->
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
-<style>
-<?php echo str_replace("\n", "", file_get_contents("register-style.css")) . str_replace("\n", "", file_get_contents("content/shortcodes.css")); ?>
-</style>
 
 </head>
 
@@ -81,23 +76,23 @@
         }
         db_query('INSERT INTO templates (username, template, page, content, ecommerce_items) VALUES (?, ?, ?, ?, ?)', $defaultPages, true);*/
 
-        require "content/f9eFfXl3tnFKzop5/g5r18Rm56Bem5uyf.php";
+        require "app/crypt/aes256.php";
         $new_api_key = bin2hex(openssl_random_pseudo_bytes(16));
         $enc_api_key = encrypt($new_api_key);
         $api_key_hash = password_hash($new_api_key, PASSWORD_BCRYPT);
         db_query('INSERT INTO api_keys (username, api_key, key_hash) VALUES (?, ?, ?)', [$username, $enc_api_key, $api_key_hash]);
 
-        $userDir = "content/users/" . $username;
+        $userDir = "app/users/" . $username;
         mkdir($userDir);
         //file_put_contents($userDir . "/.htaccess", "allow from all");
 
         mkdir($userDir . "/download");
-        $downloadIndex = file_get_contents("content/resources/register/download-directory-index.php");
+        $downloadIndex = file_get_contents("app/resources/register/download-directory-index.php");
         file_put_contents($userDir . "/download/index.php", $downloadIndex);
 
         mkdir($userDir . "/export");
         mkdir($userDir . "/images");
-        //mkdir("content/users/" . $username . "/forms");
+        //mkdir("app/users/" . $username . "/forms");
 
         $_SESSION["regenerate"] = true;
         $_SESSION["username"] = $username;
@@ -107,7 +102,7 @@
         $_SESSION["currentPage"] = [];
 
         mail("info@trianglecms.com", "TRIANGLE", "A user has registered for Triangle.\nUsername: $username\nName: $name");
-        echo "<script>location.href = 'content/admin.php';</script>";
+        echo "<script>location.href = 'app/admin.php';</script>";
 	    }
 	  } else { // if any fields are empty, create an error
       $error = "<span class='error'>*Please fill out all fields</span>";
@@ -116,7 +111,7 @@
   ?>
   <div id="content">
     <div id="registerBox">
-      <a href="index.php"><img class="img-responsive" id="logo" src="content/images/blue-triangle-small.png"></a>
+      <a href="index.php"><img class="img-responsive" id="logo" src="app/images/blue-triangle-small.png"></a>
       <form id="registerForm" method="post" action="<?php $_SERVER['PHP_SELF']; ?>">
         <table>
           <tr><td>Username:</td><td><input type="username" class="no-webkit" id="username" name="username" maxlength="32" onKeyUp="checkRegCreds(this, 'username');" onChange="checkRegCreds(this, 'username');"></td></tr>

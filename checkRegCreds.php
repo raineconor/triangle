@@ -3,8 +3,8 @@
 (C) Copyright 2020 Raine Conor. All rights reserved.
 */
 
-  require "content/scripts/sanitize_string.php";
-  require "content/scripts/db_query.php";
+  require "app/scripts/sanitize_string.php";
+  require "app/scripts/db_query.php";
 
   $search = sanitize($_GET["search"]);
   $type = sanitize($_GET["type"]);

@@ -9,8 +9,8 @@ body {
 <body>
 <?php
 
-require_once "content/scripts/sessionCheck.php";
-require_once "content/scripts/db_query.php";
+require_once "app/scripts/sessionCheck.php";
+require_once "app/scripts/db_query.php";
 
 if ($_SESSION["usertype"] != "admin") exit(1);
 
@@ -32,9 +32,9 @@ for ($x = 0; $x < count($usernames); $x++) {
   $usr_data = db_exec("select sum( length(?) + length(?) + length(?)) as result from user_data WHERE username = ?", ['username', 'fonts', 'image_map', $usernames[$x]["username"]])["result"];
   $usr_creds = db_exec("select sum( length(?) + length(?) + length(?) + length(?) + length(?)) as result from user_creds WHERE username = ?", ['id', 'username', 'email', 'password', 'enc_key', $usernames[$x]["username"]])["result"];
   
-  $images = getDirectorySize('content/users/' . $usernames[$x]["username"] . '/images');
-  $export = getDirectorySize('content/users/' . $usernames[$x]["username"] . '/export');
-  $download = getDirectorySize('content/users/' . $usernames[$x]["username"] . '/download');
+  $images = getDirectorySize('app/users/' . $usernames[$x]["username"] . '/images');
+  $export = getDirectorySize('app/users/' . $usernames[$x]["username"] . '/export');
+  $download = getDirectorySize('app/users/' . $usernames[$x]["username"] . '/download');
 
   $sum = intval($templates) + intval($api_keys) + intval($bus_prof) + intval($bus_prof_val) + intval($ecom_items) + intval($ftp_prof) + intval($usr_class) + intval($usr_id) + intval($usr_data) + intval($usr_creds) + intval($images) + intval($export) + intval($download);
   $total += $sum;
