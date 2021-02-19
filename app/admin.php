@@ -1,8 +1,8 @@
 <?php
   session_start();
-  require "php/sessionCheck.php";
+  require "php/session_check.php";
   require "php/sanitize_string.php";
-  require "php/getDirectory.php";
+  require "php/get_directory.php";
   require "php/db_query.php";
   require "crypt/aes256.php";
 

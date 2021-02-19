@@ -1,6 +1,6 @@
 <?php
   session_start();
-  require "php/sessionCheck.php";
+  require "php/session_check.php";
   require "php/instanceNumber.php";
   require "php/sanitize_string.php";
   require "php/db_query.php";
@@ -383,14 +383,11 @@ function lazyload() {
 
 </script>
 <script type="text/javascript" src="js/AJAX.js"></script>
-<script type="text/javascript" src="js/<?php
+<script type="text/javascript" src="js/TRIANGLE<?php
 if ($_SERVER["HTTP_HOST"] === "trianglecms.com"
-|| $_SERVER["HTTP_HOST"] === "www.trianglecms.com") {
-  echo "TRIANGLE" . str_replace(".", "", $latestVersion) . ".min.js";
-} else {
-  echo "TRIANGLE.js";
-}
-?>"></script>
+|| $_SERVER["HTTP_HOST"] === "www.trianglecms.com")
+echo ".min";
+?>.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
 <script type="text/javascript">
 var toastElList = [].slice.call(document.querySelectorAll('.toast'));
@@ -409,9 +406,7 @@ var toastUtil = {
   error : new bootstrap.Toast(document.getElementById("toastError"), {}),
   info : new bootstrap.Toast(document.getElementById("toastInfo"), {})
 };
-
 </script>
-
 
 <?php echo $callLoad; ?>
 <?php echo $max_templates; ?>

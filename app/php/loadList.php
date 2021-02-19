@@ -1,7 +1,7 @@
 <?php
   session_start();
-  require "sessionCheck.php";
-  require "getDirectory.php";
+  require "session_check.php";
+  require "get_directory.php";
   require "db_query.php";
   
   $templates = db_query_all('SELECT template FROM templates WHERE username = ? AND page = ?', [$username, "index"]);

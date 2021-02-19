@@ -754,7 +754,7 @@
 06/05/16
 
 - formatCode.php now uses the current page name as the CSS file name in the exported code
-- added instances to createPostForms.php
+- added instances to create_post_forms.php
 
 06/06/16
 
@@ -940,12 +940,12 @@
 
 - began writing the credit card processing script for ecommerce
 - began creating library items for ecommerce
-- changed insertLibraryItem.php to remove white space in order to improve readability of library
+- changed insert_library_item.php to remove white space in order to improve readability of library
   item files
 - added ecommerce prototype functions to the TemplateItem class to simplify editing ecommerce item
   details
 - styled menu textboxes in index-style.css
-- added a sanitize function to insertLibraryItem.php
+- added a sanitize function to insert_library_item.php
 - added sanitize_string.php to be required at the top of other PHP scripts, contains a string
   cleaning function
 - added ecommerce catalog items, with editable details in the ecommerce menu tab
@@ -974,7 +974,7 @@
 
 - began transferring from a flatfile database system to mySQL
 - added db_query.php
-- added session variable "email", which is defined upon login, and used in createPostForms.php
+- added session variable "email", which is defined upon login, and used in create_post_forms.php
 - defined the maximum length for username, password, template names, page names, and use class names
   as 32 characters
 - added an optional max length integer parameter to the sanitize string function
@@ -983,7 +983,7 @@
 
 - fixed the full template transfer when saving a multi-page template under a new name
 - admin.php now queries the database for templates, fonts, and FTP profiles
-- added a delete button for templates on the admin page, uses deleteTemplate.php
+- added a delete button for templates on the admin page, uses delete_template.php
 - added the library table to the database
 - fixed a bug with WAMP where trying to insert a row without defining one of the columns would throw
   an error
@@ -1036,7 +1036,7 @@
 07/22/16
 
 - fixed a bug where inserting a child would not update the clearfloats
-- preview template is delayed 500ms to allow exportZip.php to finish
+- preview template is delayed 500ms to allow export_zip.php to finish
 - TRIANGLE.checkPadding() now only adds padding to items with no padding at all instead of items
   with at least one unpadded side
 - add to cart buttons now insert the item IDs into a cookie

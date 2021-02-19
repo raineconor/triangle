@@ -1,6 +1,6 @@
 <?php
 
-// called by exportZip.php
+// called by export_zip.php
 function cropImages($imageList, $destinationPath) {
   if (!empty($imageList)) {
     $itemNums = $imageList["itemNums"];

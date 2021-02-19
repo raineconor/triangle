@@ -1,12 +1,12 @@
 <?php
-require_once "sessionCheck.php";
+require_once "session_check.php";
 require "compression_map.php";
-require "createPostForms.php";
+require "create_post_forms.php";
 require "responsive.php";
 require_once "db_query.php";
 
 
-// this function is called by exportZip.php on line 83
+// this function is called by export_zip.php on line 83
 function formatCode($data, $templateName, $pageName, $compress = false, $croppedImgPaths) {
 
   global $username;

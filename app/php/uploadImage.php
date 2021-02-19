@@ -1,6 +1,6 @@
 <?php
 session_start();
-require "sessionCheck.php";
+require "session_check.php";
 
 $target_dir = __DIR__ . "/../users/" . $username . "/images/";
 $max_file_size = 1024 * 5000; // 5 MB

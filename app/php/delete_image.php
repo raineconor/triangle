@@ -1,6 +1,6 @@
 <?php
   session_start();
-  require "sessionCheck.php";
+  require "session_check.php";
   require "sanitize_string.php";
   
   if (isset($_GET["srcFile"])) {

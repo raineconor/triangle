@@ -11,7 +11,7 @@ function toggleMenu(elemId) {
 }
 
 function deleteImage(elem, srcFile) {
-  AJAX.get("php/deleteImage.php", "srcFile=" + srcFile, function(xmlhttp) {
+  AJAX.get("php/delete_image.php", "srcFile=" + srcFile, function(xmlhttp) {
     if (parseInt(xmlhttp.responseText)) {
       elem.nextSibling.className += "fadeOut";
       setTimeout(function(){
@@ -39,7 +39,7 @@ function addFTPprofile() {
   var ftpUsr = encodeURIComponent(document.getElementById("ftpUsr").value);
   var ftpPwd = encodeURIComponent(document.getElementById("ftpPwd").value);
 
-  AJAX.post("php/addFTPprofile.php", "ftpURL=" + ftpURL + "&ftpUsr=" + ftpUsr + "&ftpPwd=" + ftpPwd, function(xmlhttp) {
+  AJAX.post("php/add_ftp_profile.php", "ftpURL=" + ftpURL + "&ftpUsr=" + ftpUsr + "&ftpPwd=" + ftpPwd, function(xmlhttp) {
     document.getElementById("echoFTPlist").innerHTML += xmlhttp.responseText;
 
     document.getElementById("ftpURL").value =
@@ -53,7 +53,7 @@ function deleteTemplate(templateName, templateNum) {
     var deleteElem = document.getElementById("template-" + templateNum);
     //var deleteMenu = document.getElementById("details-" + templateNum);
 
-    AJAX.post("php/deleteTemplate.php", "templateName=" + templateName, function() {
+    AJAX.post("php/delete_template.php", "templateName=" + templateName, function() {
       deleteElem.className += " fadeOut";
       //deleteMenu.className += " fadeOut";
       setTimeout(function() {
@@ -191,7 +191,7 @@ function changePassword() {
     error.innerHTML = "*Passwords may only contain characters A-Z, a-z, 0-9,<br>and these special characters: !  \"  #  $  %  &  '  (  )  *  +  ,  -  .  :  ;  <  =  >  ?  @  [  ]  ^  _  '  {  |  }  ~";
   } else if (changePass === confirmPass) {
     var params = "password=" + changePass;
-    AJAX.post("php/changePassword.php", params, function(xmlhttp) {
+    AJAX.post("php/change_password.php", params, function(xmlhttp) {
       if (parseInt(xmlhttp.responseText) != 0) {
         document.getElementById("changePassword").value = "";
         document.getElementById("changePasswordConfirm").value = "";

@@ -1,6 +1,6 @@
 <?php
   session_start();
-  require "sessionCheck.php";
+  require "session_check.php";
   require "admin_check.php";
   require "sanitize_string.php";
   require "db_query.php";

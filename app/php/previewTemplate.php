@@ -1,8 +1,8 @@
 <?php
   session_start();
-  require_once "sessionCheck.php";
+  require_once "session_check.php";
   require_once "admin_check.php";
-  
+
   $usernameDir = "../users/" . $username;
   $instance = intval($_POST["instance"]);
   $error = "";
@@ -20,9 +20,9 @@
     $error .= "Instance not set.";
   }
   /*header("X-XSS-Protection: 0");
-  require "formatCode.php";
+  require "format_code.php";
   $code = formatCode();
-  
+
   $code[0] = str_replace('<link rel="stylesheet" href="style.css" type="text/css" media="screen">', "", $code[0]);*/
 ?>
 <!DOCTYPE html>

@@ -1,11 +1,11 @@
 <?php
   session_start();
-  require "sessionCheck.php";
+  require "session_check.php";
   require "admin_check.php";
   require "sanitize_string.php";
   require "db_query.php";
   require "JSONtoHTML.php";
-  require "cropImages.php";
+  require "crop_images.php";
 
   $templateName;
   $pageName;

@@ -1,6 +1,6 @@
 <?php
   session_start();
-  require "sessionCheck.php";
+  require "session_check.php";
   
   $username = __DIR__ . "/../users/" . $username;
   $filepath = $username . "/download";

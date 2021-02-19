@@ -185,7 +185,7 @@
         }
       }
     }
-    xmlhttp.open("GET", "checkRegCreds.php?search=" + encodeURIComponent(search) + "&type=" + encodeURIComponent(type), true);
+    xmlhttp.open("GET", "check_reg_creds.php?search=" + encodeURIComponent(search) + "&type=" + encodeURIComponent(type), true);
     xmlhttp.send();
   }
 </script>
