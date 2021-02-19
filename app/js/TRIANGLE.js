@@ -1305,7 +1305,8 @@ TRIANGLE.colors = {
       paletteMenu.style.top = document.getElementById("createPalette").getBoundingClientRect().bottom + 12 + "px";
     }
 
-    function grabColor(style, category) {
+    function grabColor(style, category) { // what the hell is this function?
+      var j = 0;
       if (style && style != "inherit" && palette[category].indexOf(style) === -1) {
         palette[category][j] = style;
         addPaletteItem(palette[category][j], category);
@@ -6373,18 +6374,6 @@ TRIANGLE.publish = {
 }
 
 
-TRIANGLE.loading = {
-  start : function(callback) {
-    TRIANGLE.popUp.open("loadingCell");
-    if (typeof callback == "function") setTimeout(callback, 10);
-  },
-
-  stop : function() {
-    TRIANGLE.popUp.close();
-  }
-}
-
-
 TRIANGLE.maxAllowedItems = 100;
 
 
@@ -7653,8 +7642,6 @@ TRIANGLE.loadTemplate = {
 
 TRIANGLE.json = {
 
-
-
   encode : function() {
 
     var template = {};
@@ -7685,11 +7672,11 @@ TRIANGLE.json = {
     for (var i = 0; i < len; i++) {
       var sv_item = new TRIANGLE.TemplateItem(imgList[i].getAttribute("index"));
 
-      template.imageList["itemNums"][i] = TRIANGLE.sv_item.index;
-      template.imageList["paths"][i] = TRIANGLE.sv_item.image.src;
+      template.imageList["itemNums"][i] = sv_item.index;
+      template.imageList["paths"][i] = sv_item.image.src;
 
-      var imgItemRect = TRIANGLE.sv_item.objRef.getBoundingClientRect();
-      var imgTagRect = TRIANGLE.sv_item.image.getBoundingClientRect();
+      var imgItemRect = sv_item.objRef.getBoundingClientRect();
+      var imgTagRect = sv_item.image.getBoundingClientRect();
       var width = imgItemRect["width"] / imgTagRect["width"];
       var height = imgItemRect["height"] / imgTagRect["height"];
       var startX = (imgItemRect["left"] - imgTagRect["left"]) / imgTagRect["width"];
