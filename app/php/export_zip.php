@@ -30,6 +30,9 @@
   $filedest = $username_dir . "/export/" . $templateName;
   $resources = __DIR__ . '/../resources';
 
+  $downloadInstructions = file_get_contents("$resources/download/download_zip.php");
+  file_put_contents("$username_dir/download/index.php", $downloadInstructions);
+
   if (file_exists($filedest)) {
     //unlinkDir($filedest);
     $existingPages = [];

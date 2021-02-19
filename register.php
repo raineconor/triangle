@@ -85,11 +85,7 @@
         $userDir = "app/users/" . $username;
         mkdir($userDir);
         //file_put_contents($userDir . "/.htaccess", "allow from all");
-
         mkdir($userDir . "/download");
-        $downloadIndex = file_get_contents("app/resources/register/download-directory-index.php");
-        file_put_contents($userDir . "/download/index.php", $downloadIndex);
-
         mkdir($userDir . "/export");
         mkdir($userDir . "/images");
         //mkdir("app/users/" . $username . "/forms");
@@ -129,7 +125,7 @@
       <?php echo $error; ?>
     </div>
     <div id="footer">
-      (C) Copyright 2020 Raine Conor. All rights reserved.
+      &copy; Copyright <?php date("Y", time()); ?> Raine Conor. All rights reserved.
     </div>
   </div>
 
