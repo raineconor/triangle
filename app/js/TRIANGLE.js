@@ -5599,7 +5599,8 @@ TRIANGLE.saveItem = {
 
   exportLibraryItemCode : function exportLibraryItemCode() {
     if (TRIANGLE.item) {
-      alert(TRIANGLE.item.objRef.outerHTML);
+      TRIANGLE.notify.info.show(TRIANGLE.item.objRef.outerHTML);
+      console.log(TRIANGLE.item.objRef.outerHTML);
     }
   }
 
@@ -6495,7 +6496,7 @@ for (var key in params) {
 document.body.appendChild(form);
 form.submit();
 
-TRIANGLE.loading.stop();
+TRIANGLE.notify.loading.hide();
 },
 
 /*
@@ -6517,7 +6518,7 @@ postTemplateAJAX : function(type, params) { // not currently in use
   postData = postData.slice(0, -1);
 
   AJAX.post("php/" + type + ".php", postData, function(xmlhttp) {
-    TRIANGLE.loading.stop();
+    TRIANGLE.notify.loading.hide();
   });
 },
 
@@ -6530,7 +6531,7 @@ previewTemplate : function previewTemplate() {
       var params = "askZip=0&instance=" + TRIANGLE.instance + "&compress=" + compress;
       AJAX.post("php/export_zip.php", params, function(xmlhttp) {
         console.log(xmlhttp.responseText);//find flag
-        TRIANGLE.exportCode.postTemplate("previewTemplate", {"instance":TRIANGLE.instance});
+        TRIANGLE.exportCode.postTemplate("preview_template", {"instance":TRIANGLE.instance});
       });
     };
 
@@ -6553,12 +6554,13 @@ function templateTooLarge() alerts the user that the template is too large and t
 */
 
 error : function templateTooLarge() {
-  alert("Your template contains too many items to export. Please remove " + (TRIANGLE.templateItems.length - TRIANGLE.maxAllowedItems) + " items to export it.");
+  TRIANGLE.notify.error.show();
+  // alert("Your template contains too many items to export. Please remove " + (TRIANGLE.templateItems.length - TRIANGLE.maxAllowedItems) + " items to export it.");
 },
 
 exportZip : function() {
   TRIANGLE.exportCode.format("zip");
-  setTimeout(TRIANGLE.loading.stop, 1000);
+  setTimeout(TRIANGLE.notify.loading.hide, 1000);
 },
 
 clearZip : function() {
@@ -7094,7 +7096,7 @@ TRIANGLE.saveTemplate = {
   saveTemplate : function saveTemplate(templateName, pageName) {
     // TRIANGLE.popUp.close();
     // TRIANGLE.popUp.open("savingCell");
-    toastUtil.saving.show();
+    TRIANGLE.notify.saving.show();
 
     templateName = encodeURIComponent(templateName);
     if (!pageName || pageName == "") pageName = "";
@@ -7134,13 +7136,16 @@ TRIANGLE.saveTemplate = {
 
       // TRIANGLE.popUp.close();
       // TRIANGLE.popUp.open("savedCell");
-      toastUtil.saving.hide();
-      toastUtil.saved.show();
+      TRIANGLE.notify.saving.hide();
+      TRIANGLE.notify.saved.show();
       if (TRIANGLE.exportCode.callbackAfterSave) {
         TRIANGLE.exportCode.callbackAfterSave();
         TRIANGLE.exportCode.callbackAfterSave = false;
       } else {
-        setTimeout(function(){TRIANGLE.popUp.close();location.href="index.php?pagename=" + TRIANGLE.currentPage + "&loadTemplate=" + TRIANGLE.currentTemplate;}, 1000);
+        setTimeout(function() {
+          // TRIANGLE.popUp.close();
+          location.href="index.php?pagename=" + TRIANGLE.currentPage + "&loadTemplate=" + TRIANGLE.currentTemplate;
+        }, 1000);
       }
     });
   },
@@ -7153,7 +7158,7 @@ TRIANGLE.saveTemplate = {
   saveCurrent : function saveCurrent(callback) {
     // TRIANGLE.popUp.close();
     // TRIANGLE.popUp.open("savingCell");
-    toastUtil.saving.show();
+    TRIANGLE.notify.saving.show();
 
     var content = TRIANGLE.json.encode();
     content = TRIANGLE.json.compress(content);
@@ -7180,8 +7185,8 @@ TRIANGLE.saveTemplate = {
 
       // TRIANGLE.popUp.close();
       // TRIANGLE.popUp.open("savedCell");
-      toastUtil.saving.hide();
-      toastUtil.saved.show();
+      TRIANGLE.notify.saving.hide();
+      TRIANGLE.notify.saved.show();
       // setTimeout(TRIANGLE.popUp.close, 1000);
       if (TRIANGLE.exportCode.callbackAfterSave) {
         TRIANGLE.exportCode.callbackAfterSave();
@@ -8263,17 +8268,100 @@ close : function() {
 }
 }
 
-TRIANGLE.error = function(title, msg) {
-  document.getElementById("errorMsg").innerHTML = "";
-  if (title && msg && typeof title == "string" && typeof msg == "string") {
-    document.getElementById("errorTitle").innerHTML = title;
-    document.getElementById("errorMsg").innerHTML = msg;
-  } else if (title) {
-    msg = title;
-    title = "Error";
-    document.getElementById("errorTitle").innerHTML = title;
-    document.getElementById("errorMsg").innerHTML = msg;
-  }
-  // TRIANGLE.popUp.open("errorCell");
-  toastUtil.error.show();
+TRIANGLE.notify = {
+  toaster : document.getElementById("toaster"),
+
+  saving : {
+    show : function() {
+      var newToast = document.getElementById("toastSaving").cloneNode(true);
+      newToast.removeAttribute("id");
+      TRIANGLE.notify.toaster.appendChild(newToast);
+      TRIANGLE.notify.saving.toast = new bootstrap.Toast(newToast, {autohide:false});
+      newToast.addEventListener('hidden.bs.toast', function () {
+        TRIANGLE.notify.toaster.removeChild(this);
+      })
+      TRIANGLE.notify.saving.toast.show();
+    },
+
+    hide : function() {
+      // TRIANGLE.notify.saving.toast.hide();
+      setTimeout(function() {
+        TRIANGLE.notify.saving.toast.hide();
+      }, 150);
+      // TRIANGLE.notify.saving.toast.dispose();
+    }
+  },
+
+  saved : {
+    show : function() {
+      var newToast = document.getElementById("toastSaved").cloneNode(true);
+      newToast.removeAttribute("id");
+      TRIANGLE.notify.toaster.appendChild(newToast);
+      TRIANGLE.notify.saved.toast = new bootstrap.Toast(newToast, {});
+      newToast.addEventListener('hidden.bs.toast', function () {
+        TRIANGLE.notify.toaster.removeChild(this);
+      })
+      TRIANGLE.notify.saved.toast.show();
+    },
+
+    hide : function() {
+      TRIANGLE.notify.saved.toast.hide();
+    }
+  },
+
+  loading : {
+    show : function(callback) {
+      var newToast = document.getElementById("toastLoading").cloneNode(true);
+      newToast.removeAttribute("id");
+      TRIANGLE.notify.toaster.appendChild(newToast);
+      TRIANGLE.notify.loading.toast = new bootstrap.Toast(newToast, {autohide:false});
+      newToast.addEventListener('hidden.bs.toast', function () {
+        TRIANGLE.notify.toaster.removeChild(this);
+      })
+      TRIANGLE.notify.loading.toast.show();
+      // if (typeof callback == "function") setTimeout(callback, 10);
+      if (typeof callback == "function") callback();
+    },
+
+    hide : function() {
+      setTimeout(function() {
+        TRIANGLE.notify.loading.toast.hide();
+      }, 150);
+    }
+  },
+
+  error : {
+    show : function() {
+      var newToast = document.getElementById("toastError").cloneNode(true);
+      newToast.removeAttribute("id");
+      TRIANGLE.notify.toaster.appendChild(newToast);
+      TRIANGLE.notify.error.toast = new bootstrap.Toast(newToast, {});
+      newToast.addEventListener('hidden.bs.toast', function () {
+        TRIANGLE.notify.toaster.removeChild(this);
+      })
+      TRIANGLE.notify.error.toast.show();
+    },
+
+    hide : function() {
+      TRIANGLE.notify.error.toast.hide();
+    }
+  },
+
+  info : {
+    show : function(msg) {
+      var newToast = document.getElementById("toastInfo").cloneNode(true);
+      newToast.removeAttribute("id");
+      newToast.querySelector("#toastInfoBody").innerText = msg;
+      TRIANGLE.notify.toaster.appendChild(newToast);
+      TRIANGLE.notify.info.toast = new bootstrap.Toast(newToast, {autohide:false});
+      newToast.addEventListener('hidden.bs.toast', function () {
+        TRIANGLE.notify.toaster.removeChild(this);
+      })
+      TRIANGLE.notify.info.toast.show();
+    },
+
+    hide : function() {
+      TRIANGLE.notify.info.toast.hide();
+    }
+  },
 }

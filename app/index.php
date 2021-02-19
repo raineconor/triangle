@@ -289,7 +289,7 @@
   </div>
 </div>
 
-<div class="toast-container fixed-bottom p-3">
+<div class="d-none">
   <div id="toastSaving" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
     <div class="toast-header">
       <!-- <img src="..." class="rounded me-2" alt="..."> -->
@@ -323,6 +323,20 @@
     </div>
   </div>
 
+  <div id="toastLoading" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="toast-header">
+      <div class="spinner-border spinner-border-sm me-2 text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <strong class="me-auto">Loading...</strong>
+      <!-- <small class="text-muted">just now</small> -->
+      <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+    <!-- <div class="toast-body">
+      Please Wait...
+    </div> -->
+  </div>
+
   <div id="toastError" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
     <div class="toast-header">
       <!-- <img src="..." class="rounded me-2" alt="..."> -->
@@ -348,13 +362,13 @@
       <!-- <small class="text-muted">2 seconds ago</small> -->
       <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
     </div>
-    <div class="toast-body">
+    <div id="toastInfoBody" class="toast-body">
       Tip: lorem ipsum dolor sit amet
     </div>
   </div>
 </div>
 
-
+<div id="toaster" class="toast-container fixed-bottom p-3"></div>
 
 <?php include "ui-components/crop_image.html"; ?>
 
@@ -389,24 +403,6 @@ if ($_SERVER["HTTP_HOST"] === "trianglecms.com"
 echo ".min";
 ?>.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
-<script type="text/javascript">
-var toastElList = [].slice.call(document.querySelectorAll('.toast'));
-// console.log(toastElList);
-var toastList = toastElList.map(function (toastEl) {
-  return new bootstrap.Toast(toastEl, {});
-});
-// console.log(toastList);
-toastList.forEach((item, i) => {
-  item.show();
-});
-
-var toastUtil = {
-  saving : new bootstrap.Toast(document.getElementById("toastSaving"), {}),
-  saved : new bootstrap.Toast(document.getElementById("toastSaved"), {}),
-  error : new bootstrap.Toast(document.getElementById("toastError"), {}),
-  info : new bootstrap.Toast(document.getElementById("toastInfo"), {})
-};
-</script>
 
 <?php echo $callLoad; ?>
 <?php echo $max_templates; ?>

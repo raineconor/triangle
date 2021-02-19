@@ -6,21 +6,21 @@
     <div class="optionLabel" id="labelPublishSite">Publish Site</div>
   </div>
 
-  <div class="subMenuOption" id="exportZip" onClick="TRIANGLE.loading.start(TRIANGLE.exportCode.exportZip);">
+  <div class="subMenuOption" id="exportZip" onClick="TRIANGLE.notify.loading.show(TRIANGLE.exportCode.exportZip);">
     <div class="subMenuOptionBox">
       <img class="optionImage" src="images/opExportZip.svg">
     </div>
     <div class="optionLabel" id="labelExportZip">Download ZIP</div>
   </div>
 
-  <div class="subMenuOption" id="exportRaw" onClick="TRIANGLE.loading.start(function(){TRIANGLE.exportCode.format('raw')});">
+  <div class="subMenuOption" id="exportRaw" onClick="TRIANGLE.notify.loading.show(function(){TRIANGLE.exportCode.format('raw')});">
     <div class="subMenuOptionBox">
       <img class="optionImage" src="images/opExportRaw.gif">
     </div>
     <div class="optionLabel" id="labelExportRaw">Raw Code</div>
   </div>
 
-  <div class="subMenuOption" id="previewTemplate" onClick="TRIANGLE.loading.start(TRIANGLE.exportCode.previewTemplate);">
+  <div class="subMenuOption" id="previewTemplate" onClick="TRIANGLE.notify.loading.show(TRIANGLE.exportCode.previewTemplate);">
     <div class="subMenuOptionBox">
       <img class="optionImage" src="images/opPreviewTemplate.svg">
     </div>
