@@ -201,7 +201,7 @@ function formatCode($data, $templateName, $pageName, $compress = false, $cropped
 
     $closeTag = $innerHTML . "</" . $tag . ">\n" . $clearFloat;
 
-    $itemTags[$key]["openTag"] = $openLink . "<" . $tag . $id . $class /* . $style */. $name . $src . $form . $addToCart . ">";
+    $itemTags[$key]["openTag"] = $openLink . "<" . $tag . $id . $class /* . $style */. $name . $src . $form . ">";
     $itemTags[$key]["closeTag"] = $closeTag . $closeLink;
     $itemTags[$key]["children"] = boolval($item["children"]);
     if ($userIDparent) {
