@@ -23,54 +23,26 @@
     <div class="menuSectionTitle">Font</div>
     Type:
     <select id="fontType" class="form-select form-select-sm" onChange="TRIANGLE.text.changeFont(this);">
-      <option>Arial</option>
-      <option>Arial Black</option>
-      <option>Times New Roman</option>
-      <option>Helvetica</option>
-      <option>Impact</option>
-      <option>Verdana</option>
-      <option>Courier New</option>
-      <option>Lucida Console</option>
-      <?php
-      $defaultFonts = db_query('SELECT fonts FROM user_data WHERE username = ?', ['triangle']);
-      $defaultFonts = explode("\n", $defaultFonts["fonts"]);
-      for ($x = 0; $x < count($defaultFonts); $x++) {
-        if (empty($defaultFonts[$x])) continue;
-        $pattern = "#(.+)(:::)(.+)#";
-
-        preg_match($pattern, $defaultFonts[$x], $fontDetails);
-        $echoFontName = $fontDetails[1];
-        $echoFontURL = htmlspecialchars($fontDetails[3]);
-
-        echo '<option value="' . $x . '" font-url="'
-           . $echoFontURL
-           . '">'
-           . $echoFontName
-           . '</option>';
-      }
-
-      $user_data = db_query('SELECT fonts FROM user_data WHERE username = ?', [$username]);
-      $fonts = explode("\n", $user_data["fonts"]);
-
-      for ($x = 0; $x < count($fonts); $x++) {
-        if (empty($fonts[$x])) continue;
-        $pattern = "#(.+)(:::)(.+)#";
-
-        preg_match($pattern, $fonts[$x], $fontDetails);
-
-        if (isset(array_flip($defaultFonts)[$fontDetails[0]])) continue;
-
-        $echoFontName = $fontDetails[1];
-        $echoFontURL = htmlspecialchars($fontDetails[3]);
-
-        echo '<option value="' . ($x + count($defaultFonts) - 1) . '" font-url="'
-           . $echoFontURL
-           . '">'
-           . $echoFontName
-           . '</option>';
-      }
-      ?>
-    </select><div class="tinyColorBoxSpacing"></div><br>
+      <option triangle-font-category="sans-serif" google-font="false">Arial</option>
+      <option triangle-font-category="sans-serif" google-font="false">Arial Black</option>
+      <option triangle-font-category="serif" google-font="false">Times New Roman</option>
+      <option triangle-font-category="sans-serif" google-font="false">Helvetica</option>
+      <option triangle-font-category="sans-serif" google-font="false">Impact</option>
+      <option triangle-font-category="sans-serif" google-font="false">Verdana</option>
+      <option triangle-font-category="monospace" google-font="false">Courier New</option>
+      <option triangle-font-category="serif" google-font="false">Georgia</option>
+      <option triangle-font-category="serif" google-font="false">Garamond</option>
+      <?php include "google_fonts.html"; ?>
+    </select><!-- <div class="dropdown d-inline-block">
+      <button class="dropdown-toggle" style="height:22px;width:22px;vertical-align:bottom;margin:0;" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+        <li><a class="dropdown-item" href="#">Action</a></li>
+        <li><a class="dropdown-item" href="#">Another action</a></li>
+        <li><a class="dropdown-item" href="#">Something else here</a></li>
+      </ul>
+    </div> --><div class="tinyColorBoxSpacing"></div>
+    <br>
     Color:
     <input type="text" id="fontColor"><div class="tinyColorBox" id="colorFont" onMouseOver="TRIANGLE.text.saveTextSelection();"></div><br>
     Size:

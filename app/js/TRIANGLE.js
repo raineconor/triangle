@@ -1628,7 +1628,7 @@ TRIANGLE.text = {
   insertTextBox : function insertTextBox(text) {
 
     var newTextBox = document.createElement("div");
-    newTextBox.style.backgroundColor = "inherit";
+    newTextBox.style.backgroundColor = "";
     newTextBox.style.height = "auto";
     newTextBox.style.width = "100%";
     newTextBox.style.fontSize = "14px";
@@ -2060,32 +2060,45 @@ changeFont : function changeFont(dropdownMenu) {
   if (!TRIANGLE.isType.textBox(TRIANGLE.item.objRef)) return;
   var selectedOp = dropdownMenu.options[dropdownMenu.selectedIndex];
   var fontName = selectedOp.text;
+  var fontCategory = selectedOp.getAttribute("triangle-font-category");
   var fontData = document.getElementById("fontData");
 
-  if (selectedOp.getAttribute("font-url")) {
-    var fontURL = selectedOp.getAttribute("font-url");
-    var encodedFontURL = fontURL.replace(/'/g, '"');
-    encodedFontURL = encodeURIComponent(encodedFontURL);
-    encodedFontURL = encodedFontURL.replace(/\./g, "\\."); // escape . character
-    encodedFontURL = encodedFontURL.replace(/%0A/g, ""); // remove newline character
-
-    var needle = new RegExp(encodedFontURL);
-
-    var haystack = fontData.innerHTML;
-    haystack = haystack.replace(/'/g, '"');
-    haystack = encodeURIComponent(haystack);
-
-    if (!(needle).test(haystack)) {
-      fontData.innerHTML += fontURL;
+  if (selectedOp.getAttribute("google-font") == "true") {
+    var isDuplicate = fontData.querySelector("[triangle-font-family='" + fontName + "']") || false;
+    if (!isDuplicate) {
+      var newFont = document.createElement("link");
+      newFont.setAttribute("href", "https://fonts.googleapis.com/css2?family=" + fontName.replace(/ /g, "+") + ":wght@100;300;400;500;700&display=swap");
+      newFont.setAttribute("triangle-font-family", fontName);
+      newFont.setAttribute("rel", "stylesheet");
+      newFont.setAttribute("type", "text/css");
+      fontData.appendChild(newFont);
     }
   }
+
+  // if (selectedOp.getAttribute("font-url")) {
+  //   var fontURL = selectedOp.getAttribute("font-url");
+  //   var encodedFontURL = fontURL.replace(/'/g, '"');
+  //   encodedFontURL = encodeURIComponent(encodedFontURL);
+  //   encodedFontURL = encodedFontURL.replace(/\./g, "\\."); // escape . character
+  //   encodedFontURL = encodedFontURL.replace(/%0A/g, ""); // remove newline character
+  //
+  //   var needle = new RegExp(encodedFontURL);
+  //
+  //   var haystack = fontData.innerHTML;
+  //   haystack = haystack.replace(/'/g, '"');
+  //   haystack = encodeURIComponent(haystack);
+  //
+  //   if (!(needle).test(haystack)) {
+  //     fontData.innerHTML += fontURL;
+  //   }
+  // }
 
   if (TRIANGLE.item.objRef.isContentEditable) {
     document.execCommand("styleWithCSS", null, true);
     document.execCommand("fontName", null, fontName);
     document.execCommand("styleWithCSS", null, false);
   } else {
-    TRIANGLE.item.objRef.style.fontFamily = fontName;
+    TRIANGLE.item.objRef.style.fontFamily = "'" + fontName + "'" + ", " + fontCategory;
   }
 
   TRIANGLE.selectionBorder.update();
@@ -3124,9 +3137,10 @@ TRIANGLE.updateTemplateItems = function updateTemplateItems(repeat) { // boolean
     if (TRIANGLE.isType.textBox(sv_item.objRef)) {
       sv_item.objRef.removeEventListener("dblclick", TRIANGLE.text.editText);
       sv_item.objRef.addEventListener("dblclick", TRIANGLE.text.editText); // add event listeners to text boxes
-    } else {
-      sv_item.objRef.removeEventListener("dblclick", TRIANGLE.text.editText);
     }
+    //  else {
+    //   sv_item.objRef.removeEventListener("dblclick", TRIANGLE.text.editText);
+    // }
 
     TRIANGLE.templateItems[i].setAttribute("id", "item" + i);
     TRIANGLE.templateItems[i].setAttribute("index", i);
@@ -3141,10 +3155,10 @@ TRIANGLE.updateTemplateItems = function updateTemplateItems(repeat) { // boolean
       }
     }
 
-    if (sv_item.display === "table" && !sv_item.objRef.innerHTML) {
-      sv_item.objRef.style.display = ""; // remove the table display from empty table elements
-      sv_item.objRef.style.height = "auto";
-    }
+    // if (sv_item.display === "table" && !sv_item.objRef.innerHTML) {
+    //   sv_item.objRef.style.display = ""; // remove the table display from empty table elements
+    //   sv_item.objRef.style.height = "auto";
+    // }
 
     if (TRIANGLE.isType.formField(sv_item.objRef)) {
       sv_item.objRef.setAttribute("name", "item" + i);
@@ -3172,7 +3186,7 @@ TRIANGLE.selectItem = function selectItem(index) {
 }
 
 /*
-function refreshTemplateRef() returns an updated referene to the template element
+function refreshTemplateRef() returns an updated reference to the template element
 */
 
 /*function refreshTemplateRef() {
@@ -7440,7 +7454,7 @@ TRIANGLE.loadTemplate = {
       var listThumbs = document.getElementById("echoLoadList").querySelectorAll(".loadListItem");
       for (var i = 0; i < listThumbs.length; i++) {
         if (TRIANGLE.currentTemplate !== "" && listThumbs[i].innerHTML == TRIANGLE.currentTemplate) {
-          listThumbs[i].style.backgroundColor = "#ccdef6";
+          listThumbs[i].style.backgroundColor = "#D0DEEC";
         } else {
           listThumbs[i].style.backgroundColor = "";
         }
@@ -7470,6 +7484,7 @@ TRIANGLE.loadTemplate = {
       //console.log(xmlhttp.responseText);
       //var content = TRIANGLE.json.decompress(xmlhttp.responseText);
       var content = TRIANGLE.json.decompress(xmlhttp.responseText.replace(/http:\/\/trianglecms\.com/g, "https://trianglecms.com"));
+      content = TRIANGLE.json.decompress(xmlhttp.responseText.replace(/trianglecms\.com\/content/g, "trianglecms.com/app"));
       //console.log(content);
       TRIANGLE.json.decode(content);
       //===============================================================================
@@ -8014,7 +8029,7 @@ TRIANGLE.pages = {
         var pageThumbs = document.getElementById("echoPageList").querySelectorAll(".pageThumbnail");
         for (var i = 0; i < pageThumbs.length; i++) {
           if (TRIANGLE.currentPage !== "" && pageThumbs[i].innerHTML == TRIANGLE.currentPage) {
-            pageThumbs[i].style.backgroundColor = "#ccdef6";
+            pageThumbs[i].style.backgroundColor = "#D0DEEC";
           } else {
             pageThumbs[i].style.backgroundColor = "";
           }
