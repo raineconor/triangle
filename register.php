@@ -3,7 +3,7 @@
   require "app/php/sanitize_string.php";
   require "app/php/db_query.php";
   if (isset($_SESSION["username"])) {
-    header("Location: app/admin.php");
+    header("Location: app/dashboard.php");
   }
 ?>
 <!DOCTYPE HTML>
@@ -98,7 +98,7 @@
         $_SESSION["currentPage"] = [];
 
         mail("info@trianglecms.com", "TRIANGLE", "A user has registered for Triangle.\nUsername: $username\nName: $name");
-        echo "<script>location.href = 'app/admin.php';</script>";
+        echo "<script>location.href = 'app/dashboard.php';</script>";
 	    }
 	  } else { // if any fields are empty, create an error
       $error = "<span class='error'>*Please fill out all fields</span>";
