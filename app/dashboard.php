@@ -22,17 +22,16 @@
 <html>
 <meta charset="utf-8">
 <head>
-<title>Triangle | My Profile</title>
+<title>Triangle | Dashboard</title>
 
 <link rel="shortcut icon" href="/favicon.ico" />
 
 <!--=========== CSS Include: =============-->
-<link rel="stylesheet" href="admin-style.css" type="text/css" media="screen">
+<link rel="stylesheet" href="dashboard-style.css" type="text/css" media="screen">
 <!--======================================-->
 
 <!--=========== Font Include: ============-->
 <link rel="preconnect" href="https://fonts.gstatic.com">
-<!--<link href='https://fonts.googleapis.com/css?family=Roboto:400,700,500' rel='stylesheet' type='text/css'>-->
 <link href="https://fonts.googleapis.com/css2?family=Lato:wght@100;300;400;700&display=swap" rel="stylesheet">
 <!--======================================-->
 
@@ -42,8 +41,7 @@
 
 <div id="container-fluid" style="padding:0;">
   <header>
-    <img id="dashboard-logo" src="images/blue-triangle-small.png">
-    <span style="font-weight:700;color:#222222;font-size:22px;padding-left:5px;">Triangle</span>
+    <img id="dashboard-logo" src="../images/triangle-logo-text.svg" />
   </header>
 
   <div id="left-column">
@@ -63,7 +61,7 @@
     <a class="left-col-btn" href="logout.php">Logout</a>
 
     <div id="version">
-      v <?php include "php/version.php"; echo $latestVersion; ?>
+      v<?php include "php/version.php"; echo $latestVersion; ?>
       <br>
       <span style="font-size:10px;">&copy; Copyright <?php echo date("Y", time()); ?> Raine Conor. All rights reserved.</span>
     </div>
@@ -103,12 +101,12 @@
             $userGetParam .= "&username=" . $user;
           }
           if (file_exists(__DIR__ . "/users/$username/export/" . $templates[$x]["template"] . "/index.php")) {
-            $previewButton = '<a class="menuLinkPreview" href="users/' . $username . '/export/' . $templates[$x]["template"] . '/index.php" target="_blank">Preview</a>';
+            $previewButton = '<a class="menuLinkPreview" href="users/' . $username . '/export/' . $templates[$x]["template"] . '/index.php" target="_blank"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-display" viewBox="0 0 16 16"><path d="M0 4s0-2 2-2h12s2 0 2 2v6s0 2-2 2h-4c0 .667.083 1.167.25 1.5H11a.5.5 0 0 1 0 1H5a.5.5 0 0 1 0-1h.75c.167-.333.25-.833.25-1.5H2s-2 0-2-2V4zm1.398-.855a.758.758 0 0 0-.254.302A1.46 1.46 0 0 0 1 4.01V10c0 .325.078.502.145.602.07.105.17.188.302.254a1.464 1.464 0 0 0 .538.143L2.01 11H14c.325 0 .502-.078.602-.145a.758.758 0 0 0 .254-.302 1.464 1.464 0 0 0 .143-.538L15 9.99V4c0-.325-.078-.502-.145-.602a.757.757 0 0 0-.302-.254A1.46 1.46 0 0 0 13.99 3H2c-.325 0-.502.078-.602.145z"/></svg></a>';
           } else {
-            $previewButton = '<div class="disabledPreview">Preview</div>';
+            $previewButton = '<div class="disabledPreview"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-eye-slash-fill" viewBox="0 0 16 16"><path d="M10.79 12.912l-1.614-1.615a3.5 3.5 0 0 1-4.474-4.474l-2.06-2.06C.938 6.278 0 8 0 8s3 5.5 8 5.5a7.027 7.027 0 0 0 2.79-.588zM5.21 3.088A7.028 7.028 0 0 1 8 2.5c5 0 8 5.5 8 5.5s-.939 1.721-2.641 3.238l-2.062-2.062a3.5 3.5 0 0 0-4.474-4.474L5.21 3.088z"/>  <path d="M5.525 7.646a2.5 2.5 0 0 0 2.829 2.829l-2.83-2.829zm4.95.708l-2.829-2.83a2.5 2.5 0 0 1 2.829 2.829zm3.171 6l-12-12 .708-.708 12 12-.708.707z"/></svg></div>';
           }
           if ($username === $templates[$x]["username"]) {
-            $deleteButton = '<span class="menuLinkDelete" onClick="deleteTemplate(\'' . urlencode($templates[$x]["template"]) . '\', ' . $x . ');">Delete</span>';
+            $deleteButton = '<span class="menuLinkDelete" onClick="deleteTemplate(\'' . urlencode($templates[$x]["template"]) . '\', ' . $x . ');"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/><path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/></svg></span>';
           } else {
             $deleteButton = '';
           }
@@ -189,7 +187,7 @@
       if (file_exists($img_dir)) {
         $img_files = getDirectory($img_dir);
         $img_html = echoDirectory($img_files,
-          '<div class="userImg"><div class="deleteImage" onClick="deleteImage(this, \'' . $flag . '\')">&#8864;</div><img src="' . $dataURI . '" lazyload="users/' . $username . '/images/' . $flag . '"></div>',
+          '<div class="userImg"><div class="deleteImage" onClick="deleteImage(this, \'' . $flag . '\')"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/><path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/></svg></div><img src="' . $dataURI . '" lazyload="users/' . $username . '/images/' . $flag . '"></div>',
           $img_error);
       } else {
         echo $img_error;

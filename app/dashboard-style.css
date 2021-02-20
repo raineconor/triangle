@@ -355,8 +355,8 @@ input {
   font-size:20px;
   text-align:right;
   position:absolute;
-  right:5px;
-  top:0;
+  right:10px;
+  top:10px;
   z-index:2;
   cursor:pointer;
   transition:color 150ms;
