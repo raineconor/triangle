@@ -979,7 +979,8 @@ hr {
 
 .mainOption:hover,
 .mainOptionImmune:hover {
-  background-color:#626a7e;
+  /* background-color:#626a7e; */
+  background-color:#707D90;
   /*color:white;*/
   /*background-color:#9DB6CE;*/
 }
@@ -1055,13 +1056,7 @@ hr {
 }
 */
 .menuSectionTitle {
-  background-color:#D1E1FB;
-  /* background-color:#c6d6eb; */
-  /*background-color:#acbbd2;*/
-  /*background-color:#4a5668;*/
-  /*background-color:#5f6f86;*/
-  /*color:#ffffff;*/
-  /*color:#333333;*/
+  background-color:#D0DEEC;
   padding:3px 5px;
   text-align:center;
   margin-bottom:7px;
