@@ -2080,14 +2080,13 @@ TRIANGLE.exportTemplate = {
       var params = "askZip=" + 1 + "&instance=" + TRIANGLE.instance + "&compress=" + compress;
       AJAX.post("php/export_zip.php", params, function(xmlhttp) {
         TRIANGLE.notify.loading.hide();
-        // window.open(xmlhttp.responseText);
         var response = JSON.parse(xmlhttp.responseText);
+        // console.log(response);
         var a = document.createElement("a");
         document.body.appendChild(a);
         a.style = "display: none";
         a.href = response.url;
-        // a.href = "/triangle/app/users/admin/download/TRIANGLE-empty.zip";
-        a.download = "triangle-" + response.template + ".zip";
+        a.download = response.filename;
         a.click();
         document.body.removeChild(a);
       });

@@ -192,9 +192,10 @@
     $zip->close();
 
     // echo '/app/users/' . $username . '/download/index.php?file=' . urlencode($templateName);
+    $zipFileName = "TRIANGLE-" . urlencode($templateName) . ".zip";
     echo json_encode([
-      "template" => urlencode($templateName),
-      "url" => "/app/users/$username/download/TRIANGLE-" . urlencode($templateName)
+      "filename" => $zipFileName,
+      "url" => "users/$username/download/$zipFileName"
     ]);
   }
 
