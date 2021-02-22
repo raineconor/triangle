@@ -1874,11 +1874,7 @@ TRIANGLE.loadTemplate = {
       TRIANGLE.template.blank();
 
       //===============================================================================
-      //console.log(xmlhttp.responseText);
-      //var content = TRIANGLE.json.decompress(xmlhttp.responseText);
-      var content = TRIANGLE.json.decompress(xmlhttp.responseText.replace(/http:\/\/trianglecms\.com/g, "https://trianglecms.com"));
-      content = TRIANGLE.json.decompress(xmlhttp.responseText.replace(/trianglecms\.com\/content/g, "trianglecms.com/app"));
-      //console.log(content);
+      var content = TRIANGLE.json.decompress(xmlhttp.responseText);
       TRIANGLE.json.decode(content);
       //===============================================================================
 
