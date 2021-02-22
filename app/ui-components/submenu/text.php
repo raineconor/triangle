@@ -22,7 +22,7 @@
   <div class="menuSection">
     <div class="menuSectionTitle">Font</div>
     Type:
-    <select id="fontType" class="form-select form-select-sm" onChange="TRIANGLE.text.changeFont(this);">
+    <select id="fontType" class="form-select form-select-sm" onChange="TRIANGLE.text.changeFont(this);" style="width:102px;">
       <option triangle-font-category="sans-serif" google-font="false">Arial</option>
       <option triangle-font-category="sans-serif" google-font="false">Arial Black</option>
       <option triangle-font-category="serif" google-font="false">Times New Roman</option>
@@ -41,8 +41,7 @@
         <li><a class="dropdown-item" href="#">Another action</a></li>
         <li><a class="dropdown-item" href="#">Something else here</a></li>
       </ul>
-    </div> --><div class="tinyColorBoxSpacing"></div>
-    <br>
+    </div> --><!--<div class="tinyColorBoxSpacing"></div>--><br>
     Color:
     <input type="text" id="fontColor"><div class="tinyColorBox" id="colorFont" onMouseOver="TRIANGLE.text.saveTextSelection();"></div><br>
     Size:
