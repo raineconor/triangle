@@ -8,12 +8,12 @@
 <!--=================================-->
 
 <!--============ Favicon: ===========-->
-<link rel="shortcut icon" href="/favicon.ico" />
+<link rel="shortcut icon" href="/favicon.png" />
 <!--=================================-->
 
 <!--=========== Meta Tags: ==========-->
 <meta name="description" content="Triangle is a web application that allows you to build modern, elegant websites without code.">
-<meta name="keywords" content="insert, keywords, here">
+<meta name="keywords" content="triangle, website, builder, online, cloud, service">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <!--=================================-->
 
@@ -89,7 +89,7 @@ textarea {
   right:15px;
   bottom:15px;
   border-radius:2px;
-  font-family:Lato;
+  font-family:'Lato', sans-serif;
   font-size:16px;
   color:white;
   line-height:1;
@@ -142,7 +142,7 @@ textarea {
   background-color:inherit;
   height:auto;
   width:100%;
-  font-family:Lato;
+  font-family:'Lato', sans-serif;
   font-weight:bold;
   font-size:52px;
   color:rgb(36, 45, 56);
@@ -155,13 +155,14 @@ textarea {
   width:100%;
   margin-top:25px;
   margin-bottom:25px;
-  font-family:Lato;
+  font-family:'Lato', sans-serif;
   font-size:18px;
   color:rgb(50, 63, 79);
   line-height:1.5;
 }
 
 #item8 {
+  background-color:white;
   height:auto;
   min-height:1px;
   width:100%;
@@ -264,7 +265,7 @@ textarea {
   min-height:auto;
   width:100%;
   padding:15px;
-  font-family:Lato;
+  font-family:'Lato', sans-serif;
   font-size:14px;
   color:white;
   line-height:1;
@@ -370,10 +371,10 @@ textarea {
     <div style="clear: both;"></div>
     <a href="app/login.php">
       <div id="item2">
-        Login <br>
+        Login
       </div>
-      </a>
-    </div>
+    </a>
+  </div>
     <div id="item3">
       <div id="item4">
         <div id="item5">
@@ -385,7 +386,7 @@ textarea {
           </div>
         </div>
         <div id="item8">
-          <video id="videoPlayer" src="https://trianglecms.com/video/triangle-preview-720p.mov" type="video/mp4" loop="" autoplay="true" width="100%" height="auto"></video>
+          <video id="videoPlayer" src="https://trianglecms.com/video/triangle-preview-720p.mov" type="video/mp4" loop="" autoplay="true" controls="" width="100%" height="auto"></video>
         </div>
       </div>
     </div>
@@ -438,8 +439,6 @@ textarea {
 
 <script type="text/javascript">
 document.body.onload = deferFonts;
-/*setTimeout(deferFonts, 2000);*/
-
 function deferFonts() {
   var defer = document.querySelectorAll("[defer]");
   for (var i = 0; i < defer.length; i++) {
