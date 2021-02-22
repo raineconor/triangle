@@ -41,7 +41,7 @@
 
 <div id="container-fluid" style="padding:0;">
   <header>
-    <img id="dashboard-logo" src="../images/triangle-logo-text.svg" />
+    <a href="/"><img id="dashboard-logo" src="../images/triangle-logo-text.svg" /></a>
   </header>
 
   <div id="left-column">

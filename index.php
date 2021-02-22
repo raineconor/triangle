@@ -13,7 +13,7 @@
 
 <!--=========== Meta Tags: ==========-->
 <meta name="description" content="Triangle is a web application that allows you to build modern, elegant websites without code.">
-<meta name="keywords" content="triangle, website, builder, online, cloud, service">
+<meta name="keywords" content="triangle,website, builder, online, cloud, service">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <!--=================================-->
 
@@ -373,8 +373,8 @@ textarea {
       <div id="item2">
         Login
       </div>
-    </a>
-  </div>
+      </a>
+    </div>
     <div id="item3">
       <div id="item4">
         <div id="item5">
@@ -386,7 +386,7 @@ textarea {
           </div>
         </div>
         <div id="item8">
-          <video id="videoPlayer" src="https://trianglecms.com/video/triangle-preview-720p.mov" type="video/mp4" loop="" autoplay="true" controls="" width="100%" height="auto"></video>
+          <video id="videoPlayer" src="https://trianglecms.com/video/triangle-preview-720p.mov" type="video/mp4" loop="" autoplay="true" width="100%" height="auto"></video>
         </div>
       </div>
     </div>
