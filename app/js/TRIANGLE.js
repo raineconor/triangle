@@ -1,7 +1,7 @@
 "use strict";
 
 var TRIANGLE = TRIANGLE || {};
-TRIANGLE.version = "1.02.00";
+TRIANGLE.version = "1.02.01";
 
 /*
 augment native DOM functions with .remove() method for easy deletion of selected elements
