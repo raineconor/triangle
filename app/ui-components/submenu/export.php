@@ -1,26 +1,26 @@
 <div class="subMenu" id="displayExportOptions">
-  <div class="subMenuOption" id="publishSite" onClick="TRIANGLE.publish.prompt();">
+  <div class="subMenuOption" id="exportPublish">
     <div class="subMenuOptionBox">
       <img class="optionImage" src="images/opPublish.svg">
     </div>
-    <div class="optionLabel" id="labelPublishSite">Publish Site</div>
+    <div class="optionLabel" id="labelExportPublish">Publish Site</div>
   </div>
 
-  <div class="subMenuOption" id="exportZip" onClick="TRIANGLE.notify.loading.show(TRIANGLE.exportCode.exportZip);">
+  <div class="subMenuOption" id="exportZip">
     <div class="subMenuOptionBox">
       <img class="optionImage" src="images/opExportZip.svg">
     </div>
     <div class="optionLabel" id="labelExportZip">Download ZIP</div>
   </div>
 
-  <div class="subMenuOption" id="exportRaw" onClick="TRIANGLE.notify.loading.show(function(){TRIANGLE.exportCode.format('raw')});">
+  <div class="subMenuOption" id="exportRaw">
     <div class="subMenuOptionBox">
       <img class="optionImage" src="images/opExportRaw.gif">
     </div>
     <div class="optionLabel" id="labelExportRaw">Raw Code</div>
   </div>
 
-  <div class="subMenuOption" id="previewTemplate" onClick="TRIANGLE.notify.loading.show(TRIANGLE.exportCode.previewTemplate);">
+  <div class="subMenuOption" id="exportPreview">
     <div class="subMenuOptionBox">
       <img class="optionImage" src="images/opPreviewTemplate.svg">
     </div>
@@ -40,7 +40,11 @@
 
   <div class="menuSection">
     <div class="menuSectionTitle">Compression</div>
-    <input type="checkbox" id="exportCompress" no-clear="true"> Minify HTML
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" id="exportCompress" style="margin-top:0;" no-clear="true">
+      <label class="form-check-label" for="exportCompress">Minify HTML</label>
+    </div>
+    <!-- <input type="checkbox" id="exportCompress" no-clear="true"> Minify HTML -->
     <br><br><br><br><br>
   </div>
 

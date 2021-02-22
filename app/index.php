@@ -75,7 +75,7 @@
 <html>
 <meta charset="utf-8" />
 <head>
-<title>Triangle | Edit Template</title>
+<title>Triangle - Edit Template</title>
 
 <link rel="shortcut icon" href="/favicon.ico" />
 
@@ -242,8 +242,8 @@
       ?>
       </select>
       <br><br>
-      <button onClick="TRIANGLE.publish.begin();">Submit</button>
-      <button onClick="TRIANGLE.publish.cancel();">Cancel</button>
+      <button id="exportPublishSend">Submit</button>
+      <button id="exportPublishCancel">Cancel</button>
     </div>
   </div>
   <!-- Loading Prompt -->
@@ -397,12 +397,9 @@ function lazyload() {
 
 </script>
 <script type="text/javascript" src="js/AJAX.js"></script>
-<script type="text/javascript" src="js/TRIANGLE<?php
-if ($_SERVER["HTTP_HOST"] === "trianglecms.com"
-|| $_SERVER["HTTP_HOST"] === "www.trianglecms.com")
-echo ".min";
-?>.js"></script>
+<script type="text/javascript" src="js/TRIANGLE.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+<!-- <script type="text/javascript" src="js/bootstrap-init.js"></script> -->
 
 <?php echo $callLoad; ?>
 <?php echo $max_templates; ?>

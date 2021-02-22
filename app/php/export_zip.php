@@ -191,7 +191,11 @@
     }
     $zip->close();
 
-    echo '/app/users/' . $username . '/download/index.php?file=' . urlencode($templateName);
+    // echo '/app/users/' . $username . '/download/index.php?file=' . urlencode($templateName);
+    echo json_encode([
+      "template" => urlencode($templateName),
+      "url" => "/app/users/$username/download/TRIANGLE-" . urlencode($templateName)
+    ]);
   }
 
   // helper functions ==============================================================================
