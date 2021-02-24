@@ -41,20 +41,12 @@ body {
 }
 .form-signin input[type="password"] {
   margin-bottom: 10px;
-  /* border-top-left-radius: 0;
-  border-top-right-radius: 0; */
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
 }
 
 #footer {
-  /*background-color:#FAB6C2;*/
-  width:100%;
-  padding:20px;
-  /*position:fixed;
-  left:0;
-  right:0;
-  bottom:0;*/
-  text-align:center;
-  color:lightgray;
+
 }
 
 .error {

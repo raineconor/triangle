@@ -13,7 +13,7 @@
 
 <head>
 <!--========== Page Title: ==========-->
-<title>Triangle | Login</title>
+<title>Triangle - Login</title>
 <!--=================================-->
 
 <!--=========== Meta Tags: ==========-->
@@ -80,30 +80,13 @@
 	  }
 	}
   ?>
-  <!-- <div id="content">
-    <div id="loginBox">
-      <img class="img-responsive" id="logo" src="images/blue-triangle-medium.png">
-      <form id="loginForm" method="post" action="<?php $_SERVER['PHP_SELF']; ?>">
-        <table>
-          <tr>
-            <td>Username:</td><td><input type="username" class="no-webkit" id="username" name="username"></td>
-          </tr>
-          <tr>
-            <td>Password:</td><td><input type="password" class="no-webkit" id="password" name="password"></td>
-          </tr>
-        </table>
-        <input type="submit" value="Log In" class="no-webkit" id="loginBtn"><br>
-      </form><br>
-      <?php echo $error; ?>
-    </div>
-  </div> -->
 
   <main class="form-signin">
     <form method="post" action="<?php $_SERVER['PHP_SELF']; ?>">
       <img class="mb-4" src="../images/triangle-logo-text.svg" alt="" width="256" height="72">
       <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
-      <label for="inputUsername" class="visually-hidden">Email address</label>
-      <input type="username" name="username" id="inputUsername" class="form-control" placeholder="Email address" required autofocus>
+      <label for="inputUsername" class="visually-hidden">Username</label>
+      <input type="username" name="username" id="inputUsername" class="form-control" placeholder="Username" required autofocus>
       <label for="inputPassword" class="visually-hidden">Password</label>
       <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required>
       <button class="w-100 btn btn-lg btn-primary mb-2" type="submit">Sign in</button>
