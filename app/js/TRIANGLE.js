@@ -5,6 +5,7 @@ TRIANGLE.version = "1.02.01";
 
 /*
 augment native DOM functions with .remove() method for easy deletion of selected elements
+DONT DO THIS!!!
 */
 
 Element.prototype.remove = function() {
@@ -7032,7 +7033,6 @@ TRIANGLE.forms = {
 
 } // end TRIANGLE.forms
 
-
 /*
 locateColumns() creates an object map of each point on the x-axis that are potential snapping points for resizing elements
 */
@@ -7426,7 +7426,6 @@ TRIANGLE.json = {
 } // end TRIANGLE.json
 
 TRIANGLE.responsive = {
-
 
   prepare : function() {
 
