@@ -206,6 +206,18 @@ function changePassword() {
   }
 }
 
+// function fetchImages() {
+//   AJAX.get("ui-components/dashboard/image_list.php", "", function(xmlhttp) {
+//     document.getElementById("imageList").innerHTML = xmlhttp.responseText;
+//     lazyload();
+//   });
+// }
+
+function addImageToList(file) {
+  console.log(file);
+  document.getElementById("imageList").innerHTML = "<img src='" + file.name + "'>" + document.getElementById("imageList").innerHTML;
+}
+
 /*document.getElementById("right-column").addEventListener("scroll", lazyload);
 function lazyload() {
   var images = document.querySelectorAll('img[lazyload]');
@@ -218,3 +230,11 @@ function lazyload() {
   }
 }
 lazyload();*/
+
+Dropzone.autoDiscover = false;
+var myDropzone = new Dropzone("#imageUploadForm");
+myDropzone.on("complete", function(file) {
+  // console.log("File added: " + file.name);
+  // addImageToList(file);
+  // myDropzone.removeFile(file);
+});
