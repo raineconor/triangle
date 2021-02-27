@@ -4095,9 +4095,10 @@ TRIANGLE.images = {
     });
   },
 
-  /*
-  function insertImage inserts an image into the selected element
-  */
+  upload : function() {
+    TRIANGLE.popUp.open("uploadImagesCell");
+    TRIANGLE.menu.closeSideMenu();
+  },
 
   insert : function insertImage(filepath) {
 
@@ -6138,7 +6139,6 @@ margin : {
 
 TRIANGLE.popUp = {
   open : function(id) {
-
     var popUps = document.getElementsByClassName("popUp");
     for (var i = 0; i < popUps.length; i++) {
       popUps[i].style.display = "none";
@@ -7490,6 +7490,8 @@ TRIANGLE.defaultSettings = function defaultSettings() {
   document.getElementById("opCopyStyles").addEventListener("click", TRIANGLE.options.copyStyles);
   document.getElementById("opPasteStyles").addEventListener("click", TRIANGLE.options.pasteStyles);
   document.getElementById("opDeselect").addEventListener("click", TRIANGLE.clearSelection);
+  // pop ups
+  document.getElementById("uploadImagesBtn").addEventListener("click", TRIANGLE.images.upload);
 
   var menuInputs = document.getElementById("menu").getElementsByTagName("input");
   for (var i = 0; i < menuInputs.length; i++) {

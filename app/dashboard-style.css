@@ -163,6 +163,7 @@ input {
 }
 .left-col-btn:hover {
   background-color:#2b2f37;
+  color:white;
 }
 
 .menuLink {

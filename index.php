@@ -12,7 +12,7 @@
 <!--=================================-->
 
 <!--=========== Meta Tags: ==========-->
-<meta name="description" content="Triangle is a web application that allows you to build modern, elegant websites without code.">
+<meta name="description" content="Triangle is a web application that allows you to build modern, elegant websites visually in your browser, faster than conventional tools.">
 <meta name="keywords" content="triangle,website, builder, online, cloud, service">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <!--=================================-->
@@ -408,11 +408,8 @@ textarea {
 }
 
 @media (min-width: 1200px) {
-  #item4, #item11, #item17, #item0 {
+  #item4, #item11, #item17, #item24, #item0 {
     width:1300px;
-  }
-  #item24 {
-    width:1200px;
   }
 }
 
@@ -447,7 +444,7 @@ textarea {
             Build Websites Fast<br>
           </div>
           <div id="item7">
-            Build modern, elegant websites visually in your browser. Fast.<br>
+            Build modern, elegant websites visually in your browser, faster than conventional tools.<br>
           </div>
           <a href="register.php">
             <div id="item8">
@@ -515,9 +512,7 @@ function deferFonts() {
     defer[i].setAttribute("href", defer[i].getAttribute("defer"));
   }
 }
-
 </script>
-
 </body>
 
 </html>
