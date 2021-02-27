@@ -83,7 +83,7 @@ if ($_SESSION["usertype"] === "admin") {
         <div id="echoConfirmDelete"></div>
       </div>
 
-      <div class="popUpMenu" id="templateChoices" style="background-color:#fefefe;width:65%;padding:40px;border-radius:3px;">
+      <div class="popUpMenu" id="templateChoices">
         <h3>Choose a template type:</h3>
         <hr>
         <!-- <a class="templateChoice" target="_blank" onClick="closePopUp();" href="index.php?premadeTemplate=default">Multipurpose</a>

@@ -41,7 +41,6 @@ function addFTPprofile() {
 
   AJAX.post("php/add_ftp_profile.php", "ftpURL=" + ftpURL + "&ftpUsr=" + ftpUsr + "&ftpPwd=" + ftpPwd, function(xmlhttp) {
     document.getElementById("echoFTPlist").innerHTML += xmlhttp.responseText;
-
     document.getElementById("ftpURL").value =
     document.getElementById("ftpUsr").value =
     document.getElementById("ftpPwd").value = "";
@@ -64,6 +63,19 @@ function deleteTemplate(templateName, templateNum) {
   }
 }
 
+function deleteFTPprofile(ftpID, elemToRemove) {
+  if (confirm("Are you sure you want to delete this FTP profile?")) {
+    // var deleteElem = document.getElementById("template-" + templateNum);
+
+    AJAX.post("php/delete_ftp_profile.php", "ftp_id=" + ftpID, function() {
+      elemToRemove.className += " fadeOut";
+      setTimeout(function() {
+        elemToRemove.parentNode.removeChild(elemToRemove);
+      }, 200);
+    });
+  }
+}
+
 function menuLinkDetails(itemName, menuID) {
   var menu = document.getElementById(menuID);
   if (menu.style.display != "block") {
@@ -71,57 +83,6 @@ function menuLinkDetails(itemName, menuID) {
   } else {
     menu.style.display = "none";
   }
-}
-
-function addBusinessProfile() {
-  var id = encodeURIComponent(document.getElementById("businessID").value);
-  //if (id == "") return;
-  var name = encodeURIComponent(document.getElementById("businessName").value);
-  var state = encodeURIComponent(document.getElementById("businessState").value);
-  var city = encodeURIComponent(document.getElementById("businessCity").value);
-  var address = encodeURIComponent(document.getElementById("businessAddress").value);
-  var postal = encodeURIComponent(document.getElementById("businessPostal").value);
-  var sandboxID = encodeURIComponent(document.getElementById("businessSandboxID").value);
-  var sandboxSecret = encodeURIComponent(document.getElementById("businessSandboxSecret").value);
-  var liveID = encodeURIComponent(document.getElementById("businessLiveID").value);
-  var liveSecret = encodeURIComponent(document.getElementById("businessLiveSecret").value);
-
-  var params = "id=" + id + "&name=" + name + "&state=" + state + "&city=" + city
-            + "&address=" + address + "&postal=" + postal + "&sandboxID="
-            + sandboxID + "&sandboxSecret=" + sandboxSecret + "&liveID=" + liveID
-            + "&liveSecret=" + liveSecret;
-
-  AJAX.post("php/addBusinessProfile.php", params, function(xmlhttp) {
-    closePopUp();
-    location.href = "?tab=ecommerce";
-  });
-}
-
-function editBusinessProfile(id, name, country, state, city, address, postal, sandboxID, sandboxSecret, liveID, liveSecret) {
-  openPopUp("newBusinessProfile");
-  document.getElementById("businessID").value = id;
-  document.getElementById("businessName").value = name;
-  document.getElementById("businessState").value = state;
-  document.getElementById("businessCity").value = city;
-  document.getElementById("businessAddress").value = address;
-  document.getElementById("businessPostal").value = postal;
-  document.getElementById("businessSandboxID").value = sandboxID;
-  document.getElementById("businessSandboxSecret").value = sandboxSecret;
-  document.getElementById("businessLiveID").value = liveID;
-  document.getElementById("businessLiveSecret").value = liveSecret;
-}
-
-function deleteBusinessProfile(businessID, businessElem) {
-  var deleteElem = document.getElementById("business-" + businessElem);
-
-  AJAX.post("php/deleteBusinessProfile.php", "profileID=" + businessID, function() {
-    deleteElem.className += " fadeOut";
-    //deleteMenu.className += " fadeOut";
-    setTimeout(function() {
-      deleteElem.parentNode.removeChild(deleteElem);
-      //deleteMenu.parentNode.removeChild(deleteMenu);
-    }, 400);
-  });
 }
 
 function openPopUp(id) {

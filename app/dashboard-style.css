@@ -137,9 +137,11 @@ input {
 #darkWrapper select {
   width:200px;
 }
-#templateChoices {
-  background-color:#eeeeee;
-  width:70vw;
+#templateChoices.popUpMenu {
+  background-color:#fefefe;
+  width:65%;
+  padding:40px;
+  border-radius:3px;
 }
 #dashboard-logo {
   width:auto;
@@ -383,6 +385,15 @@ input {
 .menuAltRight {
   padding:10px;
   display:inline-block;
+}
+.ftpDelete {
+  padding:10px 18px;
+  border-radius:2px;
+}
+.ftpDelete:hover {
+  cursor:pointer;
+  background-color:#E1341E;
+  color:white;
 }
 
 .clear {

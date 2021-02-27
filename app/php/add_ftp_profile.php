@@ -16,31 +16,26 @@
 
   if (isset($ftpURL)) {
 
-    /*$url_iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length($algo));
-    $enc_ftpURL = utf8_encode(openssl_encrypt($ftpURL, $algo, $eTgVvQ8x, OPENSSL_RAW_DATA, $url_iv) . ':' . $url_iv);
-
-    $usr_iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length($algo));
-    $enc_ftpUsr = utf8_encode(openssl_encrypt($ftpUsr, $algo, $eTgVvQ8x, OPENSSL_RAW_DATA, $usr_iv) . ':' . $usr_iv);
-
-    $pwd_iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length($algo));
-    $enc_ftpPwd = utf8_encode(openssl_encrypt($ftpPwd, $algo, $eTgVvQ8x, OPENSSL_RAW_DATA, $pwd_iv) . ':' . $pwd_iv);*/
-
     $enc_ftpURL = encrypt($ftpURL);
     $enc_ftpUsr = encrypt($ftpUsr);
     $enc_ftpPwd = encrypt($ftpPwd);
 
     $read_profiles = db_query('SELECT username FROM user_creds WHERE username = ?', [$username]);
 
+    $ftp_id;
     if ($read_profiles) {
       db_query('INSERT INTO ftp_profiles (username, ftp_username, ftp_password, ftp_host) VALUES (?, ?, ?, ?)', [$username, $enc_ftpUsr, $enc_ftpPwd, $enc_ftpURL]);
+      $ftp_id = db_query('SELECT id FROM ftp_profiles WHERE username = ? AND ftp_username = ?', [$username, $enc_ftpUsr])["id"];
     } else {
       exit(1);
     }
 
-    echo '<div class="menuAlt"><div class="menuAltLeft">'
+    echo '<li class="list-group-item"><div class="menuAltLeft">'
        . htmlspecialchars($ftpUsr)
        . '</div><div class="menuAltRight">'
        . htmlspecialchars($ftpURL)
-       . '</div></div>';
+       . '</div><div class="menuAltRight ftpDelete float-end" onclick="deleteFTPprofile('.$ftp_id.', this.parentNode);">'
+       . '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/><path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/></svg>'
+       . '</div></li>';
   }
 ?>
