@@ -10,10 +10,13 @@
   <span class="error" id="changePasswordError"></span>
   <span id="changePasswordSuccess" style="color:green;display:none;">- Your password has been changed</span> -->
 
-  <div class="input-group">
+  <div class="input-group mt-3">
+    <label class="input-group-text" for="changePassword">New Password</label>
     <input type="password" class="form-control" maxlength="64" id="changePassword">
+
+    <label class="input-group-text" for="changePasswordConfirm">Confirm Password</label>
     <input type="password" class="form-control" maxlength="64" id="changePasswordConfirm">
-    <button type="button" class="btn btn-outline-secondary" onclick="changePassword()">Submit</button>
+    <button type="button" class="btn btn-outline-primary" onclick="changePassword()">Submit</button>
   </div>
 
 </section>
