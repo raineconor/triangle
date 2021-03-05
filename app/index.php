@@ -106,7 +106,6 @@
 
 <div class="hide" id="sideMenu">
   <div id="cancelSideMenu" onClick="TRIANGLE.menu.closeSideMenu();">
-    <!-- <img src="images/close-side-menu.svg"> -->
     <svg xmlns="http://www.w3.org/2000/svg" width="52" height="52" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
       <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
     </svg>
@@ -118,12 +117,6 @@
   <?php include "ui-components/sidemenu/user_items.html"; ?>
   <?php include "ui-components/sidemenu/library.html"; ?>
 </div>
-
-<!-- <div id="effectStudioMenu" style="display:none;">
-  <div id="effectStudioOptionsBar">
-    <div class="mainOptionImmune" onClick="TRIANGLE.effects.exitStudio();">Exit Effects Editor</div>
-  </div>
-</div> -->
 
 <?php include "ui-components/color_picker.html"; ?>
 <?php include "ui-components/color_palette.html"; ?>

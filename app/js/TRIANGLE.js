@@ -7545,10 +7545,6 @@ TRIANGLE.defaultSettings = function defaultSettings() {
     menuInputs[i].addEventListener("keyup", TRIANGLE.saveItem.applyChanges);
   }
 
-  /*document.addEventListener("scroll", TRIANGLE.hoverBorder.hide);
-  document.addEventListener("scroll", TRIANGLE.selectionBorder.update);
-  document.addEventListener("scroll", TRIANGLE.dragDrop.updateItemMap);*/
-
   document.addEventListener("scroll", function(){
     TRIANGLE.hoverBorder.hide();
     TRIANGLE.selectionBorder.update();
@@ -7572,9 +7568,6 @@ TRIANGLE.defaultSettings = function defaultSettings() {
       TRIANGLE.text.originalTextPosition = TRIANGLE.text.getSelectionCoords().r;
     };
   });
-
-  /*document.addEventListener("keydown", function(event){event.shiftKey ? TRIANGLE.keyEvents.shiftKey = true : TRIANGLE.keyEvents.shiftKey = false});
-  document.addEventListener("keyup", function(){TRIANGLE.keyEvents.shiftKey = false});*/
 
   document.addEventListener("keydown", function(event) {
     document.getElementById("updateAnimation").innerHTML = ""; // resets the animation style so it can play after repetitive changes
