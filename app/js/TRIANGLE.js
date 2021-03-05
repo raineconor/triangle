@@ -6265,6 +6265,52 @@ TRIANGLE.notify = {
 //====================================================================================================
 
 
+TRIANGLE.draggable = {
+
+    xInitial : null,
+    yInitial : null,
+    active : false,
+    //initialIndex : null,
+
+    initiate : function(event, elem) {
+      TRIANGLE.draggable.active = true;
+
+      document.addEventListener("mousemove", function(e) {
+        TRIANGLE.draggable.start(e, elem);
+      });
+      document.addEventListener("mouseup", TRIANGLE.draggable.stop);
+
+      TRIANGLE.draggable.xInitial = event.clientX - elem.getBoundingClientRect().left;
+      TRIANGLE.draggable.yInitial = event.clientY - elem.getBoundingClientRect().top;
+    },
+
+    start : function(event, elem) {
+      if (TRIANGLE.draggable.active) {
+        var rect = elem.getBoundingClientRect();
+        elem.style.left = event.clientX - TRIANGLE.draggable.xInitial + "px";
+        elem.style.top = event.clientY - TRIANGLE.draggable.yInitial + "px";
+      }
+    },
+
+    stop : function() {
+      TRIANGLE.draggable.active = false;
+
+      /*setTimeout(function(){ // delaying the re-selection prevents color change if dragging on top of a color palette item
+      TRIANGLE.selectItem(TRIANGLE.draggable.initialIndex)
+    }, 5);*/
+
+    document.removeEventListener("mousemove", TRIANGLE.draggable.start);
+    document.removeEventListener("mouseup", TRIANGLE.draggable.stop);
+  }
+
+}
+
+
+//====================================================================================================
+//====================================================================================================
+//====================================================================================================
+
+
 TRIANGLE.resetClearFloat = function resetClearFloat() {
   while (document.getElementsByClassName("clearFloat").length > 0) {
     /*var clearFloatElem = document.getElementsByClassName("clearFloat");
@@ -7544,7 +7590,12 @@ TRIANGLE.defaultSettings = function defaultSettings() {
   TRIANGLE.colors.fillCanvas("red"); // sets the canvas colors up
   TRIANGLE.colors.setColorBoxEvents(); // adds the event listeners to the color boxes in the menu
 
-  document.getElementById("colorPaletteBar").addEventListener("mousedown", TRIANGLE.colors.dragPalette.initiate, true);
+  var draggables = document.querySelectorAll(".draggable");
+  for (var i = 0; i < draggables.length; i++) {
+    draggables[i].addEventListener("mousedown", function(e) {
+      TRIANGLE.draggable.initiate(e, document.getElementById(this.getAttribute("draggable-target")));
+    }, true);
+  }
 
   TRIANGLE.images.crop.addHandleEventListeners();
 
