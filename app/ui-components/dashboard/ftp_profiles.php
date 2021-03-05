@@ -4,7 +4,7 @@
   <h6>All FTP profiles are securely encrypted on our servers using AES-256.</h6>
   <hr>
   <h5>Add Profile</h5>
-  <div class="input-group mt-3">
+  <div class="input-group input-group-sm mt-3">
     <label class="input-group-text" for="ftpURL">Host URL</label>
     <input type="text" class="form-control" id="ftpURL">
 
