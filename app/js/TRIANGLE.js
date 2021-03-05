@@ -7035,9 +7035,7 @@ TRIANGLE.keyEvents = { // keyboard shortcuts
 
     document : function(event) {
 
-      if (event.keyCode === 27 || event.charCode === 27) {
-        /*if ((/sideMenuOpen/g).test(document.getElementById("sideMenu").className))*/ TRIANGLE.menu.closeSideMenu();
-      }
+      if (event.keyCode === 27 || event.charCode === 27) TRIANGLE.menu.closeSideMenu();
 
       //==================================================================
       // anything above this line does not need to check for active inputs like
@@ -7651,6 +7649,10 @@ TRIANGLE.defaultSettings = function defaultSettings() {
     TRIANGLE.hoverBorder.hide();
     TRIANGLE.selectionBorder.update();
     TRIANGLE.dragDrop.updateItemMap();
+  });
+
+  document.addEventListener("keydown", function(event) {
+    if (event.keyCode == 8 && TRIANGLE.item && !TRIANGLE.keyEvents.countActiveInputs()) event.preventDefault();
   });
 
   document.addEventListener("keyup", function(event){
