@@ -136,7 +136,7 @@ TRIANGLE.TemplateItem = function(index) {
   this.triangleClass = this.objRef.getAttribute("triangle-class") || null;
   this.triangleClassList = this.triangleClass ? this.triangleClass.split(" ") : [];
   this.textNodes = this.objRef.getElementsByClassName("textBox").length;
-  this.tag = this.objRef.tagName;
+  this.tag = this.objRef.tagName.toLowerCase();
   this.resizing = false;
   this.align = this.objRef.getAttribute("item-align");
   this.isFirstChild = !this.prevSibling() ? true : false;
@@ -1511,7 +1511,7 @@ TRIANGLE.saveTemplate = {
     TRIANGLE.notify.saving.show();
 
     templateName = encodeURIComponent(templateName);
-    if (!pageName || pageName == "") pageName = "";
+    pageName = pageName || "index";
     pageName = encodeURIComponent(pageName);
     //========================================================================
     var content = TRIANGLE.json.encode();
@@ -1529,21 +1529,14 @@ TRIANGLE.saveTemplate = {
     + "&globalScript=" + globalScript;
 
     AJAX.post("php/save_template.php", params, function(xmlhttp) {
+      TRIANGLE.clearSelection();
+      TRIANGLE.updateTemplateItems();
+
       TRIANGLE.saveTemplate.saveUserIDs();
       TRIANGLE.saveTemplate.saveUserClasses();
 
-      document.getElementById("saveTemplateName").value = "";
-      document.getElementById("savePageName").value = "";
-      TRIANGLE.updateTemplateItems();
-      TRIANGLE.clearSelection();
-      TRIANGLE.pages.loadPages(templateName, 'menu');
-      document.getElementById('saveCurrentTemplate').parentNode.style.display = 'block';
-      document.getElementById('saveNewPage').parentNode.style.display = 'block';
       if (templateName) TRIANGLE.currentTemplate = templateName;
       TRIANGLE.currentPage = pageName;
-      TRIANGLE.unsaved = false;
-      TRIANGLE.unsavedPremade = false;
-      //console.log(xmlhttp.responseText);
 
       TRIANGLE.notify.saving.hide();
       TRIANGLE.notify.saved.show();
@@ -1551,9 +1544,7 @@ TRIANGLE.saveTemplate = {
         TRIANGLE.exportTemplate.callbackAfterSave();
         TRIANGLE.exportTemplate.callbackAfterSave = false;
       } else {
-        setTimeout(function() {
-          location.href="index.php?pagename=" + TRIANGLE.currentPage + "&loadTemplate=" + TRIANGLE.currentTemplate;
-        }, 1000);
+        TRIANGLE.loadTemplate.openURL(TRIANGLE.currentTemplate, TRIANGLE.currentPage);
       }
     });
   },
@@ -1583,11 +1574,10 @@ TRIANGLE.saveTemplate = {
     AJAX.post("php/save_current.php", params, function(xmlhttp) {
       TRIANGLE.saveTemplate.saveUserIDs();
       TRIANGLE.saveTemplate.saveUserClasses();
-      document.getElementById("sideMenu").display != "none" ? TRIANGLE.menu.closeSideMenu() : null;
-      TRIANGLE.updateTemplateItems();
+      TRIANGLE.menu.closeSideMenu();
       TRIANGLE.clearSelection();
+      TRIANGLE.updateTemplateItems();
       TRIANGLE.unsaved = false;
-      //console.log(xmlhttp.responseText);
 
       TRIANGLE.notify.saving.hide();
       TRIANGLE.notify.saved.show();
@@ -1799,8 +1789,6 @@ saveAll : function() {
   }
 },
 
-newPage : null,
-
 createNewPage : function(pageName) {
   var pageNameInput = document.getElementById("newPageNameInput");
   if (pageNameInput.value !== "") {
@@ -1813,15 +1801,16 @@ createNewPage : function(pageName) {
   TRIANGLE.saveTemplate.saveCurrent();
 
   AJAX.get("php/create_page.php", "instance=" + TRIANGLE.instance + "&pageName=" + pageName, function(xmlhttp) {
-    console.log(xmlhttp.responseText);
+    // console.log(xmlhttp.responseText);
+    document.getElementById("createNewPage").style.display = "none";
+    pageNameInput.value = "";
+    TRIANGLE.menu.closeSideMenu();
+
+    var newPage = pageName;
+    // setTimeout(function(){TRIANGLE.loadTemplate.loadTemplate(TRIANGLE.currentTemplate, TRIANGLE.saveTemplate.newPage)}, 500); // find flag
+    TRIANGLE.loadTemplate.openURL(TRIANGLE.currentTemplate, newPage);
+
   });
-
-  document.getElementById("createNewPage").style.display = "none";
-  pageNameInput.value = "";
-  TRIANGLE.menu.closeSideMenu();
-
-  TRIANGLE.saveTemplate.newPage = pageName;
-  setTimeout(function(){TRIANGLE.loadTemplate.loadTemplate(TRIANGLE.currentTemplate, TRIANGLE.saveTemplate.newPage)}, 500); // find flag
 }
 
 
@@ -1861,6 +1850,10 @@ TRIANGLE.loadTemplate = {
       }
 
     });
+  },
+
+  openURL : function(templateName, pageName) {
+    window.location.href = "index.php?template=" + templateName + "&page=" + pageName;
   },
 
   loadTemplate : function loadTemplate(templateName, pageName) {
@@ -2104,7 +2097,7 @@ TRIANGLE.exportTemplate = {
       });
     }
     TRIANGLE.saveTemplate.saveCurrent();
-  }, // YEET
+  },
 
   preview : function() {
     if (!TRIANGLE.unsavedPremade) { // normal user-made template
@@ -2123,10 +2116,12 @@ TRIANGLE.exportTemplate = {
     } else { // unsaved premade template from Triangle
 
       TRIANGLE.exportTemplate.callbackAfterSave = function() {
-        setTimeout(TRIANGLE.exportTemplate.previewTemplate, 100);
+        // setTimeout(TRIANGLE.exportTemplate.previewTemplate, 100);
+        TRIANGLE.exportTemplate.previewTemplate();
         setTimeout(function() {
           TRIANGLE.popUp.close();
-          location.href = "index.php?pagename=" + TRIANGLE.currentPage + "&loadTemplate=" + TRIANGLE.currentTemplate;
+          TRIANGLE.loadTemplate.openURL(TRIANGLE.currentTemplate, TRIANGLE.currentPage);
+          // location.href = "index.php?pagename=" + TRIANGLE.currentPage + "&loadTemplate=" + TRIANGLE.currentTemplate;
         }, 500);
       }
       TRIANGLE.saveTemplate.getSaveName();
@@ -3485,7 +3480,8 @@ TRIANGLE.text = {
 
     } else if (!TRIANGLE.item) {
 
-      newTextBox.style.color = TRIANGLE.colors.isColorLight(TRIANGLE.item.objRef.style.backgroundColor) ? "black" : "white";
+      newTextBox.style.color = TRIANGLE.colors.isColorLight(document.getElementById("template").style.backgroundColor) ? "black" : "white";
+      console.log(document.getElementById("template").style.backgroundColor);
 
       document.getElementById("template").appendChild(newTextBox);
       TRIANGLE.selectionBorder.update();
@@ -3560,6 +3556,8 @@ TRIANGLE.text = {
         //item.objRef.removeEventListener("keyup", TRIANGLE.selectionBorder.update);
         textItems[x].removeEventListener("keyup", TRIANGLE.selectionBorder.update);
         textItems[x].removeEventListener("paste", TRIANGLE.text.clearPastedStyles);
+
+        textItems[x].innerHTML = textItems[x].innerHTML.replace(/<br>$/gm, "");
 
         if (textItems[x].innerHTML.length === 0
           || textItems[x].innerHTML == "<br>"
@@ -4092,7 +4090,6 @@ replaceTextSelection : function replaceTextSelection() {
 
 
 TRIANGLE.images = {
-
 
   load : function loadImages() {
     AJAX.get("php/image_list.php", "", function(xmlhttp) {
@@ -4694,7 +4691,7 @@ TRIANGLE.pages = {
             break;
           }
         }
-        if (TRIANGLE.currentPage = page) TRIANGLE.loadTemplate.loadTemplate(TRIANGLE.currentTemplate, "index");
+        if (TRIANGLE.currentPage = page) TRIANGLE.loadTemplate.openURL(TRIANGLE.currentTemplate, "index");
         TRIANGLE.popUp.close();
       } else {
         TRIANGLE.error("Error deleting page");
@@ -7170,6 +7167,26 @@ TRIANGLE.locateColumns = function locateColumns() {
   return TRIANGLE.columnMap;
 }
 
+TRIANGLE.responsive = {
+
+  prepare : function() {
+
+    var respJSON = {};
+
+    for (var i = 0; i < TRIANGLE.templateItems.length; i++) {
+      var item = TRIANGLE.templateItems[i];
+
+      var rect = item.getBoundingClientRect();
+      var respCreate = [item.style.width, Math.round(rect.width * 10000) / 10000, rect.top];
+
+      respJSON[item.id] = respCreate;
+    }
+
+    return respJSON;
+  }
+
+} // end TRIANGLE.responsive
+
 TRIANGLE.json = {
 
   encode : function() {
@@ -7220,13 +7237,10 @@ TRIANGLE.json = {
 
     for (var i = 0; i < TRIANGLE.templateItems.length; i++) {
       var sv_item = new TRIANGLE.TemplateItem(i);
-
       if (skipItems.indexOf(sv_item.id) > -1) continue;
-
-      var itemID = "item" + i;
+      var itemID = sv_item.id;
 
       if (sv_item.userID) {
-        //template.items[itemID] = sv_item.userID + ' ' + sv_item.parent.id;
         template.items[itemID] = sv_item.userID;
         if (sv_item.parent.id !== "template") template.items[itemID] += ' ' + sv_item.parent.id;
 
@@ -7234,24 +7248,28 @@ TRIANGLE.json = {
         for (var x = 0; x < itemIDchildren.length; x++) {
           skipItems.push(itemIDchildren[x].getAttribute("id"));
         }
-
         continue;
       }
 
       template.items[itemID] = {};
 
-      //template.items[itemID]["user-id"] = sv_item.userID;
+      template.items[itemID]["triangle-id"] = sv_item.triangleId;
       template.items[itemID]["user-class"] = sv_item.userClass;
+      template.items[itemID]["triangle-class"] = sv_item.triangleClass;
       template.items[itemID]["tagName"] = sv_item.tag;
       template.items[itemID]["className"] = sv_item.className;
       template.items[itemID]["name"] = sv_item.objRef.getAttribute("name");
       template.items[itemID]["style"] = sv_item.objRef.style.cssText;
       template.items[itemID]["clearFloat"] = TRIANGLE.isType.clearFloat(sv_item.objRef.nextSibling) ? 1 : 0;
 
-      if (TRIANGLE.isType.textBox(sv_item.objRef)
-      || TRIANGLE.isType.imageItem(sv_item.objRef)
-      || TRIANGLE.isType.formBtn(sv_item.objRef)
-      || TRIANGLE.isType.snippetItem(sv_item.objRef)) template.items[itemID]["innerHTML"] = sv_item.objRef.innerHTML.replace(/&nbsp;/g, " ");//find flag
+      // if (TRIANGLE.isType.textBox(sv_item.objRef)
+      // || TRIANGLE.isType.imageItem(sv_item.objRef)
+      // || TRIANGLE.isType.formBtn(sv_item.objRef)
+      // || TRIANGLE.isType.snippetItem(sv_item.objRef)) template.items[itemID]["innerHTML"] = sv_item.objRef.innerHTML.replace(/&nbsp;/g, " ");
+      if (sv_item.isType("textBox")
+      || sv_item.isType("imageItem")
+      || sv_item.isType("snippetItem")
+      || sv_item.tag == "button") template.items[itemID]["innerHTML"] = sv_item.objRef.innerHTML.replace(/&nbsp;/g, " ");
 
       template.items[itemID]["src"] = sv_item.objRef.src;
       template.items[itemID]["children"] = sv_item.objRef.querySelector(".templateItem") ? 1 : 0;
@@ -7531,26 +7549,6 @@ TRIANGLE.json = {
 
 } // end TRIANGLE.json
 
-TRIANGLE.responsive = {
-
-  prepare : function() {
-
-    var respJSON = {};
-
-    for (var i = 0; i < TRIANGLE.templateItems.length; i++) {
-      var item = TRIANGLE.templateItems[i];
-
-      var rect = item.getBoundingClientRect();
-      var respCreate = [item.style.width, Math.round(rect.width * 10000) / 10000, rect.top];
-
-      respJSON[item.id] = respCreate;
-    }
-
-    return respJSON;
-  }
-
-} // end TRIANGLE.responsive
-
 //====================================================================================================
 //====================================================================================================
 //====================================================================================================
@@ -7570,7 +7568,7 @@ TRIANGLE.defaultSettings = function defaultSettings() {
   document.getElementById("bottomMarker").addEventListener("mouseup", TRIANGLE.text.checkTextEditing, true); // if text is not being edited, destroy the dialogue
   document.body.addEventListener("mouseover", TRIANGLE.hoverBorder.hide, true); // remove hover border if not hovering
 
-  // export YEET
+  // export
   document.getElementById("exportPublish").addEventListener("click", TRIANGLE.exportTemplate.publish.prompt);
   document.getElementById("exportPublishSend").addEventListener("click", TRIANGLE.exportTemplate.publish.send);
   document.getElementById("exportPublishCancel").addEventListener("click", TRIANGLE.exportTemplate.publish.cancel);
