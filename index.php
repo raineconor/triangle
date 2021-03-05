@@ -192,7 +192,7 @@ textarea {
   width:100%;
   margin-top:50px;
   border-radius:3px;
-  box-shadow:gray 0px 0px 5px;
+  box-shadow:lightgray 0px 0px 15px;
 }
 
 #item16, #item10 {
@@ -512,6 +512,7 @@ function deferFonts() {
     defer[i].setAttribute("href", defer[i].getAttribute("defer"));
   }
 }
+
 </script>
 </body>
 
