@@ -355,7 +355,7 @@ TRIANGLE.TemplateItem.prototype.searchParentTree = function(classNameSearch) {
 
 // check if item has a specific triangle class
 TRIANGLE.TemplateItem.prototype.isType = function(typeStr) {
-  return this.triangleClassList.includes(typeStr);
+  return this.triangleClassList.includes(typeStr) /* temporary ->>> */ || this.objRef.classList.contains(typeStr);
 }
 
 /*
@@ -1572,11 +1572,11 @@ TRIANGLE.saveTemplate = {
     + "&changesMade=" + TRIANGLE.changesMade;
 
     AJAX.post("php/save_current.php", params, function(xmlhttp) {
-      TRIANGLE.saveTemplate.saveUserIDs();
-      TRIANGLE.saveTemplate.saveUserClasses();
-      TRIANGLE.menu.closeSideMenu();
       TRIANGLE.clearSelection();
       TRIANGLE.updateTemplateItems();
+      TRIANGLE.menu.closeSideMenu();
+      TRIANGLE.saveTemplate.saveUserIDs();
+      TRIANGLE.saveTemplate.saveUserClasses();
       TRIANGLE.unsaved = false;
 
       TRIANGLE.notify.saving.hide();
@@ -2044,6 +2044,376 @@ TRIANGLE.loadTemplate = {
 //==================================================================================================
 
 
+TRIANGLE.json = {
+
+  encode : function() {
+
+    var template = {};
+
+    template.hoverData = document.getElementById("hoverData").innerHTML;
+    template.hoverItems = document.getElementById("hoverItems").innerHTML;
+    template.animationData = document.getElementById("animationData").innerHTML;
+    template.bodyBgData = document.getElementById("bodyBgData").style.cssText;
+    template.fontData = document.getElementById("fontData").innerHTML;
+    template.metaTitle = TRIANGLE.metaData.title;
+    template.metaKeywords = TRIANGLE.metaData.keywords;
+    template.metaDescription = TRIANGLE.metaData.description;
+    template.fixedWidth = document.getElementById("template").style.width;
+    template.exportCompress = document.getElementById("exportCompress").checked;
+    template.importWebsiteURL = TRIANGLE.importWebsiteURL;
+    template.styleTag = TRIANGLE.developer.styleTagContent;
+    template.scriptTag = TRIANGLE.developer.scriptTagContent;
+    template.imageList = {"itemNums":[], "paths":[], "dimensions":[]};
+
+    /*
+    this next for loop could be moved into the for loop below, but it takes negligible amount of time
+    with a low number of images so it's not a big deal
+    */
+
+    var imgList = document.getElementById("template").querySelectorAll(".imageItem[crop-map]");
+    var len = imgList.length;
+
+    for (var i = 0; i < len; i++) {
+      var sv_item = new TRIANGLE.TemplateItem(imgList[i].getAttribute("index"));
+
+      template.imageList["itemNums"][i] = sv_item.index;
+      template.imageList["paths"][i] = sv_item.image.src;
+
+      var imgItemRect = sv_item.objRef.getBoundingClientRect();
+      var imgTagRect = sv_item.image.getBoundingClientRect();
+      var width = imgItemRect["width"] / imgTagRect["width"];
+      var height = imgItemRect["height"] / imgTagRect["height"];
+      var startX = (imgItemRect["left"] - imgTagRect["left"]) / imgTagRect["width"];
+      var startY = (imgItemRect["top"] - imgTagRect["top"]) / imgTagRect["height"];
+
+      template.imageList["dimensions"][i] = [width, height, startX, startY];
+    }
+
+    template.items = {};
+    var skipItems = [];
+
+    for (var i = 0; i < TRIANGLE.templateItems.length; i++) {
+      var sv_item = new TRIANGLE.TemplateItem(i);
+      if (skipItems.indexOf(sv_item.id) > -1) continue;
+      var itemID = sv_item.id;
+
+      if (sv_item.userID) {
+        template.items[itemID] = sv_item.userID;
+        if (sv_item.parent.id !== "template") template.items[itemID] += ' ' + sv_item.parent.id;
+
+        var itemIDchildren = sv_item.objRef.querySelectorAll("*");
+        for (var x = 0; x < itemIDchildren.length; x++) {
+          skipItems.push(itemIDchildren[x].getAttribute("id"));
+        }
+        continue;
+      }
+
+      template.items[itemID] = {};
+
+      template.items[itemID]["triangle-id"] = sv_item.triangleId;
+      template.items[itemID]["user-class"] = sv_item.userClass;
+      template.items[itemID]["triangle-class"] = sv_item.triangleClass;
+      template.items[itemID]["tagName"] = sv_item.tag;
+      template.items[itemID]["className"] = sv_item.className;
+      template.items[itemID]["name"] = sv_item.objRef.getAttribute("name");
+      template.items[itemID]["style"] = sv_item.objRef.style.cssText;
+      template.items[itemID]["clearFloat"] = TRIANGLE.isType.clearFloat(sv_item.objRef.nextSibling) ? 1 : 0;
+
+      if (TRIANGLE.isType.textBox(sv_item.objRef)
+      || TRIANGLE.isType.imageItem(sv_item.objRef)
+      || TRIANGLE.isType.formBtn(sv_item.objRef)
+      || TRIANGLE.isType.snippetItem(sv_item.objRef)) template.items[itemID]["innerHTML"] = sv_item.objRef.innerHTML.replace(/&/g, encodeURIComponent("&"));
+
+      // if (sv_item.isType("textbox")
+      // || sv_item.isType("imageItem")
+      // || sv_item.isType("snippetItem")
+      // || sv_item.tag == "button")
+      // template.items[itemID]["innerHTML"] = sv_item.objRef.innerHTML.replace(/&/g, encodeURIComponent("&"));
+
+      template.items[itemID]["src"] = sv_item.objRef.src;
+      template.items[itemID]["children"] = sv_item.objRef.querySelector(".templateItem") ? 1 : 0;
+      template.items[itemID]["childof"] = sv_item.childOf;
+      template.items[itemID]["nextSib"] = sv_item.nextSibling() ? sv_item.nextSibling().id : 0;
+      template.items[itemID]["prevSib"] = sv_item.prevSibling() ? sv_item.prevSibling().id : 0;
+      template.items[itemID]["isLastChild"] = sv_item.isLastChild;
+      template.items[itemID]["item-align"] = sv_item.align;
+      template.items[itemID]["hover-style"] = sv_item.hover.cssText;
+      template.items[itemID]["link-to"] = sv_item.linkTo;
+      template.items[itemID]["onClick"] = sv_item.objRef.getAttribute("onclick");
+      template.items[itemID]["crop-map"] = sv_item.cropMap;
+      template.items[itemID]["crop-ratio"] = sv_item.cropRatio;
+      template.items[itemID]["target"] = sv_item.objRef.getAttribute("target");
+      template.items[itemID]["form-email"] = sv_item.objRef.getAttribute("form-email");
+    }
+
+    //template.responsiveTemplate = TRIANGLE.responsive.create(document.getElementById("template"));
+    template.responsiveItems = TRIANGLE.responsive.prepare();
+
+    var templateStr = JSON.stringify(template);
+    //console.log(templateStr);
+
+    return templateStr;
+  },
+
+  decode : function(templateStr) {
+    var templateFile = JSON.parse(templateStr);
+
+    TRIANGLE.json.convertTemplateData(templateFile);
+
+    var items = templateFile.items;
+
+    for (var prop in items) {
+      if (typeof items[prop] == "string") {
+        var split = items[prop].split(' ');
+        var createItem = document.createElement("div");
+        createItem.setAttribute("update-user-id", split[0]);
+        if (split[1]) {
+          document.getElementById(split[1]).appendChild(createItem);
+        } else {
+          document.getElementById("template").appendChild(createItem);
+        }
+        continue;
+      }
+
+      var createItem = document.createElement(items[prop]["tagName"]);
+      createItem.id = prop;
+      if (items[prop]["user-id"]) createItem.setAttribute("user-id", items[prop]["user-id"]);
+      createItem = TRIANGLE.json.convertItem(items[prop], createItem);
+
+      var childof = items[prop]["childof"];
+      if (childof && document.getElementById(childof)) {
+        document.getElementById(childof).appendChild(createItem);
+      } else if (childof && !document.getElementById(childof)) {
+        continue;
+      } else {
+        document.getElementById("template").appendChild(createItem);
+      }
+    }
+  },
+
+  toHTML : function(str) {
+    document.getElementById("JSONtoHTML").innerHTML = "";
+
+    var userIDs = JSON.parse(str);
+
+    for (var prop in userIDs) {
+
+      var createItem = document.createElement(userIDs[prop]["tagName"]);
+      createItem.id = userIDs[prop]["id"];
+      createItem.setAttribute("user-id", prop);
+      createItem = TRIANGLE.json.convertItem(userIDs[prop], createItem);
+
+      document.getElementById("JSONtoHTML").appendChild(createItem);
+
+      var children = userIDs[prop]["children"];
+
+      for (var child in children) {
+        var createChild = document.createElement(children[child]["tagName"]);
+
+        createChild.id = child;
+        children[child]["user-id"] ? createChild.setAttribute("user-id", children[child]["user-id"]) : null;
+        createChild = TRIANGLE.json.convertItem(children[child], createChild);
+
+        var childof = children[child]["childof"]
+        if (childof) {
+          document.getElementById("JSONtoHTML").querySelector('#' + childof).appendChild(createChild);
+        } else {
+          createChild = null;
+        }
+      }
+    }
+    return document.getElementById("JSONtoHTML").innerHTML;
+  },
+
+  convertTemplateData : function(templateData) {
+    document.getElementById("hoverData").innerHTML = templateData.hoverData;
+    document.getElementById("hoverItems").innerHTML = templateData.hoverItems;
+    document.getElementById("animationData").innerHTML = templateData.hoverItems;
+    document.getElementById("bodyBgData").style.cssText = templateData.bodyBgData;
+    document.getElementById("fontData").innerHTML = templateData.fontData;
+    document.getElementById("template").style.width = templateData.fixedWidth;
+    if (TRIANGLE.getUnit(templateData.fixedWidth) === "px") document.getElementById("template").style.margin = "0 auto";
+    document.getElementById("metaTitle").value = templateData.metaTitle ? templateData.metaTitle : "";
+    TRIANGLE.metaData.title = document.getElementById("metaTitle").value;
+    document.getElementById("metaKeywords").value = templateData.metaKeywords ? templateData.metaKeywords : "";
+    TRIANGLE.metaData.keywords = document.getElementById("metaKeywords").value;
+    document.getElementById("metaDescription").value = templateData.metaDescription ? templateData.metaDescription : "";
+    TRIANGLE.metaData.description = document.getElementById("metaDescription").value;
+    document.getElementById("exportCompress").checked = templateData.exportCompress;
+    if (templateData.importWebsiteURL) TRIANGLE.loadTemplate.importWebsite(templateData.importWebsiteURL);
+
+    TRIANGLE.developer.styleTagContent = templateData.styleTag || "";
+    TRIANGLE.developer.sessions.styleTag.setValue(TRIANGLE.developer.styleTagContent);
+
+    TRIANGLE.developer.globalStyleTagContent = templateData.globalStyleTag || "";
+    TRIANGLE.developer.sessions.globalStyleTag.setValue(TRIANGLE.developer.globalStyleTagContent);
+
+    TRIANGLE.developer.scriptTagContent = templateData.scriptTag || "";
+    TRIANGLE.developer.sessions.scriptTag.setValue(TRIANGLE.developer.scriptTagContent);
+
+    TRIANGLE.developer.globalScriptTagContent = templateData.globalScriptTag || "";
+    TRIANGLE.developer.sessions.globalScriptTag.setValue(TRIANGLE.developer.globalScriptTagContent);
+  },
+
+  convertItem : function(itemSrc, createItem) {
+    createItem.className = itemSrc["className"];
+    itemSrc["user-class"] ? createItem.setAttribute("user-class", itemSrc["user-class"]) : null;
+    itemSrc["name"] ? createItem.setAttribute("name", itemSrc["name"]) : null;
+    createItem.style.cssText = itemSrc["style"];
+    createItem.innerHTML = itemSrc["innerHTML"] ? itemSrc["innerHTML"] : "";
+    createItem.src = itemSrc["src"] ? itemSrc["src"] : "";
+    itemSrc["item-align"] ? createItem.setAttribute("item-align", itemSrc["item-align"]) : null;
+    itemSrc["hover-style"] ? createItem.setAttribute("hover-style", itemSrc["hover-style"]) : null;
+    itemSrc["link-to"] ? createItem.setAttribute("link-to", itemSrc["link-to"]) : null;
+    itemSrc["onClick"] ? createItem.setAttribute("onClick", itemSrc["onClick"]) : null;
+    itemSrc["crop-map"] ? createItem.setAttribute("crop-map", itemSrc["crop-map"]) : null;
+    itemSrc["crop-ratio"] ? createItem.setAttribute("crop-ratio", itemSrc["crop-ratio"]) : null;
+    itemSrc["target"] ? createItem.setAttribute("target", itemSrc["target"]) : null;
+    itemSrc["form-email"] ? createItem.setAttribute("form-email", itemSrc["form-email"]) : null;
+    return createItem;
+  },
+
+  // converts JSON to NVP in this format: name:value;name:value;name:value;
+  toNVP : function(str) {
+    var dataObj = JSON.parse(str);
+    var dataStr = "";
+    for (var prop in dataObj) {
+      dataStr += prop + ":" + dataObj[prop] + ";";
+    }
+    //dataStr = dataStr.slice(0, -1);
+    return dataStr;
+  },
+
+  // converts NVP to JSON
+  readNVP : function(str) {
+    var dataArr = str.split(";");
+    var dataObj = {};
+    for (var i = 0; i < dataArr.length; i++) {
+      var nvp = dataArr[i].split(":");
+      dataObj[nvp[0]] = nvp[1];
+    }
+    var dataStr = JSON.stringify(dataObj);
+    return dataStr;
+  },
+
+
+  compress : function(json) {
+    json = JSON.parse(json);
+
+    for (var itemID in json.items) {
+      if (typeof json.items[itemID] == "string") continue;
+
+      for (var cssStyle in TRIANGLE.json.compressionMap) {
+        json.items[itemID]["style"] = json.items[itemID]["style"].replace(cssStyle + ':', "%" + TRIANGLE.json.compressionMap[cssStyle]);
+      }
+
+      var itemStyle = json.items[itemID]["style"];
+
+      var splitItemStyle = itemStyle.split(';');
+      for (var i = 0; i < splitItemStyle.length; i++) {
+        splitItemStyle[i] = splitItemStyle[i].trim();
+      }
+
+      for (var findCopy in json.items) {
+        if (json.items[itemID] === json.items[findCopy]) break;
+
+        var copyStyle = json.items[findCopy]["style"];
+        if (copyStyle) {
+          var splitCopyStyle = copyStyle.split(';');
+          for (var i = 0; i < splitCopyStyle.length; i++) {
+            splitCopyStyle[i] = splitCopyStyle[i].trim();
+          }
+
+          if (splitItemStyle.sort().toString() === splitCopyStyle.sort().toString()) {
+            itemStyle = findCopy;
+            break;
+          }
+        }
+      }
+      json.items[itemID]["style"] = itemStyle;
+    }
+
+    for (var itemID in json.responsiveItems) {
+      var itemResp = json.responsiveItems[itemID];
+
+      for (var findCopy in json.responsiveItems) {
+        if (json.responsiveItems[itemID] === json.responsiveItems[findCopy]) break;
+
+        var copyResp = json.responsiveItems[findCopy];
+        if (JSON.stringify(itemResp) === JSON.stringify(copyResp)) {
+          itemResp = findCopy;
+          break;
+        }
+      }
+
+      json.responsiveItems[itemID] = itemResp
+    }
+
+    return JSON.stringify(json);
+  },
+
+  decompress : function(json) {
+    json = JSON.parse(json);
+
+    for (var itemID in json.items) {
+      if (typeof json.items[itemID] == "string") continue;
+      var itemStyle = json.items[itemID]["style"];
+      if (json.items[itemStyle]) {
+        json.items[itemID]["style"] = json.items[itemStyle]["style"];
+      }
+      for (var cssStyle in TRIANGLE.json.compressionMap) {
+        json.items[itemID]["style"] = json.items[itemID]["style"].replace("%" + TRIANGLE.json.compressionMap[cssStyle], cssStyle + ':');
+      }
+    }
+
+    return JSON.stringify(json);
+  },
+
+  // update server-side map too
+  compressionMap : {
+    "background-color" : "bC",
+    "background-image" : "bI",
+    "background-size" : "bSz",
+    "background" : "bg",
+    "min-height" : "mH",
+    "height" : "h",
+    "max-width" : "mW",
+    "width" : "w",
+    "display" : "d",
+    "position" : "po",
+    "float" : "cF",
+    "overflow" : "o",
+    "vertical-align" : "vA",
+    "padding" : "p",
+    "margin" : "m",
+    "box-shadow" : "bS",
+    "border-radius" : "bR",
+    "border-width" : "bW",
+    "border" : "b",
+    "left" : "L",
+    "right" : "R",
+    "top" : "T",
+    "bottom" : "B",
+    "color" : "c",
+    "font-size" : "fS",
+    "line-height" : "lH",
+    "text-align" : "tA",
+    "font-family" : "fF",
+    "font-weight" : "fW",
+    "text-decoration" : "tD",
+    "text-decoration-color" : "tDc"
+  }
+
+
+
+} // end TRIANGLE.json
+
+
+//==================================================================================================
+//==================================================================================================
+//==================================================================================================
+
+
 TRIANGLE.exportTemplate = {
 
   callbackAfterSave : false,
@@ -2116,12 +2486,10 @@ TRIANGLE.exportTemplate = {
     } else { // unsaved premade template from Triangle
 
       TRIANGLE.exportTemplate.callbackAfterSave = function() {
-        // setTimeout(TRIANGLE.exportTemplate.previewTemplate, 100);
-        TRIANGLE.exportTemplate.previewTemplate();
+        TRIANGLE.exportTemplate.preview(); // this causes the "unsaved warning" alert to pop up
         setTimeout(function() {
           TRIANGLE.popUp.close();
           TRIANGLE.loadTemplate.openURL(TRIANGLE.currentTemplate, TRIANGLE.currentPage);
-          // location.href = "index.php?pagename=" + TRIANGLE.currentPage + "&loadTemplate=" + TRIANGLE.currentTemplate;
         }, 500);
       }
       TRIANGLE.saveTemplate.getSaveName();
@@ -7186,368 +7554,6 @@ TRIANGLE.responsive = {
   }
 
 } // end TRIANGLE.responsive
-
-TRIANGLE.json = {
-
-  encode : function() {
-
-    var template = {};
-
-    template.hoverData = document.getElementById("hoverData").innerHTML;
-    template.hoverItems = document.getElementById("hoverItems").innerHTML;
-    template.animationData = document.getElementById("animationData").innerHTML;
-    template.bodyBgData = document.getElementById("bodyBgData").style.cssText;
-    template.fontData = document.getElementById("fontData").innerHTML;
-    template.metaTitle = TRIANGLE.metaData.title;
-    template.metaKeywords = TRIANGLE.metaData.keywords;
-    template.metaDescription = TRIANGLE.metaData.description;
-    template.fixedWidth = document.getElementById("template").style.width;
-    template.exportCompress = document.getElementById("exportCompress").checked;
-    template.importWebsiteURL = TRIANGLE.importWebsiteURL;
-    template.styleTag = TRIANGLE.developer.styleTagContent;
-    template.scriptTag = TRIANGLE.developer.scriptTagContent;
-    template.imageList = {"itemNums":[], "paths":[], "dimensions":[]};
-
-    /*
-    this next for loop could be moved into the for loop below, but it takes negligible amount of time
-    with a low number of images so it's not a big deal
-    */
-
-    var imgList = document.getElementById("template").querySelectorAll(".imageItem[crop-map]");
-    var len = imgList.length;
-
-    for (var i = 0; i < len; i++) {
-      var sv_item = new TRIANGLE.TemplateItem(imgList[i].getAttribute("index"));
-
-      template.imageList["itemNums"][i] = sv_item.index;
-      template.imageList["paths"][i] = sv_item.image.src;
-
-      var imgItemRect = sv_item.objRef.getBoundingClientRect();
-      var imgTagRect = sv_item.image.getBoundingClientRect();
-      var width = imgItemRect["width"] / imgTagRect["width"];
-      var height = imgItemRect["height"] / imgTagRect["height"];
-      var startX = (imgItemRect["left"] - imgTagRect["left"]) / imgTagRect["width"];
-      var startY = (imgItemRect["top"] - imgTagRect["top"]) / imgTagRect["height"];
-
-      template.imageList["dimensions"][i] = [width, height, startX, startY];
-    }
-
-    template.items = {};
-    var skipItems = [];
-
-    for (var i = 0; i < TRIANGLE.templateItems.length; i++) {
-      var sv_item = new TRIANGLE.TemplateItem(i);
-      if (skipItems.indexOf(sv_item.id) > -1) continue;
-      var itemID = sv_item.id;
-
-      if (sv_item.userID) {
-        template.items[itemID] = sv_item.userID;
-        if (sv_item.parent.id !== "template") template.items[itemID] += ' ' + sv_item.parent.id;
-
-        var itemIDchildren = sv_item.objRef.querySelectorAll("*");
-        for (var x = 0; x < itemIDchildren.length; x++) {
-          skipItems.push(itemIDchildren[x].getAttribute("id"));
-        }
-        continue;
-      }
-
-      template.items[itemID] = {};
-
-      template.items[itemID]["triangle-id"] = sv_item.triangleId;
-      template.items[itemID]["user-class"] = sv_item.userClass;
-      template.items[itemID]["triangle-class"] = sv_item.triangleClass;
-      template.items[itemID]["tagName"] = sv_item.tag;
-      template.items[itemID]["className"] = sv_item.className;
-      template.items[itemID]["name"] = sv_item.objRef.getAttribute("name");
-      template.items[itemID]["style"] = sv_item.objRef.style.cssText;
-      template.items[itemID]["clearFloat"] = TRIANGLE.isType.clearFloat(sv_item.objRef.nextSibling) ? 1 : 0;
-
-      // if (TRIANGLE.isType.textBox(sv_item.objRef)
-      // || TRIANGLE.isType.imageItem(sv_item.objRef)
-      // || TRIANGLE.isType.formBtn(sv_item.objRef)
-      // || TRIANGLE.isType.snippetItem(sv_item.objRef)) template.items[itemID]["innerHTML"] = sv_item.objRef.innerHTML.replace(/&nbsp;/g, " ");
-      if (sv_item.isType("textBox")
-      || sv_item.isType("imageItem")
-      || sv_item.isType("snippetItem")
-      || sv_item.tag == "button") template.items[itemID]["innerHTML"] = sv_item.objRef.innerHTML.replace(/&nbsp;/g, " ");
-
-      template.items[itemID]["src"] = sv_item.objRef.src;
-      template.items[itemID]["children"] = sv_item.objRef.querySelector(".templateItem") ? 1 : 0;
-      template.items[itemID]["childof"] = sv_item.childOf;
-      template.items[itemID]["nextSib"] = sv_item.nextSibling() ? sv_item.nextSibling().id : 0;
-      template.items[itemID]["prevSib"] = sv_item.prevSibling() ? sv_item.prevSibling().id : 0;
-      template.items[itemID]["isLastChild"] = sv_item.isLastChild;
-      template.items[itemID]["item-align"] = sv_item.align;
-      template.items[itemID]["hover-style"] = sv_item.hover.cssText;
-      template.items[itemID]["link-to"] = sv_item.linkTo;
-      template.items[itemID]["onClick"] = sv_item.objRef.getAttribute("onclick");
-      template.items[itemID]["crop-map"] = sv_item.cropMap;
-      template.items[itemID]["crop-ratio"] = sv_item.cropRatio;
-      template.items[itemID]["target"] = sv_item.objRef.getAttribute("target");
-      template.items[itemID]["form-email"] = sv_item.objRef.getAttribute("form-email");
-    }
-
-    //template.responsiveTemplate = TRIANGLE.responsive.create(document.getElementById("template"));
-    template.responsiveItems = TRIANGLE.responsive.prepare();
-
-    var templateStr = JSON.stringify(template);
-    //console.log(templateStr);
-
-    return templateStr;
-  },
-
-  decode : function(templateStr) {
-    var templateFile = JSON.parse(templateStr);
-
-    TRIANGLE.json.convertTemplateData(templateFile);
-
-    var items = templateFile.items;
-
-    for (var prop in items) {
-      if (typeof items[prop] == "string") {
-        var split = items[prop].split(' ');
-        var createItem = document.createElement("div");
-        createItem.setAttribute("update-user-id", split[0]);
-        if (split[1]) {
-          document.getElementById(split[1]).appendChild(createItem);
-        } else {
-          document.getElementById("template").appendChild(createItem);
-        }
-        continue;
-      }
-
-      var createItem = document.createElement(items[prop]["tagName"]);
-      createItem.id = prop;
-      if (items[prop]["user-id"]) createItem.setAttribute("user-id", items[prop]["user-id"]);
-      createItem = TRIANGLE.json.convertItem(items[prop], createItem);
-
-      var childof = items[prop]["childof"];
-      if (childof && document.getElementById(childof)) {
-        document.getElementById(childof).appendChild(createItem);
-      } else if (childof && !document.getElementById(childof)) {
-        continue;
-      } else {
-        document.getElementById("template").appendChild(createItem);
-      }
-    }
-  },
-
-  toHTML : function(str) {
-    document.getElementById("JSONtoHTML").innerHTML = "";
-
-    var userIDs = JSON.parse(str);
-
-    for (var prop in userIDs) {
-
-      var createItem = document.createElement(userIDs[prop]["tagName"]);
-      createItem.id = userIDs[prop]["id"];
-      createItem.setAttribute("user-id", prop);
-      createItem = TRIANGLE.json.convertItem(userIDs[prop], createItem);
-
-      document.getElementById("JSONtoHTML").appendChild(createItem);
-
-      var children = userIDs[prop]["children"];
-
-      for (var child in children) {
-        var createChild = document.createElement(children[child]["tagName"]);
-
-        createChild.id = child;
-        children[child]["user-id"] ? createChild.setAttribute("user-id", children[child]["user-id"]) : null;
-        createChild = TRIANGLE.json.convertItem(children[child], createChild);
-
-        var childof = children[child]["childof"]
-        if (childof) {
-          document.getElementById("JSONtoHTML").querySelector('#' + childof).appendChild(createChild);
-        } else {
-          createChild = null;
-        }
-      }
-    }
-    return document.getElementById("JSONtoHTML").innerHTML;
-  },
-
-  convertTemplateData : function(templateData) {
-    document.getElementById("hoverData").innerHTML = templateData.hoverData;
-    document.getElementById("hoverItems").innerHTML = templateData.hoverItems;
-    document.getElementById("animationData").innerHTML = templateData.hoverItems;
-    document.getElementById("bodyBgData").style.cssText = templateData.bodyBgData;
-    document.getElementById("fontData").innerHTML = templateData.fontData;
-    document.getElementById("template").style.width = templateData.fixedWidth;
-    if (TRIANGLE.getUnit(templateData.fixedWidth) === "px") document.getElementById("template").style.margin = "0 auto";
-    document.getElementById("metaTitle").value = templateData.metaTitle ? templateData.metaTitle : "";
-    TRIANGLE.metaData.title = document.getElementById("metaTitle").value;
-    document.getElementById("metaKeywords").value = templateData.metaKeywords ? templateData.metaKeywords : "";
-    TRIANGLE.metaData.keywords = document.getElementById("metaKeywords").value;
-    document.getElementById("metaDescription").value = templateData.metaDescription ? templateData.metaDescription : "";
-    TRIANGLE.metaData.description = document.getElementById("metaDescription").value;
-    document.getElementById("exportCompress").checked = templateData.exportCompress;
-    if (templateData.importWebsiteURL) TRIANGLE.loadTemplate.importWebsite(templateData.importWebsiteURL);
-
-    TRIANGLE.developer.styleTagContent = templateData.styleTag || "";
-    TRIANGLE.developer.sessions.styleTag.setValue(TRIANGLE.developer.styleTagContent);
-
-    TRIANGLE.developer.globalStyleTagContent = templateData.globalStyleTag || "";
-    TRIANGLE.developer.sessions.globalStyleTag.setValue(TRIANGLE.developer.globalStyleTagContent);
-
-    TRIANGLE.developer.scriptTagContent = templateData.scriptTag || "";
-    TRIANGLE.developer.sessions.scriptTag.setValue(TRIANGLE.developer.scriptTagContent);
-
-    TRIANGLE.developer.globalScriptTagContent = templateData.globalScriptTag || "";
-    TRIANGLE.developer.sessions.globalScriptTag.setValue(TRIANGLE.developer.globalScriptTagContent);
-  },
-
-  convertItem : function(itemSrc, createItem) {
-    createItem.className = itemSrc["className"];
-    itemSrc["user-class"] ? createItem.setAttribute("user-class", itemSrc["user-class"]) : null;
-    itemSrc["name"] ? createItem.setAttribute("name", itemSrc["name"]) : null;
-    createItem.style.cssText = itemSrc["style"];
-    createItem.innerHTML = itemSrc["innerHTML"] ? itemSrc["innerHTML"] : "";
-    createItem.src = itemSrc["src"] ? itemSrc["src"] : "";
-    itemSrc["item-align"] ? createItem.setAttribute("item-align", itemSrc["item-align"]) : null;
-    itemSrc["hover-style"] ? createItem.setAttribute("hover-style", itemSrc["hover-style"]) : null;
-    itemSrc["link-to"] ? createItem.setAttribute("link-to", itemSrc["link-to"]) : null;
-    itemSrc["onClick"] ? createItem.setAttribute("onClick", itemSrc["onClick"]) : null;
-    itemSrc["crop-map"] ? createItem.setAttribute("crop-map", itemSrc["crop-map"]) : null;
-    itemSrc["crop-ratio"] ? createItem.setAttribute("crop-ratio", itemSrc["crop-ratio"]) : null;
-    itemSrc["target"] ? createItem.setAttribute("target", itemSrc["target"]) : null;
-    itemSrc["form-email"] ? createItem.setAttribute("form-email", itemSrc["form-email"]) : null;
-    return createItem;
-  },
-
-  // converts JSON to NVP in this format: name:value;name:value;name:value;
-  toNVP : function(str) {
-    var dataObj = JSON.parse(str);
-    var dataStr = "";
-    for (var prop in dataObj) {
-      dataStr += prop + ":" + dataObj[prop] + ";";
-    }
-    //dataStr = dataStr.slice(0, -1);
-    return dataStr;
-  },
-
-  // converts NVP to JSON
-  readNVP : function(str) {
-    var dataArr = str.split(";");
-    var dataObj = {};
-    for (var i = 0; i < dataArr.length; i++) {
-      var nvp = dataArr[i].split(":");
-      dataObj[nvp[0]] = nvp[1];
-    }
-    var dataStr = JSON.stringify(dataObj);
-    return dataStr;
-  },
-
-
-  compress : function(json) {
-    json = JSON.parse(json);
-
-    for (var itemID in json.items) {
-      if (typeof json.items[itemID] == "string") continue;
-
-      for (var cssStyle in TRIANGLE.json.compressionMap) {
-        json.items[itemID]["style"] = json.items[itemID]["style"].replace(cssStyle + ':', "%" + TRIANGLE.json.compressionMap[cssStyle]);
-      }
-
-      var itemStyle = json.items[itemID]["style"];
-
-      var splitItemStyle = itemStyle.split(';');
-      for (var i = 0; i < splitItemStyle.length; i++) {
-        splitItemStyle[i] = splitItemStyle[i].trim();
-      }
-
-      for (var findCopy in json.items) {
-        if (json.items[itemID] === json.items[findCopy]) break;
-
-        var copyStyle = json.items[findCopy]["style"];
-        if (copyStyle) {
-          var splitCopyStyle = copyStyle.split(';');
-          for (var i = 0; i < splitCopyStyle.length; i++) {
-            splitCopyStyle[i] = splitCopyStyle[i].trim();
-          }
-
-          if (splitItemStyle.sort().toString() === splitCopyStyle.sort().toString()) {
-            itemStyle = findCopy;
-            break;
-          }
-        }
-      }
-      json.items[itemID]["style"] = itemStyle;
-    }
-
-    for (var itemID in json.responsiveItems) {
-      var itemResp = json.responsiveItems[itemID];
-
-      for (var findCopy in json.responsiveItems) {
-        if (json.responsiveItems[itemID] === json.responsiveItems[findCopy]) break;
-
-        var copyResp = json.responsiveItems[findCopy];
-        if (JSON.stringify(itemResp) === JSON.stringify(copyResp)) {
-          itemResp = findCopy;
-          break;
-        }
-      }
-
-      json.responsiveItems[itemID] = itemResp
-    }
-
-    return JSON.stringify(json);
-  },
-
-  decompress : function(json) {
-    json = JSON.parse(json);
-
-    for (var itemID in json.items) {
-      if (typeof json.items[itemID] == "string") continue;
-      var itemStyle = json.items[itemID]["style"];
-      if (json.items[itemStyle]) {
-        json.items[itemID]["style"] = json.items[itemStyle]["style"];
-      }
-      for (var cssStyle in TRIANGLE.json.compressionMap) {
-        json.items[itemID]["style"] = json.items[itemID]["style"].replace("%" + TRIANGLE.json.compressionMap[cssStyle], cssStyle + ':');
-      }
-    }
-
-    return JSON.stringify(json);
-  },
-
-  // update server-side map too
-  compressionMap : {
-    "background-color" : "bC",
-    "background-image" : "bI",
-    "background-size" : "bSz",
-    "background" : "bg",
-    "min-height" : "mH",
-    "height" : "h",
-    "max-width" : "mW",
-    "width" : "w",
-    "display" : "d",
-    "position" : "po",
-    "float" : "cF",
-    "overflow" : "o",
-    "vertical-align" : "vA",
-    "padding" : "p",
-    "margin" : "m",
-    "box-shadow" : "bS",
-    "border-radius" : "bR",
-    "border-width" : "bW",
-    "border" : "b",
-    "left" : "L",
-    "right" : "R",
-    "top" : "T",
-    "bottom" : "B",
-    "color" : "c",
-    "font-size" : "fS",
-    "line-height" : "lH",
-    "text-align" : "tA",
-    "font-family" : "fF",
-    "font-weight" : "fW",
-    "text-decoration" : "tD",
-    "text-decoration-color" : "tDc"
-  }
-
-
-
-} // end TRIANGLE.json
 
 //====================================================================================================
 //====================================================================================================
