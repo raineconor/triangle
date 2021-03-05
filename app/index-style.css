@@ -188,22 +188,36 @@ hr {
 }
 
 #codeEditorWrapper {
-  height:auto;
+  /* height:auto;
   width:100%;
   background-color:#333333;
   display:none;
-  z-index:3;
+  z-index:10;
   position:fixed;
   top:170px;
   left:0;
-  right:0;
+  right:0; */
+
+  background-color:lightgray;
+  box-shadow:0px 0px 6px #333;
+  width:400px;
+  height:400px;
+  display:inline-block;
+  position:fixed;
+  user-select:none;
+  z-index:10;
+  display:none;
+  text-align:center;
+  top:170px;
+  left:0;
 }
 
 #codeEditorStatus {
   background-color:#131313;
-  padding:7px 1%;
+  padding:7px;
   border-bottom:1px solid #333333;
   color:lightgray;
+  cursor:move;
 }
 
 #currentCode {
@@ -880,9 +894,13 @@ hr {
   margin:auto;
   cursor:pointer;
 }
-
+#newPageNameInput {
+  width:100%;
+  height:24px;
+}
 #cancelNewPage {
   display:inline-block;
+  /* min-width:46px; */
   width:5%;
   float:left;
   text-align:center;
@@ -1495,7 +1513,7 @@ hr.clearFloat {
 .codeBox {
   background-color:#1d1f20;
   color:#f8f8f8;
-  font-family:Courier New, monospace;
+  font-family:'Courier New', monospace;
   width:375px;
 }
 
