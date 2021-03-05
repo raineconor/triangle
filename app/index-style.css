@@ -605,10 +605,8 @@ hr {
 }
 
 #echoLoadList {
-  height:70vh;
-  /*padding-bottom:250px;*/
-  /*height:400px;*/
-  overflow:auto;
+  height:60vh;
+  overflow-y:auto;
 }
 
 #echoPageList {
