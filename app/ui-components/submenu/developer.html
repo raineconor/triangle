@@ -3,7 +3,7 @@
     <div class="menuSectionTitle">Embed Code</div>
     <textarea class="codeBox" id="snippetInsertion" onkeyup="this.onchange();" onchange="TRIANGLE.saveItem.codeSnippet(this);" style="background-color:#1d1f20;color:#f8f8f8;"></textarea>
     <div style="display:inline-block;">
-      <button class="width:100%;" onClick="TRIANGLE.developer.editCode('snippetInsertion', 'Code Snippet');">Expand</button><br>
+      <!-- <button class="width:100%;" onClick="TRIANGLE.developer.editCodeSnippet();">Expand</button><br> -->
       <button style="width:100%;" onClick="TRIANGLE.developer.insertSnippet();">Insert</button>
     </div>
   </div>
@@ -38,11 +38,9 @@
   <!--======================================-->
 
   <div class="menuSection">
-    <div class="menuSectionTitle">CSS Styles</div>
+    <div class="menuSectionTitle">Item CSS</div>
     <div class="menuDropdown" onClick="TRIANGLE.developer.editCSS();">CSS Styles</div><br>
     <div class="menuDropdown" onClick="TRIANGLE.developer.editHover();">Hover Styles</div><br>
-    <div class="menuDropdown" onClick="TRIANGLE.developer.editStyleTag();">Style Tag</div><br>
-    <div class="menuDropdown" onClick="TRIANGLE.developer.editScriptTag();">Script Tag</div><br>
   </div>
 
   <div class="menuSection hidden" style="display:none;" id="cssStylesMenu">
@@ -70,6 +68,12 @@
   </div>
 
   <!--======================================-->
+
+  <div class="menuSection">
+    <div class="menuSectionTitle">Page Tags</div>
+    <div class="menuDropdown" onClick="TRIANGLE.developer.editStyleTag();">Style Tag</div><br>
+    <div class="menuDropdown" onClick="TRIANGLE.developer.editScriptTag();">Script Tag</div><br>
+    </div>
 
   <div class="menuSection">
     <div class="menuSectionTitle">Global Tags</div>
