@@ -83,6 +83,7 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
 <link rel="stylesheet" href="dropzone/dropzone.css" type="text/css" media="screen">
 <link rel="stylesheet" href="index-style.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="ace/ace-style.css" type="text/css" media="screen" />
 <link rel="preconnect" href="https://fonts.gstatic.com">
 <link href="https://fonts.googleapis.com/css2?family=Lato:wght@100;300;400;700&display=swap" rel="stylesheet">
 <!--======================================-->
@@ -128,7 +129,7 @@
 <div id="marginFix"></div>
 
 <div id="codeEditorWrapper" class="clearfix" spellcheck="false">
-  <div id="codeEditorStatus" class="clearfix">
+  <div id="codeEditorStatus" class="clearfix draggable" draggable-target="codeEditorWrapper">
     <div id="currentCode"></div>
     <div id="exitCodeEditor" onClick="TRIANGLE.developer.exitCodeEditor();">
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
@@ -136,7 +137,8 @@
       </svg>
     </div>
   </div>
-  <textarea id="codeEditor" onKeyDown="TRIANGLE.developer.handleTabs(this, event);" onKeyUp="this.onchange();" onChange="TRIANGLE.developer.saveEdits();" onMouseMove="document.getElementById('marginFix').style.height = (this.parentElement.getBoundingClientRect().height + 170) + 'px';"></textarea>
+  <textarea style="display:none;" id="codeEditor" onKeyDown="TRIANGLE.developer.handleTabs(this, event);" onKeyUp="this.onchange();" onChange="TRIANGLE.developer.saveEdits();" onMouseMove="document.getElementById('marginFix').style.height = (this.parentElement.getBoundingClientRect().height + 170) + 'px';"></textarea>
+  <div id="ace-editor"></div>
 </div>
 
 <div id="topMarker">Top</div>
@@ -145,7 +147,7 @@
   <style id="hoverData"></style>
   <div id="hoverItems"></div>
   <style id="animationData"></style>
-  <div id="template"></div>
+  <div id="template" style="background-color:white;"></div>
   <div id="bodyBgData" style="display:none;background-color:white;"></div>
   <div id="fontData"></div>
 </div>
@@ -196,12 +198,12 @@ function lazyload() {
 };
 
 </script>
+<script src="ace/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript" src="js/AJAX.js"></script>
 <script type="text/javascript" src="js/TRIANGLE.min.js"></script>
 <script type="text/javascript" src="dropzone/dropzone.min.js"></script>
 <script type="text/javascript" src="dropzone/dropzone-init.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
-<!-- <script type="text/javascript" src="js/bootstrap-init.js"></script> -->
 
 <?php echo $callLoad; ?>
 <?php echo $max_templates; ?>

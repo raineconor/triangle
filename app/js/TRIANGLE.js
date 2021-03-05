@@ -209,7 +209,7 @@ TRIANGLE.TemplateItem = function(index) {
   //============================================================
   //this.hoverStyle = this.objRef.getAttribute("hover-style");
   this.hover = {};
-  this.hover.cssText = this.objRef.getAttribute("hover-style");
+  this.hover.cssText = this.objRef.getAttribute("hover-style") || "";
   //this.hover.fontColor = this.hover.cssText ? this.hover.cssText.match(/;?color:[^;]+/)[0].replace(/color:/, "") : null;
   //============================================================
   this.hoverObj = document.getElementById(this.id + "hover");
@@ -473,6 +473,9 @@ TRIANGLE.clearSelection = function() {
     radioElements[i].checked = false;
   }
 
+  TRIANGLE.developer.sessions.css.setValue("");
+  TRIANGLE.developer.sessions.hover.setValue("");
+
   TRIANGLE.menu.toggleVisibility(0);
 
   TRIANGLE.colors.cancelCanvasMenu();
@@ -721,7 +724,8 @@ TRIANGLE.importItem = {
     importSnippet(); // imports user-inserted code snippet
     importFormEmail(); // imports custom form email
     TRIANGLE.importItem.importCSSText();
-    importHoverStyles(); // imports hover styles
+    TRIANGLE.importItem.importHoverCSSText();
+    // importHoverStyles(); // imports hover styles
     TRIANGLE.menu.toggleVisibility(1);
     TRIANGLE.updateTemplateItems(); // updates numerical array assignments for query selector
 
@@ -944,8 +948,8 @@ TRIANGLE.importItem = {
     }
 
     function importHoverStyles() {
-      if (TRIANGLE.item.objRef.getAttribute("hover-style")) {
-        var importHoverStyleText = TRIANGLE.item.objRef.getAttribute("hover-style").replace(/;\s*/g, ";\n");
+      if (TRIANGLE.item.hover.cssText) {
+        var importHoverStyleText = TRIANGLE.item.hover.cssText.replace(/;\s*/g, ";\n");
         document.getElementById("hoverStyles").value = importHoverStyleText;
         if (TRIANGLE.developer.currentCode === "hoverStyles") document.getElementById("codeEditor").value = importHoverStyleText;
       }
@@ -954,9 +958,14 @@ TRIANGLE.importItem = {
   },
 
   importCSSText : function importCSSText() {
-    var importCSSText = TRIANGLE.item.objRef.style.cssText.replace(/;\s*/g, ";\n");
-    document.getElementById("cssStyles").value = importCSSText;
-    if (TRIANGLE.developer.currentCode === "cssStyles") document.getElementById("codeEditor").value = importCSSText;
+    TRIANGLE.developer.sessions.css.setValue(TRIANGLE.itemStyles.cssText.replace(/;\s*/g, ";\n"));
+    // var importCSSText = TRIANGLE.item.objRef.style.cssText.replace(/;\s*/g, ";\n");
+    // document.getElementById("cssStyles").value = importCSSText;
+    // if (TRIANGLE.developer.currentCode === "cssStyles") document.getElementById("codeEditor").value = importCSSText;
+  },
+
+  importHoverCSSText : function() {
+    TRIANGLE.developer.sessions.hover.setValue(TRIANGLE.item.hover.cssText.replace(/;\s*/g, ";\n"));
   },
 
   importColors : function importColors() {
@@ -1087,6 +1096,7 @@ TRIANGLE.saveItem = {
     TRIANGLE.selectItem(TRIANGLE.item.index); // re-select the current item to reset its properties
     TRIANGLE.importItem.importColors(); // imports colors again
     TRIANGLE.importItem.importCSSText();
+    TRIANGLE.importItem.importHoverCSSText();
     TRIANGLE.updateTemplateItems();
     //TRIANGLE.saveItem.equalizeUserClasses(TRIANGLE.item.userClass);
     //TRIANGLE.selectionBorder.update();
@@ -1406,31 +1416,27 @@ TRIANGLE.saveItem = {
     }
   },
 
-  cssStyles : function(elem) {
+  cssStyles : function() {
     if (TRIANGLE.item) {
-      var findStyles = elem.value.match(/[^:]+:\s*[^;]+;\s*/g);
+      var findStyles = TRIANGLE.developer.sessions.css.getValue().match(/[^:]+:\s*[^;]+;\s*/g);
       if (findStyles != null) {
         var newStyles = "";
-        for (var i = 0; i < findStyles.length; i++) {
-          newStyles += findStyles[i];
-        }
+        for (var i = 0; i < findStyles.length; i++) newStyles += findStyles[i];
         TRIANGLE.item.objRef.style.cssText = newStyles;
       }
       TRIANGLE.selectionBorder.update();
     }
   },
 
-  hoverStyles : function(elem) {
+  hoverStyles : function() {
     if (TRIANGLE.item) {
-      var findStyles = elem.value.match(/[^:]+:\s*[^;]+;\s*/g);
+      var findStyles = TRIANGLE.developer.sessions.hover.getValue().match(/[^:]+:\s*[^;]+;\s*/g);
       if (findStyles != null) {
         var newStyles = "";
-        for (var i = 0; i < findStyles.length; i++) {
-          newStyles += findStyles[i];
-        }
+        for (var i = 0; i < findStyles.length; i++) newStyles += findStyles[i];
         TRIANGLE.item.objRef.setAttribute("hover-style", newStyles);
       } else {
-        TRIANGLE.item.objRef.removeAttribute("hover-style");
+        // TRIANGLE.item.objRef.removeAttribute("hover-style");
       }
     }
   },
@@ -4902,6 +4908,75 @@ TRIANGLE.library = {
 
 TRIANGLE.developer = {
 
+  editor : ace.edit("ace-editor"),
+
+  sessions : {
+    css: null,
+    hover: null,
+    styleTag: null,
+    scriptTag: null
+  },
+
+  editCSS : function() {
+    TRIANGLE.developer.editor.setSession(TRIANGLE.developer.sessions.css);
+    if (TRIANGLE.item) TRIANGLE.importItem.importCSSText();
+    document.getElementById("currentCode").innerHTML = "Currently Editing: " + "Item CSS";
+    document.getElementById("codeEditorWrapper").style.display = "inline-block";
+  },
+
+  editHover : function() {
+    TRIANGLE.developer.editor.setSession(TRIANGLE.developer.sessions.hover);
+    if (TRIANGLE.item) TRIANGLE.importItem.importHoverCSSText();
+    document.getElementById("currentCode").innerHTML = "Currently Editing: " + "Item Hover CSS";
+    document.getElementById("codeEditorWrapper").style.display = "inline-block";
+  },
+
+  editStyleTag : function() {
+    TRIANGLE.developer.editor.setSession(TRIANGLE.developer.sessions.styleTag);
+    document.getElementById("currentCode").innerHTML = "Currently Editing: " + "CSS for Current Page";
+    document.getElementById("codeEditorWrapper").style.display = "inline-block";
+  },
+
+  editGlobalStyleTag : function() {
+    TRIANGLE.developer.editor.setSession(TRIANGLE.developer.sessions.globalStyleTag);
+    document.getElementById("currentCode").innerHTML = "Currently Editing: " + "CSS for All Pages";
+    document.getElementById("codeEditorWrapper").style.display = "inline-block";
+  },
+
+  editScriptTag : function() {
+    TRIANGLE.developer.editor.setSession(TRIANGLE.developer.sessions.scriptTag);
+    document.getElementById("currentCode").innerHTML = "Currently Editing: " + "JavaScript for Current Page";
+    document.getElementById("codeEditorWrapper").style.display = "inline-block";
+  },
+
+  editGlobalScriptTag : function() {
+    TRIANGLE.developer.editor.setSession(TRIANGLE.developer.sessions.globalScriptTag);
+    document.getElementById("currentCode").innerHTML = "Currently Editing: " + "JavaScript for All Pages";
+    document.getElementById("codeEditorWrapper").style.display = "inline-block";
+  },
+
+  saveEdits : null,
+  currentCode : null,
+
+  editCode : function(elemID, name) {
+    TRIANGLE.developer.currentCode = elemID;
+    var codeSrc = document.getElementById(elemID);
+    var editor = document.getElementById("codeEditor");
+
+    document.getElementById("currentCode").innerHTML = "Currently Editing: " + name;
+    editor.value = codeSrc.value;
+    document.getElementById("codeEditorWrapper").style.display = "inline-block";
+
+    TRIANGLE.developer.saveEdits = function() {
+      document.getElementById(elemID).value = editor.value;
+      document.getElementById(elemID).onchange();
+    };
+
+    //editor.addEventListener("keyup", TRIANGLE.developer.saveEdits);
+    // document.getElementById("marginFix").style.height = (editor.parentElement.getBoundingClientRect().height + 170) + 'px';
+    TRIANGLE.selectionBorder.update();
+  },
+
   insertSnippet : function() {
     var snippet = document.getElementById("snippetInsertion").value;
 
@@ -4941,28 +5016,6 @@ TRIANGLE.developer = {
     }
   },
 
-  saveEdits : null,
-  currentCode : null,
-
-  editCode : function(elemID, name) {
-    TRIANGLE.developer.currentCode = elemID;
-    var codeSrc = document.getElementById(elemID);
-    var editor = document.getElementById("codeEditor");
-
-    document.getElementById("currentCode").innerHTML = "Currently Editing: " + name;
-    editor.value = codeSrc.value;
-    document.getElementById("codeEditorWrapper").style.display = "block";
-
-    TRIANGLE.developer.saveEdits = function() {
-      document.getElementById(elemID).value = editor.value;
-      document.getElementById(elemID).onchange();
-    };
-
-    //editor.addEventListener("keyup", TRIANGLE.developer.saveEdits);
-    document.getElementById("marginFix").style.height = (editor.parentElement.getBoundingClientRect().height + 170) + 'px';
-    TRIANGLE.selectionBorder.update();
-  },
-
   exitCodeEditor : function() {
     var codeSrc = document.getElementById(TRIANGLE.developer.currentCode);
     var editor = document.getElementById("codeEditor");
@@ -4980,24 +5033,23 @@ TRIANGLE.developer = {
   },
 
   styleTagContent : "",
+  saveStyleTag : function() {
+    TRIANGLE.developer.styleTagContent = TRIANGLE.developer.sessions.styleTag.getValue();
+  },
+
   globalStyleTagContent : "",
+  saveGlobalStyleTag : function() {
+    TRIANGLE.developer.globalStyleTagContent = TRIANGLE.developer.sessions.globalStyleTag.getValue();
+  },
+
   scriptTagContent : "",
+  saveScriptTag : function() {
+    TRIANGLE.developer.scriptTagContent = TRIANGLE.developer.sessions.scriptTag.getValue();
+  },
+
   globalScriptTagContent : "",
-
-  saveStyleTag : function(content) {
-    TRIANGLE.developer.styleTagContent = content;
-  },
-
-  saveGlobalStyleTag : function(content) {
-    TRIANGLE.developer.globalStyleTagContent = content;
-  },
-
-  saveScriptTag : function(content) {
-    TRIANGLE.developer.scriptTagContent = content;
-  },
-
-  saveGlobalScriptTag : function(content) {
-    TRIANGLE.developer.globalScriptTagContent = content;
+  saveGlobalScriptTag : function() {
+    TRIANGLE.developer.globalScriptTagContent = TRIANGLE.developer.sessions.globalScriptTag.getValue();
   }
 
 } // end developer
@@ -7312,10 +7364,18 @@ TRIANGLE.json = {
     TRIANGLE.metaData.description = document.getElementById("metaDescription").value;
     document.getElementById("exportCompress").checked = templateData.exportCompress;
     if (templateData.importWebsiteURL) TRIANGLE.loadTemplate.importWebsite(templateData.importWebsiteURL);
-    TRIANGLE.developer.styleTagContent = document.getElementById("styleTag").value = templateData.styleTag ? templateData.styleTag : "";
-    TRIANGLE.developer.globalStyleTagContent = document.getElementById("globalStyleTag").value = templateData.globalStyleTag ? templateData.globalStyleTag : "";
-    TRIANGLE.developer.scriptTagContent = document.getElementById("scriptTag").value = templateData.scriptTag ? templateData.scriptTag : "";
-    TRIANGLE.developer.globalScriptTagContent = document.getElementById("globalScriptTag").value = templateData.globalScriptTag ? templateData.globalScriptTag : "";
+
+    TRIANGLE.developer.styleTagContent = templateData.styleTag || "";
+    TRIANGLE.developer.sessions.styleTag.setValue(TRIANGLE.developer.styleTagContent);
+
+    TRIANGLE.developer.globalStyleTagContent = templateData.globalStyleTag || "";
+    TRIANGLE.developer.sessions.globalStyleTag.setValue(TRIANGLE.developer.globalStyleTagContent);
+
+    TRIANGLE.developer.scriptTagContent = templateData.scriptTag || "";
+    TRIANGLE.developer.sessions.scriptTag.setValue(TRIANGLE.developer.scriptTagContent);
+
+    TRIANGLE.developer.globalScriptTagContent = templateData.globalScriptTag || "";
+    TRIANGLE.developer.sessions.globalScriptTag.setValue(TRIANGLE.developer.globalScriptTagContent);
   },
 
   convertItem : function(itemSrc, createItem) {
@@ -7538,6 +7598,44 @@ TRIANGLE.defaultSettings = function defaultSettings() {
   document.getElementById("opDeselect").addEventListener("click", TRIANGLE.clearSelection);
   // pop ups
   document.getElementById("uploadImagesBtn").addEventListener("click", TRIANGLE.images.upload);
+  // developer
+  TRIANGLE.developer.editor.setTheme("ace/theme/dracula");
+  // make first/last line read-only
+  // TRIANGLE.developer.editor.commands.on("exec", function(e) {
+  //   var rowCol = TRIANGLE.developer.editor.selection.getCursor();
+  //   // if () {
+  //     if ((rowCol.row == 0) || ((rowCol.row + 1) == TRIANGLE.developer.editor.session.getLength())) {
+  //       e.preventDefault();
+  //       e.stopPropagation();
+  //     }
+  //   // }
+  // });
+
+  TRIANGLE.developer.EditSession = ace.require("ace/edit_session").EditSession;
+
+  TRIANGLE.developer.sessions.css = new TRIANGLE.developer.EditSession("css");
+  TRIANGLE.developer.sessions.css.setOptions({ mode: "ace/mode/css" });
+  TRIANGLE.developer.sessions.css.on("change", TRIANGLE.saveItem.cssStyles);
+
+  TRIANGLE.developer.sessions.hover = new TRIANGLE.developer.EditSession("hover");
+  TRIANGLE.developer.sessions.hover.setOptions({ mode: "ace/mode/css" });
+  TRIANGLE.developer.sessions.hover.on("change", TRIANGLE.saveItem.hoverStyles);
+
+  TRIANGLE.developer.sessions.styleTag = new TRIANGLE.developer.EditSession("style");
+  TRIANGLE.developer.sessions.styleTag.setOptions({ mode: "ace/mode/css" });
+  TRIANGLE.developer.sessions.styleTag.on("change", TRIANGLE.developer.saveStyleTag);
+
+  TRIANGLE.developer.sessions.globalStyleTag = new TRIANGLE.developer.EditSession("globalStyle");
+  TRIANGLE.developer.sessions.globalStyleTag.setOptions({ mode: "ace/mode/css" });
+  TRIANGLE.developer.sessions.globalStyleTag.on("change", TRIANGLE.developer.saveGlobalStyleTag);
+
+  TRIANGLE.developer.sessions.scriptTag = new TRIANGLE.developer.EditSession("script");
+  TRIANGLE.developer.sessions.scriptTag.setOptions({ mode: "ace/mode/javascript" });
+  TRIANGLE.developer.sessions.scriptTag.on("change", TRIANGLE.developer.saveScriptTag);
+
+  TRIANGLE.developer.sessions.globalScriptTag = new TRIANGLE.developer.EditSession("globalScript");
+  TRIANGLE.developer.sessions.globalScriptTag.setOptions({ mode: "ace/mode/javascript" });
+  TRIANGLE.developer.sessions.globalScriptTag.on("change", TRIANGLE.developer.saveGlobalScriptTag);
 
   var menuInputs = document.getElementById("menu").getElementsByTagName("input");
   for (var i = 0; i < menuInputs.length; i++) {

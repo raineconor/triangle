@@ -1,6 +1,6 @@
 <div class="subMenu" id="displayDeveloper">
   <div class="menuSection">
-    <div class="menuSectionTitle">Insert Code Snippet</div>
+    <div class="menuSectionTitle">Embed Code</div>
     <textarea class="codeBox" id="snippetInsertion" onkeyup="this.onchange();" onchange="TRIANGLE.saveItem.codeSnippet(this);" style="background-color:#1d1f20;color:#f8f8f8;"></textarea>
     <div style="display:inline-block;">
       <button class="width:100%;" onClick="TRIANGLE.developer.editCode('snippetInsertion', 'Code Snippet');">Expand</button><br>
@@ -39,12 +39,10 @@
 
   <div class="menuSection">
     <div class="menuSectionTitle">CSS Styles</div>
-    <div class="menuDropdown" onClick="TRIANGLE.menu.toggleMenuDisplay('cssStylesMenu','inline-block');">CSS Styles</div><br>
-    <div class="menuDropdown" onClick="TRIANGLE.menu.toggleMenuDisplay('hoverStylesMenu','inline-block');">Hover Styles</div><br>
-    <!--<div class="menuDropdown" onClick="TRIANGLE.menu.toggleMenuDisplay('styleTagMenu','inline-block');">Style Tag</div><br>
-    <div class="menuDropdown" onClick="TRIANGLE.menu.toggleMenuDisplay('scriptTagMenu','inline-block');">Script Tag</div><br>-->
-    <div class="menuDropdown" onClick="TRIANGLE.developer.editCode('styleTag', 'Style Tag');">Style Tag</div><br>
-    <div class="menuDropdown" onClick="TRIANGLE.developer.editCode('scriptTag', 'Script Tag');">Script Tag</div><br>
+    <div class="menuDropdown" onClick="TRIANGLE.developer.editCSS();">CSS Styles</div><br>
+    <div class="menuDropdown" onClick="TRIANGLE.developer.editHover();">Hover Styles</div><br>
+    <div class="menuDropdown" onClick="TRIANGLE.developer.editStyleTag();">Style Tag</div><br>
+    <div class="menuDropdown" onClick="TRIANGLE.developer.editScriptTag();">Script Tag</div><br>
   </div>
 
   <div class="menuSection hidden" style="display:none;" id="cssStylesMenu">
@@ -75,8 +73,8 @@
 
   <div class="menuSection">
     <div class="menuSectionTitle">Global Tags</div>
-    <div class="menuDropdown" onClick="TRIANGLE.developer.editCode('globalStyleTag', 'Global Style Tag');">Global Style Tag</div><br>
-    <div class="menuDropdown" onClick="TRIANGLE.developer.editCode('globalScriptTag', 'Global Script Tag');">Global Script Tag</div><br>
+    <div class="menuDropdown" onClick="TRIANGLE.developer.editGlobalStyleTag();">Global Style Tag</div><br>
+    <div class="menuDropdown" onClick="TRIANGLE.developer.editGlobalScriptTag();">Global Script Tag</div><br>
   </div>
 
   <div class="menuSection hidden" style="display:none;" id="styleTagMenu">
