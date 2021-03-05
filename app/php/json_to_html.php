@@ -23,10 +23,8 @@ function formatCode($data, $templateName, $pageName, $compress = false, $cropped
   $fonts = "";
   $deferFonts = "";
   if (!empty($data["fontData"]) && $data["fontData"] !== "") {
-    $fonts = "<!--========= Font Include: =========-->\n"
-           . "<link rel='preconnect' href='https://fonts.gstatic.com'>\n"
-           . str_replace("><", ">\n<", trim(str_replace("href=\"", "defer=\"", $data["fontData"])))
-           . "\n<!--=================================-->\n";
+    $fonts = "<link rel='preconnect' href='https://fonts.gstatic.com'>\n"
+           . str_replace("><", ">\n<", trim(str_replace("href=\"", "defer=\"", $data["fontData"]))) . "\n";
     $deferFonts = "<script type=\"text/javascript\">\n" . file_get_contents(__DIR__ . "/../resources/lazyload/defer.js") . "\n</script>\n\n";
   }
 
@@ -40,9 +38,7 @@ function formatCode($data, $templateName, $pageName, $compress = false, $cropped
     /*$CSSinclude = "<!--========== CSS Include: =========-->\n"
                 . "<link rel=\"stylesheet\" href=\"" . $pageName .".css\" type=\"text/css\" media=\"screen\">\n"
                 . "<!--=================================-->\n\n";*/
-                $CSSinclude = "<!--========== CSS Include: =========-->\n"
-                            . "<style><css></style>"
-                            . "<!--=================================-->\n\n";
+                $CSSinclude = "<style><css></style>\n\n";
   }
 
   // PHP 7 logic
@@ -55,19 +51,13 @@ function formatCode($data, $templateName, $pageName, $compress = false, $cropped
          . "<head>\n"
          . "<meta charset=\"utf-8\">\n\n"
 
-         . "<!--========== Page Title: ==========-->\n"
-         . "<title>" . $metaTitle . "</title>\n"
-         . "<!--=================================-->\n\n"
+         . "<title>" . $metaTitle . "</title>\n\n"
 
-         . "<!--============ Favicon: ===========-->\n"
-         . "<link rel=\"shortcut icon\" href=\"/favicon.png\" />\n"
-         . "<!--=================================-->\n\n"
+         . "<link rel=\"shortcut icon\" href=\"/favicon.png\" />\n\n"
 
-         . "<!--=========== Meta Tags: ==========-->\n"
          . "<meta name=\"description\" content=\"" . $metaDescription . "\">\n"
          . "<meta name=\"keywords\" content=\"" . $metaKeywords . "\">\n"
-         . "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n"
-         . "<!--=================================-->\n\n"
+         . "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n\n"
 
          . $CSSinclude
 
