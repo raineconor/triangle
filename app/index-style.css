@@ -199,7 +199,7 @@ hr {
   right:0; */
 
   background-color:lightgray;
-  box-shadow:0px 0px 6px #333;
+  box-shadow:0px 0px 4px #333;
   width:400px;
   height:400px;
   display:inline-block;
@@ -337,7 +337,8 @@ hr {
   /*width:500px;*/
   background-color:#ffffff;
   z-index:11;
-  box-shadow:0px 0px 10px #333333;
+  /* box-shadow:0px 0px 10px #333333; */
+  box-shadow:rgba(0, 0, 0, 0.22) 0px 25.6px 57.6px 0px, rgba(0, 0, 0, 0.18) 0px 4.8px 14.4px 0px;
   /*border:1px solid gray;*/
   overflow:hidden;
   font-family:'Helvetica', 'Arial', sans-serif;
@@ -1336,7 +1337,7 @@ hr.clearFloat {
 
 .smSqBtn:hover {
   /* border:1px solid gray; */
-  background-color:#d9d9d9;
+  background-color:#d3d3d3;
   cursor:pointer;
 }
 
