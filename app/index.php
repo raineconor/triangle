@@ -19,15 +19,15 @@
 
   $templateName = null;
   $userTemplate = $premadeTemplate = false;
-  if (isset($_GET["loadTemplate"])) {
-    $templateName = sanitize($_GET["loadTemplate"]);
+  if (isset($_GET["template"])) {
+    $templateName = sanitize($_GET["template"]);
     $userTemplate = true;
   } else if (isset($_GET["premadeTemplate"])) {
     $templateName = sanitize($_GET["premadeTemplate"]);
     $premadeTemplate = true;
   }
 
-  $pageName = isset($_GET["pagename"]) ? sanitize($_GET["pagename"]) : null;
+  $pageName = isset($_GET["page"]) ? sanitize($_GET["page"]) : null;
 
   $printPageName = "";
 

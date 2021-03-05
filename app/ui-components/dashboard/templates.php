@@ -40,9 +40,10 @@ for ($x = count($templates) - 1; $x >= 0; $x--) {
   } else {
     $deleteButton = '';
   }
-  $template_html .= '<div id="template-' . $x . '" user="' . $user . '"><a class="menuLink" href="index.php?pagename=index&loadTemplate='
+  $template_html .= '<div id="template-' . $x . '" user="' . $user . '"><a class="menuLink" href="index.php?template='
   . urlencode($templates[$x]["template"])
-  . $userGetParam
+  // . $userGetParam
+  . "&page=index"
   . '" target="">'
   . $templates[$x]["template"]
   // . "<span class=\"templateDate\">"

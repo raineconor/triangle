@@ -32,7 +32,7 @@
               . '\');">' . $pages[$x]["page"] . '</div>'
               . $deleteBtn;*/
 
-        $html = '<div class="pageThumbnail" onClick="location.href=\'index.php?pagename=' . $pages[$x]["page"] . '&loadTemplate=' . $templateName . '&username=' . $username . '\';">'
+        $html = '<div class="pageThumbnail" onClick="location.href=\'index.php?template=' . $templateName . '&page=' . $pages[$x]["page"] . '\';">'
               . $pages[$x]["page"]
               . '</div>'
               . $deleteBtn;
