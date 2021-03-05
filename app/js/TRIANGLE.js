@@ -721,8 +721,9 @@ TRIANGLE.importItem = {
     importUserClass(); // imports custom user item class
     importHyperlink(); // imports hyperlink string from anchor tag
     importLinkTarget(); // imports hyperlink target from anchor tag
-    importSnippet(); // imports user-inserted code snippet
+    // importSnippet(); // imports user-inserted code snippet
     importFormEmail(); // imports custom form email
+    TRIANGLE.importItem.importCodeSnippet();
     TRIANGLE.importItem.importCSSText();
     TRIANGLE.importItem.importHoverCSSText();
     // importHoverStyles(); // imports hover styles
@@ -957,15 +958,35 @@ TRIANGLE.importItem = {
 
   },
 
+  importCodeSnippet : function() {
+    if (TRIANGLE.item) {
+      if (TRIANGLE.isType.snippetItem(TRIANGLE.item.objRef)) {
+        var snippet = TRIANGLE.item.objRef.innerHTML;
+        document.getElementById("snippetInsertion").value = snippet;
+        TRIANGLE.developer.sessions.codeSnippet.setValue(snippet);
+      } else {
+        document.getElementById("snippetInsertion").value = "";
+        TRIANGLE.developer.sessions.codeSnippet.setValue("");
+      }
+    }
+  },
+
   importCSSText : function importCSSText() {
-    TRIANGLE.developer.sessions.css.setValue(TRIANGLE.itemStyles.cssText.replace(/;\s*/g, ";\n"));
-    // var importCSSText = TRIANGLE.item.objRef.style.cssText.replace(/;\s*/g, ";\n");
-    // document.getElementById("cssStyles").value = importCSSText;
-    // if (TRIANGLE.developer.currentCode === "cssStyles") document.getElementById("codeEditor").value = importCSSText;
+    TRIANGLE.developer.sessions.css.setValue(
+      // "selected item {\n"
+      //  + TRIANGLE.itemStyles.cssText.replace(/;\s*/g, ";\n")
+      //  + "\n}"
+      TRIANGLE.itemStyles.cssText.replace(/;\s*/g, ";\n")
+    );
   },
 
   importHoverCSSText : function() {
-    TRIANGLE.developer.sessions.hover.setValue(TRIANGLE.item.hover.cssText.replace(/;\s*/g, ";\n"));
+    TRIANGLE.developer.sessions.hover.setValue(
+      // "selected item {\n"
+      // + TRIANGLE.item.hover.cssText.replace(/;\s*/g, ";\n")
+      // + "\n}"
+      TRIANGLE.item.hover.cssText.replace(/;\s*/g, ";\n")
+    );
   },
 
   importColors : function importColors() {
@@ -1419,6 +1440,7 @@ TRIANGLE.saveItem = {
   cssStyles : function() {
     if (TRIANGLE.item) {
       var findStyles = TRIANGLE.developer.sessions.css.getValue().match(/[^:]+:\s*[^;]+;\s*/g);
+      // var findStyles = TRIANGLE.developer.sessions.css.getLines(1, TRIANGLE.developer.sessions.css.getLength() - 2);
       if (findStyles != null) {
         var newStyles = "";
         for (var i = 0; i < findStyles.length; i++) newStyles += findStyles[i];
@@ -1431,6 +1453,7 @@ TRIANGLE.saveItem = {
   hoverStyles : function() {
     if (TRIANGLE.item) {
       var findStyles = TRIANGLE.developer.sessions.hover.getValue().match(/[^:]+:\s*[^;]+;\s*/g);
+      // var findStyles = TRIANGLE.developer.sessions.hover.getLines(1, TRIANGLE.developer.sessions.hover.getLength() - 2);
       if (findStyles != null) {
         var newStyles = "";
         for (var i = 0; i < findStyles.length; i++) newStyles += findStyles[i];
@@ -5285,38 +5308,45 @@ TRIANGLE.developer = {
   editCSS : function() {
     TRIANGLE.developer.editor.setSession(TRIANGLE.developer.sessions.css);
     if (TRIANGLE.item) TRIANGLE.importItem.importCSSText();
-    document.getElementById("currentCode").innerHTML = "Currently Editing: " + "Item CSS";
+    document.getElementById("currentCode").innerHTML = "Item CSS";
     document.getElementById("codeEditorWrapper").style.display = "inline-block";
   },
 
   editHover : function() {
     TRIANGLE.developer.editor.setSession(TRIANGLE.developer.sessions.hover);
     if (TRIANGLE.item) TRIANGLE.importItem.importHoverCSSText();
-    document.getElementById("currentCode").innerHTML = "Currently Editing: " + "Item Hover CSS";
+    document.getElementById("currentCode").innerHTML = "Item Hover CSS";
     document.getElementById("codeEditorWrapper").style.display = "inline-block";
   },
 
   editStyleTag : function() {
     TRIANGLE.developer.editor.setSession(TRIANGLE.developer.sessions.styleTag);
-    document.getElementById("currentCode").innerHTML = "Currently Editing: " + "CSS for Current Page";
+    document.getElementById("currentCode").innerHTML = "CSS for Current Page";
     document.getElementById("codeEditorWrapper").style.display = "inline-block";
   },
 
   editGlobalStyleTag : function() {
     TRIANGLE.developer.editor.setSession(TRIANGLE.developer.sessions.globalStyleTag);
-    document.getElementById("currentCode").innerHTML = "Currently Editing: " + "CSS for All Pages";
+    document.getElementById("currentCode").innerHTML = "CSS for All Pages";
     document.getElementById("codeEditorWrapper").style.display = "inline-block";
   },
 
   editScriptTag : function() {
     TRIANGLE.developer.editor.setSession(TRIANGLE.developer.sessions.scriptTag);
-    document.getElementById("currentCode").innerHTML = "Currently Editing: " + "JavaScript for Current Page";
+    document.getElementById("currentCode").innerHTML = "JavaScript for Current Page";
     document.getElementById("codeEditorWrapper").style.display = "inline-block";
   },
 
   editGlobalScriptTag : function() {
     TRIANGLE.developer.editor.setSession(TRIANGLE.developer.sessions.globalScriptTag);
-    document.getElementById("currentCode").innerHTML = "Currently Editing: " + "JavaScript for All Pages";
+    document.getElementById("currentCode").innerHTML = "JavaScript for All Pages";
+    document.getElementById("codeEditorWrapper").style.display = "inline-block";
+  },
+
+  editCodeSnippet : function() {
+    TRIANGLE.developer.editor.setSession(TRIANGLE.developer.sessions.codeSnippet);
+    if (TRIANGLE.item) TRIANGLE.importItem.importCodeSnippet();
+    document.getElementById("currentCode").innerHTML = "Code in Current Item";
     document.getElementById("codeEditorWrapper").style.display = "inline-block";
   },
 
@@ -5328,7 +5358,7 @@ TRIANGLE.developer = {
     var codeSrc = document.getElementById(elemID);
     var editor = document.getElementById("codeEditor");
 
-    document.getElementById("currentCode").innerHTML = "Currently Editing: " + name;
+    document.getElementById("currentCode").innerHTML = name;
     editor.value = codeSrc.value;
     document.getElementById("codeEditorWrapper").style.display = "inline-block";
 
@@ -5415,6 +5445,13 @@ TRIANGLE.developer = {
   globalScriptTagContent : "",
   saveGlobalScriptTag : function() {
     TRIANGLE.developer.globalScriptTagContent = TRIANGLE.developer.sessions.globalScriptTag.getValue();
+  },
+
+  saveCodeSnippet : function() {
+    // TRIANGLE.developer.globalScriptTagContent = TRIANGLE.developer.sessions.globalScriptTag.getValue();
+    if (TRIANGLE.item) {
+      // TRIANGLE.item.objRef.innerHTML = TRIANGLE.developer.sessions.globalScriptTag.getValue();
+    }
   }
 
 } // end developer
@@ -7605,22 +7642,24 @@ TRIANGLE.defaultSettings = function defaultSettings() {
   // make first/last line read-only
   // TRIANGLE.developer.editor.commands.on("exec", function(e) {
   //   var rowCol = TRIANGLE.developer.editor.selection.getCursor();
-  //   // if () {
+  //   if (TRIANGLE.developer.editor.session.id == TRIANGLE.developer.sessions.css.id
+  //   || TRIANGLE.developer.editor.session.id == TRIANGLE.developer.sessions.hover.id
+  //   ) {
   //     if ((rowCol.row == 0) || ((rowCol.row + 1) == TRIANGLE.developer.editor.session.getLength())) {
   //       e.preventDefault();
   //       e.stopPropagation();
   //     }
-  //   // }
+  //   }
   // });
 
   TRIANGLE.developer.EditSession = ace.require("ace/edit_session").EditSession;
 
   TRIANGLE.developer.sessions.css = new TRIANGLE.developer.EditSession("css");
-  TRIANGLE.developer.sessions.css.setOptions({ mode: "ace/mode/css" });
+  TRIANGLE.developer.sessions.css.setOptions({ mode: "ace/mode/css", useWorker: false });
   TRIANGLE.developer.sessions.css.on("change", TRIANGLE.saveItem.cssStyles);
 
   TRIANGLE.developer.sessions.hover = new TRIANGLE.developer.EditSession("hover");
-  TRIANGLE.developer.sessions.hover.setOptions({ mode: "ace/mode/css" });
+  TRIANGLE.developer.sessions.hover.setOptions({ mode: "ace/mode/css", useWorker: false });
   TRIANGLE.developer.sessions.hover.on("change", TRIANGLE.saveItem.hoverStyles);
 
   TRIANGLE.developer.sessions.styleTag = new TRIANGLE.developer.EditSession("style");
@@ -7639,9 +7678,12 @@ TRIANGLE.defaultSettings = function defaultSettings() {
   TRIANGLE.developer.sessions.globalScriptTag.setOptions({ mode: "ace/mode/javascript" });
   TRIANGLE.developer.sessions.globalScriptTag.on("change", TRIANGLE.developer.saveGlobalScriptTag);
 
+  TRIANGLE.developer.sessions.codeSnippet = new TRIANGLE.developer.EditSession("codeSnippet");
+  TRIANGLE.developer.sessions.codeSnippet.setOptions({ mode: "ace/mode/html" });
+  TRIANGLE.developer.sessions.codeSnippet.on("change", TRIANGLE.developer.saveCodeSnippet);
+
   var menuInputs = document.getElementById("menu").getElementsByTagName("input");
   for (var i = 0; i < menuInputs.length; i++) {
-    // menuInputs[i].removeEventListener("keyup", TRIANGLE.saveItem.applyChanges);
     menuInputs[i].addEventListener("keyup", TRIANGLE.saveItem.applyChanges);
   }
 
@@ -7652,7 +7694,10 @@ TRIANGLE.defaultSettings = function defaultSettings() {
   });
 
   document.addEventListener("keydown", function(event) {
-    if (event.keyCode == 8 && TRIANGLE.item && !TRIANGLE.keyEvents.countActiveInputs()) event.preventDefault();
+    if (event.keyCode == 8
+      && TRIANGLE.item
+      && !TRIANGLE.keyEvents.countActiveInputs()
+    ) event.preventDefault();
   });
 
   document.addEventListener("keyup", function(event){
