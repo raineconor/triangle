@@ -596,7 +596,7 @@ TRIANGLE.menu = {
   toggleVisibility : function(mode) {
     var toggleVisibility = menu.getElementsByClassName("toggleVisibility");
     for (var i = 0; i < toggleVisibility.length; i++) {
-      toggleVisibility[i].style.display = mode ? "inherit" : "none";
+      toggleVisibility[i].style.display = mode ? "inline-block" : "none";
     }
   },
 
@@ -3841,19 +3841,19 @@ isColorLight : function(color) {
 
 TRIANGLE.text = {
 
-
   insertTextBox : function insertTextBox(text) {
 
     var newTextBox = document.createElement("div");
     newTextBox.style.backgroundColor = "";
     newTextBox.style.height = "auto";
     newTextBox.style.width = "100%";
+    newTextBox.style.padding = "15px";
     newTextBox.style.fontSize = "14px";
     newTextBox.style.lineHeight = 1;
     newTextBox.style.fontFamily = "Verdana";
     newTextBox.className = "templateItem textBox";
     newTextBox.setAttribute("triangle-class", "templateItem textbox");
-    newTextBox.innerHTML = text ? text : "New text box";
+    newTextBox.innerHTML = text || "New text box";
 
     if (TRIANGLE.item && !TRIANGLE.isType.bannedInsertion(TRIANGLE.item.objRef)) {
 
@@ -3878,8 +3878,6 @@ TRIANGLE.text = {
       TRIANGLE.selectionBorder.update();
       TRIANGLE.updateTemplateItems(true);
 
-    } else {
-      return;
     }
   },
 
@@ -7014,10 +7012,7 @@ TRIANGLE.checkPadding = function checkPadding(obj) {
   &&    (parseInt(obj.style.paddingRight) === 0 || !obj.style.paddingRight)
   &&    (parseInt(obj.style.paddingTop) === 0 || !obj.style.paddingTop)
   &&    (parseInt(obj.style.paddingBottom) === 0 || !obj.style.paddingBottom)  ) {
-    obj.style.paddingTop =
-    obj.style.paddingRight =
-    obj.style.paddingBottom =
-    obj.style.paddingLeft = "15px";
+    obj.style.padding = "15px";
   }
 }
 
