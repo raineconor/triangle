@@ -6543,7 +6543,7 @@ margin : {
       if (TRIANGLE.getUnit(item[TRIANGLE.resize.direction]) === '%') {
         item.objRef.style[TRIANGLE.resize.direction] = Math.abs((Math.ceil((mousePos - TRIANGLE.resize.margin.currentMargin) / item.parent.getBoundingClientRect().width * 10000) / 100)) + "%";
       } else {
-        item.objRef.style[TRIANGLE.resize.direction] = (Math.floor(Math.abs(mousePos - TRIANGLE.resize.margin.currentMargin) / snapThreshold) * snapThreshold) + "px";
+        item.objRef.style[TRIANGLE.resize.direction] = (Math.floor(Math.abs(mousePos - TRIANGLE.resize.margin.currentMargin) / 4 / snapThreshold) * snapThreshold) + "px";
       }
       //if (parseFloat(item.objRef.style[TRIANGLE.resize.direction]) < 0) item.objRef.style[TRIANGLE.resize.direction] = 0;
       if (compare) item.objRef.style[TRIANGLE.resize.direction] = 0;
