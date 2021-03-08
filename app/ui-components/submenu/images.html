@@ -1,36 +1,41 @@
-<div class="subMenu" id="displayImages">
-  <div class="subMenuOption" id="imgLibrary" onClick="TRIANGLE.images.load();TRIANGLE.menu.openSideMenu('imageLibraryMenu');">
-    <div class="subMenuOptionBox">
-      <img class="optionImage" src="images/opInsertImage.svg">
-    </div>
-    <div class="optionLabel" id="labelImgLibrary">Insert Image</div>
+<div class="subMenu clearfix" id="displayImages">
+
+  <div class="subMenuOption subMenuOptionBtn" id="imgLibrary" onClick="TRIANGLE.images.load();TRIANGLE.menu.openSideMenu('imageLibraryMenu');" data-bs-toggle="tooltip" data-bs-placement="bottom" title="(M)">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-images" viewBox="0 0 16 16">
+      <path d="M4.502 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/>
+      <path d="M14.002 13a2 2 0 0 1-2 2h-10a2 2 0 0 1-2-2V5A2 2 0 0 1 2 3a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v8a2 2 0 0 1-1.998 2zM14 2H4a1 1 0 0 0-1 1h9.002a2 2 0 0 1 2 2v7A1 1 0 0 0 15 11V3a1 1 0 0 0-1-1zM2.002 4a1 1 0 0 0-1 1v8l2.646-2.354a.5.5 0 0 1 .63-.062l2.66 1.773 3.71-3.71a.5.5 0 0 1 .577-.094l1.777 1.947V5a1 1 0 0 0-1-1h-10z"/>
+    </svg>
+    <span class="subMenuOptionLabel">Insert Image</span>
   </div>
 
-  <div class="subMenuOption" id="setImageBg" onClick="TRIANGLE.images.load();TRIANGLE.menu.openSideMenu('imageLibraryMenu');TRIANGLE.images.setBackground = true;">
-    <div class="subMenuOptionBox">
-      <img class="optionImage" src="images/opSetImageBg.svg">
-    </div>
-    <div class="optionLabel" id="labelSetImgBg">Set Background</div>
+  <div class="subMenuOption subMenuOptionBtn" id="setImageBg" onClick="TRIANGLE.images.load();TRIANGLE.menu.openSideMenu('imageLibraryMenu');TRIANGLE.images.setBackground = true;">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-file-earmark-image" viewBox="0 0 16 16">
+      <path d="M6.502 7a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/>
+      <path d="M14 14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5V14zM4 1a1 1 0 0 0-1 1v10l2.224-2.224a.5.5 0 0 1 .61-.075L8 11l2.157-3.02a.5.5 0 0 1 .76-.063L13 10V4.5h-2A1.5 1.5 0 0 1 9.5 3V1H4z"/>
+    </svg>
+    <span class="subMenuOptionLabel">Set Background</span>
   </div>
 
-  <div class="subMenuOption" id="removeImageBg" onClick="TRIANGLE.images.removeBackground();">
-    <div class="subMenuOptionBox">
-      <img class="optionImage" src="images/opRemoveImageBg.svg">
-    </div>
-    <div class="optionLabel" id="labelRemoveImgBg">Remove Background</div>
+  <div class="subMenuOption subMenuOptionBtn" id="removeImageBg" onClick="TRIANGLE.images.removeBackground();">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-file-earmark-x" viewBox="0 0 16 16">
+      <path d="M6.854 7.146a.5.5 0 1 0-.708.708L7.293 9l-1.147 1.146a.5.5 0 0 0 .708.708L8 9.707l1.146 1.147a.5.5 0 0 0 .708-.708L8.707 9l1.147-1.146a.5.5 0 0 0-.708-.708L8 8.293 6.854 7.146z"/>
+      <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5v2z"/>
+    </svg>
+    <span class="subMenuOptionLabel">Remove Background</span>
   </div>
 
-  <!--<div class="subMenuOption" id="cropImg" onClick="TRIANGLE.images.crop.createBorder();">
-    <div class="subMenuOptionBox">
-      <img class="optionImage" src="images/opCropImage.svg">
-    </div>
-    <div class="optionLabel" id="labelCropImg">Crop Image</div>
-  </div>-->
+  <div class="subMenuOption subMenuOptionBtn d-none" id="cropImg" onClick="TRIANGLE.images.crop.createBorder();">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-crop" viewBox="0 0 16 16">
+      <path d="M3.5.5A.5.5 0 0 1 4 1v13h13a.5.5 0 0 1 0 1h-2v2a.5.5 0 0 1-1 0v-2H3.5a.5.5 0 0 1-.5-.5V4H1a.5.5 0 0 1 0-1h2V1a.5.5 0 0 1 .5-.5zm2.5 3a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-1 0V4H6.5a.5.5 0 0 1-.5-.5z"/>
+    </svg>
+    <span class="subMenuOptionLabel">Crop Image</span>
+  </div>
 
-  <div class="subMenuOption" id="autoSizeImg" onClick="TRIANGLE.images.autoSize();">
-    <div class="subMenuOptionBox">
-      <img class="optionImage" src="images/opExpandFitImg.svg">
-    </div>
-    <div class="optionLabel" id="labelAutoSizeImg">Expand to Fit</div>
+  <div class="subMenuOption subMenuOptionBtn" id="autoSizeImg" onClick="TRIANGLE.images.autoSize();">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-aspect-ratio" viewBox="0 0 16 16">
+      <path d="M0 3.5A1.5 1.5 0 0 1 1.5 2h13A1.5 1.5 0 0 1 16 3.5v9a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 12.5v-9zM1.5 3a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h13a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-13z"/>
+      <path d="M2 4.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1H3v2.5a.5.5 0 0 1-1 0v-3zm12 7a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1 0-1H13V8.5a.5.5 0 0 1 1 0v3z"/>
+    </svg>
+    <span class="subMenuOptionLabel">Autosize</span>
   </div>
 </div>

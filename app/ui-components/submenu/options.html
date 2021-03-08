@@ -1,80 +1,97 @@
-<div class="subMenu" id="displayGeneralOptions">
+<div class="subMenu clearfix" id="displayGeneralOptions">
 
-  <div class="subMenuOption" id="fixedWidth">
-    <div class="subMenuOptionBox">
-      <img class="optionImage" src="images/opFixedWidth.svg">
-    </div>
-    <div class="optionLabel" id="labelFixedWidth">Fixed Width</div>
+  <div class="subMenuOption subMenuOptionBtn" id="opDeleteElement" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Delete Item (Del / Backspace)">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+      <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+      <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+    </svg>
   </div>
 
-  <div class="subMenuOption" id="fluidWidth">
-    <div class="subMenuOptionBox">
-      <img class="optionImage" src="images/opFluidWidth.svg">
-    </div>
-    <div class="optionLabel" id="labelFluidWidth">Fluid Width</div>
+  <div class="subMenuOption subMenuOptionBtn" id="opUndo" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Undo (Ctrl + Z)">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-counterclockwise" viewBox="0 0 16 16">
+      <path fill-rule="evenodd" d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z"/>
+      <path d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466z"/>
+    </svg>
   </div>
 
-  <div class="subMenuOption" id="newRow">
-    <div class="subMenuOptionBox">
-      <img class="optionImage" src="images/opNewRow.svg">
-    </div>
-    <div class="optionLabel" id="labelNewRow">New Row</div>
+  <div class="subMenuOption subMenuOptionBtn" id="opShiftUp" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Shift Up (&uarr; / &larr;)">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-up-short" viewBox="0 0 16 16">
+      <path fill-rule="evenodd" d="M8 12a.5.5 0 0 0 .5-.5V5.707l2.146 2.147a.5.5 0 0 0 .708-.708l-3-3a.5.5 0 0 0-.708 0l-3 3a.5.5 0 1 0 .708.708L7.5 5.707V11.5a.5.5 0 0 0 .5.5z"/>
+    </svg>
   </div>
 
-  <div class="subMenuOption" id="blankTemplate">
-    <div class="subMenuOptionBox">
-      <img class="optionImage" src="images/opBlankTemplate.svg">
-    </div>
-    <div class="optionLabel" id="labelBlankTemplate">Blank Template</div>
+  <div class="subMenuOption subMenuOptionBtn" id="opShiftDown" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Shift Up (&darr; / &rarr;)">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-down-short" viewBox="0 0 16 16">
+      <path fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L7.5 10.293V4.5A.5.5 0 0 1 8 4z"/>
+    </svg>
   </div>
 
-  <div class="subMenuOption toggleVisibility" id="insert2columns" style="display:none;">
-    <div class="subMenuOptionBox">
-      <img class="optionImage" src="images/opInsert2columns.svg">
-    </div>
-    <div class="optionLabel" id="labelInsert2columns">Split 2 Columns</div>
+  <div class="subMenuOption subMenuOptionBtn" id="opCopyStyles" data-bs-toggle="tooltip" data-bs-placement="bottom" title="(Ctrl + C)">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-clipboard-plus" viewBox="0 0 16 16">
+      <path fill-rule="evenodd" d="M8 7a.5.5 0 0 1 .5.5V9H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V10H6a.5.5 0 0 1 0-1h1.5V7.5A.5.5 0 0 1 8 7z"/>
+      <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
+      <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
+    </svg>
+    <span class="subMenuOptionLabel">Copy</span>
   </div>
 
-  <div class="subMenuOption toggleVisibility" id="insert3columns" style="display:none;">
-    <div class="subMenuOptionBox">
-      <img class="optionImage" src="images/opInsert3columns.svg">
-    </div>
-    <div class="optionLabel" id="labelInsert3columns">Split 3 Columns</div>
+  <div class="subMenuOption subMenuOptionBtn" id="opPasteStyles" data-bs-toggle="tooltip" data-bs-placement="bottom" title="(Ctrl + V)">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-clipboard-minus" viewBox="0 0 16 16">
+      <path fill-rule="evenodd" d="M5.5 9.5A.5.5 0 0 1 6 9h4a.5.5 0 0 1 0 1H6a.5.5 0 0 1-.5-.5z"/>
+      <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
+      <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
+    </svg>
+    <span class="subMenuOptionLabel">Paste</span>
   </div>
 
-  <div class="subMenuOption toggleVisibility" id="opDuplicateElement" style="display:none;">
-    <div class="subMenuOptionBox">
-      <img class="optionImage" src="images/opDuplicateElement.svg">
-    </div>
-    <div class="optionLabel" id="labelDuplicateElement">Duplicate</div>
+  <div class="subMenuOption subMenuOptionBtn" id="opDeselect" data-bs-toggle="tooltip" data-bs-placement="bottom" title="(Esc)">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-x-square" viewBox="0 0 16 16">
+      <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
+      <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+    </svg>
+    <span class="subMenuOptionLabel">Deselect</span>
   </div>
 
-  <div class="subMenuOption toggleVisibility" id="opInsertNewChild" style="display:none;">
-    <div class="subMenuOptionBox">
-      <img class="optionImage" src="images/opInsertNewChild.svg">
-    </div>
-    <div class="optionLabel" id="labelInsertNewChild">Insert Child</div>
+  <span class="subMenuOptionDivider"></span>
+
+  <div class="subMenuOption subMenuOptionBtn" id="fixedWidth">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrows-expand rotate90" viewBox="0 0 16 16">
+      <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 1 8zM7.646.146a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1-.708.708L8.5 1.707V5.5a.5.5 0 0 1-1 0V1.707L6.354 2.854a.5.5 0 1 1-.708-.708l2-2zM8 10a.5.5 0 0 1 .5.5v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 14.293V10.5A.5.5 0 0 1 8 10z"/>
+    </svg>
+    <span class="subMenuOptionLabel">Fixed Width</span>
   </div>
 
-  <div class="subMenuOption toggleVisibility" id="opSelectParent" style="display:none;">
-    <div class="subMenuOptionBox">
-      <div style="background-color:#f1f1f1;height:100%;display:flex;align-items:center;justify-content:center;">Select<br>Parent</div>
-      <!--<img class="optionImage" src="images/opInsertNewChild.svg">-->
-      <!-- <svg xmlns="http://www.w3.org/2000/svg" width="88" height="88" fill="currentColor" class="bi bi-box-arrow-up px-3 py-3" viewBox="0 0 16 16">
-        <path fill-rule="evenodd" d="M3.5 6a.5.5 0 0 0-.5.5v8a.5.5 0 0 0 .5.5h9a.5.5 0 0 0 .5-.5v-8a.5.5 0 0 0-.5-.5h-2a.5.5 0 0 1 0-1h2A1.5 1.5 0 0 1 14 6.5v8a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 14.5v-8A1.5 1.5 0 0 1 3.5 5h2a.5.5 0 0 1 0 1h-2z"/>
-        <path fill-rule="evenodd" d="M7.646.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 1.707V10.5a.5.5 0 0 1-1 0V1.707L5.354 3.854a.5.5 0 1 1-.708-.708l3-3z"/>
-      </svg> -->
-    </div>
-    <div class="optionLabel" id="labelSelectParent">Select Parent</div>
+  <div class="subMenuOption subMenuOptionBtn" id="fluidWidth">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-percent" viewBox="0 0 16 16">
+      <path d="M13.442 2.558a.625.625 0 0 1 0 .884l-10 10a.625.625 0 1 1-.884-.884l10-10a.625.625 0 0 1 .884 0zM4.5 6a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm0 1a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5zm7 6a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm0 1a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"/>
+    </svg>
+    <span class="subMenuOptionLabel">Fluid Width</span>
   </div>
 
-  <div class="subMenuOption toggleVisibility" id="opHyperlink" style="display:none;">
-    <div class="subMenuOptionBox">
-      <img class="optionImage" src="images/opHyperlink.svg">
-    </div>
-    <div class="optionLabel" id="labelHyperlink">Create Hyperlink</div>
+  <span class="subMenuOptionDivider"></span>
+
+  <div class="subMenuOption subMenuOptionBtn toggleVisibility" id="opSelectParent" style="display:none;">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-box-arrow-up-left" viewBox="0 0 16 16">
+      <path fill-rule="evenodd" d="M7.364 3.5a.5.5 0 0 1 .5-.5H14.5A1.5 1.5 0 0 1 16 4.5v10a1.5 1.5 0 0 1-1.5 1.5h-10A1.5 1.5 0 0 1 3 14.5V7.864a.5.5 0 1 1 1 0V14.5a.5.5 0 0 0 .5.5h10a.5.5 0 0 0 .5-.5v-10a.5.5 0 0 0-.5-.5H7.864a.5.5 0 0 1-.5-.5z"/>
+      <path fill-rule="evenodd" d="M0 .5A.5.5 0 0 1 .5 0h5a.5.5 0 0 1 0 1H1.707l8.147 8.146a.5.5 0 0 1-.708.708L1 1.707V5.5a.5.5 0 0 1-1 0v-5z"/>
+    </svg>
+    <span class="subMenuOptionLabel">Select Parent</span>
   </div>
 
-  <div style="clear:both;"></div>
+  <div class="subMenuOption subMenuOptionBtn toggleVisibility" id="opHyperlink" style="display:none;">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-link-45deg" viewBox="0 0 16 16">
+      <path d="M4.715 6.542L3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1.001 1.001 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4.018 4.018 0 0 1-.128-1.287z"/>
+      <path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 0 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 0 0-4.243-4.243L6.586 4.672z"/>
+    </svg>
+    <span class="subMenuOptionLabel">Link</span>
+  </div>
+
+  <div class="subMenuOption subMenuOptionBtn toggleVisibility" style="display:none;" onlick="TRIANGLE.text.deleteHyperlink();">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-link-45deg" viewBox="0 0 16 16">
+      <path d="M4.715 6.542L3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1.001 1.001 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4.018 4.018 0 0 1-.128-1.287z"/>
+      <path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 0 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 0 0-4.243-4.243L6.586 4.672z"/>
+    </svg>
+    <span class="subMenuOptionLabel">Delete Link</span>
+  </div>
 
 </div>

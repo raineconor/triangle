@@ -48,16 +48,11 @@ TRIANGLE.template = {
   type : null, // global variable, contains either "fixed" or "fluid"
 
   fixedWidth : function fixedWidth() {
-    //TRIANGLE.template.objRef = refreshTemplateRef();
-    if (arguments.length === 1) {
-      document.getElementById("template").style.width = arguments[0];
-    } else if (arguments.length === 0) {
-      var getFixedValue = document.getElementById("customFixedWidth").value;
-      if ((/\D/g).test(getFixedValue)) {
-        document.getElementById("template").style.width = getFixedValue;
-      } else {
-        document.getElementById("template").style.width = getFixedValue + "px";
-      }
+    var getFixedValue = document.getElementById("customFixedWidth").value;
+    if ((/\D/g).test(getFixedValue)) {
+      document.getElementById("template").style.width = getFixedValue;
+    } else {
+      document.getElementById("template").style.width = getFixedValue + "px";
     }
     document.getElementById("template").style.margin = "0 auto";
     TRIANGLE.template.type = "fixed";
@@ -432,6 +427,7 @@ TRIANGLE.selectItem = function selectItem(index) {
 TRIANGLE.clearSelection = function() {
 
   TRIANGLE.selectionBorder.remove();
+  TRIANGLE.selectedItemOptions.hide();
   for (var i = 0; i < TRIANGLE.templateItems.length; i++) {
     var clearElem = document.getElementById("item" + i);
     if (TRIANGLE.isType.textBox(clearElem)) {
@@ -450,7 +446,7 @@ TRIANGLE.clearSelection = function() {
 
   var menu = document.getElementById("menu");
 
-  var inputElements = menu.querySelectorAll("input[type=text]");
+  var inputElements = menu.querySelectorAll("input[type=text], input[type=number]");
   for (var i = 0; i < inputElements.length; i++) {
     if (inputElements[i].getAttribute("no-clear") == "true") continue;
     inputElements[i].value = "";
@@ -756,33 +752,38 @@ TRIANGLE.importItem = {
     }
 
     function importPadding() {
-      document.getElementById("paddingL").value = TRIANGLE.itemStyles.paddingLeft;
-      document.getElementById("paddingR").value = TRIANGLE.itemStyles.paddingRight;
-      document.getElementById("paddingT").value = TRIANGLE.itemStyles.paddingTop;
-      document.getElementById("paddingB").value = TRIANGLE.itemStyles.paddingBottom;
+      var side = document.getElementById("paddingSide").querySelector(".edgeOptionActive").getAttribute("data-side");
+      document.getElementById("padding").value = TRIANGLE.itemStyles["padding" + side];
     }
 
     function importMargin() {
-      document.getElementById("marginL").value = TRIANGLE.itemStyles.marginLeft;
-      document.getElementById("marginR").value = TRIANGLE.itemStyles.marginRight;
-      document.getElementById("marginT").value = TRIANGLE.itemStyles.marginTop;
-      document.getElementById("marginB").value = TRIANGLE.itemStyles.marginBottom;
+      var side = document.getElementById("marginSide").querySelector(".edgeOptionActive").getAttribute("data-side");
+      document.getElementById("margin").value = TRIANGLE.itemStyles["margin" + side];
     }
 
     function importBorder() {
+      var side = document.getElementById("borderSide").querySelector(".edgeOptionActive").getAttribute("data-side");
       var borderStyleDictionary = ["solid", "dashed", "dotted"];
-      ["Left", "Right", "Top", "Bottom"].forEach(function(item, i) {
-        document.getElementById("border" + item[0] + "width").value = parseInt(TRIANGLE.itemStyles["border" + item + "Width"]) || "";
-        document.getElementById("border" + item[0] + "type").selectedIndex = borderStyleDictionary.indexOf(TRIANGLE.itemStyles["border" + item + "Style"]);
-        document.getElementById("border" + item[0] + "color").value =
-          (/rgb/).test(TRIANGLE.itemStyles["border" + item + "Color"])
-          ? TRIANGLE.colors.rgbToHex(TRIANGLE.itemStyles["border" + item + "Color"])
-          : TRIANGLE.itemStyles["border" + item + "Color"];
-      });
+      document.getElementById("borderWidth").value = TRIANGLE.itemStyles["border" + side + "Width"];
+      document.getElementById("borderStyle").selectedIndex = borderStyleDictionary.indexOf(TRIANGLE.itemStyles["border" + side + "Style"]);
+      document.getElementById("borderColor").value =
+          (/rgb/).test(TRIANGLE.itemStyles["border" + side + "Color"])
+          ? TRIANGLE.colors.rgbToHex(TRIANGLE.itemStyles["border" + side + "Color"])
+          : TRIANGLE.itemStyles["border" + side + "Color"];
+
+      // var borderStyleDictionary = ["solid", "dashed", "dotted"];
+      // ["Left", "Right", "Top", "Bottom"].forEach(function(item, i) {
+      //   document.getElementById("border" + item[0] + "width").value = parseInt(TRIANGLE.itemStyles["border" + item + "Width"]) || "";
+      //   document.getElementById("border" + item[0] + "type").selectedIndex = borderStyleDictionary.indexOf(TRIANGLE.itemStyles["border" + item + "Style"]);
+      //   document.getElementById("border" + item[0] + "color").value =
+      //     (/rgb/).test(TRIANGLE.itemStyles["border" + item + "Color"])
+      //     ? TRIANGLE.colors.rgbToHex(TRIANGLE.itemStyles["border" + item + "Color"])
+      //     : TRIANGLE.itemStyles["border" + item + "Color"];
+      // });
     }
 
     function importBoxShadow() {
-      var boxShadowArray = TRIANGLE.itemStyles.boxShadow.replace(/rgb\((\d+), (\d+), (\d+)\)/g, "rgb($1,$2,$3)").split(" ")
+      var boxShadowArray = TRIANGLE.itemStyles.boxShadow.replace(/rgb(a)?\((\d+), ?(\d+), ?(\d+)(,)? ?(\d*\.?\d*)?\)/g, "rgb$1($2,$3,$4$5$6)").split(" ")
       var boxShadowHinput = document.getElementById("boxShadowH");
       var boxShadowVinput = document.getElementById("boxShadowV");
       var boxShadowBlurInput = document.getElementById("boxShadowBlur");
@@ -1263,56 +1264,54 @@ TRIANGLE.saveItem = {
     }
 
     function savePadding() {
-      ["Left", "Right", "Top", "Bottom"].forEach(function(side, i) {
-        var paddingInput = document.getElementById("padding" + side[0]);
-
-        if (parseInt(paddingInput.value) == 0) {
-          TRIANGLE.saveItem.createAnimation("padding-" + side, TRIANGLE.itemStyles["padding" + side], 0, function(){TRIANGLE.selectionBorder.create()});
-          TRIANGLE.item.objRef.style["padding" + side] = "";
-        } else if (!TRIANGLE.getUnit(paddingInput.value) && paddingInput.value !== "") {
-          TRIANGLE.saveItem.createAnimation("padding-" + side, TRIANGLE.itemStyles["padding" + side], paddingInput.value + "px", function(){TRIANGLE.selectionBorder.create()});
-          TRIANGLE.item.objRef.style["padding" + side] = paddingInput.value + "px";
-        } else {
-          TRIANGLE.saveItem.createAnimation("padding-" + side, TRIANGLE.itemStyles["padding" + side], paddingInput.value, function(){TRIANGLE.selectionBorder.create()});
-          TRIANGLE.item.objRef.style["padding" + side] = paddingInput.value;
-        }
-      });
+      var side = document.getElementById("paddingSide").querySelector(".edgeOptionActive").getAttribute("data-side");
+      var dash = side ? "-" : "";
+      var paddingValue = document.getElementById("padding").value;
+      if (parseInt(paddingValue) == 0) {
+            TRIANGLE.saveItem.createAnimation("padding" + dash + side, TRIANGLE.itemStyles["padding" + side], 0, TRIANGLE.selectionBorder.create);
+            TRIANGLE.item.objRef.style["padding" + side] = "";
+      } else if (!TRIANGLE.getUnit(paddingValue) && paddingValue !== "") {
+            TRIANGLE.saveItem.createAnimation("padding" + dash + side, TRIANGLE.itemStyles["padding" + side], paddingValue + "px", TRIANGLE.selectionBorder.create);
+            TRIANGLE.item.objRef.style["padding" + side] = paddingValue + "px";
+      } else {
+            TRIANGLE.saveItem.createAnimation("padding" + dash + side, TRIANGLE.itemStyles["padding" + side], paddingValue, TRIANGLE.selectionBorder.create);
+            TRIANGLE.item.objRef.style["padding" + side] = paddingValue;
+      }
     }
 
     function saveMargin() {
-      ["Left", "Right", "Top", "Bottom"].forEach(function(side, i) {
-        var marginInput = document.getElementById("margin" + side[0]);
-        if (parseInt(marginInput.value) === 0 || marginInput.value == "") {
-          TRIANGLE.saveItem.createAnimation("margin-" + side, TRIANGLE.itemStyles["margin" + side], "", function(){TRIANGLE.selectionBorder.create()});
-          TRIANGLE.item.objRef.style["margin" + side] = "";
-        } else if (!TRIANGLE.getUnit(marginInput.value)) {
-          TRIANGLE.saveItem.createAnimation("margin-" + side, TRIANGLE.itemStyles["margin" + side], marginInput.value + "px", function(){TRIANGLE.selectionBorder.create()});
-          TRIANGLE.item.objRef.style["margin" + side] = marginInput.value + "px";
-        } else {
-          TRIANGLE.saveItem.createAnimation("margin-" + side, TRIANGLE.itemStyles["margin" + side], marginInput.value, function(){TRIANGLE.selectionBorder.create()});
-          TRIANGLE.item.objRef.style["margin" + side] = marginInput.value;
-        }
-      });
+      var side = document.getElementById("marginSide").querySelector(".edgeOptionActive").getAttribute("data-side");
+      var dash = side ? "-" : "";
+      var marginValue = document.getElementById("margin").value;
+      if (parseInt(marginValue) == 0) {
+            TRIANGLE.saveItem.createAnimation("margin" + dash + side, TRIANGLE.itemStyles["margin" + side], 0, TRIANGLE.selectionBorder.create);
+            TRIANGLE.item.objRef.style["margin" + side] = "";
+      } else if (!TRIANGLE.getUnit(marginValue) && marginValue !== "") {
+            TRIANGLE.saveItem.createAnimation("margin" + dash + side, TRIANGLE.itemStyles["margin" + side], marginValue + "px", TRIANGLE.selectionBorder.create);
+            TRIANGLE.item.objRef.style["margin" + side] = marginValue + "px";
+      } else {
+            TRIANGLE.saveItem.createAnimation("margin" + dash + side, TRIANGLE.itemStyles["margin" + side], marginValue, TRIANGLE.selectionBorder.create);
+            TRIANGLE.item.objRef.style["margin" + side] = marginValue;
+      }
     }
 
     function saveBorder() {
-      ["Left", "Right", "Top", "Bottom"].forEach(function(side, i) {
-        var sideLetter = side[0];
-        var borderWidthInput = document.getElementById("border" + sideLetter + "width");
-        var borderTypeSelect = document.getElementById("border" + sideLetter + "type");
-        var borderTypeText = borderTypeSelect.selectedIndex >= 0 ? borderTypeSelect.options[borderTypeSelect.selectedIndex].text : "";
-        var borderColorInput = document.getElementById("border" + sideLetter + "color");
+      var side = document.getElementById("borderSide").querySelector(".edgeOptionActive").getAttribute("data-side");
+      var dash = side ? "-" : "";
+      var borderWidthValue = document.getElementById("borderWidth").value;
+      var borderStyleSelect = document.getElementById("borderStyle");
+      var borderStyleValue = borderStyleSelect.selectedIndex >= 0 ? borderStyleSelect.options[borderStyleSelect.selectedIndex].text : "";;
+      var borderColorValue = document.getElementById("borderColor").value;
 
-        if (parseInt(borderWidthInput.value) == 0 || borderWidthInput.value == "") {
-          TRIANGLE.saveItem.createAnimation("border-" + side, TRIANGLE.itemStyles["border" + side], "", function(){TRIANGLE.selectionBorder.create()});
-          TRIANGLE.item.objRef.style["border" + side] = "";
-        } else {
-          var borderStyle = parseInt(borderWidthInput.value) + "px " + borderTypeText + " " + borderColorInput.value;
-          TRIANGLE.saveItem.createAnimation("border-" + side, TRIANGLE.item["border" + side], borderStyle, function(){TRIANGLE.selectionBorder.create()});
-          TRIANGLE.item.objRef.style["border" + side] = borderStyle;
-          document.getElementById("colorListBorder" + sideLetter).style.backgroundColor = borderColorInput.value;
-        }
-      });
+      if (parseInt(borderWidthValue) == 0 || borderWidthValue == "") {
+        TRIANGLE.saveItem.createAnimation("border" + dash + side, TRIANGLE.itemStyles["border" + side], "", TRIANGLE.selectionBorder.create);
+        TRIANGLE.item.objRef.style["border" + side] = "";
+      } else {
+        var borderStyle = parseInt(borderWidthValue) + "px " + borderStyleValue + " " + borderColorValue;
+        TRIANGLE.saveItem.createAnimation("border" + dash + side, TRIANGLE.item["border" + side], borderStyle, TRIANGLE.selectionBorder.create);
+        TRIANGLE.item.objRef.style["border" + side] = borderStyle;
+        document.getElementById("colorListBorder" + sideLetter).style.backgroundColor = borderColorValue;
+      }
     }
 
     function saveBoxShadow() {
@@ -2529,6 +2528,7 @@ TRIANGLE.exportTemplate = {
     form.innerHTML = "";
     form.setAttribute("action", actionPath);
 
+    params["compress"] = document.getElementById("exportCompress").checked ? 1 : 0;
     for (var key in params) {
       if (params.hasOwnProperty(key)) {
         var hiddenField = document.createElement("input");
@@ -2538,7 +2538,6 @@ TRIANGLE.exportTemplate = {
         form.appendChild(hiddenField);
       }
     }
-    params["compress"] = document.getElementById("exportCompress").checked ? 1 : 0;
 
     document.body.appendChild(form);
     form.submit();
@@ -2871,14 +2870,12 @@ TRIANGLE.options = {
       TRIANGLE.checkPadding(TRIANGLE.item.objRef);
       TRIANGLE.item.append(pasteItem);
       // TRIANGLE.importItem.single(TRIANGLE.item.index);
-      // TRIANGLE.selectionBorder.update();
-      TRIANGLE.updateTemplateItems();
     } else {
       document.getElementById("template").appendChild(pasteItem);
       // TRIANGLE.importItem.single(TRIANGLE.templateItems.length - 1);
-      // TRIANGLE.selectionBorder.update();
-      TRIANGLE.updateTemplateItems();
     }
+    TRIANGLE.selectionBorder.update();
+    TRIANGLE.updateTemplateItems();
   },
 
   undoList : [],
@@ -2929,21 +2926,21 @@ undo : function() {
   if (TRIANGLE.options.undoIndex > 0) TRIANGLE.options.undoIndex--;
   TRIANGLE.options.undoList.splice(TRIANGLE.options.undoIndex + 1, TRIANGLE.options.undoList.length - TRIANGLE.options.undoIndex - 1);
 
-  /*if (TRIANGLE.options.undoIndex && TRIANGLE.options.undoIndex > 0) {
-  console.log("message01");
-  TRIANGLE.options.undoIndex--;
-} else if (parseInt(TRIANGLE.options.undoIndex) <= 0) {
-console.log("message02");
-TRIANGLE.options.undoIndex = 0;
-} else {
-console.log("message03");
-TRIANGLE.options.undoIndex = TRIANGLE.options.undoList.length - 2;
-}*/
+  // if (TRIANGLE.options.undoIndex && TRIANGLE.options.undoIndex > 0) {
+  //   console.log("message01");
+  //   TRIANGLE.options.undoIndex--;
+  // } else if (parseInt(TRIANGLE.options.undoIndex) <= 0) {
+  //   console.log("message02");
+  //   TRIANGLE.options.undoIndex = 0;
+  // } else {
+  //   console.log("message03");
+  //   TRIANGLE.options.undoIndex = TRIANGLE.options.undoList.length - 2;
+  // }
 
-document.getElementById("templateWrapper").innerHTML = TRIANGLE.options.undoList[TRIANGLE.options.undoIndex];
-TRIANGLE.colors.updateBodyBg();
-TRIANGLE.updateTemplateItems();
-TRIANGLE.resize.removeHandles(); // these are saved in the undolist dom so they need to be removed manually
+  document.getElementById("templateWrapper").innerHTML = TRIANGLE.options.undoList[TRIANGLE.options.undoIndex];
+  TRIANGLE.colors.updateBodyBg();
+  TRIANGLE.updateTemplateItems();
+  TRIANGLE.resize.removeHandles(); // these are saved in the undolist dom so they need to be removed manually
 
 },
 
@@ -3875,6 +3872,7 @@ TRIANGLE.text = {
       console.log(document.getElementById("template").style.backgroundColor);
 
       document.getElementById("template").appendChild(newTextBox);
+      window.scrollTo(0, document.body.scrollHeight);
       TRIANGLE.selectionBorder.update();
       TRIANGLE.updateTemplateItems(true);
 
@@ -4533,7 +4531,7 @@ TRIANGLE.images = {
           imgContainer.style.display = "inline-block";
           imgContainer.style.height = "auto";
           imgContainer.style.minHeight = "auto";
-          imgContainer.style.width = "auto";
+          imgContainer.style.width = "100%";
           imgContainer.style.maxWidth = "100%";
 
           var newImage = document.createElement("img");
@@ -5391,37 +5389,19 @@ TRIANGLE.developer = {
     }
   },
 
-  handleTabs : function(elem, event) {
-    if (event.keyCode === 9) {
-      // get caret position/selection
-      var start = elem.selectionStart;
-      var end = elem.selectionEnd;
-
-      var value = elem.value;
-
-      // set textarea value to: text before caret + tab + text after caret
-      elem.value = value.substring(0, start) + "    " + value.substring(end);
-
-      // put caret at right position again (add 4 for the tab spaces)
-      elem.selectionStart = elem.selectionEnd = start + 4;
-
-      event.preventDefault();
-    }
-  },
-
   exitCodeEditor : function() {
-    var codeSrc = document.getElementById(TRIANGLE.developer.currentCode);
-    var editor = document.getElementById("codeEditor");
+    // var codeSrc = document.getElementById(TRIANGLE.developer.currentCode);
+    // var editor = document.getElementById("codeEditor");
 
     document.getElementById("codeEditorWrapper").style.display = "none";
-    codeSrc.value = editor.value;
-    editor.value = "";
+    // codeSrc.value = editor.value;
+    // editor.value = "";
 
     //editor.removeEventListener("keyup", TRIANGLE.developer.saveEdits);
     TRIANGLE.developer.saveEdits = null;
     TRIANGLE.developer.currentCode = null;
 
-    document.getElementById("marginFix").style.height = "170px";
+    // document.getElementById("marginFix").style.height = "170px";
     TRIANGLE.selectionBorder.update();
   },
 
@@ -5829,21 +5809,14 @@ maintainVisBox : function maintainVisBox(event) {
 TRIANGLE.generateBorder = function generateBorder(rectangle) {
   var borderSpace = 6; // space between border and hovered/selected element, use an even number
   var borderElem = document.createElement("div");
-  borderElem.style.border = "1px solid #478BE3";
-  borderElem.setAttribute("id", "showHoverBorder");
-  borderElem.style.position = "fixed";
+  borderElem.id = "showHoverBorder";
   borderElem.style.height = rectangle.height + borderSpace + "px";
   borderElem.style.width = rectangle.width + borderSpace + "px";
   borderElem.style.top = rectangle.top - (borderSpace / 2) + "px";
   borderElem.style.left = rectangle.left - (borderSpace / 2) + "px";
-  borderElem.style.zIndex = 1;
 
   var secondBorder = document.createElement("div");
-  secondBorder.style.height = "100%";
-  secondBorder.style.width = "100%";
-  secondBorder.style.border = "1px solid #478BE3";
-  secondBorder.style.padding = "1px";
-  secondBorder.setAttribute("id", "noClickThru");
+  secondBorder.id = "noClickThru";
   borderElem.appendChild(secondBorder);
 
   return borderElem;
@@ -5852,10 +5825,6 @@ TRIANGLE.generateBorder = function generateBorder(rectangle) {
 TRIANGLE.hoveredElem = false;
 
 TRIANGLE.hoverBorder = {
-
-  /*
-  function showHoverBorder() creates an outline of the element that is being hovered over
-  */
 
   show : function showHoverBorder(event) {
     if (TRIANGLE.resize.active || TRIANGLE.saveItem.animationActive || TRIANGLE.images.crop.active) return;
@@ -5887,10 +5856,6 @@ TRIANGLE.hoverBorder = {
     }
   },
 
-  /*
-  function hideHoverBorder() removes the dashed outline that appears when hovering over an element
-  */
-
   hide : function hideHoverBorder() {
     if (document.getElementById("showHoverBorder")) {
       document.getElementById("template").removeChild(document.getElementById("showHoverBorder"));
@@ -5900,87 +5865,72 @@ TRIANGLE.hoverBorder = {
     }
   }
 
-
 } // end TRIANGLE.hoverBorder
 
 TRIANGLE.selectionBorder = {
 
-  style : "1px solid #90F3FF",
-
-  /*
-  function lockSelectionBorder() is called by TRIANGLE.importItem.single() to lock the selection border in place
-  */
-
   create : function createSelectionBorder() {
-    /*if (TRIANGLE.keyEvents.shiftKey && TRIANGLE.importItem.group.length > 1) {
-    TRIANGLE.selectionBorder.remove();
-    for (var i = 0; i < TRIANGLE.importItem.group.length; i++) {
-    var rect = document.getElementById("item" + TRIANGLE.importItem.group[i]).getBoundingClientRect();
-    document.getElementById("template").appendChild(TRIANGLE.selectionBorder.generateMultiple(rect));
+
+    var selBorder;
+    if (TRIANGLE.item) {
+      TRIANGLE.hoverBorder.hide();
+      TRIANGLE.selectionBorder.remove();
+      var rect = TRIANGLE.item.objRef.getBoundingClientRect();
+      document.getElementById("template").appendChild(TRIANGLE.generateBorder(rect));
+      document.getElementById("showHoverBorder").id = "selectionBorder";
+      selBorder = document.getElementById("selectionBorder");
+      if (TRIANGLE.item.objRef.isContentEditable) {
+        selBorder.style.border = "1px dashed black";
+      }
+      selBorder.style.zIndex = 2;
+      TRIANGLE.resize.showHandles();
+      TRIANGLE.selectedItemOptions.show();
+    } else if (document.getElementById("showHoverBorder")) {
+      document.getElementById("showHoverBorder").id = "selectionBorder";
+      selBorder = document.getElementById("selectionBorder");
+      TRIANGLE.resize.showHandles();
+    }
+
+    TRIANGLE.unsaved = true;
+  },
+
+  remove : function removeSelectionBorder() {
+    if (document.getElementById("selectionBorder")) {
+      document.getElementById("template").removeChild(document.getElementById("selectionBorder"));
+      TRIANGLE.resize.removeHandles();
+      TRIANGLE.selectedItemOptions.hide();
+    }
+  },
+
+  update : function updateSelectionBorder() {
+    if (document.getElementById("selectionBorder")) {
+      TRIANGLE.selectionBorder.remove();
+      TRIANGLE.selectionBorder.create();
+    }
   }
-} else */
-
-/*if (document.getElementById("showHoverBorder")) {
-document.getElementById("showHoverBorder").setAttribute("id", "selectionBorder");
-var selBorder = document.getElementById("selectionBorder");
-selBorder.style.border = "1px solid #00ff00";
-TRIANGLE.resize.showHandles();
-} else if (TRIANGLE.item) {
-TRIANGLE.hoverBorder.hide();
-TRIANGLE.selectionBorder.remove();
-var rect = TRIANGLE.item.objRef.getBoundingClientRect();
-document.getElementById("template").appendChild(TRIANGLE.generateBorder(rect));
-document.getElementById("showHoverBorder").setAttribute("id", "selectionBorder");
-var selBorder = document.getElementById("selectionBorder");
-selBorder.style.border = "1px solid #00ff00";
-TRIANGLE.resize.showHandles();
-}*/
-
-
-if (TRIANGLE.item) {
-  TRIANGLE.hoverBorder.hide();
-  TRIANGLE.selectionBorder.remove();
-  var rect = TRIANGLE.item.objRef.getBoundingClientRect();
-  document.getElementById("template").appendChild(TRIANGLE.generateBorder(rect));
-  document.getElementById("showHoverBorder").setAttribute("id", "selectionBorder");
-  var selBorder = document.getElementById("selectionBorder");
-  if (TRIANGLE.item.objRef.isContentEditable) {
-    selBorder.style.border = "1px dashed black";
-  } else {
-    selBorder.style.border = TRIANGLE.selectionBorder.style;
-  }
-  selBorder.style.zIndex = 2;
-  TRIANGLE.resize.showHandles();
-} else if (document.getElementById("showHoverBorder")) {
-  document.getElementById("showHoverBorder").id = "selectionBorder";
-  var selBorder = document.getElementById("selectionBorder");
-  selBorder.style.border = TRIANGLE.selectionBorder.style;
-  TRIANGLE.resize.showHandles();
-}
-TRIANGLE.unsaved = true;
-},
-
-
-remove : function removeSelectionBorder() {
-  if (document.getElementById("selectionBorder")) {
-    document.getElementById("template").removeChild(document.getElementById("selectionBorder"));
-    TRIANGLE.resize.removeHandles();
-  }
-},
-
-/*
-function updateSelectionBorder() resets the location of the border when the page is scrolled
-*/
-
-update : function updateSelectionBorder() {
-  if (document.getElementById("selectionBorder")) {
-    TRIANGLE.selectionBorder.remove();
-    TRIANGLE.selectionBorder.create();
-  }
-}
-
 
 } // end TRIANGLE.selectionBorder
+
+TRIANGLE.selectedItemOptions = {
+  show : function() {
+    if (TRIANGLE.item) {
+      var optionsBar = document.getElementById("selectedItemOptionsBar");
+      optionsBar.style.display = "initial";
+      var rect = TRIANGLE.item.objRef.getBoundingClientRect();
+      optionsBar.style.top = rect.bottom + 20 + "px";
+      optionsBar.style.left = rect.left + (rect.width / 2 - optionsBar.getBoundingClientRect().width / 2) + "px";
+    }
+  },
+
+  hide : function() {
+    document.getElementById("selectedItemOptionsBar").style.display = "none";
+  },
+
+  update : function() {
+    TRIANGLE.selectedItemOptions.hide();
+    TRIANGLE.selectedItemOptions.show();
+  }
+}
 
 TRIANGLE.resize = {
 
@@ -6000,8 +5950,6 @@ TRIANGLE.resize = {
       //================================================================================================
 
       var topMid = document.createElement("div");
-      topMid.style.width = handleWidth + "px";
-      topMid.style.height = handleHeight + "px";
       topMid.style.cursor = "row-resize";
       topMid.className = marginClass;
       topMid.style.top = rect.top - handleHeight / 2 - 2 + "px";
@@ -6012,8 +5960,6 @@ TRIANGLE.resize = {
 
       if (!isImage) {
         var botMid = document.createElement("div");
-        botMid.style.width = handleWidth + "px";
-        botMid.style.height = handleHeight + "px";
         botMid.style.cursor = "s-resize";
         botMid.className = classType;
         botMid.style.top = rect.bottom - 2 + "px";
@@ -6027,8 +5973,6 @@ TRIANGLE.resize = {
 
         if (TRIANGLE.item.align != "right") {
           var topRight = document.createElement("div");
-          topRight.style.width = handleWidth + "px";
-          topRight.style.height = handleHeight + "px";
           topRight.style.cursor = "ne-resize";
           topRight.className = classType;
           topRight.style.top = rect.top - handleHeight + 2 + "px";
@@ -6042,8 +5986,6 @@ TRIANGLE.resize = {
           topRight.addEventListener("mousedown", TRIANGLE.resize.initiate);
 
           var botRight = document.createElement("div");
-          botRight.style.width = handleWidth + "px";
-          botRight.style.height = handleHeight + "px";
           botRight.style.cursor = "se-resize";
           botRight.className = classType;
           botRight.style.top = rect.bottom - 2 + "px";
@@ -6057,8 +5999,6 @@ TRIANGLE.resize = {
           botRight.addEventListener("mousedown", TRIANGLE.resize.initiate);
         } else {
           var topLeft = document.createElement("div");
-          topLeft.style.width = handleWidth + "px";
-          topLeft.style.height = handleHeight + "px";
           topLeft.style.cursor = "nw-resize";
           topLeft.className = classType;
           topLeft.style.top = rect.top - handleHeight + 2 + "px";
@@ -6072,8 +6012,6 @@ TRIANGLE.resize = {
           topLeft.addEventListener("mousedown", TRIANGLE.resize.initiate);
 
           var botLeft = document.createElement("div");
-          botLeft.style.width = handleWidth + "px";
-          botLeft.style.height = handleHeight + "px";
           botLeft.style.cursor = "sw-resize";
           botLeft.className = classType;
           botLeft.style.top = rect.bottom - 2 + "px";
@@ -6090,8 +6028,6 @@ TRIANGLE.resize = {
 
       if (TRIANGLE.item.align !== "right") {
         var rightMid = document.createElement("div");
-        rightMid.style.width = handleWidth + "px";
-        rightMid.style.height = handleHeight + "px";
         rightMid.style.cursor = "e-resize";
         rightMid.className = classType;
         rightMid.style.top = rect.top + (rect.height / 2 - handleHeight / 2) + "px";
@@ -6105,8 +6041,6 @@ TRIANGLE.resize = {
         rightMid.addEventListener("mousedown", TRIANGLE.resize.initiate);
 
         var leftMid = document.createElement("div");
-        leftMid.style.width = handleWidth + "px";
-        leftMid.style.height = handleHeight + "px";
         leftMid.style.cursor = "col-resize";
         leftMid.className = marginClass;
         leftMid.style.top = rect.top + (rect.height / 2 - handleHeight / 2) + "px";
@@ -6121,8 +6055,6 @@ TRIANGLE.resize = {
 
       } else {
         var leftMid = document.createElement("div");
-        leftMid.style.width = handleWidth + "px";
-        leftMid.style.height = handleHeight + "px";
         leftMid.style.cursor = "e-resize";
         leftMid.className = classType;
         leftMid.style.top = rect.top + (rect.height / 2 - handleHeight / 2) + "px";
@@ -6136,8 +6068,6 @@ TRIANGLE.resize = {
         leftMid.addEventListener("mousedown", TRIANGLE.resize.initiate);
 
         var rightMid = document.createElement("div");
-        rightMid.style.width = handleWidth + "px";
-        rightMid.style.height = handleHeight + "px";
         rightMid.style.cursor = "col-resize";
         rightMid.className = marginClass;
         rightMid.style.top = rect.top + (rect.height / 2 - handleHeight / 2) + "px";
@@ -6177,7 +6107,8 @@ TRIANGLE.resize = {
 
   XY : function() {
     if(!TRIANGLE.resize.active) {
-      TRIANGLE.resize.activeElem = TRIANGLE.item.index;TRIANGLE.resize.direction = "XY";
+      TRIANGLE.resize.activeElem = TRIANGLE.item.index;
+      TRIANGLE.resize.direction = "XY";
       var ratioRect = TRIANGLE.item.objRef.getBoundingClientRect();
       TRIANGLE.resize.XYratio = ratioRect.width / ratioRect.height;
     }
@@ -7091,6 +7022,8 @@ TRIANGLE.keyEvents = { // keyboard shortcuts
 
       if (event.keyCode === 78) TRIANGLE.options.newRow();
 
+      if (event.keyCode === 88) TRIANGLE.keyEvents.keyX();
+
       if (event.ctrlKey && (event.keyCode === 37 || event.charCode === 37 || event.keyCode === 40 || event.charCode === 40)) TRIANGLE.template.decreaseOpacity();
 
       if (event.ctrlKey && (event.keyCode === 38 || event.charCode === 38 || event.keyCode === 39 || event.charCode === 39)) TRIANGLE.template.increaseOpacity();
@@ -7245,6 +7178,12 @@ TRIANGLE.keyEvents = { // keyboard shortcuts
   keyM : function() {
     TRIANGLE.images.load();
     TRIANGLE.menu.openSideMenu("imageLibraryMenu");
+  },
+
+  keyX : function() {
+    TRIANGLE.menu.displaySubMenu('displayDeveloper');
+    TRIANGLE.menu.menuBtnActive(document.getElementById("opDeveloper"));
+    TRIANGLE.developer.editCSS();
   },
 
   keyD : function() {
@@ -7632,8 +7571,23 @@ TRIANGLE.defaultSettings = function defaultSettings() {
   document.getElementById("opDeselect").addEventListener("click", TRIANGLE.clearSelection);
   // pop ups
   document.getElementById("uploadImagesBtn").addEventListener("click", TRIANGLE.images.upload);
+  // padding, margin, border
+  var gridBtns = document.querySelectorAll(".edgeOptionBtn");
+  for (var i = 0; i < gridBtns.length; i++) {
+    gridBtns[i].addEventListener("click", function() {
+      var edgeOptions = this.parentNode.querySelectorAll(".edgeOptionActive");
+      for (var i = 0; i < edgeOptions.length; i++) edgeOptions[i].classList.remove("edgeOptionActive");
+      this.classList.add("edgeOptionActive");
+      document.getElementById(this.parentNode.getAttribute("data-input")).focus();
+      if (TRIANGLE.item) TRIANGLE.importItem.single(TRIANGLE.item.index);
+    });
+  }
   // developer
   TRIANGLE.developer.editor.setTheme("ace/theme/dracula");
+  TRIANGLE.developer.editor.setOptions({
+    useSoftTabs: true,
+    navigateWithinSoftTabs: true
+  });
   // make first/last line read-only
   // TRIANGLE.developer.editor.commands.on("exec", function(e) {
   //   var rowCol = TRIANGLE.developer.editor.selection.getCursor();
@@ -7650,31 +7604,31 @@ TRIANGLE.defaultSettings = function defaultSettings() {
   TRIANGLE.developer.EditSession = ace.require("ace/edit_session").EditSession;
 
   TRIANGLE.developer.sessions.css = new TRIANGLE.developer.EditSession("css");
-  TRIANGLE.developer.sessions.css.setOptions({ mode: "ace/mode/css", useWorker: false });
+  TRIANGLE.developer.sessions.css.setOptions({ mode: "ace/mode/css", tabSize: 2, navigateWithinSoftTabs: true, useWorker: false });
   TRIANGLE.developer.sessions.css.on("change", TRIANGLE.saveItem.cssStyles);
 
   TRIANGLE.developer.sessions.hover = new TRIANGLE.developer.EditSession("hover");
-  TRIANGLE.developer.sessions.hover.setOptions({ mode: "ace/mode/css", useWorker: false });
+  TRIANGLE.developer.sessions.hover.setOptions({ mode: "ace/mode/css", tabSize: 2, navigateWithinSoftTabs: true, useWorker: false });
   TRIANGLE.developer.sessions.hover.on("change", TRIANGLE.saveItem.hoverStyles);
 
   TRIANGLE.developer.sessions.styleTag = new TRIANGLE.developer.EditSession("style");
-  TRIANGLE.developer.sessions.styleTag.setOptions({ mode: "ace/mode/css" });
+  TRIANGLE.developer.sessions.styleTag.setOptions({ mode: "ace/mode/css", tabSize: 2, navigateWithinSoftTabs: true });
   TRIANGLE.developer.sessions.styleTag.on("change", TRIANGLE.developer.saveStyleTag);
 
   TRIANGLE.developer.sessions.globalStyleTag = new TRIANGLE.developer.EditSession("globalStyle");
-  TRIANGLE.developer.sessions.globalStyleTag.setOptions({ mode: "ace/mode/css" });
+  TRIANGLE.developer.sessions.globalStyleTag.setOptions({ mode: "ace/mode/css", tabSize: 2, navigateWithinSoftTabs: true });
   TRIANGLE.developer.sessions.globalStyleTag.on("change", TRIANGLE.developer.saveGlobalStyleTag);
 
   TRIANGLE.developer.sessions.scriptTag = new TRIANGLE.developer.EditSession("script");
-  TRIANGLE.developer.sessions.scriptTag.setOptions({ mode: "ace/mode/javascript" });
+  TRIANGLE.developer.sessions.scriptTag.setOptions({ mode: "ace/mode/javascript", tabSize: 2, navigateWithinSoftTabs: true });
   TRIANGLE.developer.sessions.scriptTag.on("change", TRIANGLE.developer.saveScriptTag);
 
   TRIANGLE.developer.sessions.globalScriptTag = new TRIANGLE.developer.EditSession("globalScript");
-  TRIANGLE.developer.sessions.globalScriptTag.setOptions({ mode: "ace/mode/javascript" });
+  TRIANGLE.developer.sessions.globalScriptTag.setOptions({ mode: "ace/mode/javascript", tabSize: 2, navigateWithinSoftTabs: true });
   TRIANGLE.developer.sessions.globalScriptTag.on("change", TRIANGLE.developer.saveGlobalScriptTag);
 
   TRIANGLE.developer.sessions.codeSnippet = new TRIANGLE.developer.EditSession("codeSnippet");
-  TRIANGLE.developer.sessions.codeSnippet.setOptions({ mode: "ace/mode/html" });
+  TRIANGLE.developer.sessions.codeSnippet.setOptions({ mode: "ace/mode/html", tabSize: 2, navigateWithinSoftTabs: true });
   TRIANGLE.developer.sessions.codeSnippet.on("change", TRIANGLE.developer.saveCodeSnippet);
 
   var menuInputs = document.getElementById("menu").getElementsByTagName("input");
