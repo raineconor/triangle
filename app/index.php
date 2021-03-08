@@ -94,15 +94,24 @@
   <?php include "ui-components/menu_bar.html"; ?>
   <?php include "ui-components/submenu/export.php" ?>
   <?php include "ui-components/submenu/options.html" ?>
-  <?php include "ui-components/submenu/style.html" ?>
+  <?php include "ui-components/submenu/insert.html" ?>
+  <?php include "ui-components/submenu/layout.html" ?>
   <?php include "ui-components/submenu/colors.html" ?>
   <?php include "ui-components/submenu/text.php" ?>
   <?php include "ui-components/submenu/forms.html" ?>
   <?php include "ui-components/submenu/images.html" ?>
   <?php include "ui-components/submenu/premade_templates.html" ?>
   <?php include "ui-components/submenu/premade_elements.html" ?>
+  <?php include "ui-components/submenu/meta_data.html" ?>
   <?php include "ui-components/submenu/developer.html" ?>
-  <?php include "ui-components/side_options.html" ?>
+  <?php /*include "ui-components/side_options.html"*/ ?>
+  <div id="underMenu">
+    <?php include "ui-components/undermenu/padding.html"; ?>
+    <?php include "ui-components/undermenu/margin.html"; ?>
+    <?php include "ui-components/undermenu/padding_margin.html"; ?>
+    <?php include "ui-components/undermenu/border.html"; ?>
+    <?php include "ui-components/undermenu/box_shadow.html"; ?>
+  </div>
 </div>
 
 <div class="hide" id="sideMenu">
