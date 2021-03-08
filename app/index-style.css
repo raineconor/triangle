@@ -210,14 +210,17 @@ hr {
   text-align:center;
   top:170px;
   left:0;
+  border-radius:2px;
 }
 
 #codeEditorStatus {
   background-color:#131313;
-  padding:7px;
+  padding:7px 12px;
   border-bottom:1px solid #333333;
   color:lightgray;
   cursor:move;
+  border-top-left-radius:2px;
+  border-top-right-radius:2px;
 }
 
 #currentCode {
@@ -309,8 +312,8 @@ hr {
 }
 
 #hyperlinkMenu {
-  box-shadow:1px 2px 6px #333;
-  padding:15px;
+  box-shadow:0 0 8px rgba(20,20,20,0.25);
+  padding:25px;
   position:fixed;
   left:0;
   top:0;
@@ -318,6 +321,7 @@ hr {
   text-align:right;
   background-color:#ffffff;
   z-index:2;
+  border-radius: 2px;
 }
 
 #hyperlinkMenu button {
