@@ -1,5 +1,5 @@
 var AJAX = {
-  
+
   post : function(script, params, callback) {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function() {
@@ -11,7 +11,7 @@ var AJAX = {
     xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
     xmlhttp.send(params);
   },
-  
+
   get : function(script, params, callback) {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function() {
@@ -22,16 +22,5 @@ var AJAX = {
     xmlhttp.open("GET", script + "?" + params, true);
     xmlhttp.send();
   }
-  
+
 };
-
-
-
-
-
-
-
-
-
-
-
