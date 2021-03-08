@@ -52,6 +52,8 @@ input[type=checkbox] {
   vertical-align:middle;
   line-height:inherit;
   vertical-align:middle; */
+  vertical-align:middle;
+  margin:0;
 }
 
 input[type=radio] {
@@ -69,6 +71,7 @@ hr {
   height:1px;
   border:none;
   background-color:lightgray;
+  margin:8px 0;
 }
 
 /*============================================
@@ -748,7 +751,7 @@ hr {
 
 #colorPalette {
   background-color:lightgray;
-  box-shadow:0px 0px 3px #333333;
+  box-shadow:0 0 4px rgba(20,20,20,0.3);
   width:236px;
   height:auto;
   display:inline-block;
@@ -1051,6 +1054,22 @@ hr {
   height:88px;
 }
 
+#menu .subMenu .dropdown {
+  /* line-height: 0; */
+  display:inline-block;
+}
+#menu .subMenu .dropdown-toggle::after {
+  vertical-align: middle;
+}
+
+#menu .subMenu .dropdown-menu {
+  border-radius:3px;
+  box-shadow:0 0 8px rgba(20,20,20,0.2);
+  padding:15px;
+  background-color:#f3f2f1;
+  text-align:right;
+}
+
 .optionImage {
   width:100%;
 }
@@ -1228,7 +1247,7 @@ hr {
 .tinyColorBox {
   width:22px;
   height:22px;
-  vertical-align: bottom;
+  vertical-align: middle;
   display:inline-block;
   cursor:pointer;
   border-top:1px solid gray;
@@ -1372,29 +1391,33 @@ hr.clearFloat {
   display:inline-block;
   cursor:pointer;
   margin:1%;
-  border:1px solid lightgray;
+  /* border:1px solid lightgray; */
   object-fit:cover;
+  opacity:1;
+  transition:opacity 100ms ease 0ms;
 }
 
 .imgLibrary:hover {
-  opacity:0.9;
-  border:1px solid white;
+  opacity:0.85;
+  /* border:1px solid white; */
+}
+
+.resizeHandle, .marginHandle {
+  width:8px;
+  height:8px;
+  position:fixed;
+  pointer-events:auto;
+  z-index:2;
 }
 
 .resizeHandle {
   background-color:#ffffff;
   border:1px solid gray;
-  position:fixed;
-  pointer-events:auto;
-  z-index:2;
 }
 
 .marginHandle {
-  background-color:#80e1ff;
-  border:1px solid #007599;
-  position:fixed;
-  pointer-events:auto;
-  z-index:2;
+  background-color:#90f3ff;
+  border:1px solid #4899B7;
 }
 
 .cropHandle {
@@ -1513,11 +1536,13 @@ hr.clearFloat {
   animation-duration: 200ms;
 }
 
-.codeBox {
+#menu textarea.codeBox,
+#menu input.codeBox {
   background-color:#1d1f20;
   color:#f8f8f8;
   font-family:'Courier New', monospace;
-  width:375px;
+  /* width:375px; */
+  width: 20em;
 }
 
 .applyAllBtn {
@@ -1546,6 +1571,10 @@ hr.clearFloat {
   width:12px;
   margin:0;
   vertical-align:bottom;
+}
+
+.rotate90 {
+  transform: rotate(90deg);
 }
 
 [triangle-class~=templateItem] {
