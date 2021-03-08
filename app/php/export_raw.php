@@ -10,7 +10,7 @@
   $templateName;
   $pageName;
   $instance = intval(sanitize($_POST["instance"]));
-  $compress = boolval($_POST["compress"]);
+  $compress = boolval(sanitize($_POST["compress"]));
 
   if (!empty($_POST["templateName"]) && isset($_POST["templateName"])) {
     $templateName = sanitize($_POST["templateName"]);
@@ -37,23 +37,29 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Triangle | Export Template as Raw Code</title>
+<title>Triangle - Raw Code</title>
+<link rel="stylesheet" href="../ace/ace-style.css" type="text/css" media="screen" />
 <style>
 * {
   box-sizing: border-box;
 }
-#container {
-  height:98vh;
+body {
+  height:100%;
+  display:flex;
+  margin:0;
+  padding:0;
 }
-textarea {
+#ace-editor {
   width:<?php if ($compress) { echo "100"; } else { echo "50"; } ?>%;
   height:100%;
-  resize:none;
+}
+#editor1, #editor2 {
+ width:50%;
+ height:100vh;
 }
 </style>
 </head>
 <body>
-<div id="container">
 <?php
   //$code = formatCode();
   $code = formatCode($JSON_arr, $templateName, $pageName, $compress, $croppedImgPaths);
@@ -61,13 +67,26 @@ textarea {
   $code[1] = preg_replace("@url\(\"[^\"]*\/(images\/[^\"]+)\"\)@", "url(\"$1\")", $code[1]);
 ?>
 
-<textarea>
-<?php echo htmlentities($code[0]); ?>
-</textarea><!--
+<div id="editor1"><?php echo htmlentities($code[0]); ?></div><!--
 
 --><?php
-if (!$compress) echo "<textarea>" . $code[1] . "</textarea>";
+if (!$compress) echo "<div id='editor2'>" . htmlentities($code[1]) . "</div>";
 ?>
-</div>
+<script src="../ace/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+  var editor1 = ace.edit("editor1");
+  editor1.setTheme("ace/theme/dracula");
+  editor1.session.setMode("ace/mode/html");
+  editor1.session.setTabSize(2);
+  editor1.session.setUseSoftTabs(true);
+  editor1.session.setNavigateWithinSoftTabs(true);
+
+  var editor2 = ace.edit("editor2");
+  editor2.setTheme("ace/theme/merbivore_soft");
+  editor2.session.setMode("ace/mode/css");
+  editor2.session.setTabSize(2);
+  editor2.session.setUseSoftTabs(true);
+  editor2.session.setNavigateWithinSoftTabs(true);
+</script>
 </body>
 </html>
