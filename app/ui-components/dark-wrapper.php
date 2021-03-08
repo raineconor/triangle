@@ -5,8 +5,8 @@
       <h3>Save New Template</h3>
       Enter a name:
       <input type="text" size="32" id="saveTemplateName" maxlength="32">
-      <button onClick="TRIANGLE.saveTemplate.saveTemplate(document.getElementById('saveTemplateName').value);">Save</button>
-      <button onClick="TRIANGLE.saveTemplate.cancelSave();">Cancel</button>
+      <button type="button" class="btn btn-primary btn-sm" onClick="TRIANGLE.saveTemplate.saveTemplate(document.getElementById('saveTemplateName').value);">Save</button>
+      <button type="button" class="btn btn-outline-secondary btn-sm" onClick="TRIANGLE.saveTemplate.cancelSave();">Cancel</button>
     </div>
   </div>
   <!-- Save Page -->
@@ -15,8 +15,8 @@
       <h3>Save New Page</h3>
       Enter a name:
       <input type="text" size="32" id="savePageName" maxlength="64">
-      <button onClick="TRIANGLE.saveTemplate.saveTemplate('', document.getElementById('savePageName').value);">Save</button>
-      <button onClick="TRIANGLE.saveTemplate.cancelSave();">Cancel</button>
+      <button type="button" class="btn btn-primary btn-sm" onClick="TRIANGLE.saveTemplate.saveTemplate('', document.getElementById('savePageName').value);">Save</button>
+      <button type="button" class="btn btn-outline-secondary btn-sm" onClick="TRIANGLE.saveTemplate.cancelSave();">Cancel</button>
     </div>
   </div>
   <!-- Load Template -->
@@ -25,7 +25,7 @@
       <h3>Load Template</h3>
       <!--<div id="echoLoadList"></div>-->
       <br>
-      <button onClick="TRIANGLE.loadTemplate.cancelLoad();">Cancel</button>
+      <button type="button" class="btn btn-outline-secondary btn-sm" onClick="TRIANGLE.loadTemplate.cancelLoad();">Cancel</button>
     </div>
   </div>
   <!-- Upload Images -->
@@ -34,7 +34,7 @@
       <h3>Upload Images</h3>
       <br>
       <form class="dropzone mb-3" action="php/upload_image.php"></form>
-      <button onClick="TRIANGLE.popUp.close();">Cancel</button>
+      <button type="button" class="btn btn-outline-secondary btn-sm" onClick="TRIANGLE.popUp.close();">Cancel</button>
     </div>
   </div>
   <!-- Import Website -->
@@ -43,8 +43,8 @@
       <h3>Import Website</h3>
       <input type="text" id="importWebsiteURL" size="64" style="margin-bottom:10px;">
       <br>
-      <button onClick="TRIANGLE.loadTemplate.importWebsite();">Submit</button>
-      <button onClick="TRIANGLE.popUp.close();">Cancel</button>
+      <button type="button" class="btn btn-primary btn-sm" onClick="TRIANGLE.loadTemplate.importWebsite();">Submit</button>
+      <button type="button" class="btn btn-outline-secondary btn-sm" onClick="TRIANGLE.popUp.close();">Cancel</button>
     </div>
   </div>
   <!-- Pixel Fixed Width -->
@@ -52,8 +52,8 @@
     <div class="popUpInner" id="getFixedWidthBox">
       Enter a Width:
       <input type="text" size="10" value="1170" id="customFixedWidth">
-      <button onClick="TRIANGLE.template.fixedWidth();">Submit</button>
-      <button onClick="TRIANGLE.popUp.close();">Cancel</button>
+      <button type="button" class="btn btn-primary btn-sm" onClick="TRIANGLE.template.fixedWidth();">Submit</button>
+      <button type="button" class="btn btn-outline-secondary btn-sm" onClick="TRIANGLE.popUp.close();">Cancel</button>
     </div>
   </div>
   <!-- Publish with FTP Profile -->
@@ -78,8 +78,8 @@
       ?>
       </select>
       <br><br>
-      <button id="exportPublishSend">Submit</button>
-      <button id="exportPublishCancel">Cancel</button>
+      <button type="button" class="btn btn-primary btn-sm" id="exportPublishSend">Submit</button>
+      <button type="button" class="btn btn-outline-secondary btn-sm" id="exportPublishCancel">Cancel</button>
     </div>
   </div>
   <!-- Loading Prompt -->
@@ -110,17 +110,17 @@
       <h2 id="errorTitle">Error</h2>
       <div id="errorMsg"></div>
       <br>
-      <button onClick="TRIANGLE.popUp.close();">Close</button>
+      <button type="button" class="btn btn-outline-secondary btn-sm" onClick="TRIANGLE.popUp.close();">Close</button>
     </div>
   </div>
   <!-- Delete Page -->
   <div class="popUp" id="deletePageCell" style="display:none">
     <div class="popUpInner" id="deletePage">
-      <img src="images/blue-triangle-small.png">
       <h2>Delete Page?</h2>
       <div id="confirmDeletePage" style="text-align:center;"></div>
       <br>
-      <button id="confirmDeletePageBtn">Delete</button><button onClick="TRIANGLE.popUp.close();">Cancel</button>
+      <button type="button" class="btn btn-danger btn-sm" id="confirmDeletePageBtn">Delete</button>
+      <button type="button" class="btn btn-outline-secondary btn-sm" onClick="TRIANGLE.popUp.close();">Cancel</button>
     </div>
   </div>
 </div>

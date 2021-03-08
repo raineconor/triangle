@@ -1,13 +1,12 @@
 <div id="hyperlinkMenu">
   URL: <input type="text" id="hyperlinkURL"><br>
-  <!--Title: <input type="text"><br>-->
-  <div style="text-align:center;margin-top:3px;">
-    <select id="hyperlinkPage" style="max-width:200px;">
+  <div class="text-center mt-2">
+    <select id="hyperlinkPage" class="form-select form-select-sm" style="max-width:200px;">
       <option value=" - Select a page -" selected="selected">- Select a page -</option>
     </select>
   </div>
-  <div style="text-align:center;margin-top:3px;">
-    <button onClick="TRIANGLE.text.applyHyperlink();">Apply</button>
-    <button onClick="TRIANGLE.text.cancelHyperlink();">Cancel</button>
+  <div class="text-center mt-2">
+    <button type="button" class="btn btn-primary btn-sm" onClick="TRIANGLE.text.applyHyperlink();">Apply</button>
+    <button type="button" class="btn btn-outline-secondary btn-sm" onClick="TRIANGLE.text.cancelHyperlink();">Cancel</button>
   </div>
 </div>
