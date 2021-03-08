@@ -64,7 +64,7 @@ function formatCode($data, $templateName, $pageName, $compress = false, $cropped
          . $fonts
 
          . "</head>\n\n"
-         . "<body>\n"
+         . "<body>\n\n"
          . "<div class=\"container\">\n";
 
   $itemHTML = "";
@@ -214,7 +214,7 @@ function formatCode($data, $templateName, $pageName, $compress = false, $cropped
 
   $scriptTag = $openScript . "\n" . $scriptTag . $closeScript;
 
-  //echo $scriptTag;
+  if (preg_replace("/\s+/", "", $scriptTag) == "<scripttype=\"text/javascript\"></script>") $scriptTag = "";
 
   if ($imgCount > 5) {
     $imgCount = "<script type=\"text/javascript\">\n" . file_get_contents(__DIR__ . "/../resources/lazyload/lazyload.js") . "\n</script>\n\n";
@@ -655,11 +655,12 @@ function formatCSStext($cssStr, $isCropped = "") {
     "border-left-width", "border-left-style", "border-left-color",
 
     "border-radius",
+    "outline", "outline-style", "outline-color", "outline-width", "outline-offset",
     "box-shadow",
     "font-family", "font-weight", "font-size",
     "color",
     "line-height",
-    "text-align", "text-decoration", "text-dcoration-color", "text-shadow",
+    "text-align", "text-decoration", "text-decoration-color", "text-shadow",
     "letter-spacing",
     "cursor",
     "opacity", "visibility",
