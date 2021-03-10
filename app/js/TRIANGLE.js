@@ -830,7 +830,8 @@ TRIANGLE.importItem = {
 
     function importFont() {
       document.getElementById("fontColor").value = TRIANGLE.colors.rgbToHex(TRIANGLE.itemStyles.color);
-      document.getElementById("fontSize").value = isNaN(parseFloat(TRIANGLE.itemStyles.fontSize)) ? null : parseFloat(TRIANGLE.itemStyles.fontSize);
+      // document.getElementById("fontSize").value = isNaN(parseFloat(TRIANGLE.itemStyles.fontSize)) ? null : parseFloat(TRIANGLE.itemStyles.fontSize);
+      document.getElementById("fontSize").value = TRIANGLE.itemStyles.fontSize;
       document.getElementById("fontLineHeight").value = TRIANGLE.itemStyles.lineHeight;
       document.getElementById("fontWeight").value = TRIANGLE.itemStyles.fontWeight;
 
@@ -2158,8 +2159,8 @@ TRIANGLE.json = {
       template.items[itemID]["nextSib"] = sv_item.nextSibling() ? sv_item.nextSibling().id : 0;
       template.items[itemID]["prevSib"] = sv_item.prevSibling() ? sv_item.prevSibling().id : 0;
       template.items[itemID]["isLastChild"] = sv_item.isLastChild;
-      template.items[itemID]["item-align"] = sv_item.align;
-      template.items[itemID]["hover-style"] = sv_item.hover.cssText;
+      template.items[itemID]["item-align"] = sv_item.align || "";
+      template.items[itemID]["hover-style"] = sv_item.hover.cssText || "";
       template.items[itemID]["link-to"] = sv_item.linkTo;
       template.items[itemID]["onClick"] = sv_item.objRef.getAttribute("onclick");
       template.items[itemID]["crop-map"] = sv_item.cropMap;
@@ -2284,6 +2285,7 @@ TRIANGLE.json = {
     createItem.style.cssText = itemSrc["style"];
     createItem.innerHTML = itemSrc["innerHTML"] ? itemSrc["innerHTML"] : "";
     createItem.src = itemSrc["src"] ? itemSrc["src"] : "";
+    createItem.innerHTML = itemSrc["innerHTML"] ? itemSrc["innerHTML"].replace(/\%26amp;/g, "&") : "";
     itemSrc["item-align"] ? createItem.setAttribute("item-align", itemSrc["item-align"]) : null;
     itemSrc["hover-style"] ? createItem.setAttribute("hover-style", itemSrc["hover-style"]) : null;
     itemSrc["link-to"] ? createItem.setAttribute("link-to", itemSrc["link-to"]) : null;
@@ -4160,7 +4162,7 @@ deleteHyperlink : function deleteHyperlink() {
       document.execCommand("unlink");
     } else {
       var firstChild = TRIANGLE.item.objRef.firstChild;
-      var firstChildTag = firstChild.tagName;
+      var firstChildTag = firstChild ? firstChild.tagName : null;
 
       if (TRIANGLE.isType.textBox(TRIANGLE.item.objRef) && TRIANGLE.item.objRef.children.length === 1 && firstChildTag === "A") {
         TRIANGLE.item.objRef.innerHTML = firstChild.innerHTML;
@@ -4231,7 +4233,7 @@ insertHorizontalRule : function insertHorizontalRule() {
 },
 
 changeFont : function changeFont(dropdownMenu) {
-  if (!TRIANGLE.isType.textBox(TRIANGLE.item.objRef)) return;
+  // if (!TRIANGLE.isType.textBox(TRIANGLE.item.objRef)) return;
   var selectedOp = dropdownMenu.options[dropdownMenu.selectedIndex];
   var fontName = selectedOp.text;
   var fontCategory = selectedOp.getAttribute("triangle-font-category");
@@ -4305,8 +4307,6 @@ deleteUnusedFonts : function() {
       fontURL = encodeURIComponent(fontURL);
       fontURL = fontURL.replace(/\./g, "\\."); // escape . character
       fontURL = fontURL.replace(/%0A/g, ""); // remove newline character
-
-      var needle = new RegExp(fontURL);
 
       var fontData = document.getElementById("fontData");
 

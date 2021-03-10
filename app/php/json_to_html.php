@@ -351,7 +351,8 @@ function formatCode($data, $templateName, $pageName, $compress = false, $cropped
         . "}\n\n"
 
         . "body {\n"
-        . "  font-family:Verdana, Arial, sans-serif;\n"
+        . "  font-family:" . $data["fontFamily"] . ";\n"
+        . "  font-size:16px;\n"
         . "  background-color:" . preg_replace("/[^;]*;\s?background-color:\s?([^;]+);[^;]*;?/", "$1", $data["bodyBgData"]) . ";\n"
         . "  margin:0;\n"
         . "}\n\n"
