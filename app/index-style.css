@@ -1297,6 +1297,11 @@ hr {
   /*border:1px solid #e6e6e6;*/
 }
 
+.tinyColorBox:hover {
+  outline:1px solid #333333;
+  outline-offset:-1px;
+}
+
 .tinyColorBoxSpacing {
   width:22px;
   height:22px;
@@ -1542,6 +1547,7 @@ hr.clearFloat {
 }
 .colorPaletteItem:hover {
   border-color:black;
+  outline:1px solid white;
   cursor:pointer;
 }
 .paletteCategory {
