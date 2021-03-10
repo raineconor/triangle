@@ -43,3 +43,6 @@ document.getElementById("boxShadowBtn").addEventListener("click", function() {
   BS.boxShadowMenu._element.classList.contains("show") ? BS.underMenuMarginFix.hide() : BS.underMenuMarginFix.show();
   BS.boxShadowMenu.toggle();
 });
+
+// var poop = new bootstrap.Toast(document.getElementById("darkToast"), {animation:false,autohide:false});
+// poop.show();

@@ -336,7 +336,7 @@ hr {
   left:0;*/
 }
 
-#darkWrapper {
+#darkWrapper, #darkToaster {
   display:none;
   background-color:rgba(0,0,0,0.5);
   width:100%;
@@ -345,9 +345,8 @@ hr {
   left:0;
   right:0;
   top:0;
-  /*top:170px;*/
   bottom:0;
-  z-index:5; /* selected elements have a z-index of 1, so z-index:2 shows over it */
+  z-index:100;
 }
 
 #hyperlinkMenu {

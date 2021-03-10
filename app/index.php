@@ -186,6 +186,17 @@
 <?php include "ui-components/toasts.html"; ?>
 
 <div id="toaster" class="toast-container fixed-bottom p-3"></div>
+<div id="darkToaster" class="justify-content-center align-items-center">
+  <div id="darkToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="toast-body">
+      Dark Toast
+      <div class="mt-2 pt-2 border-top">
+        <button type="button" class="btn btn-primary btn-sm">Take action</button>
+        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="toast">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <?php include "ui-components/crop_image.html"; ?>
 
