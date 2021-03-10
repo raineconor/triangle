@@ -164,28 +164,7 @@
   <div id="fontData"></div>
 </div>
 
-<div class="btn-group" id="selectedItemOptionsBar" style="display:none;">
-  <!-- <li class="selectedItemOption" id="selectedItemInsertEmptyItem" onclick="TRIANGLE.options.newRow();"> -->
-  <div class="selectedItemOption" id="selectedItemInsertEmptyItem" onclick="TRIANGLE.options.newRow();" data-bs-toggle="tooltip" data-bs-placement="bottom" title="New Section (N)">
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-square" viewBox="0 0 16 16">
-      <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"></path>
-      <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"></path>
-    </svg>
-  </div>
-
-  <div class="selectedItemOption" id="selectedItemDuplicateItem" onclick="TRIANGLE.options.duplicate();" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Duplicate (D)">
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-layers" viewBox="0 0 16 16">
-      <path d="M8.235 1.559a.5.5 0 0 0-.47 0l-7.5 4a.5.5 0 0 0 0 .882L3.188 8 .264 9.559a.5.5 0 0 0 0 .882l7.5 4a.5.5 0 0 0 .47 0l7.5-4a.5.5 0 0 0 0-.882L12.813 8l2.922-1.559a.5.5 0 0 0 0-.882l-7.5-4zm3.515 7.008L14.438 10 8 13.433 1.562 10 4.25 8.567l3.515 1.874a.5.5 0 0 0 .47 0l3.515-1.874zM8 9.433L1.562 6 8 2.567 14.438 6 8 9.433z"></path>
-    </svg>
-  </div>
-
-
-    <div class="selectedItemOption" id="selectedItemInsertChild" onclick="TRIANGLE.options.insertNewChild();" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Insert Child Item">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-save2" viewBox="0 0 16 16">
-        <path d="M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H9.5a1 1 0 0 0-1 1v4.5h2a.5.5 0 0 1 .354.854l-2.5 2.5a.5.5 0 0 1-.708 0l-2.5-2.5A.5.5 0 0 1 5.5 6.5h2V2a2 2 0 0 1 2-2H14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h2.5a.5.5 0 0 1 0 1H2z"/>
-      </svg>
-    </div>
-</div>
+<?php include "ui-components/selected_item_options.html"; ?>
 
 <div id="bottomMarker">
   <div>Bottom</div>
