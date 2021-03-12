@@ -39,6 +39,7 @@ function formatCode($data, $templateName, $pageName, $compress = false, $cropped
                 . "<link rel=\"stylesheet\" href=\"" . $pageName .".css\" type=\"text/css\" media=\"screen\">\n"
                 . "<!--=================================-->\n\n";*/
                 $CSSinclude = "<style><css></style>\n\n";
+                // $CSSinclude = "<link rel=\"stylesheet\" href=\"" . $pageName .".css\" type=\"text/css\" media=\"screen\">\n\n";
   }
 
   // PHP 7 logic
@@ -59,9 +60,8 @@ function formatCode($data, $templateName, $pageName, $compress = false, $cropped
          . "<meta name=\"keywords\" content=\"" . $metaKeywords . "\">\n"
          . "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n\n"
 
-         . $CSSinclude
-
          . $fonts
+         . $CSSinclude
 
          . "</head>\n\n"
          . "<body>\n\n"
@@ -346,9 +346,9 @@ function formatCode($data, $templateName, $pageName, $compress = false, $cropped
         . "  box-sizing:border-box;\n"
         . "}\n\n"
 
-        . "*[onClick] {\n"
-        . "  cursor:pointer;\n"
-        . "}\n\n"
+        // . "*[onClick] {\n"
+        // . "  cursor:pointer;\n"
+        // . "}\n\n"
 
         . "body {\n"
         . "  font-family:" . $data["fontFamily"] . ";\n"

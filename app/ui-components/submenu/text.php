@@ -9,7 +9,11 @@
   </div>
 
   <div class="subMenuOption">
-    <select id="fontType" class="form-select form-select-sm" onChange="TRIANGLE.text.changeFont(this);" style="width:102px;">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-fonts" viewBox="0 0 16 16">
+      <path d="M12.258 3H3.747l-.082 2.46h.478c.26-1.544.76-1.783 2.694-1.845l.424-.013v7.827c0 .663-.144.82-1.3.923v.52h4.082v-.52c-1.162-.103-1.306-.26-1.306-.923V3.602l.43.013c1.935.062 2.434.301 2.694 1.846h.479L12.258 3z"/>
+    </svg>
+    <select id="fontType" class="form-select form-select-sm" onChange="TRIANGLE.text.changeFont(this);">
+      <option triangle-font-category="" google-font="false" style="font-family:inherit;">Inherit</option>
       <option triangle-font-category="sans-serif" google-font="false" style="font-family:'Arial';">Arial</option>
       <option triangle-font-category="sans-serif" google-font="false" style="font-family:'Arial Black';">Arial Black</option>
       <option triangle-font-category="serif" google-font="false" style="font-family:'Times New Roman';">Times New Roman</option>
@@ -20,15 +24,19 @@
       <option triangle-font-category="serif" google-font="false" style="font-family:'Georgia';">Georgia</option>
       <option triangle-font-category="serif" google-font="false" style="font-family:'Garamond';">Garamond</option>
       <?php include "google_fonts.html"; ?>
-    </select><!-- <div class="dropdown d-inline-block">
-    <button class="dropdown-toggle" style="height:22px;width:22px;vertical-align:bottom;margin:0;" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-    </button>
-    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-      <li><a class="dropdown-item" href="#">Action</a></li>
-      <li><a class="dropdown-item" href="#">Another action</a></li>
-      <li><a class="dropdown-item" href="#">Something else here</a></li>
-    </ul>
-  </div> --><input type="number" id="fontSize" min="0" onChange="TRIANGLE.text.changeFontSize();">
+    </select><!-- <input type="number" id="fontSize" min="0" onChange="TRIANGLE.text.changeFontSize();">
+    --><input type="text" id="fontSize" onChange="TRIANGLE.text.changeFontSize();">
+  </div>
+
+  <div class="subMenuOption">
+    <!-- <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-fonts" viewBox="0 0 16 16">
+      <path d="M12.258 3H3.747l-.082 2.46h.478c.26-1.544.76-1.783 2.694-1.845l.424-.013v7.827c0 .663-.144.82-1.3.923v.52h4.082v-.52c-1.162-.103-1.306-.26-1.306-.923V3.602l.43.013c1.935.062 2.434.301 2.694 1.846h.479L12.258 3z"/>
+    </svg> -->
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-border-width" viewBox="0 0 16 16">
+      <path d="M0 3.5A.5.5 0 0 1 .5 3h15a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5H.5a.5.5 0 0 1-.5-.5v-2zm0 5A.5.5 0 0 1 .5 8h15a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H.5a.5.5 0 0 1-.5-.5v-1zm0 4a.5.5 0 0 1 .5-.5h15a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5z"/>
+    </svg>
+    <span class="subMenuOptionLabel">Weight</span>
+    <input type="text" id="fontWeight">
   </div>
 
   <div class="subMenuOption subMenuOptionBtn" onmousedown="TRIANGLE.text.bold();">
@@ -120,14 +128,6 @@
     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-hr" viewBox="0 0 16 16">
       <path d="M12 3H4a1 1 0 0 0-1 1v2.5H2V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v2.5h-1V4a1 1 0 0 0-1-1zM2 9.5h1V12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V9.5h1V12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9.5zm-1.5-2a.5.5 0 0 0 0 1h15a.5.5 0 0 0 0-1H.5z"/>
     </svg>
-  </div>
-
-  <div class="subMenuOption">
-    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-fonts" viewBox="0 0 16 16">
-      <path d="M12.258 3H3.747l-.082 2.46h.478c.26-1.544.76-1.783 2.694-1.845l.424-.013v7.827c0 .663-.144.82-1.3.923v.52h4.082v-.52c-1.162-.103-1.306-.26-1.306-.923V3.602l.43.013c1.935.062 2.434.301 2.694 1.846h.479L12.258 3z"/>
-    </svg>
-    <span class="subMenuOptionLabel">Font Weight</span>
-    <input type="text" id="fontWeight">
   </div>
 
 <section class="d-none">

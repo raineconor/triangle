@@ -171,9 +171,13 @@ hr {
 #menu input[type="number"] {
   width:45px;
 }
+#menu select#fontType {
+  width:150px;
+}
 #menu input#fontSize {
   border-left:none;
   margin:0;
+  width:50px;
 }
 #menu input#fontWeight {
   width:55px;
@@ -237,7 +241,8 @@ hr {
 #codeEditorWrapper {
   box-shadow:0px 0px 4px rgba(10, 10, 10, 0.5);
   width:400px;
-  height:400px;
+  /* height:400px; */
+  height:auto;
   display:inline-block;
   position:fixed;
   user-select:none;
@@ -298,6 +303,7 @@ hr {
 
 #templateWrapper {
   /* min-height:170px; */
+  font-size:16px;
   min-height:50vh;
   animation-name: fade-in;
   animation-duration: 400ms;
@@ -307,6 +313,13 @@ hr {
   transition:all 500ms;
   opacity:0;
   visibility:hidden;
+}
+
+#template p {
+  /* all:initial; */
+  /* margin:initial; */
+  /* margin-top:1em;
+  margin-bottom:1em; */
 }
 
 #template button {
