@@ -1,10 +1,16 @@
 <?php
 
-// Linux AMPPS
+// MAMP
 $host = '127.0.0.1';
 $db   = 'triangle';
 $user = 'root';
-$pass = 'mysql';
+$pass = 'root';
+
+// AMPPS
+// $host = '127.0.0.1';
+// $db   = 'triangle';
+// $user = 'root';
+// $pass = 'mysql';
 
 
 // CC VPS
