@@ -1,5 +1,7 @@
 #ace-editor {
-  height:364px;
+  /* height:364px; */
+  /* height:auto; */
+  /* max-height:364px; */
   border-bottom-left-radius: 2px;
   border-bottom-right-radius: 2px;
 }

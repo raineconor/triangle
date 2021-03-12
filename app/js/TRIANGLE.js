@@ -7586,7 +7586,9 @@ TRIANGLE.defaultSettings = function defaultSettings() {
   TRIANGLE.developer.editor.setTheme("ace/theme/dracula");
   TRIANGLE.developer.editor.setOptions({
     useSoftTabs: true,
-    navigateWithinSoftTabs: true
+    navigateWithinSoftTabs: true,
+    maxLines: 30,
+    minLines: 20
   });
   // make first/last line read-only
   // TRIANGLE.developer.editor.commands.on("exec", function(e) {
