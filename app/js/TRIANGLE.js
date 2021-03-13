@@ -24,11 +24,30 @@ NodeList.prototype.remove = HTMLCollection.prototype.remove = function() {
 //==================================================================================================
 //==================================================================================================
 
+TRIANGLE.iframe = function() {
+  return document.getElementById("iframeTemplate")
+};
+TRIANGLE.iframe().contentDocument.head.innerHTML += '<link rel="stylesheet" href="template-style.css" type="text/css" media="screen" />';
+// TRIANGLE.iframe().contentDocument.addEventListener("keydown", function(event){event.preventDefault()});
+// TRIANGLE.iframe().contentDocument.addEventListener("keyup", function(event){event.preventDefault()});
+TRIANGLE.iframe().getElementById = function(id) {
+  return TRIANGLE.iframe().contentDocument.getElementById(id);
+}
+TRIANGLE.iframe().getElementsByClassName = function(className) {
+  return TRIANGLE.iframe().contentDocument.getElementsByClassName(className);
+}
+TRIANGLE.iframe().querySelector = function(selector) {
+  return TRIANGLE.iframe().contentDocument.querySelector(selector);
+}
+TRIANGLE.iframe().querySelectorAll = function(selector) {
+  return TRIANGLE.iframe().contentDocument.querySelectorAll(selector);
+}
 
-TRIANGLE.templateItems = document.getElementsByClassName("templateItem");
+TRIANGLE.templateItems = TRIANGLE.iframe().getElementsByClassName("templateItem");
 
 TRIANGLE.refreshTemplateItems = function() {
-  var itemList = document.getElementById("template").getElementsByClassName("templateItem");
+  // var itemList = TRIANGLE.iframe().getElementById("template").getElementsByClassName("templateItem");
+  var itemList = TRIANGLE.iframe().getElementsByClassName("templateItem");
   TRIANGLE.templateItems = null;
   TRIANGLE.templateItems = itemList;
   return itemList;
@@ -42,7 +61,7 @@ TRIANGLE.template = {
 
   getFixedWidth : function getFixedWidth() {
     TRIANGLE.popUp.open("getFixedWidthCell");
-    document.getElementById("customFixedWidth").value = document.getElementById("template").style.width;
+    document.getElementById("customFixedWidth").value = TRIANGLE.iframe().getElementById("template").style.width;
   },
 
   type : null, // contains either "fixed" or "fluid"
@@ -50,11 +69,11 @@ TRIANGLE.template = {
   fixedWidth : function fixedWidth() {
     var getFixedValue = document.getElementById("customFixedWidth").value;
     if ((/\D/g).test(getFixedValue)) {
-      document.getElementById("template").style.width = getFixedValue;
+      TRIANGLE.iframe().getElementById("template").style.width = getFixedValue;
     } else {
-      document.getElementById("template").style.width = getFixedValue + "px";
+      TRIANGLE.iframe().getElementById("template").style.width = getFixedValue + "px";
     }
-    document.getElementById("template").style.margin = "0 auto";
+    TRIANGLE.iframe().getElementById("template").style.margin = "0 auto";
     TRIANGLE.template.type = "fixed";
     TRIANGLE.popUp.close();
     TRIANGLE.selectionBorder.update();
@@ -66,8 +85,8 @@ TRIANGLE.template = {
 
   fluidWidth : function fluidWidth() {
     //TRIANGLE.template.objRef = refreshTemplateRef();
-    document.getElementById("template").style.width = "100%";
-    document.getElementById("template").style.margin = "";
+    TRIANGLE.iframe().getElementById("template").style.width = "100%";
+    TRIANGLE.iframe().getElementById("template").style.margin = "";
     TRIANGLE.template.type = "fluid"; // changes a global variable
     TRIANGLE.selectionBorder.update();
   },
@@ -79,20 +98,20 @@ TRIANGLE.template = {
       TRIANGLE.templateItems[i].removeEventListener("dblclick", TRIANGLE.text.editText);
     }
     //TRIANGLE.template.objRef = refreshTemplateRef();
-    document.getElementById("template").innerHTML = "";
-    document.getElementById("bodyBgData").style.backgroundColor = "#FFFFFF";
-    document.getElementById("hoverData").innerHTML = "";
-    document.getElementById("hoverItems").innerHTML = "";
-    document.getElementById("animationData").innerHTML = "";
-    document.getElementById("fontData").innerHTML = "";
-    document.getElementById("template").style.fontFamily = "";
+    TRIANGLE.iframe().getElementById("template").innerHTML = "";
+    TRIANGLE.iframe().getElementById("bodyBgData").style.backgroundColor = "#FFFFFF";
+    TRIANGLE.iframe().getElementById("hoverData").innerHTML = "";
+    TRIANGLE.iframe().getElementById("hoverItems").innerHTML = "";
+    TRIANGLE.iframe().getElementById("animationData").innerHTML = "";
+    TRIANGLE.iframe().getElementById("fontData").innerHTML = "";
+    TRIANGLE.iframe().getElementById("template").style.fontFamily = "";
     TRIANGLE.colors.updateBodyBg();
     //checkBottomMarker();
     TRIANGLE.clearSelection();
   },
 
   increaseOpacity : function() {
-    var template = document.getElementById("template");
+    var template = TRIANGLE.iframe().getElementById("template");
     if (template.style.opacity) {
       template.style.opacity = parseFloat(template.style.opacity) + parseFloat(template.style.opacity) / 10;
       if (parseFloat(template.style.opacity) > 0.9) template.style.opacity = "";
@@ -100,7 +119,7 @@ TRIANGLE.template = {
   },
 
   decreaseOpacity : function() {
-    var template = document.getElementById("template");
+    var template = TRIANGLE.iframe().getElementById("template");
     if (template.style.opacity) {
       template.style.opacity = parseFloat(template.style.opacity) - parseFloat(template.style.opacity) / 10;
       if (parseFloat(template.style.opacity) < 0.1) template.style.opacity = 0.1;
@@ -119,10 +138,9 @@ class constructor for TemplateItem. This is a global object that is used by most
 
 TRIANGLE.TemplateItem = function(index) {
   this.index = parseInt(index);
-  //this.objRef = document.getElementById("item" + this.index) || TRIANGLE.templateItems[this.index];
-  this.objRef = document.getElementById("item" + this.index) ? document.getElementById("item" + this.index) : TRIANGLE.templateItems[this.index];
-  this.prevItem = document.getElementById("item" + (index - 1)) || TRIANGLE.templateItems[index - 1];
-  this.nextItem = document.getElementById("item" + (index + 1)) || TRIANGLE.templateItems[index + 1];
+  this.objRef = TRIANGLE.iframe().getElementById("item" + this.index) ? TRIANGLE.iframe().getElementById("item" + this.index) : TRIANGLE.templateItems[this.index];
+  this.prevItem = TRIANGLE.iframe().getElementById("item" + (index - 1)) || TRIANGLE.templateItems[index - 1];
+  this.nextItem = TRIANGLE.iframe().getElementById("item" + (index + 1)) || TRIANGLE.templateItems[index + 1];
   this.parent = this.objRef.parentNode;
   this.childOf = this.objRef.getAttribute("childof") || null;
   this.id = this.objRef.id;
@@ -208,7 +226,7 @@ TRIANGLE.TemplateItem = function(index) {
   this.hover.cssText = this.objRef.getAttribute("hover-style") || "";
   //this.hover.fontColor = this.hover.cssText ? this.hover.cssText.match(/;?color:[^;]+/)[0].replace(/color:/, "") : null;
   //============================================================
-  this.hoverObj = document.getElementById(this.id + "hover");
+  this.hoverObj = TRIANGLE.iframe().getElementById(this.id + "hover");
   this.hoverVersion = this.hoverObj ? true : false;
 }
 
@@ -301,7 +319,7 @@ TRIANGLE.TemplateItem.prototype.detectTransform = function() {
 TRIANGLE.TemplateItem.prototype.isAbove = function(index) {
   var siblings = this.siblings();
   for (var k = 0; k < siblings.length; k++) {
-    if (siblings[k] === document.getElementById("item" + index)) {
+    if (siblings[k] === TRIANGLE.iframe().getElementById("item" + index)) {
       var thisRect = this.objRef.getBoundingClientRect();
       var sibRect = siblings[k].getBoundingClientRect();
       if (sibRect.bottom <= thisRect.top && thisRect.top - sibRect.bottom <= 200) {
@@ -318,7 +336,7 @@ TRIANGLE.TemplateItem.prototype.isAbove = function(index) {
 TRIANGLE.TemplateItem.prototype.isBelow = function(index) {
   var siblings = this.siblings();
   for (var k = 0; k < siblings.length; k++) {
-    if (siblings[k] === document.getElementById("item" + index)) {
+    if (siblings[k] === TRIANGLE.iframe().getElementById("item" + index)) {
       var thisRect = this.objRef.getBoundingClientRect();
       var sibRect = siblings[k].getBoundingClientRect();
       if (sibRect.top >= thisRect.bottom && sibRect.bottom - thisRect.bottom <= 200) {
@@ -379,7 +397,7 @@ TRIANGLE.updateTemplateItems = function updateTemplateItems(repeat) { // boolean
     sv_item.objRef.addEventListener("mousedown", TRIANGLE.importItem.single, true);
 
     if (!sv_item.parent.classList.contains("templateItem")) {
-      sv_item.objRef.addEventListener("mousedown", TRIANGLE.dragDrop.applyDrag, true);
+      // sv_item.objRef.addEventListener("mousedown", TRIANGLE.dragDrop.applyDrag, true);
     } else {
       if (!sv_item.objRef.classList.contains("childItem")) {
         sv_item.objRef.classList.add("childItem");
@@ -431,9 +449,10 @@ TRIANGLE.clearSelection = function() {
   TRIANGLE.selectionBorder.remove();
   TRIANGLE.selectedItemOptions.hide();
   for (var i = 0; i < TRIANGLE.templateItems.length; i++) {
-    var clearElem = document.getElementById("item" + i);
+    var clearElem = TRIANGLE.iframe().getElementById("item" + i);
     if (TRIANGLE.isType.textBox(clearElem)) {
-      if (clearElem.isContentEditable && clearElem !== document.activeElement) { // find flag
+      // if (clearElem.isContentEditable && clearElem !== document.activeElement) { // find flag
+      if (clearElem.isContentEditable && clearElem !== TRIANGLE.iframe().contentDocument.activeElement) { // find flag
         clearElem.blur();
         TRIANGLE.text.checkTextEditing();
       }
@@ -480,7 +499,7 @@ TRIANGLE.clearSelection = function() {
 
   // document.getElementById("fontType").selectedIndex = 0;
   var fontFamilyInput = document.getElementById("fontType");
-  var templateFont = document.getElementById("template").style.fontFamily.split(",")[0].replace(/'|"/g, "");
+  var templateFont = TRIANGLE.iframe().getElementById("template").style.fontFamily.split(",")[0].replace(/'|"/g, "");
   if (!templateFont) {
     fontFamilyInput.selectedIndex = -1;
   } else {
@@ -495,7 +514,7 @@ TRIANGLE.clearSelection = function() {
 
   // document.body.removeEventListener("keyup", TRIANGLE.keyEvents.whichKey.item);
 
-  document.getElementById("updateAnimation").innerHTML = "";
+  TRIANGLE.iframe().getElementById("updateAnimation").innerHTML = "";
 
   document.getElementById("hrefTarget").value = 0;
   document.getElementById("hrefTarget").disabled = true;
@@ -532,8 +551,8 @@ TRIANGLE.deleteItem = function deleteElement(index) {
 
   } else {
     if (TRIANGLE.templateItems.length > 0) {
-      var elem = document.getElementById("item" + index);
-      var hoverElem = document.getElementById("item" + index + ":hover");
+      var elem = TRIANGLE.iframe().getElementById("item" + index);
+      var hoverElem = TRIANGLE.iframe().getElementById("item" + index + ":hover");
 
       elem.removeEventListener("mousedown", TRIANGLE.importItem.single, true);
       elem.removeEventListener("mouseover", TRIANGLE.hoverBorder.show, true);
@@ -543,7 +562,7 @@ TRIANGLE.deleteItem = function deleteElement(index) {
         elem.removeEventListener("paste", TRIANGLE.text.clearPastedStyles);
       }
 
-      if (hoverElem) document.getElementById("hoverItems").removeChild(hoverElem);
+      if (hoverElem) TRIANGLE.iframe().getElementById("hoverItems").removeChild(hoverElem);
       elem.remove();
     }
   }
@@ -688,7 +707,7 @@ TRIANGLE.importItem = {
       try {
         index = this.getAttribute("index");
       } catch (ex) {
-        console.log(ex.message);
+        // console.log(ex.message);
         return;
       }
       if (event.shiftKey) {
@@ -1391,7 +1410,7 @@ TRIANGLE.saveItem = {
       if (userClassStr !== "" && document.getElementById("userClass") === document.activeElement) {
         TRIANGLE.item.objRef.setAttribute("user-class", userClassStr);
         setTimeout(TRIANGLE.selectionBorder.create, TRIANGLE.saveItem.animationTime);
-        var template = document.getElementById("template");
+        var template = TRIANGLE.iframe().getElementById("template");
         var existingUserClasses = template.querySelectorAll("[user-class~=" + userClassStr + "]");
         if (existingUserClasses.length > 1) {
           if (existingUserClasses[0] != TRIANGLE.item.objRef) {
@@ -1533,7 +1552,7 @@ TRIANGLE.saveItem = {
   },
 
   equalizeUserClasses : function(userClassName) {
-    var userClasses = document.getElementById("template").querySelectorAll("[user-class=" + userClassName + "]");
+    var userClasses = TRIANGLE.iframe().getElementById("template").querySelectorAll("[user-class=" + userClassName + "]");
     for (var i = 0; i < userClasses.length; i++) {
       if (TRIANGLE.item && userClasses[i] != TRIANGLE.item.objRef) {
         userClasses[i].style.cssText = TRIANGLE.itemStyles.cssText;
@@ -1554,10 +1573,10 @@ TRIANGLE.saveItem = {
       "animation-name:updateAnimation;animation-duration:300ms}";
 
       if (originalStyle !== styleValue) {
-        document.getElementById("updateAnimation").innerHTML = animationCSS;
+        TRIANGLE.iframe().getElementById("updateAnimation").innerHTML = animationCSS;
         TRIANGLE.saveItem.animationActive = true;
         setTimeout(function() {
-          document.getElementById("updateAnimation").innerHTML = "";
+          TRIANGLE.iframe().getElementById("updateAnimation").innerHTML = "";
           TRIANGLE.saveItem.animationActive = false;
           if (callback && typeof callback == "function") callback();
         }, TRIANGLE.saveItem.animationTime);
@@ -1682,7 +1701,7 @@ TRIANGLE.saveTemplate = {
   },
 
   saveUserIDs : function() {
-    var userIDs = document.getElementById("template").querySelectorAll("*[user-id]");
+    var userIDs = TRIANGLE.iframe().getElementById("template").querySelectorAll("*[user-id]");
     var userIDobj = {};
 
     for (var i = 0; i < userIDs.length; i++) {
@@ -1844,7 +1863,7 @@ TRIANGLE.saveTemplate = {
 },
 
 saveUserClasses : function() {
-  var userClasses = document.getElementById("template").querySelectorAll("[user-class]");
+  var userClasses = TRIANGLE.iframe().getElementById("template").querySelectorAll("[user-class]");
   if (userClasses) {
     var userClassArr = [];
     for (var i = 0, k = 0; i < userClasses.length; i++) {
@@ -1856,7 +1875,7 @@ saveUserClasses : function() {
     }
     var userClassObj = {};
     for (var i = 0; i < userClassArr.length; i++) {
-      var getStyle = document.getElementById("template").querySelector("[user-class=" + userClassArr[i] + "]").style.cssText;
+      var getStyle = TRIANGLE.iframe().getElementById("template").querySelector("[user-class=" + userClassArr[i] + "]").style.cssText;
       userClassObj[userClassArr[i]] = getStyle;
     }
 
@@ -1918,13 +1937,13 @@ createNewPage : function(pageName) {
 TRIANGLE.loadTemplate = {
 
   hide : function hideTemplate() {
-    var template = document.getElementById("template");
+    var template = TRIANGLE.iframe().getElementById("template");
     template.style.opacity = 0;
     template.style.visibility = "hidden";
   },
 
   show : function showTemplate() {
-    var template = document.getElementById("template");
+    var template = TRIANGLE.iframe().getElementById("template");
     template.style.visibility = "visible";
     template.style.opacity = 1;
   },
@@ -1962,6 +1981,7 @@ TRIANGLE.loadTemplate = {
     var params = "templateName=" + templateName + page + "&instance=" + TRIANGLE.instance;
 
     AJAX.post("php/load_template.php", params, function(xmlhttp) {
+
       if (document.getElementById("loadingCell").style.display === "none") TRIANGLE.popUp.close();
       document.getElementById("loadTemplatesCell").style.display = "none";
       TRIANGLE.template.blank();
@@ -1989,10 +2009,12 @@ TRIANGLE.loadTemplate = {
       // setTimeout(TRIANGLE.updateTemplateItems, 100); // [find flag], for some reason the items dont update unless theres a delay
       document.getElementById("FTPselect").selectedIndex = 0;
 
+      // document.getElementById("iframeTemplate").srcdoc = TRIANGLE.iframe().getElementById("templateWrapper").innerHTML;
+      // TRIANGLE.iframe().contentDocument.body.appendChild(TRIANGLE.iframe().getElementById("templateWrapper").cloneNode());
+
       TRIANGLE.updateTemplateItems();
 
       TRIANGLE.options.compareUndoList();
-
     });
   },
 
@@ -2011,7 +2033,7 @@ TRIANGLE.loadTemplate = {
       //console.log(xmlhttp.responseText);
 
       var userIDs = JSON.parse(xmlhttp.responseText);
-      var updateUserIDs = document.getElementById("template").querySelectorAll("[update-user-id]");
+      var updateUserIDs = TRIANGLE.iframe().getElementById("template").querySelectorAll("[update-user-id]");
       var updateIDlist = {};
 
       for (var i = 0; i < updateUserIDs.length; i++) {
@@ -2050,7 +2072,7 @@ TRIANGLE.loadTemplate = {
 
           var childof = children[child]["childof"];
           if (childof) {
-            document.getElementById(childof).appendChild(createChild);
+            TRIANGLE.iframe().getElementById(childof).appendChild(createChild);
           } else {
             createChild = null;
           }
@@ -2073,7 +2095,7 @@ TRIANGLE.loadTemplate = {
       TRIANGLE.userClasses = userClasses;
 
       for (var userClass in userClasses) {
-        var domUserClass = document.getElementById("template").querySelectorAll("[user-class=" + userClass + "]");
+        var domUserClass = TRIANGLE.iframe().getElementById("template").querySelectorAll("[user-class=" + userClass + "]");
         for (var i = 0; i < domUserClass.length; i++) {
           domUserClass[i].style.cssText = userClasses[userClass];
         }
@@ -2119,7 +2141,7 @@ TRIANGLE.loadTemplate = {
         images[i].src = url + slash + images[i].getAttribute("src");
       }
       //============================================================================================
-      /*document.getElementById("template").innerHTML = importWebsite.innerHTML;
+      /*TRIANGLE.iframe().getElementById("template").innerHTML = importWebsite.innerHTML;
       importWebsite.innerHTML = "";*/
     }
   });
@@ -2140,16 +2162,16 @@ TRIANGLE.json = {
 
     var template = {};
 
-    template.hoverData = document.getElementById("hoverData").innerHTML;
-    template.hoverItems = document.getElementById("hoverItems").innerHTML;
-    template.animationData = document.getElementById("animationData").innerHTML;
-    template.bodyBgData = document.getElementById("bodyBgData").style.cssText;
-    template.fontData = document.getElementById("fontData").innerHTML;
-    template.fontFamily = document.getElementById("template").style.fontFamily;
+    template.hoverData = TRIANGLE.iframe().getElementById("hoverData").innerHTML;
+    template.hoverItems = TRIANGLE.iframe().getElementById("hoverItems").innerHTML;
+    template.animationData = TRIANGLE.iframe().getElementById("animationData").innerHTML;
+    template.bodyBgData = TRIANGLE.iframe().getElementById("bodyBgData").style.cssText;
+    template.fontData = TRIANGLE.iframe().getElementById("fontData").innerHTML;
+    template.fontFamily = TRIANGLE.iframe().getElementById("template").style.fontFamily;
     template.metaTitle = TRIANGLE.metaData.title;
     template.metaKeywords = TRIANGLE.metaData.keywords;
     template.metaDescription = TRIANGLE.metaData.description;
-    template.fixedWidth = document.getElementById("template").style.width;
+    template.fixedWidth = TRIANGLE.iframe().getElementById("template").style.width;
     template.exportCompress = document.getElementById("exportCompress").checked;
     template.importWebsiteURL = TRIANGLE.importWebsiteURL;
     template.styleTag = TRIANGLE.developer.styleTagContent;
@@ -2161,7 +2183,7 @@ TRIANGLE.json = {
     with a low number of images so it's not a big deal
     */
 
-    var imgList = document.getElementById("template").querySelectorAll(".imageItem[crop-map]");
+    var imgList = TRIANGLE.iframe().getElementById("template").querySelectorAll(".imageItem[crop-map]");
     var len = imgList.length;
 
     for (var i = 0; i < len; i++) {
@@ -2237,7 +2259,7 @@ TRIANGLE.json = {
       template.items[itemID]["form-email"] = sv_item.objRef.getAttribute("form-email");
     }
 
-    //template.responsiveTemplate = TRIANGLE.responsive.create(document.getElementById("template"));
+    //template.responsiveTemplate = TRIANGLE.responsive.create(TRIANGLE.iframe().getElementById("template"));
     template.responsiveItems = TRIANGLE.responsive.prepare();
 
     var templateStr = JSON.stringify(template);
@@ -2261,7 +2283,7 @@ TRIANGLE.json = {
         if (split[1]) {
           document.getElementById(split[1]).appendChild(createItem);
         } else {
-          document.getElementById("template").appendChild(createItem);
+          TRIANGLE.iframe().getElementById("template").appendChild(createItem);
         }
         continue;
       }
@@ -2272,12 +2294,12 @@ TRIANGLE.json = {
       createItem = TRIANGLE.json.convertItem(items[prop], createItem);
 
       var childof = items[prop]["childof"];
-      if (childof && document.getElementById(childof)) {
-        document.getElementById(childof).appendChild(createItem);
+      if (childof && TRIANGLE.iframe().getElementById(childof)) {
+        TRIANGLE.iframe().getElementById(childof).appendChild(createItem);
       } else if (childof && !document.getElementById(childof)) {
         continue;
       } else {
-        document.getElementById("template").appendChild(createItem);
+        TRIANGLE.iframe().getElementById("template").appendChild(createItem);
       }
     }
   },
@@ -2317,14 +2339,14 @@ TRIANGLE.json = {
   },
 
   convertTemplateData : function(templateData) {
-    document.getElementById("hoverData").innerHTML = templateData.hoverData;
-    document.getElementById("hoverItems").innerHTML = templateData.hoverItems;
-    document.getElementById("animationData").innerHTML = templateData.hoverItems;
-    document.getElementById("bodyBgData").style.cssText = templateData.bodyBgData;
-    document.getElementById("fontData").innerHTML = templateData.fontData;
-    document.getElementById("template").style.fontFamily = templateData.fontFamily;
-    document.getElementById("template").style.width = templateData.fixedWidth;
-    if (TRIANGLE.getUnit(templateData.fixedWidth) === "px") document.getElementById("template").style.margin = "0 auto";
+    TRIANGLE.iframe().getElementById("hoverData").innerHTML = templateData.hoverData;
+    TRIANGLE.iframe().getElementById("hoverItems").innerHTML = templateData.hoverItems;
+    TRIANGLE.iframe().getElementById("animationData").innerHTML = templateData.hoverItems;
+    TRIANGLE.iframe().getElementById("bodyBgData").style.cssText = templateData.bodyBgData;
+    TRIANGLE.iframe().getElementById("fontData").innerHTML = templateData.fontData;
+    TRIANGLE.iframe().getElementById("template").style.fontFamily = templateData.fontFamily;
+    TRIANGLE.iframe().getElementById("template").style.width = templateData.fixedWidth;
+    if (TRIANGLE.getUnit(templateData.fixedWidth) === "px") TRIANGLE.iframe().getElementById("template").style.margin = "0 auto";
     document.getElementById("metaTitle").value = templateData.metaTitle || "";
     TRIANGLE.metaData.title = document.getElementById("metaTitle").value;
     document.getElementById("metaKeywords").value = templateData.metaKeywords || "";
@@ -2354,6 +2376,8 @@ TRIANGLE.json = {
     createItem.style.cssText = itemSrc["style"];
     createItem.innerHTML = itemSrc["innerHTML"] ? itemSrc["innerHTML"].replace(/\%26amp;/g, "&") : "";
     createItem.src = itemSrc["src"] || "";
+    itemSrc["triangle-id"] ? createItem.setAttribute("triangle-id", itemSrc["triangle-id"]) : null;
+    itemSrc["triangle-class"] ? createItem.setAttribute("triangle-class", itemSrc["triangle-class"]) : null;
     itemSrc["item-align"] ? createItem.setAttribute("item-align", itemSrc["item-align"]) : null;
     itemSrc["hover-style"] ? createItem.setAttribute("hover-style", itemSrc["hover-style"]) : null;
     itemSrc["link-to"] ? createItem.setAttribute("link-to", itemSrc["link-to"]) : null;
@@ -2673,12 +2697,12 @@ TRIANGLE.options = {
   newRow : function() {
     TRIANGLE.selectionBorder.remove();
     var newDiv = document.createElement("div");
-    newDiv.className = "templateItem"; // add templateItem class to every generated element to be read by query
+    newDiv.className = "templateItem";
     newDiv.setAttribute("triangle-class", "templateItem");
     newDiv.style.backgroundColor = "#f5f2f0";
-    newDiv.style.minHeight = "100px"; // set default height so div is visible
-    newDiv.style.height = "auto"; // set default height so div is visible
-    newDiv.style.width = "100%"; // set default width so TRIANGLE.options.insertColumns() can divide it
+    // newDiv.style.minHeight = "100px";
+    newDiv.style.height = "auto";
+    newDiv.style.width = "100%";
     newDiv.style.display = "block";
     newDiv.style.position = "relative";
 
@@ -2688,9 +2712,10 @@ TRIANGLE.options = {
       TRIANGLE.updateTemplateItems();
       newIndex = TRIANGLE.item.nextSibling().getAttribute("index");
     } else {
-      document.getElementById("template").appendChild(newDiv);
-      //window.scrollTo(0, TRIANGLE.templateItems[TRIANGLE.templateItems.length - 1].getBoundingClientRect().top - 200);
-      window.scrollTo(0, document.body.scrollHeight);
+      TRIANGLE.iframe().getElementById("template").appendChild(newDiv);
+      window.scrollTo(0, TRIANGLE.templateItems[TRIANGLE.templateItems.length - 1].getBoundingClientRect().top - 83);
+      // window.scrollTo(0, document.body.scrollHeight);
+      // TRIANGLE.iframe().contentWindow.scrollTo(0, TRIANGLE.iframe().contentDocument.body.scrollHeight);
       newIndex = TRIANGLE.templateItems.length - 1;
     }
 
@@ -2717,7 +2742,8 @@ TRIANGLE.options = {
 
         newColumn.style.backgroundColor = TRIANGLE.itemStyles.backgroundColor;
         newColumn.style.minHeight = TRIANGLE.itemStyles.minHeight;
-        newColumn.style.height = "auto"; // or item.height
+        // newColumn.style.height = "auto"; // or item.height
+        newColumn.style.height = TRIANGLE.itemStyles.height;
         newColumn.style.width = columnWidth + TRIANGLE.getUnit(TRIANGLE.itemStyles.width);
         newColumn.style.position = "relative";
 
@@ -2829,7 +2855,7 @@ TRIANGLE.options = {
 
         var itemRect = TRIANGLE.item.objRef.getBoundingClientRect();
         var screenHeight = window.innerHeight;
-        var menuRect = document.getElementById("menu").getBoundingClientRect().bottom;
+        var menuRect = document.getElementById("menu").getBoundingClientRect().bottom; // iframe update
 
         if (itemRect.top < menuRect) {
           TRIANGLE.item.objRef.scrollIntoView();
@@ -2867,7 +2893,7 @@ TRIANGLE.options = {
 
         var itemRect = TRIANGLE.item.objRef.getBoundingClientRect();
         var screenHeight = window.innerHeight;
-        var menuRect = document.getElementById("menu").getBoundingClientRect().bottom;
+        var menuRect = document.getElementById("menu").getBoundingClientRect().bottom; // iframe update
         if (itemRect.top < menuRect) {
           TRIANGLE.item.objRef.scrollIntoView();
           window.scrollBy(0, -250);
@@ -2942,7 +2968,7 @@ TRIANGLE.options = {
       TRIANGLE.item.append(pasteItem);
       // TRIANGLE.importItem.single(TRIANGLE.item.index);
     } else {
-      document.getElementById("template").appendChild(pasteItem);
+      TRIANGLE.iframe().getElementById("template").appendChild(pasteItem);
       // TRIANGLE.importItem.single(TRIANGLE.templateItems.length - 1);
     }
     TRIANGLE.selectionBorder.update();
@@ -2953,8 +2979,8 @@ TRIANGLE.options = {
   undoIndex : false,
   maxUndo : 20, // maximum number of steps stored to undo
 
-  compareUndoList : function() {
-    var contentHTML = document.getElementById("templateWrapper").innerHTML.trim(); // find this
+  compareUndoList : function() { //YEET LEFT OFF
+    var contentHTML = TRIANGLE.iframe().getElementById("templateWrapper").innerHTML.trim(); // find this
     contentHTML = contentHTML.replace(/\r|\n/g, "");
     contentHTML = contentHTML.replace(/&nbsp;/g, " ");
     contentHTML = contentHTML.replace(/(\s)+/g, "$1");
@@ -2991,7 +3017,7 @@ TRIANGLE.options = {
 undo : function() {
 
   TRIANGLE.clearSelection();
-  if (TRIANGLE.options.undoList.length === 0/* || document.getElementById("template").innerHTML == ""*/) {
+  if (TRIANGLE.options.undoList.length === 0/* || TRIANGLE.iframe().getElementById("template").innerHTML == ""*/) {
     return;
   }
   if (TRIANGLE.options.undoIndex > 0) TRIANGLE.options.undoIndex--;
@@ -3008,7 +3034,7 @@ undo : function() {
   //   TRIANGLE.options.undoIndex = TRIANGLE.options.undoList.length - 2;
   // }
 
-  document.getElementById("templateWrapper").innerHTML = TRIANGLE.options.undoList[TRIANGLE.options.undoIndex];
+  TRIANGLE.iframe().getElementById("templateWrapper").innerHTML = TRIANGLE.options.undoList[TRIANGLE.options.undoIndex];
   TRIANGLE.colors.updateBodyBg();
   TRIANGLE.updateTemplateItems();
   TRIANGLE.resize.removeHandles(); // these are saved in the undolist dom so they need to be removed manually
@@ -3154,8 +3180,8 @@ TRIANGLE.colors = {
     document.getElementById("colorMainBg").addEventListener("click", function() {
       TRIANGLE.colors.fillCanvas(this.style.backgroundColor);
       TRIANGLE.colors.showCanvasMenu(this, function(){
-        document.body.style.backgroundColor = TRIANGLE.colors.canvasColorChoice;
-        document.getElementById("bodyBgData").style.backgroundColor = TRIANGLE.colors.canvasColorChoice;
+        TRIANGLE.iframe().contentDocument.body.style.backgroundColor = TRIANGLE.colors.canvasColorChoice;
+        TRIANGLE.iframe().getElementById("bodyBgData").style.backgroundColor = TRIANGLE.colors.canvasColorChoice;
       });
       TRIANGLE.colors.canvasPaletteTarget = "bodyBg";
     });
@@ -3414,8 +3440,8 @@ TRIANGLE.colors = {
     var newColor = elem.style.backgroundColor;
 
     if (target === "bodyBg") {
-      document.body.style.backgroundColor = newColor;
-      document.getElementById("bodyBgData").style.backgroundColor = newColor;
+      TRIANGLE.iframe().contentDocument.body.style.backgroundColor = newColor;
+      TRIANGLE.iframe().getElementById("bodyBgData").style.backgroundColor = newColor;
     } else if (target === "boxShadow") {
       //console.log("OLD: " + TRIANGLE.item.boxShadow);
       var shadowArray = TRIANGLE.item.boxShadow.split(" ");
@@ -3473,9 +3499,9 @@ TRIANGLE.colors = {
 
   colorDropChoose : function chooseColor() {
     if (this.style.backgroundColor === "inherit") {
-      document.getElementById("item" + TRIANGLE.colors.colorDropIndex).style.backgroundColor = this.parentNode.style.backgroundColor;
+      TRIANGLE.iframe().getElementById("item" + TRIANGLE.colors.colorDropIndex).style.backgroundColor = this.parentNode.style.backgroundColor;
     } else {
-      document.getElementById("item" + TRIANGLE.colors.colorDropIndex).style.backgroundColor = this.style.backgroundColor;
+      TRIANGLE.iframe().getElementById("item" + TRIANGLE.colors.colorDropIndex).style.backgroundColor = this.style.backgroundColor;
     }
     for (var i = 0; i < TRIANGLE.templateItems.length; i++) {
       TRIANGLE.templateItems[i].removeEventListener("mousedown", TRIANGLE.colors.colorDropChoose);
@@ -3851,9 +3877,10 @@ function updateBodyBg() changes the body background color based on the backgroun
 */
 
 updateBodyBg : function updateBodyBg() {
-  document.body.style.backgroundColor = document.getElementById("bodyBgData").style.backgroundColor;
-  document.body.style.backgroundImage = document.getElementById("bodyBgData").style.backgroundImage;
-  document.getElementById("colorMainBg").style.backgroundColor = document.getElementById("bodyBgData").style.backgroundColor;
+  var bodyBg = TRIANGLE.iframe().getElementById("bodyBgData").style.backgroundColor;
+  TRIANGLE.iframe().contentDocument.body.style.backgroundColor = bodyBg;
+  TRIANGLE.iframe().contentDocument.body.style.backgroundImage = bodyBg;
+  document.getElementById("colorMainBg").style.backgroundColor = bodyBg;
 },
 
 /*
@@ -3913,9 +3940,9 @@ TRIANGLE.text = {
 
     var newTextBox = document.createElement("p");
     newTextBox.style.backgroundColor = "";
-    newTextBox.style.marginTop = "1em";
-    newTextBox.style.marginBottom = "1em";
-    newTextBox.style.minHeight = "auto";
+    // newTextBox.style.marginTop = "1em";
+    // newTextBox.style.marginBottom = "1em";
+    // newTextBox.style.minHeight = "auto";
     newTextBox.style.height = "auto";
     newTextBox.style.width = "100%";
     newTextBox.style.padding = "15px";
@@ -3946,10 +3973,11 @@ TRIANGLE.text = {
 
     } else if (!TRIANGLE.item) {
 
-      newTextBox.style.color = TRIANGLE.colors.isColorLight(document.getElementById("template").style.backgroundColor) ? "black" : "white";
+      newTextBox.style.color = TRIANGLE.colors.isColorLight(TRIANGLE.iframe().getElementById("template").style.backgroundColor) ? "black" : "white";
 
-      document.getElementById("template").appendChild(newTextBox);
+      TRIANGLE.iframe().getElementById("template").appendChild(newTextBox);
       window.scrollTo(0, document.body.scrollHeight);
+      // TRIANGLE.iframe().contentWindow.scrollTo(0, TRIANGLE.iframe().contentDocument.body.scrollHeight);
       TRIANGLE.selectionBorder.update();
       TRIANGLE.updateTemplateItems(true);
 
@@ -3989,30 +4017,25 @@ TRIANGLE.text = {
   },
 
   editText : function editText() {
-    var item = TRIANGLE.item;
-    item.objRef.removeEventListener("dblclick", TRIANGLE.text.editText);
-    item.objRef.addEventListener("keyup", TRIANGLE.selectionBorder.update);
-    item.objRef.addEventListener("paste", TRIANGLE.text.clearPastedStyles);
-    item.objRef.contentEditable = "true";
-    item.objRef.focus();
-    item.objRef.style.cursor = "text";
-    if (item.objRef.innerHTML == "New text box"
-    || item.objRef.innerHTML == "Field Label") item.objRef.innerHTML = "&nbsp;";
+    TRIANGLE.item.objRef.removeEventListener("dblclick", TRIANGLE.text.editText);
+    TRIANGLE.item.objRef.addEventListener("keyup", TRIANGLE.selectionBorder.update);
+    TRIANGLE.item.objRef.addEventListener("paste", TRIANGLE.text.clearPastedStyles);
+    TRIANGLE.item.objRef.contentEditable = "true";
+    TRIANGLE.item.objRef.focus();
+    TRIANGLE.item.objRef.style.cursor = "text";
+    if (TRIANGLE.item.objRef.innerHTML == "New text box"
+    || TRIANGLE.item.objRef.innerHTML == "Field Label") TRIANGLE.item.objRef.innerHTML = "";
     document.getElementById("selectionBorder").style.border = "1px dashed black";
     TRIANGLE.resize.removeHandles();
     TRIANGLE.menu.displaySubMenu('displayTextStyles');
     TRIANGLE.menu.menuBtnActive(document.getElementById("opTextStyles"));
   },
 
-  /*
-  function checkTextEditing() checks if text is being edited, and closes the text editing dialogue if it is not being used
-  */
-
   checkTextEditing : function checkTextEditing(event) {
     var item = TRIANGLE.item;
-    var textItems = document.getElementsByClassName("textBox");
+    var textItems = TRIANGLE.iframe().getElementsByClassName("textBox");
     for (var x = 0; x < textItems.length; x++) {
-      if (textItems[x].isContentEditable && textItems[x] !== document.activeElement) {
+      if (textItems[x].isContentEditable && textItems[x] !== TRIANGLE.iframe().contentDocument.activeElement) {
         TRIANGLE.text.clearTextSelection();
         textItems[x].contentEditable = "false";
         //item.objRef.style.cursor = "";
@@ -4069,12 +4092,13 @@ TRIANGLE.text = {
       if (item && TRIANGLE.isType.textBox(item.objRef)) {
         if (item.objRef.isContentEditable) {
           //document.execCommand("styleWithCSS", null, false);
-          document.execCommand("bold");
+          // document.execCommand("bold");
+          TRIANGLE.iframe().contentDocument.execCommand("bold");
         } else {
           if ((/<\/*(b|strong)>/g).test(item.objRef.innerHTML)) {
             item.objRef.innerHTML = item.objRef.innerHTML.replace(/<\/*(b|strong)>/g, "");
           } else {
-            item.objRef.innerHTML = "<b>" + item.objRef.innerHTML + "</b>";
+            item.objRef.innerHTML = "<strong>" + item.objRef.innerHTML + "</strong>";
           }
         }
       } else {
@@ -4087,12 +4111,12 @@ TRIANGLE.text = {
       if (item && TRIANGLE.isType.textBox(item.objRef)) {
         if (item.objRef.isContentEditable) {
           //document.execCommand("styleWithCSS", null, false)
-          document.execCommand("italic");
+          TRIANGLE.iframe().contentDocument.execCommand("italic");
         } else {
           if ((/<\/*(i|em)>/g).test(item.objRef.innerHTML)) {
             item.objRef.innerHTML = item.objRef.innerHTML.replace(/<\/*(i|em)>/g, "");
           } else {
-            item.objRef.innerHTML = "<i>" + item.objRef.innerHTML + "</i>";
+            item.objRef.innerHTML = "<em>" + item.objRef.innerHTML + "</em>";
           }
         }
       } else {
@@ -4104,7 +4128,7 @@ TRIANGLE.text = {
       if (TRIANGLE.item && TRIANGLE.isType.textBox(TRIANGLE.item.objRef)) {
         if (TRIANGLE.item.objRef.isContentEditable) {
           //document.execCommand("styleWithCSS", null, false)
-          document.execCommand("underline");
+          TRIANGLE.iframe().contentDocument.execCommand("underline");
         } else {
           if ((/<\/*u>/g).test(TRIANGLE.item.objRef.innerHTML)) {
             TRIANGLE.item.objRef.innerHTML = TRIANGLE.item.objRef.innerHTML.replace(/<\/*u>/g, "");
@@ -4123,9 +4147,9 @@ TRIANGLE.text = {
     if (TRIANGLE.item/* && TRIANGLE.isType.textBox(TRIANGLE.item.objRef)*/) {
       if (TRIANGLE.item.objRef.isContentEditable) {
         switch (choice) {
-          case "left" : document.execCommand("justifyLeft");break;
-          case "center" : document.execCommand("justifyCenter");break;
-          case "right" : document.execCommand("justifyRight");break;
+          case "left" : TRIANGLE.iframe().contentDocument.execCommand("justifyLeft");break;
+          case "center" : TRIANGLE.iframe().contentDocument.execCommand("justifyCenter");break;
+          case "right" : TRIANGLE.iframe().contentDocument.execCommand("justifyRight");break;
           default: break;
         }
       } else {
@@ -4157,73 +4181,73 @@ TRIANGLE.text = {
         document.getElementById("hyperlinkURL").focus();
 
       } else {
-//return;
-TRIANGLE.pages.loadPages("", "select");
-var rect = TRIANGLE.item.objRef.getBoundingClientRect();
-var linkMenu = document.getElementById("hyperlinkMenu");
-linkMenu.style.display = "inline-block";
-linkMenu.style.left = rect.left + "px";
-if (linkMenu.getBoundingClientRect().right > window.innerWidth) {
-  linkMenu.style.left = "auto";
-  linkMenu.style.right = 0;
-} else {
-  linkMenu.style.right = "auto";
-}
-linkMenu.style.top = rect.bottom + "px";
-if (linkMenu.getBoundingClientRect().bottom > window.innerHeight) {
-  linkMenu.style.top = "auto";
-  linkMenu.style.bottom = 0;
-} else {
-  linkMenu.style.bottom = "auto";
-}
-document.getElementById("hyperlinkURL").focus();
-}
-} else {
-  return;
-}
-},
-
-applyHyperlink : function applyHyperlink() {
-  //var isImg = TRIANGLE.isType.imageItem(TRIANGLE.item.objRef);
-  if (TRIANGLE.item && TRIANGLE.isType.textBox(TRIANGLE.item.objRef) && TRIANGLE.item.objRef.isContentEditable) {
-
-    TRIANGLE.text.replaceTextSelection();
-    var pageDropdown = document.getElementById("hyperlinkPage");
-    if (pageDropdown.selectedIndex !== 0) {
-      var linkChoice = pageDropdown.options[pageDropdown.selectedIndex].value + ".php";
-      if (TRIANGLE.isType.textBox(TRIANGLE.item.objRef) && TRIANGLE.item.objRef.isContentEditable) {
-        document.execCommand("createLink", null, linkChoice);
-      } else {
-        TRIANGLE.item.objRef.setAttribute("link-to", linkChoice);
+        //return;
+        TRIANGLE.pages.loadPages("", "select");
+        var rect = TRIANGLE.item.objRef.getBoundingClientRect();
+        var linkMenu = document.getElementById("hyperlinkMenu");
+        linkMenu.style.display = "inline-block";
+        linkMenu.style.left = rect.left + "px";
+        if (linkMenu.getBoundingClientRect().right > window.innerWidth) {
+          linkMenu.style.left = "auto";
+          linkMenu.style.right = 0;
+        } else {
+          linkMenu.style.right = "auto";
+        }
+        linkMenu.style.top = rect.bottom + "px";
+        if (linkMenu.getBoundingClientRect().bottom > window.innerHeight) {
+          linkMenu.style.top = "auto";
+          linkMenu.style.bottom = 0;
+        } else {
+          linkMenu.style.bottom = "auto";
+        }
+        document.getElementById("hyperlinkURL").focus();
       }
-    } else if (document.getElementById("hyperlinkURL").value !== "") {
-      var linkURL = document.getElementById("hyperlinkURL").value;
-      if (TRIANGLE.isType.textBox(TRIANGLE.item.objRef) && TRIANGLE.item.objRef.isContentEditable) {
-        document.execCommand("createLink", null, linkURL);
-      } else {
+    } else {
+      return;
+    }
+  },
+
+  applyHyperlink : function applyHyperlink() {
+    //var isImg = TRIANGLE.isType.imageItem(TRIANGLE.item.objRef);
+    if (TRIANGLE.item && TRIANGLE.isType.textBox(TRIANGLE.item.objRef) && TRIANGLE.item.objRef.isContentEditable) {
+
+      TRIANGLE.text.replaceTextSelection();
+      var pageDropdown = document.getElementById("hyperlinkPage");
+      if (pageDropdown.selectedIndex !== 0) {
+        var linkChoice = pageDropdown.options[pageDropdown.selectedIndex].value + ".php";
+        if (TRIANGLE.isType.textBox(TRIANGLE.item.objRef) && TRIANGLE.item.objRef.isContentEditable) {
+          TRIANGLE.iframe().contentDocument.execCommand("createLink", null, linkChoice);
+        } else {
+          TRIANGLE.item.objRef.setAttribute("link-to", linkChoice);
+        }
+      } else if (document.getElementById("hyperlinkURL").value !== "") {
+        var linkURL = document.getElementById("hyperlinkURL").value;
+        if (TRIANGLE.isType.textBox(TRIANGLE.item.objRef) && TRIANGLE.item.objRef.isContentEditable) {
+          TRIANGLE.iframe().contentDocument.execCommand("createLink", null, linkURL);
+        } else {
+          TRIANGLE.item.objRef.setAttribute("link-to", linkURL);
+        }
+      }
+      TRIANGLE.text.underline();
+      TRIANGLE.text.cancelHyperlink();
+
+    } else if (TRIANGLE.item/* && isImg*/) {
+
+      var pageDropdown = document.getElementById("hyperlinkPage");
+      if (pageDropdown.selectedIndex !== 0) {
+        var linkChoice = pageDropdown.options[pageDropdown.selectedIndex].value + ".php";
+        TRIANGLE.item.objRef.setAttribute("link-to", linkChoice);
+      } else if (document.getElementById("hyperlinkURL").value !== "") {
+        var linkURL = document.getElementById("hyperlinkURL").value;
         TRIANGLE.item.objRef.setAttribute("link-to", linkURL);
       }
+      TRIANGLE.text.cancelHyperlink();
+
+    } else {
+      TRIANGLE.text.cancelHyperlink();
     }
-    TRIANGLE.text.underline();
-    TRIANGLE.text.cancelHyperlink();
-
-  } else if (TRIANGLE.item/* && isImg*/) {
-
-    var pageDropdown = document.getElementById("hyperlinkPage");
-    if (pageDropdown.selectedIndex !== 0) {
-      var linkChoice = pageDropdown.options[pageDropdown.selectedIndex].value + ".php";
-      TRIANGLE.item.objRef.setAttribute("link-to", linkChoice);
-    } else if (document.getElementById("hyperlinkURL").value !== "") {
-      var linkURL = document.getElementById("hyperlinkURL").value;
-      TRIANGLE.item.objRef.setAttribute("link-to", linkURL);
-    }
-    TRIANGLE.text.cancelHyperlink();
-
-  } else {
-    TRIANGLE.text.cancelHyperlink();
-  }
-  TRIANGLE.importItem.single(TRIANGLE.item.index);
-},
+    TRIANGLE.importItem.single(TRIANGLE.item.index);
+  },
 
 cancelHyperlink : function cancelHyperlink() {
   document.getElementById("hyperlinkURL").value = "";
@@ -4234,7 +4258,7 @@ cancelHyperlink : function cancelHyperlink() {
 deleteHyperlink : function deleteHyperlink() {
   if (TRIANGLE.item) {
     if (TRIANGLE.isType.textBox(TRIANGLE.item.objRef) && TRIANGLE.item.objRef.isContentEditable) {
-      document.execCommand("unlink");
+      TRIANGLE.iframe().contentDocument.execCommand("unlink");
     } else {
       var firstChild = TRIANGLE.item.objRef.firstChild;
       var firstChildTag = firstChild ? firstChild.tagName : null;
@@ -4278,7 +4302,7 @@ changeLinkTarget : function(elem) {
 
 insertUnorderedList : function insertUnorderedList() {
   if (TRIANGLE.item && TRIANGLE.item.objRef.isContentEditable) {
-    document.execCommand("insertUnorderedList");
+    TRIANGLE.iframe().contentDocument.execCommand("insertUnorderedList");
     TRIANGLE.selectionBorder.update();
   } else {
     return;
@@ -4287,7 +4311,7 @@ insertUnorderedList : function insertUnorderedList() {
 
 insertOrderedList : function insertOrderedList() {
   if (TRIANGLE.item && TRIANGLE.item.objRef.isContentEditable) {
-    document.execCommand("insertOrderedList");
+    TRIANGLE.iframe().contentDocument.execCommand("insertOrderedList");
     TRIANGLE.selectionBorder.update();
   } else {
     return;
@@ -4297,7 +4321,7 @@ insertOrderedList : function insertOrderedList() {
 insertHorizontalRule : function insertHorizontalRule() {
   if (TRIANGLE.item && TRIANGLE.isType.textBox(TRIANGLE.item.objRef)) {
     if (TRIANGLE.item.objRef.isContentEditable) {
-      document.execCommand("insertHorizontalRule");
+      TRIANGLE.iframe().contentDocument.execCommand("insertHorizontalRule");
     } else {
       TRIANGLE.item.objRef.innerHTML += "<hr>";
     }
@@ -4312,7 +4336,7 @@ changeFont : function changeFont(dropdownMenu) {
   var selectedOp = dropdownMenu.options[dropdownMenu.selectedIndex];
   var fontName = selectedOp.text;
   var fontCategory = selectedOp.getAttribute("triangle-font-category");
-  var fontData = document.getElementById("fontData");
+  var fontData = TRIANGLE.iframe().getElementById("fontData");
 
   if (selectedOp.getAttribute("google-font") == "true") {
     var isDuplicate = fontData.querySelector("[triangle-font-family='" + fontName + "']") || false;
@@ -4351,21 +4375,21 @@ changeFont : function changeFont(dropdownMenu) {
   } else if (TRIANGLE.item) {
     TRIANGLE.item.objRef.style.fontFamily = "'" + fontName + "'" + ", " + fontCategory;
   } else {
-    document.getElementById("template").style.fontFamily = "'" + fontName + "'" + ", " + fontCategory;
+    TRIANGLE.iframe().getElementById("template").style.fontFamily = "'" + fontName + "'" + ", " + fontCategory;
   }
 
   TRIANGLE.selectionBorder.update();
 },
 
 deleteUnusedFonts : function() {
-  var usedFonts = [document.getElementById("template").style.fontFamily.split(",")[0].replace(/'|"/g, "")];
+  var usedFonts = [TRIANGLE.iframe().getElementById("template").style.fontFamily.split(",")[0].replace(/'|"/g, "")];
   for (var i = 0; i < TRIANGLE.templateItems.length; i++) {
     var fontFamily = TRIANGLE.templateItems[i].style.fontFamily.split(",")[0].replace(/'|"/g, "");
     if (fontFamily && !usedFonts.includes(fontFamily)) {
       usedFonts[usedFonts.length] = fontFamily;
     }
   }
-  var fontData = document.getElementById("fontData");
+  var fontData = TRIANGLE.iframe().getElementById("fontData");
   var fontDataNodes = fontData.querySelectorAll("[triangle-font-family]")
   for (var i = 0; i < fontDataNodes.length; i++) {
     if (!usedFonts.includes(fontDataNodes[i].getAttribute("triangle-font-family"))) {
@@ -4379,9 +4403,9 @@ changeFontColor : function changeFontColor(fontColor) {
   if (!TRIANGLE.isType.textBox(item.objRef)) return;
   TRIANGLE.text.replaceTextSelection();
   if (item.objRef.isContentEditable) {
-    document.execCommand("styleWithCSS", null, true);
-    document.execCommand("foreColor", null, fontColor);
-    document.execCommand("styleWithCSS", null, false);
+    TRIANGLE.iframe().contentDocument.execCommand("styleWithCSS", null, true);
+    TRIANGLE.iframe().contentDocument.execCommand("foreColor", null, fontColor);
+    TRIANGLE.iframe().contentDocument.execCommand("styleWithCSS", null, false);
   } else {
     item.objRef.style.color = fontColor;
   }
@@ -4444,9 +4468,9 @@ changeFontWeight : function(weight) {
 
 },
 
-
 getSelectionCoords : function getSelectionCoords(win) {
-  win = win || window;
+  // win = win || window;
+  win = win || TRIANGLE.iframe().contentWindow;
   var doc = win.document;
   var sel = doc.selection, range, rects, rect;
   var selX = 0, selY = 0;
@@ -4497,8 +4521,9 @@ getSelectionCoords : function getSelectionCoords(win) {
 
 
 saveTextSelection : function saveTextSelection() {
-  if (window.getSelection && document.createRange) {
-    var sel = window.getSelection();
+  // if (window.getSelection && document.createRange) {
+  if (TRIANGLE.iframe().contentWindow.getSelection && TRIANGLE.iframe().contentDocument.createRange) {
+    var sel = TRIANGLE.iframe().contentWindow.getSelection();
     var saveRange = sel.getRangeAt(0).cloneRange();
     TRIANGLE.text.savedTextRange = saveRange;
     return saveRange;
@@ -4514,7 +4539,7 @@ function replaceTextSelection()
 */
 
 replaceTextSelection : function replaceTextSelection() {
-  var sel = window.getSelection();
+  var sel = TRIANGLE.iframe().contentWindow.getSelection();
   sel.removeAllRanges();
   sel.addRange(TRIANGLE.text.savedTextRange);
 }
@@ -4554,7 +4579,7 @@ TRIANGLE.images = {
 
         TRIANGLE.item.objRef.style.overflow = "";
         TRIANGLE.item.objRef.style.height = "auto";
-        TRIANGLE.item.objRef.style.minHeight = "auto"; //shit
+        // TRIANGLE.item.objRef.style.minHeight = "auto"; //shit
         //TRIANGLE.item.objRef.style.minHeight = TRIANGLE.item.image.getBoundingClientRect().height + "px";
         TRIANGLE.item.objRef.removeAttribute("crop-map");
         TRIANGLE.item.objRef.removeAttribute("crop-ratio");
@@ -4582,7 +4607,7 @@ TRIANGLE.images = {
           imgContainer.className = "templateItem childItem imageItem";
           imgContainer.style.display = "inline-block";
           imgContainer.style.height = "auto";
-          imgContainer.style.minHeight = "auto";
+          // imgContainer.style.minHeight = "auto";
           imgContainer.style.width = "100%";
           imgContainer.style.maxWidth = "100%";
 
@@ -4608,11 +4633,11 @@ TRIANGLE.images = {
 
       if (TRIANGLE.images.setBackground) {
 
-        document.getElementById("bodyBgData").style.backgroundImage =
-        document.body.style.backgroundImage = "url('" + filepath + "')";
+        TRIANGLE.iframe().getElementById("bodyBgData").style.backgroundImage =
+        TRIANGLE.iframe().contentDocument.body.style.backgroundImage = "url('" + filepath + "')";
 
-        document.getElementById("bodyBgData").style.backgroundRepeat =
-        document.body.style.backgroundRepeat = "repeat";
+        TRIANGLE.iframe().getElementById("bodyBgData").style.backgroundRepeat =
+        TRIANGLE.iframe().contentDocument.body.style.backgroundRepeat = "repeat";
 
         TRIANGLE.updateTemplateItems();
 
@@ -4621,7 +4646,7 @@ TRIANGLE.images = {
         imgContainer.className = "templateItem childItem imageItem";
         imgContainer.style.display = "inline-block";
         imgContainer.style.height = "auto";
-        imgContainer.style.minHeight = "auto";
+        // imgContainer.style.minHeight = "auto";
         imgContainer.style.width = "auto";
         imgContainer.style.maxWidth = "100%";
 
@@ -4631,7 +4656,7 @@ TRIANGLE.images = {
         newImage.style.height = "100%";
 
         imgContainer.appendChild(newImage);
-        document.getElementById("template").appendChild(imgContainer);
+        TRIANGLE.iframe().getElementById("template").appendChild(imgContainer);
         TRIANGLE.updateTemplateItems();
         TRIANGLE.importItem.single(TRIANGLE.templateItems.length - 1);
       }
@@ -4651,7 +4676,7 @@ TRIANGLE.images = {
 
   var imgSrc = TRIANGLE.item.objRef.children[0].src;
 
-  if (TRIANGLE.item.parent != document.getElementById("template")) {
+  if (TRIANGLE.item.parent != TRIANGLE.iframe().getElementById("template")) {
   var parentIndex = TRIANGLE.item.parent.getAttribute("index");
   TRIANGLE.item.remove();
   TRIANGLE.selectionBorder.remove();
@@ -4668,10 +4693,10 @@ removeBackground : function() {
     TRIANGLE.item.objRef.style.backgroundImage = "";
     TRIANGLE.item.objRef.style.backgroundSize = "";
   } else {
-    document.getElementById("bodyBgData").style.backgroundImage =
-    document.body.style.backgroundImage =
-    document.getElementById("bodyBgData").style.backgroundRepeat =
-    document.body.style.backgroundRepeat = "";
+    TRIANGLE.iframe().getElementById("bodyBgData").style.backgroundImage =
+    TRIANGLE.iframe().contentDocument .body.style.backgroundImage =
+    TRIANGLE.iframe().getElementById("bodyBgData").style.backgroundRepeat =
+    TRIANGLE.iframe().contentDocument.body.style.backgroundRepeat = "";
   }
 },
 
@@ -5207,7 +5232,7 @@ TRIANGLE.library = {
     AJAX.get("php/insert_library_item.php", params, function(xmlhttp) {
       var newItem = xmlhttp.responseText;
       if (!TRIANGLE.item) {
-        document.getElementById("template").innerHTML += newItem;
+        TRIANGLE.iframe().getElementById("template").innerHTML += newItem;
         //window.scrollTo(0, TRIANGLE.templateItems[TRIANGLE.templateItems.length - 1].getBoundingClientRect().top - 200);
         window.scrollTo(0, document.body.scrollHeight);
       } else {
@@ -5223,7 +5248,7 @@ TRIANGLE.library = {
   },
 
   convertStandbyItems : function convertStandbyItems() {
-    var standbyElems = document.getElementById("template").getElementsByClassName("standby");
+    var standbyElems = TRIANGLE.iframe().getElementById("template").getElementsByClassName("standby");
     for (var i = 0; i < standbyElems.length; i++) {
       var standbyClass = standbyElems[i].className;
       var newClass = standbyClass.replace("standby", "templateItem");
@@ -5241,8 +5266,8 @@ TRIANGLE.library = {
       var itemContent = TRIANGLE.json.toHTML(xmlhttp.responseText);
       var checkSameClass = TRIANGLE.getElementByUserId(name);
       if (!TRIANGLE.item) {
-        document.getElementById("template").innerHTML += itemContent;
-        if (checkSameClass) document.getElementById("template").lastChild.removeAttribute("user-id");
+        TRIANGLE.iframe().getElementById("template").innerHTML += itemContent;
+        if (checkSameClass) TRIANGLE.iframe().getElementById("template").lastChild.removeAttribute("user-id");
         //window.scrollTo(0, TRIANGLE.templateItems[TRIANGLE.templateItems.length - 1].getBoundingClientRect().top - 200);
         window.scrollTo(0, document.body.scrollHeight);
       } else {
@@ -5271,7 +5296,7 @@ TRIANGLE.library = {
         TRIANGLE.item.append(newItem);
         setTimeout(TRIANGLE.selectionBorder.update, 50);
       } else {
-        document.getElementById("template").appendChild(newItem);
+        TRIANGLE.iframe().getElementById("template").appendChild(newItem);
         //window.scrollTo(0, TRIANGLE.templateItems[TRIANGLE.templateItems.length - 1].getBoundingClientRect().top - 200);
         window.scrollTo(0, document.body.scrollHeight);
       }
@@ -5443,7 +5468,7 @@ TRIANGLE.developer = {
         container.style.minHeight = "1px";
         container.style.height = "auto";
         container.innerHTML = snippet;
-        document.getElementById("template").appendChild(container);;
+        TRIANGLE.iframe().getElementById("template").appendChild(container);;
         TRIANGLE.selectionBorder.update();
         TRIANGLE.updateTemplateItems(true);
       }
@@ -5653,7 +5678,7 @@ TRIANGLE.dragDrop = {
       if (TRIANGLE.hoveredElem === TRIANGLE.dragDrop.draggingElem) return;
 
 
-      var template = document.getElementById("template");
+      var template = TRIANGLE.iframe().getElementById("template");
       var templateLastChildIndex = TRIANGLE.templateItems.length - 1;
 
       if (indexChildren(draggingIndex).indexOf(parseInt(hoveredIndex)) > -1) return;
@@ -5864,7 +5889,7 @@ TRIANGLE.generateBorder = function generateBorder(rectangle) {
   borderElem.id = "showHoverBorder";
   borderElem.style.height = rectangle.height + borderSpace + "px";
   borderElem.style.width = rectangle.width + borderSpace + "px";
-  borderElem.style.top = rectangle.top - (borderSpace / 2) + "px";
+  borderElem.style.top = rectangle.top - (borderSpace / 2) + TRIANGLE.iframe().getBoundingClientRect().top + "px";
   borderElem.style.left = rectangle.left - (borderSpace / 2) + "px";
 
   var secondBorder = document.createElement("div");
@@ -5882,7 +5907,7 @@ TRIANGLE.hoverBorder = {
     if (TRIANGLE.resize.active || TRIANGLE.saveItem.animationActive || TRIANGLE.images.crop.active) return;
     TRIANGLE.hoverBorder.hide();
     var rect = this.getBoundingClientRect();
-    document.getElementById("template").appendChild(TRIANGLE.generateBorder(rect));
+    document.getElementById("selectionBorderContainer").appendChild(TRIANGLE.generateBorder(rect));
     TRIANGLE.hoveredElem = this;
     var itemLabel = TRIANGLE.isType.itemLabel(this);
     var userID = this.getAttribute("user-id");
@@ -5890,30 +5915,30 @@ TRIANGLE.hoverBorder = {
     var linkHref = this.getAttribute("href") || this.getAttribute("link-to");
 
     if (itemLabel) {
-      document.addEventListener("mousemove", TRIANGLE.tooltip.update);
+      TRIANGLE.iframe().contentDocument.addEventListener("mousemove", TRIANGLE.tooltip.update);
       TRIANGLE.tooltip.show(itemLabel);
     } else if (userID) {
-      document.addEventListener("mousemove", TRIANGLE.tooltip.update);
+      TRIANGLE.iframe().contentDocument.addEventListener("mousemove", TRIANGLE.tooltip.update);
       TRIANGLE.tooltip.show("#" + userID);
     } else if (userClass) {
-      document.addEventListener("mousemove", TRIANGLE.tooltip.update);
+      TRIANGLE.iframe().contentDocument.addEventListener("mousemove", TRIANGLE.tooltip.update);
       TRIANGLE.tooltip.show("." + userClass);
     } else if (linkHref) {
-      document.addEventListener("mousemove", TRIANGLE.tooltip.update);
+      TRIANGLE.iframe().contentDocument.addEventListener("mousemove", TRIANGLE.tooltip.update);
       if (linkHref.length > 30) linkHref = linkHref.slice(0, 30) + "...";
       TRIANGLE.tooltip.show("Link: " + linkHref);
     } else {
-      document.removeEventListener("mousemove", TRIANGLE.tooltip.update);
+      TRIANGLE.iframe().contentDocument.removeEventListener("mousemove", TRIANGLE.tooltip.update);
       TRIANGLE.tooltip.hide();
     }
   },
 
   hide : function hideHoverBorder() {
     if (document.getElementById("showHoverBorder")) {
-      document.getElementById("template").removeChild(document.getElementById("showHoverBorder"));
+      document.getElementById("selectionBorderContainer").removeChild(document.getElementById("showHoverBorder"));
       TRIANGLE.hoveredElem = false;
       TRIANGLE.tooltip.hide();
-      document.removeEventListener("mousemove", TRIANGLE.tooltip.update);
+      TRIANGLE.iframe().contentDocument.removeEventListener("mousemove", TRIANGLE.tooltip.update);
     }
   }
 
@@ -5928,7 +5953,7 @@ TRIANGLE.selectionBorder = {
       TRIANGLE.hoverBorder.hide();
       TRIANGLE.selectionBorder.remove();
       var rect = TRIANGLE.item.objRef.getBoundingClientRect();
-      document.getElementById("template").appendChild(TRIANGLE.generateBorder(rect));
+      document.getElementById("selectionBorderContainer").appendChild(TRIANGLE.generateBorder(rect));
       document.getElementById("showHoverBorder").id = "selectionBorder";
       selBorder = document.getElementById("selectionBorder");
       if (TRIANGLE.item.objRef.isContentEditable) {
@@ -5948,7 +5973,7 @@ TRIANGLE.selectionBorder = {
 
   remove : function removeSelectionBorder() {
     if (document.getElementById("selectionBorder")) {
-      document.getElementById("template").removeChild(document.getElementById("selectionBorder"));
+      document.getElementById("selectionBorderContainer").removeChild(document.getElementById("selectionBorder"));
       TRIANGLE.resize.removeHandles();
       TRIANGLE.selectedItemOptions.hide();
     }
@@ -5969,7 +5994,7 @@ TRIANGLE.selectedItemOptions = {
       var optionsBar = document.getElementById("selectedItemOptionsBar");
       optionsBar.style.display = "initial";
       var rect = TRIANGLE.item.objRef.getBoundingClientRect();
-      optionsBar.style.top = rect.bottom + 20 + "px";
+      optionsBar.style.top = rect.bottom + 20 + TRIANGLE.iframe().getBoundingClientRect().top + "px";
       optionsBar.style.left = rect.left + (rect.width / 2 - optionsBar.getBoundingClientRect().width / 2) + "px";
     }
   },
@@ -5992,8 +6017,9 @@ TRIANGLE.resize = {
 
       var handleWidth = 8;
       var handleHeight = 8;
-      var overflowGap = TRIANGLE.scrollbarWidth;
+      var overflowGap = TRIANGLE.scrollbarWidth + 10;
       var rect = TRIANGLE.item.objRef.getBoundingClientRect();
+      var iframeTop = TRIANGLE.iframe().getBoundingClientRect().top;
       var selBorder = document.getElementById("selectionBorder");
       var classType = "resizeHandle";
       var marginClass = "marginHandle";
@@ -6004,7 +6030,7 @@ TRIANGLE.resize = {
       var topMid = document.createElement("div");
       topMid.style.cursor = "row-resize";
       topMid.className = marginClass;
-      topMid.style.top = rect.top - handleHeight / 2 - 2 + "px";
+      topMid.style.top = rect.top - handleHeight / 2 - 2 + iframeTop + "px";
       topMid.style.left = rect.left + (rect.width / 2 - handleWidth / 2) + "px";
       selBorder.appendChild(topMid);
       topMid.addEventListener("mouseover", TRIANGLE.resize.margin.top);
@@ -6014,7 +6040,7 @@ TRIANGLE.resize = {
         var botMid = document.createElement("div");
         botMid.style.cursor = "s-resize";
         botMid.className = classType;
-        botMid.style.top = rect.bottom - 2 + "px";
+        botMid.style.top = rect.bottom - 2 + iframeTop + "px";
         botMid.style.left = rect.left + (rect.width / 2 - handleWidth / 2) + "px";
         selBorder.appendChild(botMid);
         //isImage ? botMid.addEventListener("mouseover", TRIANGLE.resize.XY) : botMid.addEventListener("mouseover", TRIANGLE.resize.Y);
@@ -6027,7 +6053,7 @@ TRIANGLE.resize = {
           var topRight = document.createElement("div");
           topRight.style.cursor = "ne-resize";
           topRight.className = classType;
-          topRight.style.top = rect.top - handleHeight + 2 + "px";
+          topRight.style.top = rect.top - handleHeight + 2 + iframeTop + "px";
           if (rect.right >= window.innerWidth - overflowGap) {
             topRight.style.left = window.innerWidth - overflowGap - handleWidth + "px";
           } else {
@@ -6040,7 +6066,7 @@ TRIANGLE.resize = {
           var botRight = document.createElement("div");
           botRight.style.cursor = "se-resize";
           botRight.className = classType;
-          botRight.style.top = rect.bottom - 2 + "px";
+          botRight.style.top = rect.bottom - 2 + iframeTop + "px";
           if (rect.right >= window.innerWidth - overflowGap) {
             botRight.style.left = window.innerWidth - overflowGap - handleWidth + "px";
           } else {
@@ -6053,7 +6079,7 @@ TRIANGLE.resize = {
           var topLeft = document.createElement("div");
           topLeft.style.cursor = "nw-resize";
           topLeft.className = classType;
-          topLeft.style.top = rect.top - handleHeight + 2 + "px";
+          topLeft.style.top = rect.top - handleHeight + 2 + iframeTop + "px";
           if (rect.left <= 0) {
             topLeft.style.left = 5 + "px";
           } else {
@@ -6066,7 +6092,7 @@ TRIANGLE.resize = {
           var botLeft = document.createElement("div");
           botLeft.style.cursor = "sw-resize";
           botLeft.className = classType;
-          botLeft.style.top = rect.bottom - 2 + "px";
+          botLeft.style.top = rect.bottom - 2 + iframeTop + "px";
           if (rect.left <= 0) {
             botLeft.style.left = 5 + "px";
           } else {
@@ -6082,7 +6108,7 @@ TRIANGLE.resize = {
         var rightMid = document.createElement("div");
         rightMid.style.cursor = "e-resize";
         rightMid.className = classType;
-        rightMid.style.top = rect.top + (rect.height / 2 - handleHeight / 2) + "px";
+        rightMid.style.top = rect.top + (rect.height / 2 - handleHeight / 2) + iframeTop + "px";
         if (rect.right >= window.innerWidth - overflowGap) {
           rightMid.style.left = window.innerWidth - overflowGap - handleWidth + "px";
         } else {
@@ -6095,7 +6121,7 @@ TRIANGLE.resize = {
         var leftMid = document.createElement("div");
         leftMid.style.cursor = "col-resize";
         leftMid.className = marginClass;
-        leftMid.style.top = rect.top + (rect.height / 2 - handleHeight / 2) + "px";
+        leftMid.style.top = rect.top + (rect.height / 2 - handleHeight / 2) + iframeTop + "px";
         if (rect.left <= 0) {
           leftMid.style.left = 5 + "px";
         } else {
@@ -6109,7 +6135,7 @@ TRIANGLE.resize = {
         var leftMid = document.createElement("div");
         leftMid.style.cursor = "e-resize";
         leftMid.className = classType;
-        leftMid.style.top = rect.top + (rect.height / 2 - handleHeight / 2) + "px";
+        leftMid.style.top = rect.top + (rect.height / 2 - handleHeight / 2) + iframeTop + "px";
         if (rect.left <= 0) {
           leftMid.style.left = 5 + "px";
         } else {
@@ -6122,7 +6148,7 @@ TRIANGLE.resize = {
         var rightMid = document.createElement("div");
         rightMid.style.cursor = "col-resize";
         rightMid.className = marginClass;
-        rightMid.style.top = rect.top + (rect.height / 2 - handleHeight / 2) + "px";
+        rightMid.style.top = rect.top + (rect.height / 2 - handleHeight / 2) + iframeTop + "px";
         if (rect.right >= window.innerWidth - overflowGap) {
           rightMid.style.left = window.innerWidth - overflowGap - handleWidth + "px";
         } else {
@@ -6170,7 +6196,9 @@ TRIANGLE.resize = {
     TRIANGLE.resize.active = true;
     TRIANGLE.selectItem(TRIANGLE.resize.activeElem);
     document.body.addEventListener("mouseup", TRIANGLE.resize.stop);
-    document.body.addEventListener("mousemove", TRIANGLE.resize.start);
+    // document.body.addEventListener("mousemove", TRIANGLE.resize.start);
+    TRIANGLE.iframe().contentDocument.body.addEventListener("mouseup", TRIANGLE.resize.stop);
+    TRIANGLE.iframe().contentDocument.body.addEventListener("mousemove", TRIANGLE.resize.start);
     TRIANGLE.item.objRef.style.maxWidth = "100%";
     document.getElementById("dimensionLabels").style.display = "inline-block";
     document.getElementById("widthLabel").innerHTML = "W: " + TRIANGLE.item.width;
@@ -6185,7 +6213,7 @@ TRIANGLE.resize = {
     TRIANGLE.resize.active = false;
     TRIANGLE.resize.direction = false;
     TRIANGLE.resize.contentWidth = null;
-    document.getElementById("bottomMarker").style.marginTop = 0;
+    TRIANGLE.iframe().getElementById("bottomMarker").style.marginTop = 0;
     if (!TRIANGLE.isType.imageItem(TRIANGLE.item.objRef)) TRIANGLE.item.objRef.style.maxWidth = "";
     if (TRIANGLE.getUnit(TRIANGLE.item.width) === "%" && parseFloat(TRIANGLE.item.width) > 100) {
       TRIANGLE.item.objRef.style.width = "100%";
@@ -6198,12 +6226,15 @@ TRIANGLE.resize = {
     }
     TRIANGLE.item.objRef.style.width = document.getElementById("widthLabel").innerHTML.replace(/W: /g, "");
     document.body.removeEventListener("mouseup", TRIANGLE.resize.stop);
-    document.body.removeEventListener("mousemove", TRIANGLE.resize.start);
+    // document.body.removeEventListener("mousemove", TRIANGLE.resize.start);
+    TRIANGLE.iframe().contentDocument.body.removeEventListener("mouseup", TRIANGLE.resize.stop);
+    TRIANGLE.iframe().contentDocument.body.removeEventListener("mousemove", TRIANGLE.resize.start);
     TRIANGLE.selectionBorder.create();
     TRIANGLE.text.clearTextSelection();
     TRIANGLE.saveItem.equalizeUserClasses(TRIANGLE.item.userClass);
     TRIANGLE.text.allowTextSelect();
     TRIANGLE.tooltip.hide();
+    // TRIANGLE.iframe().iFrameResizer.resize()
   },
 
   start : function resizeItem(event) {
@@ -6214,6 +6245,7 @@ TRIANGLE.resize = {
       var posY = event.clientY;
       var rect = TRIANGLE.item.objRef.getBoundingClientRect();
       var parentRect = TRIANGLE.item.parent.getBoundingClientRect();
+      var iframeTop = TRIANGLE.iframe().getBoundingClientRect().top;
       var minSize = 2; // minimum size allowed for resizing
       var widthLabel = document.getElementById("widthLabel");
       var heightLabel = document.getElementById("heightLabel");
@@ -6311,7 +6343,7 @@ TRIANGLE.resize = {
           item.objRef.style.minHeight = Math.floor(posY - rect.top) + "px";
           if (TRIANGLE.isType.imageItem(TRIANGLE.item.objRef)) item.objRef.style.height = item.objRef.style.minHeight;
           if (item.transform || item.display == "table") item.objRef.style.height = item.objRef.style.minHeight;
-          if (item.isLastChild) document.getElementById("bottomMarker").style.marginTop = window.innerHeight + "px";
+          if (item.isLastChild) TRIANGLE.iframe().getElementById("bottomMarker").style.marginTop = window.innerHeight + "px";
           snapYdimension();
         } else {
           return;
@@ -6378,21 +6410,21 @@ TRIANGLE.resize = {
           }
         }
       }
-      /*if (!isApplied) {
-      if (posX >= TRIANGLE.columnMap.template.left - 3 && posX <= TRIANGLE.columnMap.template.left + 3) {
-      posX = TRIANGLE.columnMap.template.left;
-      isApplied = true;
-      if (TRIANGLE.item.prevSibling().style.width === TRIANGLE.item.prevSibling().previousSibling.style.width) {
-      TRIANGLE.item.objRef.style.width = TRIANGLE.item.prevSibling().style.width;
-      console.log(TRIANGLE.item.objRef.style.width);
+      //       if (!isApplied) {
+      //       if (posX >= TRIANGLE.columnMap.template.left - 3 && posX <= TRIANGLE.columnMap.template.left + 3) {
+      //       posX = TRIANGLE.columnMap.template.left;
+      //       isApplied = true;
+      //       if (TRIANGLE.item.prevSibling().style.width === TRIANGLE.item.prevSibling().previousSibling.style.width) {
+      //       TRIANGLE.item.objRef.style.width = TRIANGLE.item.prevSibling().style.width;
+      //       console.log(TRIANGLE.item.objRef.style.width);
+      //     }
+      //   } else if (posX >= TRIANGLE.columnMap.template.right - 3 && posX <= TRIANGLE.columnMap.template.right + 3) {
+      //   posX = TRIANGLE.columnMap.template.right;
+      //   isApplied = true;
+      // }
+      // }
+      return isApplied;
     }
-  } else if (posX >= TRIANGLE.columnMap.template.right - 3 && posX <= TRIANGLE.columnMap.template.right + 3) {
-  posX = TRIANGLE.columnMap.template.right;
-  isApplied = true;
-}
-}*/
-return isApplied;
-}
 
 function snapYdimension() {
   var isApplied = false;
@@ -6469,7 +6501,9 @@ margin : {
     TRIANGLE.resize.active = true;
     TRIANGLE.selectItem(TRIANGLE.resize.activeElem);
     document.body.addEventListener("mouseup", TRIANGLE.resize.margin.stop);
-    document.body.addEventListener("mousemove", TRIANGLE.resize.margin.start);
+    // document.body.addEventListener("mousemove", TRIANGLE.resize.margin.start);
+    TRIANGLE.iframe().contentDocument.body.addEventListener("mouseup", TRIANGLE.resize.margin.stop);
+    TRIANGLE.iframe().contentDocument.body.addEventListener("mousemove", TRIANGLE.resize.margin.start);
     document.getElementById("dimensionLabels").style.display = "inline-block";
     document.getElementById("widthLabel").innerHTML = "M: " + TRIANGLE.item[TRIANGLE.resize.direction];
     document.getElementById("heightLabel").innerHTML = "";
@@ -6485,11 +6519,13 @@ margin : {
     TRIANGLE.resize.activeElem = -1;
     TRIANGLE.resize.active = false;
     TRIANGLE.resize.direction = false;
-    document.getElementById("bottomMarker").style.marginTop = 0;
+    TRIANGLE.iframe().getElementById("bottomMarker").style.marginTop = 0;
     TRIANGLE.updateTemplateItems();
     TRIANGLE.importItem.single(TRIANGLE.item.index);
     document.body.removeEventListener("mouseup", TRIANGLE.resize.margin.stop);
-    document.body.removeEventListener("mousemove", TRIANGLE.resize.margin.start);
+    // document.body.removeEventListener("mousemove", TRIANGLE.resize.margin.start);
+    TRIANGLE.iframe().contentDocument.body.removeEventListener("mouseup", TRIANGLE.resize.margin.stop);
+    TRIANGLE.iframe().contentDocument.body.removeEventListener("mousemove", TRIANGLE.resize.margin.start);
     TRIANGLE.selectionBorder.create();
     TRIANGLE.text.clearTextSelection();
     TRIANGLE.text.allowTextSelect();
@@ -6748,14 +6784,14 @@ TRIANGLE.draggable = {
 
 
 TRIANGLE.resetClearFloat = function resetClearFloat() {
-  while (document.getElementsByClassName("clearFloat").length > 0) {
-    /*var clearFloatElem = document.getElementsByClassName("clearFloat");
-    for (var i = 0; i < clearFloatElem.length; i++) {
-    clearFloatElem[i].remove();
-  }*/
-  var clearFloatElem = document.getElementsByClassName("clearFloat");
-  clearFloatElem[0].remove();
-}
+  while (TRIANGLE.iframe().getElementsByClassName("clearFloat").length > 0) {
+    // var clearFloatElem = document.getElementsByClassName("clearFloat");
+    // for (var i = 0; i < clearFloatElem.length; i++) {
+    //   clearFloatElem[i].remove();
+    // }
+    var clearFloatElem = TRIANGLE.iframe().getElementsByClassName("clearFloat");
+    clearFloatElem[0].parentElement.removeChild(clearFloatElem[0]);
+  }
 }
 
 TRIANGLE.insertClearFloats = function insertClearFloats(item) {
@@ -6970,10 +7006,10 @@ TRIANGLE.contentWidth = function(obj) {
 
   obj.appendChild(measure);
 
-  var rect = document.getElementById("measureContentWidth").getBoundingClientRect();
+  var rect = TRIANGLE.iframe().getElementById("measureContentWidth").getBoundingClientRect();
   value = rect.width;
 
-  obj.removeChild(document.getElementById("measureContentWidth"));
+  obj.removeChild(TRIANGLE.iframe().getElementById("measureContentWidth"));
 
   return value;
 }
@@ -7006,7 +7042,7 @@ TRIANGLE.tooltip = {
     document.getElementById("tooltip").style.display = "block";
   },
   update : function updateTooltipLocation(event) {
-    document.getElementById("tooltip").style.top = (event.clientY + 15) + "px";
+    document.getElementById("tooltip").style.top = (event.clientY + 15 + TRIANGLE.iframe().getBoundingClientRect().top) + "px";
     document.getElementById("tooltip").style.left = (event.clientX + 15) + "px";
   },
   hide : function hideTooltip() {
@@ -7254,7 +7290,7 @@ TRIANGLE.keyEvents = { // keyboard shortcuts
   countActiveInputs : function countActiveInputs() {
     var inputElements = document.getElementsByTagName("input");
     var textareaElements = document.getElementsByTagName("textarea");
-    var textBoxElements = document.getElementsByClassName("textBox");
+    var textBoxElements = TRIANGLE.iframe().getElementsByClassName("textBox");
     var countActive = 0;
 
     for (var i = 0; i < inputElements.length; i++) {
@@ -7406,7 +7442,7 @@ TRIANGLE.forms = {
     //newForm.setAttribute("enctype", "application/x-www-form-urlencoded");
     newForm.className = "templateItem childItem";
     newForm.style.backgroundColor = "inherit";
-    newForm.style.minHeight = "100px";
+    // newForm.style.minHeight = "100px";
     newForm.style.height = "auto";
     newForm.style.width = "100%";
     newForm.style.position = "relative";
@@ -7538,7 +7574,7 @@ TRIANGLE.columnMap = {
 
 TRIANGLE.locateColumns = function locateColumns() {
 
-  var templateRect = document.getElementById("template").getBoundingClientRect();
+  var templateRect = TRIANGLE.iframe().getElementById("template").getBoundingClientRect();
   TRIANGLE.columnMap.template.left = templateRect.left;
   TRIANGLE.columnMap.template.right = templateRect.right;
 
@@ -7593,13 +7629,15 @@ TRIANGLE.defaultSettings = function defaultSettings() {
   TRIANGLE.menu.menuBtnActive(document.getElementById("opInsert")); // open a specific menu by default
   TRIANGLE.menu.addOptionLabelEvents(); // adds mouseover/out events to option buttons to show their labels
   document.getElementById("colorMainBg").style.backgroundColor = document.body.style.backgroundColor; // default on load: auto-import body background color
-  document.getElementById("templateWrapper").addEventListener("mousedown", TRIANGLE.clearSelection, true); // clear element selection if blank area on template is clicked
-  document.getElementById("bottomMarker").addEventListener("mousedown", TRIANGLE.clearSelection, true); // clear element selection bottom marker area on template is clicked
-  document.getElementById("templateWrapper").addEventListener("mouseup", TRIANGLE.text.checkTextEditing, true); // if text is not being edited, destroy the dialogue
-  document.getElementById("bottomMarker").addEventListener("mouseup", TRIANGLE.text.checkTextEditing, true); // if text is not being edited, destroy the dialogue
+  TRIANGLE.iframe().getElementById("templateWrapper").addEventListener("mousedown", TRIANGLE.clearSelection, true); // clear element selection if blank area on template is clicked
+  TRIANGLE.iframe().getElementById("bottomMarker").addEventListener("mousedown", TRIANGLE.clearSelection, true); // clear element selection bottom marker area on template is clicked
+  TRIANGLE.iframe().getElementById("templateWrapper").addEventListener("mouseup", TRIANGLE.text.checkTextEditing, true); // if text is not being edited, destroy the dialogue
+  TRIANGLE.iframe().getElementById("bottomMarker").addEventListener("mouseup", TRIANGLE.text.checkTextEditing, true); // if text is not being edited, destroy the dialogue
   document.body.addEventListener("mouseover", TRIANGLE.hoverBorder.hide, true); // remove hover border if not hovering
+  TRIANGLE.iframe().contentDocument.addEventListener("mouseover", TRIANGLE.hoverBorder.hide, true); // remove hover border if not hovering
   // document.body.addEventListener("keyup", TRIANGLE.keyEvents.whichKey.item);
   document.body.addEventListener("keydown", TRIANGLE.keyEvents.whichKey.item);
+  TRIANGLE.iframe().contentDocument.body.addEventListener("keydown", TRIANGLE.keyEvents.whichKey.item);
 
   // export
   document.getElementById("exportPublish").addEventListener("click", TRIANGLE.exportTemplate.publish.prompt);
@@ -7743,24 +7781,33 @@ TRIANGLE.defaultSettings = function defaultSettings() {
     TRIANGLE.selectionBorder.update();
     TRIANGLE.dragDrop.updateItemMap();
   });
-
-  document.addEventListener("mouseup", function() {
-    TRIANGLE.dragDrop.stop();
-    setTimeout(TRIANGLE.options.compareUndoList, TRIANGLE.saveItem.animationTime + 30);
+  TRIANGLE.iframe().contentDocument.addEventListener("scroll", function() {
+    TRIANGLE.hoverBorder.hide();
+    TRIANGLE.selectionBorder.update();
+    TRIANGLE.dragDrop.updateItemMap();
   });
 
-  document.addEventListener("mousedown", function() {
+  function stopDragDrop() {
+    TRIANGLE.dragDrop.stop();
+    setTimeout(TRIANGLE.options.compareUndoList, TRIANGLE.saveItem.animationTime + 30);
+  }
+  document.addEventListener("mouseup", stopDragDrop);
+  TRIANGLE.iframe().contentDocument.addEventListener("mouseup", stopDragDrop);
+
+  function rememberTextPosition() {
     if (TRIANGLE.item && TRIANGLE.item.objRef.isContentEditable) {
       TRIANGLE.text.originalTextPosition = TRIANGLE.text.getSelectionCoords().r;
     };
-  });
+  }
+  document.addEventListener("mousedown", rememberTextPosition);
+  TRIANGLE.iframe().contentDocument.addEventListener("mousedown", rememberTextPosition);
 
   // document.addEventListener("keyup", function(event) {
   //
   // });
 
-  document.addEventListener("keydown", function(event) {
-    document.getElementById("updateAnimation").innerHTML = ""; // resets the animation style so it can play after repetitive changes
+  function preventDefaultEvents(event) {
+    TRIANGLE.iframe().getElementById("updateAnimation").innerHTML = ""; // resets the animation style so it can play after repetitive changes
     var ctrlCmd = event.ctrlKey || event.metaKey;
     if (event.keyCode == 8 && !TRIANGLE.keyEvents.countActiveInputs()) event.preventDefault(); // prevent backspace going back
     if (ctrlCmd && event.keyCode === 83) event.preventDefault(); // prevents browser ctrl+S functions
@@ -7770,8 +7817,13 @@ TRIANGLE.defaultSettings = function defaultSettings() {
     }
     TRIANGLE.keyEvents.whichKey.document(event);
     setTimeout(TRIANGLE.options.compareUndoList, TRIANGLE.saveItem.animationTime + 30);
-  });
+  }
+  document.addEventListener("keydown", preventDefaultEvents);
+  TRIANGLE.iframe().contentDocument.addEventListener("keydown", preventDefaultEvents);
+
   window.addEventListener("resize", TRIANGLE.selectionBorder.update);
+  TRIANGLE.iframe().contentWindow.addEventListener("resize", TRIANGLE.selectionBorder.update);
+
   TRIANGLE.images.load(); // get the image library for the menu
   TRIANGLE.library.load(); // get the premade elements library for the menu
   TRIANGLE.colors.fillCanvas("red"); // sets the canvas colors up
@@ -7795,6 +7847,11 @@ TRIANGLE.defaultSettings = function defaultSettings() {
 
   // prevent image dragging in some browsers
   document.body.addEventListener("mousedown", function(event) {
+    if (event.target.tagName.toLowerCase() === "img") {
+      event.preventDefault();
+    }
+  });
+  TRIANGLE.iframe().contentDocument.body.addEventListener("mousedown", function(event) {
     if (event.target.tagName.toLowerCase() === "img") {
       event.preventDefault();
     }
@@ -7832,9 +7889,9 @@ TRIANGLE.defaultSettings = function defaultSettings() {
   };
 
   if (window.addEventListener) {
-    document.getElementById("template").addEventListener('click', preventIEanchor, false);
+    TRIANGLE.iframe().getElementById("template").addEventListener('click', preventIEanchor, false);
   } else {
-    document.getElementById("template").attachEvent('onclick', preventIEanchor);
+    TRIANGLE.iframe().getElementById("template").attachEvent('onclick', preventIEanchor);
   }
 
   window.onbeforeunload = function() {
@@ -7843,7 +7900,7 @@ TRIANGLE.defaultSettings = function defaultSettings() {
 
   TRIANGLE.updateTemplateItems();
 }
-TRIANGLE.defaultSettings();
+// TRIANGLE.defaultSettings();
 
 
 //====================================================================================================

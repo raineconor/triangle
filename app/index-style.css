@@ -212,12 +212,12 @@ hr {
   background-color:white;
 }
 
-#sideOptionsBar {
-  width:80px;
-  float:right;
-  height:100%;
-  background-color:#242831;
-  /*background-color:#333333;*/
+#iframeTemplate {
+  width:100%;
+  overflow:scroll;
+  /* height is calculated screenHeight - menuHeight - topMarkerHeight */
+  /* height:calc(100vh - 71px - 22px); */
+  height:calc(99vh - 71px);
 }
 
 #effectStudioMenu {
@@ -328,25 +328,6 @@ hr {
 
 #fontData {
   display:none;
-}
-
-#topMarker {
-  border-bottom: 1px dashed gray;
-  background-color:white;
-  text-align: center;
-  color:gray;
-}
-
-#bottomMarker {
-  border-top: 1px dashed gray;
-  background-color:none;
-  text-align: center;
-  height:150px;
-  color:gray;
-  /*position:relative;
-  bottom:0;
-  right:0;
-  left:0;*/
 }
 
 #darkWrapper, #darkToaster {

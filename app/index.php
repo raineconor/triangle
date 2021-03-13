@@ -43,27 +43,21 @@
   if (!empty($templateName)) {
 
     if ($userTemplate) {
-      $callLoad = "<script type=\"text/javascript\">"
-                  . "TRIANGLE.loadTemplate.loadTemplate('" . $templateName . "', '" . $pageName . "');"
-                  . "TRIANGLE.unsaved = false;"
-                . "</script>";
+      $callLoad = "TRIANGLE.loadTemplate.loadTemplate('" . $templateName . "', '" . $pageName . "');"
+                  . "TRIANGLE.unsaved = false;";
 
     } else if ($premadeTemplate) {
-      $callLoad = "<script type=\"text/javascript\">"
-                  . "TRIANGLE.library.insertTemplate('" . $templateName . "');"
+      $callLoad = "TRIANGLE.library.insertTemplate('" . $templateName . "');"
                   . "TRIANGLE.unsaved = true;"
-                  . "TRIANGLE.unsavedPremade = true;"
-                . "</script>";
+                  . "TRIANGLE.unsavedPremade = true;";
     }
 
   }
 
   if (!$userTemplate) {
     if (empty($templateName)) $_SESSION["currentTemplate"][$instanceNumber] = "untitled";
-    $callLoad .= "<script type=\"text/javascript\">"
-                . "document.getElementById('saveCurrentTemplate').parentNode.style.display = 'none';"
-                . "document.getElementById('saveNewPage').parentNode.style.display = 'none';"
-              . "</script>";
+    $callLoad .= "document.getElementById('saveCurrentTemplate').parentNode.style.display = 'none';"
+                . "document.getElementById('saveNewPage').parentNode.style.display = 'none';";
   }
 
   $max_templates = "";
@@ -104,7 +98,6 @@
   <?php include "ui-components/submenu/premade_elements.html" ?>
   <?php include "ui-components/submenu/meta_data.html" ?>
   <?php include "ui-components/submenu/developer.html" ?>
-  <?php /*include "ui-components/side_options.html"*/ ?>
   <div id="underMenu">
     <?php include "ui-components/undermenu/padding.html"; ?>
     <?php include "ui-components/undermenu/margin.html"; ?>
@@ -153,9 +146,7 @@
   <div id="ace-editor"></div>
 </div>
 
-<div id="topMarker">Top</div>
-
-<div id="templateWrapper">
+<div id="templateWrapper" class="d-none">
   <style id="hoverData"></style>
   <div id="hoverItems"></div>
   <style id="animationData"></style>
@@ -164,12 +155,10 @@
   <div id="fontData"></div>
 </div>
 
-<?php include "ui-components/selected_item_options.html"; ?>
+<div id="selectionBorderContainer"></div>
+<iframe id="iframeTemplate" src="template-default.html"></iframe>
 
-<div id="bottomMarker">
-  <div>Bottom</div>
-  <span style="font-size:10px;color:lightgray;">&copy; Copyright <?php echo date("Y", time()); ?> Raine Conor. All rights reserved.</span>
-</div>
+<?php include "ui-components/selected_item_options.html"; ?>
 
 <!--===========================================-->
 <!--=========== end template block ============-->
@@ -204,12 +193,11 @@
 
 <script type="text/javascript">
 var TRIANGLE = TRIANGLE || {};
-
 TRIANGLE.enable = {
   animations : true
 };
 TRIANGLE.instance = parseInt(<?php echo $instanceNumber; ?>);
-console.log(TRIANGLE.instance);
+// console.log(TRIANGLE.instance);
 
 document.getElementById("echoImageList").addEventListener("scroll", lazyload);
 function lazyload() {
@@ -228,13 +216,30 @@ function lazyload() {
 <script type="text/javascript" src="iframeResizer/iframeResizer.min.js"></script>
 <script type="text/javascript" src="js/iframeResizer-init.min.js"></script>
 <script type="text/javascript" src="js/AJAX.min.js"></script>
-<script type="text/javascript" src="js/TRIANGLE.min.js"></script>
+<script type="text/javascript" src="js/TRIANGLE.js"></script>
 <script type="text/javascript" src="dropzone/dropzone.min.js"></script>
 <script type="text/javascript" src="dropzone/dropzone-init.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
 <script type="text/javascript" src="js/bootstrap-init.min.js"></script>
 
-<?php echo $callLoad; ?>
+<script type="text/javascript">
+function checkIframeLoaded() {
+  var iframe = TRIANGLE.iframe();
+  var iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+  if (iframeDoc.readyState  == 'complete') {
+    afterLoading();
+    return;
+  }
+  window.setTimeout(checkIframeLoaded, 20);
+}
+
+function afterLoading() {
+  TRIANGLE.defaultSettings();
+  <?php echo $callLoad; ?>
+}
+
+window.onload = checkIframeLoaded();
+</script>
 <?php echo $max_templates; ?>
 </body>
 </html>
