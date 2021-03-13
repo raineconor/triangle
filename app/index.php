@@ -225,6 +225,8 @@ function lazyload() {
 
 </script>
 <script src="ace/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" src="iframeResizer/iframeResizer.min.js"></script>
+<script type="text/javascript" src="js/iframeResizer-init.min.js"></script>
 <script type="text/javascript" src="js/AJAX.min.js"></script>
 <script type="text/javascript" src="js/TRIANGLE.min.js"></script>
 <script type="text/javascript" src="dropzone/dropzone.min.js"></script>
