@@ -430,12 +430,13 @@ input {
   width:31.33%;
   float:left;
   margin:1%;
-  transition:all 150ms;
+  transition:all 150ms ease 0ms;
 }
 
 .templateChoice:hover {
   color:#161616;
   border-left:10px solid #2170D6;
+  background-color:#DAF0FD;
 }
 
 .helpEntry {

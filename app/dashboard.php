@@ -86,9 +86,9 @@ if ($_SESSION["usertype"] === "admin") {
       <div class="popUpMenu" id="templateChoices">
         <h3>Choose a template type:</h3>
         <hr>
-        <!-- <a class="templateChoice" target="_blank" onClick="closePopUp();" href="index.php?premadeTemplate=default">Multipurpose</a>
-        <a class="templateChoice" target="_blank" onClick="closePopUp();" href="index.php?premadeTemplate=railroad">Personal Blog</a>
-        <a class="templateChoice" target="_blank" onClick="closePopUp();" href="index.php?premadeTemplate=Skybound">Photography</a> -->
+        <!-- <a class="templateChoice" target="_blank" onClick="closePopUp();" href="index.php?premadeTemplate=default">Multipurpose</a> -->
+        <!-- <a class="templateChoice" target="_blank" onClick="closePopUp();" href="index.php?premadeTemplate=railroad">Personal Blog</a> -->
+        <a class="templateChoice" target="" onClick="closePopUp();" href="index.php?premadeTemplate=Business">Business</a>
         <a class="templateChoice" target="" onClick="closePopUp();" href="index.php?premadeTemplate=blank">Blank template</a>
         <div style="clear:both;"></div>
         <br>
