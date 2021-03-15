@@ -240,7 +240,7 @@ hr {
 
 #codeEditorWrapper {
   box-shadow:0px 0px 4px rgba(10, 10, 10, 0.5);
-  width:400px;
+  width:500px;
   /* height:400px; */
   height:auto;
   display:inline-block;
@@ -252,6 +252,8 @@ hr {
   top:170px;
   left:0;
   border-radius:2px;
+  /* resize:both;
+  overflow:auto; */
 }
 
 #codeEditorStatus {
