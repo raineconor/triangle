@@ -38,7 +38,7 @@ function formatCode($data, $templateName, $pageName, $compress = false, $cropped
     /*$CSSinclude = "<!--========== CSS Include: =========-->\n"
                 . "<link rel=\"stylesheet\" href=\"" . $pageName .".css\" type=\"text/css\" media=\"screen\">\n"
                 . "<!--=================================-->\n\n";*/
-                $CSSinclude = "<style><css></style>\n\n";
+                $CSSinclude = "<style><css></style>";
                 // $CSSinclude = "<link rel=\"stylesheet\" href=\"" . $pageName .".css\" type=\"text/css\" media=\"screen\">\n\n";
   }
 
@@ -317,7 +317,7 @@ function formatCode($data, $templateName, $pageName, $compress = false, $cropped
 
   $html .= implode($itemHTML);
 
-  $html .= "\n\n</div><!-- end class=\"container\" -->\n\n"
+  $html .= "\n\n</div>\n\n"
          . $deferFonts
          . $imgCount
          . $scriptTag
@@ -494,7 +494,7 @@ function formatCode($data, $templateName, $pageName, $compress = false, $cropped
              preg_replace("/(;|{)\s*width:[^;]+;/", ";\n  width:" . $responsive[$key]["xs"] . ';', formatCSStext($itemStyle, $item["crop-map"])))
            . "}\n\n";
 
-      if ($item["hover-style"]) {
+      if ($item["hover-style"] && !is_null($item["hover-style"]) && $item["hover-style"] != "null") {
         $css .= $elemType . $itemTitle . ":hover {\n"
              . preg_replace("/\s+-webkit-user-select:none;/", "", formatCSStext($item["hover-style"]))
              . "}\n\n";
@@ -572,7 +572,7 @@ function formatCode($data, $templateName, $pageName, $compress = false, $cropped
     $css = preg_replace("/\s*({|}|;|,|\(|\))\s*/", "$1", $css);
     $html = str_replace("<style><css></style>", "<style>" . $css . "</style>", $html);
   } else {
-    $html = str_replace("<style><css></style>", "<style>\n" . $css . "\n</style>\n", $html);
+    $html = str_replace("<style><css></style>", "<style>\n" . preg_replace("/\s+$/", "", $css) . "\n</style>\n", $html);
   }
 
   str_replace("<?php", "<!--<?php", $html);
