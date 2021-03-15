@@ -3,32 +3,24 @@
 <head>
 <meta charset="utf-8">
 
-<!--========== Page Title: ==========-->
 <title>Triangle - Build Websites Fast</title>
-<!--=================================-->
 
-<!--============ Favicon: ===========-->
 <link rel="shortcut icon" href="/favicon.png" />
-<!--=================================-->
 
-<!--=========== Meta Tags: ==========-->
 <meta name="description" content="Triangle is a web application that allows you to build modern, elegant websites visually in your browser, faster than conventional tools.">
 <meta name="keywords" content="triangle,website, builder, online, cloud, service">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<!--=================================-->
 
-<!--========== CSS Include: =========-->
+<link rel='preconnect' href='https://fonts.gstatic.com'>
+<link defer="https://fonts.googleapis.com/css2?family=Lato:wght@100;300;400;500;700&amp;display=swap" triangle-font-family="Lato" rel="stylesheet" type="text/css">
 <style>
 * {
   box-sizing:border-box;
 }
 
-*[onClick] {
-  cursor:pointer;
-}
-
 body {
-  font-family:Verdana, Arial, sans-serif;
+  font-family:"Lato", sans-serif;
+  font-size:16px;
   background-color:white;
   margin:0;
 }
@@ -151,6 +143,9 @@ textarea {
   text-align:left;
 }
 
+.heading:hover {
+}
+
 #item7 {
   height:auto;
   width:100%;
@@ -195,7 +190,7 @@ textarea {
   box-shadow:lightgray 0px 0px 15px;
 }
 
-#item16, #item10 {
+#item16, #item22, #item10 {
   background-color:white;
   height:auto;
   min-height:auto;
@@ -209,7 +204,7 @@ textarea {
 
 #item11 {
   background-color:rgb(191, 215, 234);
-  background-image:linear-gradient(to right bottom, rgb(240, 205, 160), rgb(255, 241, 225));
+  background-image:linear-gradient(to right bottom, rgb(182, 222, 252), rgb(234, 247, 253));
   height:auto;
   min-height:80vh;
   width:100%;
@@ -222,7 +217,7 @@ textarea {
   align-items:center;
 }
 
-#item18, #item12 {
+#item18, #item24, #item12 {
   height:auto;
   min-height:auto;
   width:100%;
@@ -232,7 +227,7 @@ textarea {
   padding-bottom:15px;
 }
 
-#item20, #item14 {
+#item20, #item26, #item14 {
   background-color:inherit;
   height:auto;
   width:100%;
@@ -255,6 +250,43 @@ textarea {
 
 #item17 {
   background-color:rgb(191, 215, 234);
+  background-image:linear-gradient(to right bottom, rgb(240, 205, 160), rgb(255, 241, 225));
+  height:auto;
+  min-height:80vh;
+  width:100%;
+  display:flex;
+  position:relative;
+  padding:40px;
+  border-radius:2px;
+  flex-flow:row wrap;
+  justify-content:center;
+  align-items:center;
+}
+
+#item19 {
+  background-color:inherit;
+  height:auto;
+  width:100%;
+  font-family:"Lato", sans-serif;
+  font-weight:700;
+  font-size:52px;
+  color:rgb(36, 45, 56);
+  line-height:1.15;
+  text-align:left;
+}
+
+#item21 {
+  height:auto;
+  min-height:auto;
+  width:100%;
+  max-width:100%;
+  display:inline-block;
+  overflow:hidden;
+  border-radius:2px;
+}
+
+#item23 {
+  background-color:rgb(191, 215, 234);
   background-image:linear-gradient(to right bottom, rgb(170, 240, 191), rgb(224, 249, 231));
   height:auto;
   min-height:80vh;
@@ -268,7 +300,7 @@ textarea {
   align-items:center;
 }
 
-#item21 {
+#item27 {
   background-color:rgb(29, 31, 33);
   height:auto;
   min-height:auto;
@@ -279,7 +311,7 @@ textarea {
   text-align:center;
 }
 
-#item22 {
+#item28 {
   height:auto;
   min-height:auto;
   width:100%;
@@ -288,7 +320,7 @@ textarea {
   border-right:5px solid rgb(41, 44, 47);
 }
 
-#item23 {
+#item29 {
   background-color:white;
   height:auto;
   min-height:auto;
@@ -301,7 +333,7 @@ textarea {
   align-items:center;
 }
 
-#item24 {
+#item30 {
   height:auto;
   min-height:auto;
   width:100%;
@@ -313,7 +345,7 @@ textarea {
   justify-content:center;
 }
 
-#item26 {
+#item32 {
   background-image:linear-gradient(to right bottom, rgb(33, 112, 214), rgb(71, 139, 227));
   height:auto;
   min-height:auto;
@@ -322,7 +354,7 @@ textarea {
   padding:10px;
 }
 
-#item27 {
+#item33 {
   height:auto;
   min-height:auto;
   width:100%;
@@ -378,19 +410,19 @@ textarea {
 
 
 @media (min-width: 768px) {
-  #item4, #item9, #item11, #item12, #item15, #item17, #item18, #item21, #item24, #item0 {
+  #item4, #item9, #item11, #item12, #item15, #item17, #item18, #item21, #item23, #item24, #item27, #item30, #item0 {
     width:100%;
   }
   #item5 {
     width:58.12%;
   }
-  #item22 {
+  #item28 {
     width:400px;
   }
 }
 
 @media (min-width: 992px) {
-  #item4, #item11, #item17, #item24, #item0 {
+  #item4, #item11, #item17, #item23, #item30, #item0 {
     width:100%;
   }
   #item1 {
@@ -402,28 +434,25 @@ textarea {
   #item9 {
     width:55%;
   }
-  #item15, #item18, #item21, #item12 {
+  #item15, #item18, #item21, #item24, #item27, #item12 {
     width:50%;
   }
 }
 
 @media (min-width: 1200px) {
-  #item4, #item11, #item17, #item24, #item0 {
+  #item4, #item11, #item17, #item23, #item30, #item0 {
     width:1300px;
   }
 }
 
 
 </style>
-<!--=================================-->
 
-<!--========= Font Include: =========-->
-<link rel='preconnect' href='https://fonts.gstatic.com'>
-<link defer="https://fonts.googleapis.com/css2?family=Lato:wght@100;300;400;500;700&amp;display=swap" triangle-font-family="Lato" rel="stylesheet" type="text/css">
-<!--=================================-->
+
 </head>
 
 <body>
+
 <div class="container">
 
   <div id="item0">
@@ -453,7 +482,7 @@ textarea {
             </a>
           </div>
           <div id="item9">
-            <video id="videoPlayer" src="https://trianglecms.com/video/triangle-preview-720p.mov" type="video/mp4" loop="" autoplay="true" width="100%" height="auto"></video>
+            <video id="videoPlayer" src="https://trianglecms.com/video/triangle-preview-720p.mov" type="video/mp4" loop="" autoplay="true" preload="auto" width="100%" height="auto"></video>
           </div>
         </div>
       </div>
@@ -461,43 +490,58 @@ textarea {
         <div id="item11">
           <div id="item12">
             <div class="heading">
-              Made For Professionals<br>
+              Fastest Editor for Developers
             </div>
             <div id="item14">
-              From freelancer to agency, web design professionals use Triangle for rapid website design and development every day.<br>
+              Triangle is one of the only all-in-one web design platforms that generates clean, editable code while designing visually, and vice versa: designs update visually while editing code.
             </div>
           </div>
           <div id="item15">
-            <img src="images/triangle-home-background-2000.jpg" style="width: 100%; height: auto;">
+            <img src="images/editor-for-developers.png" style="width: 100%; height: auto;">
           </div>
         </div>
       </div>
       <div id="item16">
         <div id="item17">
           <div id="item18">
-            <div class="heading">
-              Customize Everything<br>
+            <div id="item19">
+              Made For Professionals<br>
             </div>
             <div id="item20">
-              Triangle is one of the only all-in-one online web design platforms that generates clean, editable code while you design visually.<br>
+              From freelancer to agency, Triangle will help you deliver beautiful custom websites to your clients faster.
             </div>
           </div>
           <div id="item21">
-            <div id="item22">
+            <img src="images/triangle-home-background-2000.jpg" style="width: 100%; height: auto;">
+          </div>
+        </div>
+      </div>
+      <div id="item22">
+        <div id="item23">
+          <div id="item24">
+            <div class="heading">
+              Customize Everything<br>
+            </div>
+            <div id="item26">
+              Since designs are editable through code, the user interface will never be a limiting obstacle for your creativity.
+            </div>
+          </div>
+          <div id="item27">
+            <div id="item28">
               <img src="images/triangle-css.png" style="width: 100%; height: auto;">
             </div>
           </div>
         </div>
       </div>
-      <div id="item23">
-        <div id="item24">
+      <div id="item29">
+        <div id="item30">
           <div class="heading">
             This website was made with Triangle.<br>
           </div>
         </div>
       </div>
-      <div id="item26">
-        <div id="item27">
+      <div id="item32">
+        <div id="item33">
           © Copyright 2021 Raine Conor. All rights reserved. <br>
         </div>
       </div>
@@ -514,6 +558,7 @@ function deferFonts() {
 }
 
 </script>
+
 </body>
 
 </html>
