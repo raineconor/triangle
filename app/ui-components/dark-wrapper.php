@@ -25,7 +25,7 @@
       <h3>Load Template</h3>
       <!--<div id="echoLoadList"></div>-->
       <br>
-      <button type="button" class="btn btn-outline-secondary btn-sm" onClick="TRIANGLE.loadTemplate.cancelLoad();">Cancel</button>
+      <button type="button" class="btn btn-outline-secondary btn-sm" onClick="TRIANGLE.popUp.close();">Cancel</button>
     </div>
   </div>
   <!-- Upload Images -->
@@ -52,7 +52,7 @@
     <div class="popUpInner" id="getFixedWidthBox">
       Enter a Width:
       <input type="text" size="10" value="1170" id="customFixedWidth">
-      <button type="button" class="btn btn-primary btn-sm" onClick="TRIANGLE.template.fixedWidth();">Submit</button>
+      <button type="button" class="btn btn-primary btn-sm" onClick="TRIANGLE.options.fixedWidth();">Submit</button>
       <button type="button" class="btn btn-outline-secondary btn-sm" onClick="TRIANGLE.popUp.close();">Cancel</button>
     </div>
   </div>
