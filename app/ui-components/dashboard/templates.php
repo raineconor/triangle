@@ -1,9 +1,6 @@
 <section class="menu" id="myTemplates" style="display:block;">
   <h4>My Templates</h4>
   <hr>
-  <!--<a class="menuLink" href="index.php?pagename=index&loadTemplate=default" target="_blank">
-  + New Template
-</a>-->
 <a class="menuLink" onClick="openPopUp('templateChoices');" target="_blank">
   + New Template
 </a>

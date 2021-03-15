@@ -15,8 +15,6 @@ if (!empty($_FILES)) {
 
   } else {
 
-    file_put_contents("YEET.txt", json_encode($_FILES["file"]["name"]));
-
     $target_file = $target_dir . basename($_FILES["file"]["name"]);
     $imageFileType = pathinfo($target_file, PATHINFO_EXTENSION);
     $imageFileType = strtoupper($imageFileType);
