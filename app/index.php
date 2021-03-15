@@ -11,8 +11,8 @@
 
   if (isset($_GET["username"]) && isset($_SESSION["usertype"]) && $_SESSION["usertype"] === "admin") {
     //$_SESSION["pseudouser"][$instanceNumber] = $_GET["username"];
-    $_SESSION["pseudouser"] = $_GET["username"];
-    $username = $_GET["username"];
+    $_SESSION["pseudouser"] = _GET("username");
+    $username = _GET("username");
   } else if (isset($_SESSION["pseudouser"])) {
     unset($_SESSION["pseudouser"]);
   }
@@ -20,10 +20,10 @@
   $templateName = null;
   $userTemplate = $premadeTemplate = false;
   if (isset($_GET["template"])) {
-    $templateName = sanitize($_GET["template"]);
+    $templateName = _GET("template");
     $userTemplate = true;
   } else if (isset($_GET["premadeTemplate"])) {
-    $templateName = sanitize($_GET["premadeTemplate"]);
+    $templateName = _GET("premadeTemplate");
     $premadeTemplate = true;
   }
 
@@ -69,18 +69,18 @@
 <html>
 <meta charset="utf-8" />
 <head>
-<title>Triangle - Edit Template</title>
+  <title>Triangle - Edit Template</title>
 
-<link rel="shortcut icon" href="/favicon.ico" />
+  <link rel="shortcut icon" href="/favicon.png" />
 
-<!--=========== CSS Include: =============-->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
-<link rel="stylesheet" href="dropzone/dropzone.css" type="text/css" media="screen">
-<link rel="stylesheet" href="index-style.css" type="text/css" media="screen" />
-<link rel="stylesheet" href="ace/ace-style.css" type="text/css" media="screen" />
-<link rel="preconnect" href="https://fonts.gstatic.com">
-<link href="https://fonts.googleapis.com/css2?family=Lato:wght@100;300;400;700&display=swap" rel="stylesheet">
-<!--======================================-->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+  <link rel="stylesheet" href="dropzone/dropzone.min.css" type="text/css" media="screen">
+  <link rel="stylesheet" href="index-style.min.css" type="text/css" media="screen" />
+  <link rel="stylesheet" href="ace/ace-style.min.css" type="text/css" media="screen" />
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@100;300;400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;700&display=swap" rel="stylesheet">
+  <?php //include "ui-components/google_font_links.html"; ?>
 </head>
 <body>
 
@@ -240,6 +240,7 @@ function afterLoading() {
 
 window.onload = checkIframeLoaded();
 </script>
+
 <?php echo $max_templates; ?>
 </body>
 </html>

@@ -6,4 +6,12 @@ function sanitize($data) {
   $data = htmlspecialchars($data);
   return $data;
 }
+
+function _GET($str) {
+  return sanitize($_GET[$str]);
+}
+
+function _POST($str) {
+  return sanitize($_POST[$str]);
+}
 ?>
