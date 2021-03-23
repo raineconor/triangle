@@ -6,8 +6,8 @@ require "responsive.php";
 require_once "db_query.php";
 
 
-// this function is called by export_zip.php on line 83
-function formatCode($data, $templateName, $pageName, $compress = false, $croppedImgPaths) {
+// this function is called by export_zip.php
+function formatCode($data, $templateName, $pageName, $compress = false) {
 
   global $username;
   global $compression_map;
@@ -22,11 +22,16 @@ function formatCode($data, $templateName, $pageName, $compress = false, $cropped
 
   $fonts = "";
   $deferFonts = "";
-  if (!empty($data["fontData"]) && $data["fontData"] !== "") {
-    $fonts = "<link rel='preconnect' href='https://fonts.gstatic.com'>\n"
-           . str_replace("><", ">\n<", trim(str_replace("href=\"", "defer=\"", $data["fontData"]))) . "\n";
-    $deferFonts = "<script type=\"text/javascript\">\n" . file_get_contents(__DIR__ . "/../resources/lazyload/defer.js") . "\n</script>\n\n";
-  }
+
+  $fontData = trim($data["fontData"]);
+  $fonts = !empty($fontData) ? "<link rel='preconnect' href='https://fonts.gstatic.com'>\n"
+          . str_replace("><", ">\n<", $fontData) . "\n" : "";
+
+  // if (!empty($data["fontData"]) && $data["fontData"] !== "") {
+  //   $fonts = "<link rel='preconnect' href='https://fonts.gstatic.com'>\n"
+  //          . str_replace("><", ">\n<", trim(str_replace("href=\"", "defer=\"", $data["fontData"]))) . "\n";
+  //   $deferFonts = "<script type=\"text/javascript\">\n" . file_get_contents(__DIR__ . "/../resources/lazyload/defer.js") . "\n</script>\n\n";
+  // }
 
   $metaTitle = !empty($data["metaTitle"]) ? $data["metaTitle"] : "Page Title";
   $metaKeywords = !empty($data["metaKeywords"]) ? $data["metaKeywords"] : "insert, keywords, here";
@@ -35,11 +40,11 @@ function formatCode($data, $templateName, $pageName, $compress = false, $cropped
   if ($compress) {
     $CSSinclude = "<style><css></style>";
   } else {
-    /*$CSSinclude = "<!--========== CSS Include: =========-->\n"
-                . "<link rel=\"stylesheet\" href=\"" . $pageName .".css\" type=\"text/css\" media=\"screen\">\n"
-                . "<!--=================================-->\n\n";*/
-                $CSSinclude = "<style><css></style>";
-                // $CSSinclude = "<link rel=\"stylesheet\" href=\"" . $pageName .".css\" type=\"text/css\" media=\"screen\">\n\n";
+    // $CSSinclude = "<!--========== CSS Include: =========-->\n"
+    //             . "<link rel=\"stylesheet\" href=\"" . $pageName .".css\" type=\"text/css\" media=\"screen\">\n"
+    //             . "<!--=================================-->\n\n";
+    $CSSinclude = "<style><css></style>";
+    // $CSSinclude = "<link rel=\"stylesheet\" href=\"" . $pageName .".css\" type=\"text/css\" media=\"screen\">\n\n";
   }
 
   // PHP 7 logic
@@ -52,12 +57,12 @@ function formatCode($data, $templateName, $pageName, $compress = false, $cropped
          . "<head>\n"
          . "<meta charset=\"utf-8\">\n\n"
 
-         . "<title>" . $metaTitle . "</title>\n\n"
+         . "<title>$metaTitle</title>\n\n"
 
          . "<link rel=\"shortcut icon\" href=\"/favicon.png\" />\n\n"
 
-         . "<meta name=\"description\" content=\"" . $metaDescription . "\">\n"
-         . "<meta name=\"keywords\" content=\"" . $metaKeywords . "\">\n"
+         . "<meta name=\"description\" content=\"$metaDescription\">\n"
+         . "<meta name=\"keywords\" content=\"$metaKeywords\">\n"
          . "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n\n"
 
          . $fonts
@@ -168,18 +173,18 @@ function formatCode($data, $templateName, $pageName, $compress = false, $cropped
       if ($countImgTags) {
         $imgCount++;
       }
-      $len_y = count($croppedImgPaths["original"]);
-      for ($y = 0; $y < $len_y; $y++) {
-        //if (strpos($innerHTML, $croppedImgPaths["original"][$y])) {
-        //if (strpos($innerHTML, "item" . $croppedImgPaths["itemNums"][$y]) && strpos($innerHTML, $croppedImgPaths["original"][$y])) {
-          echo $croppedImgPaths["itemNums"][$y] . "\n";
-        if (strpos($id . $class, "item" . $croppedImgPaths["itemNums"][$y])) {
-          $innerHTML = str_replace($croppedImgPaths["original"][$y], $croppedImgPaths["new"][$y], $innerHTML);
-          $innerHTML = preg_replace('#style="[^"]*"#', 'style="width:100%;height:auto;"', $innerHTML);
-          unset($croppedImgPaths["original"][$y]);
-          unset($croppedImgPaths["new"][$y]);
-        }
-      }
+      // $len_y = count($croppedImgPaths["original"]);
+      // for ($y = 0; $y < $len_y; $y++) {
+      //   //if (strpos($innerHTML, $croppedImgPaths["original"][$y])) {
+      //   //if (strpos($innerHTML, "item" . $croppedImgPaths["itemNums"][$y]) && strpos($innerHTML, $croppedImgPaths["original"][$y])) {
+      //     echo $croppedImgPaths["itemNums"][$y] . "\n";
+      //   if (strpos($id . $class, "item" . $croppedImgPaths["itemNums"][$y])) {
+      //     $innerHTML = str_replace($croppedImgPaths["original"][$y], $croppedImgPaths["new"][$y], $innerHTML);
+      //     $innerHTML = preg_replace('#style="[^"]*"#', 'style="width:100%;height:auto;"', $innerHTML);
+      //     unset($croppedImgPaths["original"][$y]);
+      //     unset($croppedImgPaths["new"][$y]);
+      //   }
+      // }
     }
     $target = !empty($item["target"]) ? " target=\"" . $item["target"] . "\"" : "";
     //$innerHTML = !empty($item["link-to"]) ? "\n<a href=\"" . $item["link-to"] . "\"" . $target . ">" . $innerHTML . "</a>\n" : $innerHTML;
@@ -246,7 +251,7 @@ function formatCode($data, $templateName, $pageName, $compress = false, $cropped
 
       $prevChildOf;
       $counter = 0;
-      while ($isLast && $childOf) {
+      while ($isLast && $childOf != "") {
         $itemHTML .= $itemTags[$childOf]["closeTag"];
         $isLast = boolval($itemTags[$childOf]["isLastChild"]);
         $prevChildOf = $childOf;
@@ -342,6 +347,8 @@ function formatCode($data, $templateName, $pageName, $compress = false, $cropped
                BEGIN CSS FORMATTING
   ============================================*/
 
+  $bodyFont = $data["fontFamily"] == "undefined" ? "'Verdana', sans-serif" : $data["fontFamily"];
+
   $css .= "* {\n"
         . "  box-sizing:border-box;\n"
         . "}\n\n"
@@ -351,7 +358,7 @@ function formatCode($data, $templateName, $pageName, $compress = false, $cropped
         // . "}\n\n"
 
         . "body {\n"
-        . "  font-family:" . $data["fontFamily"] . ";\n"
+        . "  font-family:" . $bodyFont . ";\n"
         . "  font-size:16px;\n"
         . "  background-color:" . preg_replace("/[^;]*;\s?background-color:\s?([^;]+);[^;]*;?/", "$1", $data["bodyBgData"]) . ";\n"
         . "  margin:0;\n"
