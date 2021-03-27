@@ -12,7 +12,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <link rel='preconnect' href='https://fonts.gstatic.com'>
-<link defer="https://fonts.googleapis.com/css2?family=Lato:wght@100;300;400;500;700&amp;display=swap" triangle-font-family="Lato" rel="stylesheet" type="text/css">
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@100;300;400;500;700&amp;display=swap" triangle-font-family="Lato" rel="stylesheet" type="text/css">
 <style>
 * {
   box-sizing:border-box;
@@ -141,9 +141,6 @@ textarea {
   color:rgb(36, 45, 56);
   line-height:1.15;
   text-align:left;
-}
-
-.heading:hover {
 }
 
 #item7 {
@@ -444,11 +441,7 @@ textarea {
     width:1300px;
   }
 }
-
-
 </style>
-
-
 </head>
 
 <body>
@@ -477,7 +470,7 @@ textarea {
           </div>
           <a href="register.php">
             <div id="item8">
-              GET STARTED<br>
+              GET STARTED
             </div>
             </a>
           </div>
@@ -546,16 +539,11 @@ textarea {
         </div>
       </div>
 
-</div><!-- end class="container" -->
+</div>
 
 <script type="text/javascript">
-document.body.onload = deferFonts;
-function deferFonts() {
-  var defer = document.querySelectorAll("[defer]");
-  for (var i = 0; i < defer.length; i++) {
-    defer[i].setAttribute("href", defer[i].getAttribute("defer"));
-  }
-}
+
+</script><script type="text/javascript" id="hs-script-loader" async defer src="//js.hs-scripts.com/9439526.js"></script>
 
 </script>
 
