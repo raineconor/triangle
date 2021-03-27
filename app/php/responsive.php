@@ -10,7 +10,7 @@ function responsive_template($widthStyle) {
 
   $widthValue = floatval($widthStyle);
   $xsValue = $smValue = $mdValue = $lgValue = $widthStyle;
-    
+
   if ($widthValue > 300 && $widthValue <= 768) {
     $xsValue = "100%";
   }
@@ -23,7 +23,7 @@ function responsive_template($widthStyle) {
     $smValue = "750px";
     $mdValue = "970px";
   }
-    
+
   return set_responsive($responsive, $xsValue, $smValue, $mdValue, $lgValue);
 }
 
@@ -34,28 +34,28 @@ function responsive_item($id, $styles, $parent, $nextSib, $prevSib, &$items) {
     "md" => "",
     "lg" => ""
   ];
-  
+
   if (  empty($styles) || (  isset($styles[0]) && empty($styles[0])  )  ) {
     $responsive = set_responsive($responsive, "100%", "", "", "");
   } else {
     $widthStyle = $styles[0];
     $widthValue = floatval($widthStyle);
-    
+
     if (getUnit($widthStyle) === '%' && $widthValue < 100) {
       $percent = $widthValue / 100;
-      
+
       $xsCalc = $percent * 768;
       $smCalc = $percent * 992;
       $mdCalc = $percent * 1200;
-      
+
       $xsValue = $smValue = $mdValue = $lgValue = $widthStyle;
-      
+
       $objRect = $styles;
       $rectWidth = $styles[1];
       $objTop = $styles[2];
-      
+
       //$parentWidth = $items[$parent][0];
-      
+
       if (boolval($nextSib)) {
         if (is_array($items[$nextSib])) {
           $nextRect = $items[$nextSib];
@@ -65,7 +65,7 @@ function responsive_item($id, $styles, $parent, $nextSib, $prevSib, &$items) {
         $nextTop = $nextRect[2];
       }
       $nextSib = boolval($nextSib);
-      
+
       if (boolval($prevSib)) {
         if (is_array($items[$prevSib])) {
           $prevRect = $items[$prevSib];
@@ -75,9 +75,9 @@ function responsive_item($id, $styles, $parent, $nextSib, $prevSib, &$items) {
         $prevTop = $items[$prevSib][2];
       }
       $prevSib = boolval($prevSib);
-      
+
       // --- begin responsive calculations ---
-      
+
       if ($widthValue < 85) {
         $xsValue = "100%";
       }
@@ -113,35 +113,35 @@ function responsive_item($id, $styles, $parent, $nextSib, $prevSib, &$items) {
       if ($parent != "template" && ($objRect[2] / 992) * 100 <= 16.66) {
         if (getUnit($items[$parent][0]) === '%') $mdValue = "100%";
       }
-      
+
       if ($xsValue === $widthStyle
       &&  $smValue === $widthStyle
       &&  $mdValue === $widthStyle
       &&  $lgValue === $widthStyle) {
-      
+
           $smValue = $msValue = $lgValue = "";
-        
+
       } else if ($xsValue != $widthStyle
              &&  $smValue === $widthStyle
              &&  $mdValue === $widthStyle
              &&  $lgValue === $widthStyle) {
-             
+
                  $mdValue = $lgValue = "";
-               
+
       } else if ($xsValue != $widthStyle
              &&  $smValue != $widthStyle
              &&  $mdValue === $widthStyle
              &&  $lgValue === $widthStyle) {
-        
+
                  $lgValue = "";
       }
-      
+
       return set_responsive($responsive, $xsValue, $smValue, $mdValue, $lgValue);
-    
+
     } else if (getUnit($widthStyle) === "x") {
-      
+
       $xsValue = $smValue = $mdValue = $lgValue = $widthStyle;
-      
+
       if ($widthValue > 300 && $widthValue <= 768) {
         $xsValue = "100%";
       }
@@ -161,31 +161,31 @@ function responsive_item($id, $styles, $parent, $nextSib, $prevSib, &$items) {
         $smValue = "100%";
         $xsValue = "100%";
       }
-      
+
       if ($xsValue === $widthStyle
       &&  $smValue === $widthStyle
       &&  $mdValue === $widthStyle
       &&  $lgValue === $widthStyle) {
-      
+
           $smValue = $msValue = $lgValue = "";
-        
+
       } else if ($xsValue != $widthStyle
              &&  $smValue === $widthStyle
              &&  $mdValue === $widthStyle
              &&  $lgValue === $widthStyle) {
-             
+
                  $mdValue = $lgValue = "";
-               
+
       } else if ($xsValue != $widthStyle
              &&  $smValue != $widthStyle
              &&  $mdValue === $widthStyle
              &&  $lgValue === $widthStyle) {
-        
+
                  $lgValue = "";
       }
-      
+
       return set_responsive($responsive, $xsValue, $smValue, $mdValue, $lgValue);
-      
+
     } else {
       return set_responsive($responsive, $widthStyle, "", "", "");
     }
