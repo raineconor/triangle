@@ -107,6 +107,20 @@ hr {
   box-shadow:0 0 5px rgba(22, 22, 22, 0.2);
 }
 
+#templateTree {
+  position:fixed;
+  left:0;
+  bottom:0;
+  right:0;
+  height:20px;
+}
+
+.treeBtn {
+  display:inline-block;
+  background-color:lightblue;
+  border-right:1px solid gray;
+}
+
 .underMenu {
   position:fixed;
   top:71px;
@@ -218,6 +232,9 @@ hr {
   /* height is calculated screenHeight - menuHeight - topMarkerHeight */
   /* height:calc(100vh - 71px - 22px); */
   height:calc(99vh - 71px);
+  display:block;
+  margin:0 auto;
+  transition:width 200ms;
 }
 
 #effectStudioMenu {
@@ -614,6 +631,28 @@ hr {
   display:inline-block;
 }
 
+#breakpointBtns {
+  color:inherit;
+  float:right;
+  height:30px;
+  color:white;
+}
+
+.breakpointBtn {
+  display:inline-block;
+  cursor:pointer;
+  height:30px;
+  padding:2px 6px;
+}
+
+.breakpointBtn:hover {
+  background-color:#707d90;
+}
+
+/* .breakpointBtn:last-child {
+  padding:2px 2px;
+} */
+
 #tooltip {
   position:fixed;
   color:white;
@@ -772,7 +811,8 @@ hr {
 /* color palette */
 
 #colorPalette {
-  background-color:lightgray;
+  background-color:#282a36;
+  color:white;
   box-shadow:0 0 4px rgba(20,20,20,0.3);
   width:236px;
   height:auto;
@@ -785,12 +825,15 @@ hr {
   text-align:center;
   top:200px;
   left:100px;
+  border-radius:2px;
 }
 
 #colorPaletteBar {
   background-color:#323a47;
-  height:15px;
+  height:30px;
   cursor:move;
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
 }
 
 #paletteItems {
@@ -1501,6 +1544,10 @@ hr.clearFloat {
   border-left:10px solid #8BE347;
 }
 
+.libraryItem:last-child {
+  border-bottom:none;
+}
+
 .libraryCategory {
   padding:10px;
   background-color:#dfe5eb;
@@ -1539,10 +1586,10 @@ hr.clearFloat {
   border:1px solid #333;
   float:left;
   margin:3px;
+  outline:1px solid white;
 }
 .colorPaletteItem:hover {
   border-color:black;
-  outline:1px solid white;
   cursor:pointer;
 }
 .paletteCategory {

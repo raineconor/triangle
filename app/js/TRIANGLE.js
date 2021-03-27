@@ -27,21 +27,29 @@ TRIANGLE.iframe = function() {
   return document.getElementById("iframeTemplate");
 };
 
-// TRIANGLE.iframe().contentDocument.head.innerHTML += '<link rel="stylesheet" href="template-style.css" type="text/css" media="screen" />';
 TRIANGLE.iframe().getElementById = function(id) {
   return TRIANGLE.iframe().contentDocument.getElementById(id);
 }
 TRIANGLE.iframe().getElementsByClassName = function(className) {
   return TRIANGLE.iframe().contentDocument.getElementsByClassName(className);
 }
+TRIANGLE.iframe().getElementsByTriangleClass = function(className) {
+  return TRIANGLE.iframe().contentDocument.querySelectorAll("[triangle-class~=" + className + "]");
+}
 TRIANGLE.iframe().getElementsByTagName = function(className) {
   return TRIANGLE.iframe().contentDocument.getElementsByClassName(className);
+}
+TRIANGLE.iframe().getElementByUserId = function(userID) {
+  return TRIANGLE.iframe().contentDocument.querySelector("[user-id=" + userID + "]");
 }
 TRIANGLE.iframe().querySelector = function(selector) {
   return TRIANGLE.iframe().contentDocument.querySelector(selector);
 }
 TRIANGLE.iframe().querySelectorAll = function(selector) {
   return TRIANGLE.iframe().contentDocument.querySelectorAll(selector);
+}
+TRIANGLE.iframe().getTriangleIndex = function(index) {
+  return TRIANGLE.iframe().contentDocument.querySelector("#template [triangle-index='" + index + "']");
 }
 
 TRIANGLE.templateWrapper = function() {
@@ -53,10 +61,12 @@ TRIANGLE.template = function() {
 
 // TRIANGLE.templateItems = TRIANGLE.iframe().getElementsByClassName("templateItem");
 // TRIANGLE.templateItems = TRIANGLE.template().getElementsByTagName("*");
-TRIANGLE.templateItems = TRIANGLE.iframe().getElementsByClassName("templateItem");
+// TRIANGLE.templateItems = TRIANGLE.iframe().getElementsByClassName("templateItem");
+TRIANGLE.templateItems = TRIANGLE.iframe().querySelectorAll("#template [triangle-class~=templateItem]");
 
 TRIANGLE.refreshTemplateItems = function() {
-  var itemList = TRIANGLE.template().getElementsByClassName("templateItem");
+  // var itemList = TRIANGLE.template().getElementsByClassName("templateItem");
+  var itemList = TRIANGLE.template().querySelectorAll("#template [triangle-class~=templateItem]");
   // var itemList = TRIANGLE.template().getElementsByTagName("*");
   TRIANGLE.templateItems = null;
   TRIANGLE.templateItems = itemList;
@@ -73,16 +83,15 @@ class constructor for TemplateItem. This is a global object that is used by most
 
 TRIANGLE.TemplateItem = function(index) {
   this.index = parseInt(index);
-  this.objRef = TRIANGLE.iframe().getElementById("item" + this.index) ? TRIANGLE.iframe().getElementById("item" + this.index) : TRIANGLE.templateItems[this.index];
-  this.prevItem = TRIANGLE.iframe().getElementById("item" + (index - 1)) || TRIANGLE.templateItems[index - 1];
-  this.nextItem = TRIANGLE.iframe().getElementById("item" + (index + 1)) || TRIANGLE.templateItems[index + 1];
+  this.objRef = TRIANGLE.iframe().getTriangleIndex(this.index) || TRIANGLE.templateItems[this.index];
+  this.prevItem = TRIANGLE.iframe().getTriangleIndex(this.index - 1) || TRIANGLE.templateItems[index - 1];
+  this.nextItem = TRIANGLE.iframe().getTriangleIndex(this.index + 1) || TRIANGLE.templateItems[index + 1];
   this.parent = this.objRef.parentNode;
-  this.childOf = this.objRef.getAttribute("childof") || null;
+  this.childOf = this.objRef.getAttribute("triangle-childof");
   this.id = this.objRef.id;
   this.parentId = this.objRef.parentNode.id;
   this.className = this.objRef.className;
-  this.triangleId = this.objRef.getAttribute("triangle-id") || null;
-  this.triangleClass = this.objRef.getAttribute("triangle-class") || null;
+  this.triangleClass = this.objRef.getAttribute("triangle-class");
   this.triangleClassList = this.triangleClass ? this.triangleClass.split(" ") : [];
   this.textNodes = this.objRef.getElementsByClassName("textBox").length;
   this.tag = this.objRef.tagName.toLowerCase();
@@ -91,11 +100,11 @@ TRIANGLE.TemplateItem = function(index) {
   this.isFirstChild = !this.prevSibling() ? true : false;
   this.isLastChild = !this.nextSibling() ? true : false;
   this.image = TRIANGLE.isType.imageItem(this.objRef) ? this.objRef.children[0] : undefined;
-  this.cropMap = this.objRef.getAttribute("crop-map") ? this.objRef.getAttribute("crop-map") : false;
+  this.cropMap = this.objRef.getAttribute("crop-map") || false;
   this.cropRatio = this.objRef.getAttribute("crop-ratio") ? parseFloat(this.objRef.getAttribute("crop-ratio")) : false;
-  this.linkTo = this.objRef.getAttribute("link-to") ? this.objRef.getAttribute("link-to") : false;
-  this.userID = this.objRef.getAttribute("user-id") ? this.objRef.getAttribute("user-id") : false;
-  this.userClass = this.objRef.getAttribute("user-class") ? this.objRef.getAttribute("user-class") : false;
+  this.linkTo = this.objRef.getAttribute("link-to") || false;
+  this.userID = this.objRef.getAttribute("user-id") || false;
+  this.userClass = this.objRef.getAttribute("user-class") || false;
   //============================================================
   this.hover = {};
   this.hover.cssText = this.objRef.getAttribute("hover-style") || "";
@@ -128,7 +137,8 @@ TRIANGLE.TemplateItem.prototype.remove = function() {
 
 // count all text nodes within the selected item
 TRIANGLE.TemplateItem.prototype.countTextNodes = function() {
-  var textboxes = this.objRef.getElementsByClassName("textBox");
+  // var textboxes = this.objRef.getElementsByClassName("textBox");
+  var textboxes = this.objRef.querySelectorAll("[triangle-class~=textbox]");
   var counter = textboxes.length;
   for (var z =0; z < textboxes.length; z++) {
     counter += textboxes[z].children.length;
@@ -136,23 +146,15 @@ TRIANGLE.TemplateItem.prototype.countTextNodes = function() {
   return counter;
 }
 
-// pass a class name as a string argument to be appended to the class of the selected item
-TRIANGLE.TemplateItem.prototype.addClass = function(classname) {
-  this.objRef.className = this.className + " " + classname;
-}
-
-// pass a class name as a string argument to be removed from the class of the selected item
-TRIANGLE.TemplateItem.prototype.removeClass = function(classname) {
-  this.objRef.className = this.objRef.className.replace(classname, "");
-  this.objRef.className = this.objRef.className.replace("\s+", " ");
-}
-
 // returns an array of indexes of all siblings of the selected item within the same parent
 TRIANGLE.TemplateItem.prototype.siblings = function() {
   var siblings = this.parent.children;
   var siblingList = [];
   for (var j = 0, k = 0; k < siblings.length; k++) {
-    if (siblings[k].parentNode === this.parent && siblings[k] !== this.objRef && (/templateItem/g).test(siblings[k].className)) {
+    if (siblings[k].parentNode === this.parent
+    && siblings[k] !== this.objRef
+    && (siblings[k].classList.contains("templateItem")
+    || (/templateItem/g).test(siblings[k].getAttribute("triangle-class")))) {
       siblingList[j] = siblings[k];
       j++;
     }
@@ -165,7 +167,8 @@ TRIANGLE.TemplateItem.prototype.prevSibling = function() {
   var siblings = this.parent.children;
   for (var k = siblings.length - 1; k >= 0; k--) {
     if (siblings[k] === this.objRef) var currentSib = this.index;
-    if (parseInt(siblings[k].getAttribute("index")) < currentSib && siblings[k].parentNode === this.parent) return siblings[k];
+    if (parseInt(siblings[k].getAttribute("triangle-index")) < currentSib
+    && siblings[k].parentNode === this.parent) return siblings[k];
   }
 }
 
@@ -174,7 +177,8 @@ TRIANGLE.TemplateItem.prototype.nextSibling = function() {
   var siblings = this.parent.children;
   for (var k = 0; k < siblings.length; k++) {
     if (siblings[k] === this.objRef) var currentSib = this.index;
-    if (parseInt(siblings[k].getAttribute("index")) > currentSib && siblings[k].parentNode === this.parent) return siblings[k];
+    if (parseInt(siblings[k].getAttribute("triangle-index")) > currentSib
+    && siblings[k].parentNode === this.parent) return siblings[k];
   }
 }
 
@@ -193,7 +197,7 @@ TRIANGLE.TemplateItem.prototype.detectTransform = function() {
 TRIANGLE.TemplateItem.prototype.isAbove = function(index) {
   var siblings = this.siblings();
   for (var k = 0; k < siblings.length; k++) {
-    if (siblings[k] === TRIANGLE.iframe().getElementById("item" + index)) {
+    if (siblings[k] === TRIANGLE.iframe().getTriangleIndex(index)) {
       var thisRect = this.objRef.getBoundingClientRect();
       var sibRect = siblings[k].getBoundingClientRect();
       if (sibRect.bottom <= thisRect.top && thisRect.top - sibRect.bottom <= 200) {
@@ -210,7 +214,7 @@ TRIANGLE.TemplateItem.prototype.isAbove = function(index) {
 TRIANGLE.TemplateItem.prototype.isBelow = function(index) {
   var siblings = this.siblings();
   for (var k = 0; k < siblings.length; k++) {
-    if (siblings[k] === TRIANGLE.iframe().getElementById("item" + index)) {
+    if (siblings[k] === TRIANGLE.iframe().getTriangleIndex(index)) {
       var thisRect = this.objRef.getBoundingClientRect();
       var sibRect = siblings[k].getBoundingClientRect();
       if (sibRect.top >= thisRect.bottom && sibRect.bottom - thisRect.bottom <= 200) {
@@ -244,7 +248,23 @@ TRIANGLE.TemplateItem.prototype.searchParentTree = function(classNameSearch) {
 
 // check if item has a specific triangle class
 TRIANGLE.TemplateItem.prototype.isType = function(typeStr) {
-  return this.triangleClassList.includes(typeStr) /* temporary ->>> */ || this.objRef.classList.contains(typeStr);
+  return this.triangleClassList.includes(typeStr) || this.objRef.classList.contains(typeStr);
+}
+
+TRIANGLE.TemplateItem.prototype.addTriangleClass = function(classStr) {
+  if (!this.triangleClassList.includes(classStr))
+  this.objRef.setAttribute(
+    "triangle-class",
+    this.triangleClass + " " + classStr
+  );
+}
+
+TRIANGLE.TemplateItem.prototype.removeTriangleClass = function(classStr) {
+  if (this.triangleClassList.includes(classStr))
+  this.objRef.setAttribute(
+    "triangle-class",
+    this.triangleClass.replace(classStr, "").replace("  ", " ").trim()
+  );
 }
 
 /*
@@ -260,44 +280,38 @@ If any templateItems are floating left, a div is inserted after it to clear the 
 a dblClick event listener to make the textbox editable upon double clicking it.
 */
 
-TRIANGLE.updateTemplateItems = function updateTemplateItems(repeat) { // boolean, if true repeat function
+TRIANGLE.updateTemplateItems = function(repeat) { // boolean, if true repeat function
   TRIANGLE.templateItems = TRIANGLE.refreshTemplateItems();
   // TRIANGLE.dragDrop.removeVisBox();
   TRIANGLE.resetClearFloat();
   for (var i = 0; i < TRIANGLE.templateItems.length; i++) {
     var sv_item = new TRIANGLE.TemplateItem(i);
 
-    // sv_item.objRef.removeEventListener("mousedown", TRIANGLE.importItem.single, true);
     sv_item.objRef.addEventListener("mousedown", TRIANGLE.importItem.single, true);
-
-    if (!sv_item.parent.classList.contains("templateItem")) {
-      // sv_item.objRef.addEventListener("mousedown", TRIANGLE.dragDrop.applyDrag, true);
-    } else {
-      if (!sv_item.objRef.classList.contains("childItem")) {
-        sv_item.objRef.classList.add("childItem");
-      }
-    }
-
-    // sv_item.objRef.removeEventListener("mouseover", TRIANGLE.hoverBorder.show, true);
     sv_item.objRef.addEventListener("mouseover", TRIANGLE.hoverBorder.show, true);
 
-    if (sv_item.objRef.classList.contains("textBox")) {
-      // sv_item.objRef.removeEventListener("dblclick", TRIANGLE.text.editText);
+    if (sv_item.parent.getAttribute("triangle-class") && !sv_item.parent.getAttribute("triangle-class").includes("templateItem")) {
+      // sv_item.objRef.addEventListener("mousedown", TRIANGLE.dragDrop.applyDrag, true);
+    } else if (!sv_item.triangleClassList.includes("childItem")) {
+        sv_item.addTriangleClass("childItem");
+    }
+
+    if (sv_item.triangleClassList.includes("textbox")) {
       sv_item.objRef.addEventListener("dblclick", TRIANGLE.text.editText);
     } else {
       sv_item.objRef.removeEventListener("dblclick", TRIANGLE.text.editText);
     }
 
-    TRIANGLE.templateItems[i].setAttribute("id", "item" + i);
-    TRIANGLE.templateItems[i].setAttribute("triangle-id", "item" + i);
-    TRIANGLE.templateItems[i].setAttribute("index", i);
+    TRIANGLE.templateItems[i].setAttribute("triangle-index", i);
 
-    if (sv_item.objRef.classList.contains("childItem")) {
-      var parentId = sv_item.parent.getAttribute("id");
-      var parentTriangleId = sv_item.parent.getAttribute("triangle-id");
-      sv_item.objRef.setAttribute("childof", parentId);
-      sv_item.objRef.setAttribute("triangle-childof", parentTriangleId);
-      if (parentId === "template") sv_item.objRef.classList.remove("childItem");
+    if (sv_item.triangleClassList.includes("childItem")) {
+      if (sv_item.parent.id === "template") {
+        sv_item.removeTriangleClass("childItem");
+        sv_item.objRef.setAttribute("triangle-childof", "");
+      } else {
+        var parentIndex = sv_item.parent.getAttribute("triangle-index");
+        sv_item.objRef.setAttribute("triangle-childof", parentIndex);
+      }
     }
 
     if (TRIANGLE.isType.formField(sv_item.objRef)) {
@@ -312,7 +326,7 @@ TRIANGLE.updateTemplateItems = function updateTemplateItems(repeat) { // boolean
   if (repeat) TRIANGLE.updateTemplateItems();
 }
 
-TRIANGLE.selectItem = function selectItem(index) {
+TRIANGLE.selectItem = function(index) {
   TRIANGLE.item = new TRIANGLE.TemplateItem(index);
   TRIANGLE.itemStyles = TRIANGLE.item.objRef.style;
   TRIANGLE.selectionBorder.update();
@@ -323,7 +337,7 @@ TRIANGLE.clearSelection = function() {
   TRIANGLE.selectionBorder.remove();
   TRIANGLE.selectedItemOptions.hide();
   for (var i = 0; i < TRIANGLE.templateItems.length; i++) {
-    var clearElem = TRIANGLE.iframe().getElementById("item" + i);
+    var clearElem = TRIANGLE.iframe().getTriangleIndex(i);
     if (TRIANGLE.isType.textBox(clearElem)) {
       // if (clearElem.isContentEditable && clearElem !== document.activeElement) { // find flag
       if (clearElem.isContentEditable && clearElem !== TRIANGLE.iframe().contentDocument.activeElement) { // find flag
@@ -332,6 +346,8 @@ TRIANGLE.clearSelection = function() {
       }
     }
   }
+
+  document.getElementById("templateTree").innerHTML = "";
 
   // blur all elements
   var dummyInput = document.createElement("input");
@@ -380,7 +396,7 @@ TRIANGLE.clearSelection = function() {
   var fontFamilyInput = document.getElementById("fontType");
   var templateFont = TRIANGLE.template().style.fontFamily.split(",")[0].replace(/'|"/g, "");
   if (!templateFont) {
-    fontFamilyInput.selectedIndex = -1;
+    fontFamilyInput.selectedIndex = 0;
   } else {
     for (var i = 0; i < fontFamilyInput.options.length; i++) {
       if (fontFamilyInput.options[i].text == templateFont) {
@@ -405,14 +421,22 @@ TRIANGLE.clearSelection = function() {
 
 }
 
+//====================================================================================================
+//====================================================================================================
+//====================================================================================================
+
+
+TRIANGLE.styleSheets = {
+
+}
+
 
 //====================================================================================================
 //====================================================================================================
 //====================================================================================================
 
 
-TRIANGLE.deleteItem = function deleteElement(index) {
-  if (TRIANGLE.isType.preventDelete(TRIANGLE.item.objRef)) return;
+TRIANGLE.deleteItem = function(index) {
   var item = new TRIANGLE.TemplateItem(index);
   if (item.hoverVersion) TRIANGLE.iframe().getElementById("hoverItems").removeChild(item.hoverObj);
   item.remove();
@@ -453,25 +477,6 @@ TRIANGLE.menu = {
     btn.className += " mainOptionActive";
   },
 
-  addOptionLabelEvents : function() {
-    var optionLabelElems = document.getElementsByClassName("optionLabel"); // global variable
-    var elemId; // global variable
-
-    for (var i = 0; i < optionLabelElems.length; i++) {
-      elemId = optionLabelElems[i].getAttribute("id");
-      optionLabelElems[i].parentElement.setAttribute("onMouseOver", "TRIANGLE.menu.optionLabel('" + elemId + "');");
-      optionLabelElems[i].parentElement.setAttribute("onMouseOut", "TRIANGLE.menu.optionLabel('" + elemId + "');");
-    }
-  },
-
-  optionLabel : function optionLabel(id) {
-    if (document.getElementById(id).style.display !== "block") {
-      document.getElementById(id).style.display = "block";
-    } else {
-      document.getElementById(id).style.display = "none";
-    }
-  },
-
   toggleVisibility : function(mode) {
     var toggleVisibility = menu.getElementsByClassName("toggleVisibility");
     for (var i = 0; i < toggleVisibility.length; i++) {
@@ -492,10 +497,6 @@ TRIANGLE.menu = {
       document.getElementById(id).style.display = "none";
     }
   },
-
-  /*
-  function openSideMenu()
-  */
 
   sideMenuId : null,
 
@@ -554,7 +555,7 @@ TRIANGLE.importItem = {
     if (isNaN(parseInt(index))) {
       event = index;
       try {
-        index = this.getAttribute("index");
+        index = this.getAttribute("triangle-index");
       } catch (ex) {
         // console.log(ex.message);
         return;
@@ -577,7 +578,7 @@ TRIANGLE.importItem = {
     } else if (arguments.length === 1 && ((/\d/).test(arguments[0]) || parseInt(arguments[0]))) {
       passedIndex = arguments[0];
     } else if (this) {
-      passedIndex = this.getAttribute("index");
+      passedIndex = this.getAttribute("triangle-index");
     } else {
       return;
     }
@@ -602,6 +603,7 @@ TRIANGLE.importItem = {
     importLinkTarget(); // imports hyperlink target from anchor tag
     // importSnippet(); // imports user-inserted code snippet
     importFormEmail(); // imports custom form email
+    importItemTree();
     TRIANGLE.importItem.importCodeSnippet();
     TRIANGLE.importItem.importOuterHTML();
     TRIANGLE.importItem.importCSSText();
@@ -636,17 +638,17 @@ TRIANGLE.importItem = {
     }
 
     function importPadding() {
-      var side = document.getElementById("paddingSide").querySelector(".edgeOptionActive").getAttribute("data-side");
+      var side = document.getElementById("paddingSide").querySelector(".edgeOptionActive").getAttribute("data-triangle-side");
       document.getElementById("padding").value = TRIANGLE.itemStyles["padding" + side];
     }
 
     function importMargin() {
-      var side = document.getElementById("marginSide").querySelector(".edgeOptionActive").getAttribute("data-side");
+      var side = document.getElementById("marginSide").querySelector(".edgeOptionActive").getAttribute("data-triangle-side");
       document.getElementById("margin").value = TRIANGLE.itemStyles["margin" + side];
     }
 
     function importBorder() {
-      var side = document.getElementById("borderSide").querySelector(".edgeOptionActive").getAttribute("data-side");
+      var side = document.getElementById("borderSide").querySelector(".edgeOptionActive").getAttribute("data-triangle-side");
       var borderStyleDictionary = ["solid", "dashed", "dotted"];
       document.getElementById("borderWidth").value = TRIANGLE.itemStyles["border" + side + "Width"];
       document.getElementById("borderStyle").selectedIndex = borderStyleDictionary.indexOf(TRIANGLE.itemStyles["border" + side + "Style"]);
@@ -825,6 +827,20 @@ TRIANGLE.importItem = {
         document.getElementById("formEmail").value = TRIANGLE.item.objRef.getAttribute("form-email");
       } else {
         document.getElementById("formEmail").value = "";
+      }
+    }
+
+    function importItemTree() {
+      return;
+      if (TRIANGLE.item) {
+        var currentNode = TRIANGLE.item.objRef;
+        while (currentNode.parentNode.id != "template") {
+          var treeBtn = document.createElement("span");
+          treeBtn.className = "treeBtn";
+          treeBtn.innerText = currentNode.tagName;
+          document.getElementById("templateTree").appendChild(treeBtn);
+          currentNode = currentNode.parentNode;
+        }
       }
     }
 
@@ -1173,7 +1189,7 @@ TRIANGLE.saveItem = {
     }
 
     function savePadding() {
-      var side = document.getElementById("paddingSide").querySelector(".edgeOptionActive").getAttribute("data-side");
+      var side = document.getElementById("paddingSide").querySelector(".edgeOptionActive").getAttribute("data-triangle-side");
       var dash = side ? "-" : "";
       var paddingValue = document.getElementById("padding").value;
       if (parseInt(paddingValue) == 0) {
@@ -1189,7 +1205,7 @@ TRIANGLE.saveItem = {
     }
 
     function saveMargin() {
-      var side = document.getElementById("marginSide").querySelector(".edgeOptionActive").getAttribute("data-side");
+      var side = document.getElementById("marginSide").querySelector(".edgeOptionActive").getAttribute("data-triangle-side");
       var dash = side ? "-" : "";
       var marginValue = document.getElementById("margin").value;
       if (parseInt(marginValue) == 0) {
@@ -1205,7 +1221,7 @@ TRIANGLE.saveItem = {
     }
 
     function saveBorder() {
-      var side = document.getElementById("borderSide").querySelector(".edgeOptionActive").getAttribute("data-side");
+      var side = document.getElementById("borderSide").querySelector(".edgeOptionActive").getAttribute("data-triangle-side");
       var dash = side ? "-" : "";
       var borderWidthValue = document.getElementById("borderWidth").value;
       var borderStyleSelect = document.getElementById("borderStyle");
@@ -1332,7 +1348,7 @@ TRIANGLE.saveItem = {
     if (TRIANGLE.item) {
       TRIANGLE.selectionBorder.remove();
       TRIANGLE.hoverBorder.hide();
-      var side = document.getElementById("marginSide").querySelector(".edgeOptionActive").getAttribute("data-side");
+      var side = document.getElementById("marginSide").querySelector(".edgeOptionActive").getAttribute("data-triangle-side");
       var dash = side ? "-" : "";
       var marginValue = document.getElementById("margin").value;
       if (parseInt(marginValue) == 0) {
@@ -1354,7 +1370,7 @@ TRIANGLE.saveItem = {
     if (TRIANGLE.item) {
       TRIANGLE.selectionBorder.remove();
       TRIANGLE.hoverBorder.hide();
-      var side = document.getElementById("borderSide").querySelector(".edgeOptionActive").getAttribute("data-side");
+      var side = document.getElementById("borderSide").querySelector(".edgeOptionActive").getAttribute("data-triangle-side");
       var dash = side ? "-" : "";
       var borderWidthValue = document.getElementById("borderWidth").value;
       var borderStyleSelect = document.getElementById("borderStyle");
@@ -1458,7 +1474,7 @@ TRIANGLE.saveItem = {
       var animationCSS = "@keyframes updateAnimation {" +
       "from{" + styleType + ":" + originalStyle + "}" +
       "to{" + styleType + ":" + styleValue + "}}" +
-      "#" + TRIANGLE.item.id + "{" + styleType + ":" + styleValue + ";" +
+      "[triangle-index='" + TRIANGLE.item.index + "']{" + styleType + ":" + styleValue + ";" +
       "animation-name:updateAnimation;animation-duration:300ms}";
 
       if (originalStyle !== styleValue) {
@@ -1516,7 +1532,7 @@ TRIANGLE.saveTemplate = {
     pageName = encodeURIComponent(pageName);
     //========================================================================
     var content = TRIANGLE.json.encode();
-    content = TRIANGLE.json.compress(content);
+    // content = TRIANGLE.json.compress(content);
     content = encodeURIComponent(content);
     //========================================================================
     var globalStyle = encodeURIComponent(TRIANGLE.developer.globalStyleTagContent);
@@ -1552,6 +1568,7 @@ TRIANGLE.saveTemplate = {
   cancelSave : function cancelSave() {
     TRIANGLE.popUp.close();
     document.getElementById("saveTemplateName").value = "";
+    TRIANGLE.notify.loading.hide();
   },
 
   saveCurrent : function saveCurrent(callback) {
@@ -1559,7 +1576,7 @@ TRIANGLE.saveTemplate = {
     TRIANGLE.text.deleteUnusedFonts();
 
     var content = TRIANGLE.json.encode();
-    content = TRIANGLE.json.compress(content);
+    // content = TRIANGLE.json.compress(content);
     //console.log(content);
     content = encodeURIComponent(content);
     //========================================================================
@@ -1595,20 +1612,21 @@ TRIANGLE.saveTemplate = {
 
     for (var i = 0; i < userIDs.length; i++) {
       var userIDtitle = userIDs[i].getAttribute("user-id");
-      if (!userIDtitle) continue;
+      if (!userIDtitle || userIDtitle == "null" || userIDtitle == "undefined") continue;
 
       var nextSib = userIDs[i].nextSibling;
       var prevSib = userIDs[i].previousSibling;
 
       userIDobj[userIDtitle] = {};
-      var idMap = {};
+      var indexMap = {};
 
+      userIDobj[userIDtitle]["user-id"] = userIDs[i].getAttribute("user-id");
       userIDobj[userIDtitle]["user-class"] = userIDs[i].getAttribute("user-class");
       userIDobj[userIDtitle]["tagName"] = userIDs[i].tagName;
       userIDobj[userIDtitle]["id"] = userIDtitle;
-      idMap[userIDs[i].id] = userIDtitle;
+      indexMap[userIDs[i].getAttribute("triangle-index")] = userIDtitle;
       userIDobj[userIDtitle]["className"] = userIDs[i].className;
-      userIDobj[userIDtitle]["triangle-id"] = userIDs[i].getAttribute("triangle-id");
+      userIDobj[userIDtitle]["triangle-index"] = userIDs[i].getAttribute("triangle-index");
       userIDobj[userIDtitle]["triangle-class"] = userIDs[i].getAttribute("triangle-class");
       userIDobj[userIDtitle]["name"] = userIDs[i].getAttribute("name");
       userIDobj[userIDtitle]["style"] = userIDs[i].style.cssText;
@@ -1620,7 +1638,7 @@ TRIANGLE.saveTemplate = {
       || TRIANGLE.isType.snippetItem(userIDs[i])) userIDobj[userIDtitle]["innerHTML"] = userIDs[i].innerHTML.replace(/&/g, encodeURIComponent("&"));
 
       userIDobj[userIDtitle]["src"] = userIDs[i].src;
-      userIDobj[userIDtitle]["childof"] = 0;
+      // userIDobj[userIDtitle]["triangle-childof"] = 0; // ????
       /*userIDobj[userIDtitle]["nextSib"] = nextSib && TRIANGLE.isType.templateItem(nextSib) ? nextSib.id : 0;
       userIDobj[userIDtitle]["prevSib"] = prevSib && TRIANGLE.isType.templateItem(prevSib) ? prevSib.id : 0;*/
       if (nextSib && TRIANGLE.isType.templateItem(nextSib)) {
@@ -1669,19 +1687,19 @@ TRIANGLE.saveTemplate = {
 
       userIDobj[userIDtitle]["userIDchild"] = false;*/
 
-      var childList = userIDs[i].querySelectorAll(".templateItem");
+      var childList = userIDs[i].querySelectorAll("[triangle-class~=templateItem]");
 
       for (var x = 0; x < childList.length; x++) {
         nextSib = childList[x].nextSibling;
         prevSib = childList[x].previousSibling;
 
         var childIndex = userIDtitle + x;
-        idMap[childList[x].id] = childIndex;
+        indexMap[childList[x].getAttribute("triangle-index")] = childIndex;
 
         userIDobj[userIDtitle]["children"][childIndex] = {};
         userIDobj[userIDtitle]["children"][childIndex]["user-id"] = childList[x].getAttribute("user-id");
         userIDobj[userIDtitle]["children"][childIndex]["user-class"] = childList[x].getAttribute("user-class");
-        userIDobj[userIDtitle]["children"][childIndex]["triangle-id"] = childList[x].getAttribute("triangle-id");
+        userIDobj[userIDtitle]["children"][childIndex]["triangle-index"] = childList[x].getAttribute("triangle-index");
         userIDobj[userIDtitle]["children"][childIndex]["triangle-class"] = childList[x].getAttribute("triangle-class");
         userIDobj[userIDtitle]["children"][childIndex]["tagName"] = childList[x].tagName;
         userIDobj[userIDtitle]["children"][childIndex]["className"] = childList[x].className;
@@ -1695,10 +1713,10 @@ TRIANGLE.saveTemplate = {
         || TRIANGLE.isType.snippetItem(childList[x])) userIDobj[userIDtitle]["children"][childIndex]["innerHTML"] = childList[x].innerHTML.replace(/&/g, encodeURIComponent("&"));
 
         userIDobj[userIDtitle]["children"][childIndex]["src"] = childList[x].src;
-        userIDobj[userIDtitle]["children"][childIndex]["children"] = childList[x].querySelector(".templateItem") ? 1 : 0;
-        userIDobj[userIDtitle]["children"][childIndex]["childof"] = idMap[childList[x].getAttribute("childof")];
+        userIDobj[userIDtitle]["children"][childIndex]["children"] = childList[x].querySelector("[triangle-class~=templateItem]") ? 1 : 0;
+        userIDobj[userIDtitle]["children"][childIndex]["triangle-childof"] = indexMap[childList[x].getAttribute("triangle-childof")];
         /*userIDobj[userIDtitle]["children"][childIndex]["nextSib"] = nextSib && TRIANGLE.isType.templateItem(nextSib) ? userIDtitle + (x + 1) : 0;
-        userIDobj[userIDtitle]["children"][childIndex]["prevSib"] = prevSib && TRIANGLE.isType.templateItem(prevSib) ? idMap[prevSib.id] : 0;*/
+        userIDobj[userIDtitle]["children"][childIndex]["prevSib"] = prevSib && TRIANGLE.isType.templateItem(prevSib) ? indexMap[prevSib.id] : 0;*/
 
         if (nextSib && TRIANGLE.isType.templateItem(nextSib)) {
           userIDobj[userIDtitle]["children"][childIndex]["nextSib"] = userIDtitle + (x + 1);
@@ -1709,9 +1727,9 @@ TRIANGLE.saveTemplate = {
         }
 
         if (prevSib && TRIANGLE.isType.templateItem(prevSib)) {
-          userIDobj[userIDtitle]["children"][childIndex]["prevSib"] = idMap[prevSib.id];
+          userIDobj[userIDtitle]["children"][childIndex]["prevSib"] = indexMap[prevSib.getAttribute("triangle-index")];
         } else if (prevSib && TRIANGLE.isType.clearFloat(prevSib)) {
-          userIDobj[userIDtitle]["children"][childIndex]["prevSib"] = prevSib.previousSibling && TRIANGLE.isType.templateItem(prevSib.previousSibling) ? idMap[prevSib.id] : 0;
+          userIDobj[userIDtitle]["children"][childIndex]["prevSib"] = prevSib.previousSibling && TRIANGLE.isType.templateItem(prevSib.previousSibling) ? indexMap[prevSib.getAttribute("triangle-index")] : 0;
         } else {
           userIDobj[userIDtitle]["children"][childIndex]["prevSib"] = 0;//SHIT
         }
@@ -1745,11 +1763,9 @@ TRIANGLE.saveTemplate = {
   }
 
   var userIDstr = JSON.stringify(userIDobj);
-
   var params = "instance=" + TRIANGLE.instance + "&content=" + userIDstr;
-
   AJAX.post("php/save_user_ids.php", params, function(xmlhttp) {
-    //console.log(xmlhttp.responseText);
+    // console.log(xmlhttp.responseText);
   });
 
   //console.log(userIDstr);
@@ -1899,14 +1915,8 @@ TRIANGLE.loadTemplate = {
       TRIANGLE.currentTemplate = templateName;
       TRIANGLE.currentPage = pageName;
 
-      // setTimeout(TRIANGLE.updateTemplateItems, 100); // [find flag], for some reason the items dont update unless theres a delay
       document.getElementById("FTPselect").selectedIndex = 0;
-
-      // document.getElementById("iframeTemplate").srcdoc = TRIANGLE.templateWrapper().innerHTML;
-      // TRIANGLE.iframe().contentDocument.body.appendChild(TRIANGLE.templateWrapper().cloneNode());
-
       TRIANGLE.updateTemplateItems();
-
       TRIANGLE.options.compareUndoList();
     });
   },
@@ -1930,17 +1940,18 @@ TRIANGLE.loadTemplate = {
       }
 
       for (var prop in userIDs) {
+        // console.log(prop);
 
         var originalItem = false;
 
         if (!isNaN(updateIDlist[prop])) {
           originalItem = updateUserIDs[parseInt(updateIDlist[prop])];
-        } else if (TRIANGLE.getElementByUserId(prop)) {
-          originalItem = TRIANGLE.getElementByUserId(prop);
+        } else if (TRIANGLE.iframe().getElementByUserId(prop)) {
+          originalItem = TRIANGLE.iframe().getElementByUserId(prop);
         } else {
           continue;
         }
-        /*var originalItem = TRIANGLE.getElementByUserId(prop);
+        /*var originalItem = TRIANGLE.iframe().getElementByUserId(prop);
         if (!originalItem) continue;*/
 
         var createItem = document.createElement(userIDs[prop]["tagName"]);
@@ -1954,14 +1965,15 @@ TRIANGLE.loadTemplate = {
         var children = userIDs[prop]["children"];
 
         for (var child in children) {
+
           var createChild = document.createElement(children[child]["tagName"]);
+          createChild = TRIANGLE.json.convertItem(children[child], createChild);
           createChild.id = child;
           children[child]["user-id"] ? createChild.setAttribute("user-id", children[child]["user-id"]) : null;
-          createChild = TRIANGLE.json.convertItem(children[child], createChild);
 
-          var childof = children[child]["childof"];
+          var childof = children[child]["triangle-childof"];
           if (childof) {
-            TRIANGLE.iframe().getElementById(childof).appendChild(createChild);
+            TRIANGLE.iframe().getElementById(childof).appendChild(createChild); //YEET
           } else {
             createChild = null;
           }
@@ -2067,110 +2079,107 @@ TRIANGLE.json = {
     template.scriptTag = TRIANGLE.developer.scriptTagContent;
     template.imageList = {"itemNums":[], "paths":[], "dimensions":[]};
 
-    /*
-    this next for loop could be moved into the for loop below, but it takes negligible amount of time
-    with a low number of images so it's not a big deal
-    */
-
-    var imgList = TRIANGLE.template().querySelectorAll(".imageItem[crop-map]");
-    var len = imgList.length;
-
-    for (var i = 0; i < len; i++) {
-      var sv_item = new TRIANGLE.TemplateItem(imgList[i].getAttribute("index"));
-
-      template.imageList["itemNums"][i] = sv_item.index;
-      template.imageList["paths"][i] = sv_item.image.src;
-
-      var imgItemRect = sv_item.objRef.getBoundingClientRect();
-      var imgTagRect = sv_item.image.getBoundingClientRect();
-      var width = imgItemRect["width"] / imgTagRect["width"];
-      var height = imgItemRect["height"] / imgTagRect["height"];
-      var startX = (imgItemRect["left"] - imgTagRect["left"]) / imgTagRect["width"];
-      var startY = (imgItemRect["top"] - imgTagRect["top"]) / imgTagRect["height"];
-
-      template.imageList["dimensions"][i] = [width, height, startX, startY];
-    }
-
-    template.items = {};
+    template.items = [];
     var skipItems = [];
 
     for (var i = 0; i < TRIANGLE.templateItems.length; i++) {
       var sv_item = new TRIANGLE.TemplateItem(i);
-      if (skipItems.indexOf(sv_item.id) > -1) continue;
-      var itemID = sv_item.id;
+      if (skipItems.indexOf(sv_item.index) > -1) continue;
+      var triangleIndex = sv_item.index;
 
       if (sv_item.userID) {
-        template.items[itemID] = sv_item.userID;
-        if (sv_item.parent.id !== "template") template.items[itemID] += ' ' + sv_item.parent.id;
+        template.items[triangleIndex] = {
+          masterItem: true,
+          masterID: sv_item.userID,
+          masterIndex: sv_item.index,
+          masterParent: false
+        };
+        if (sv_item.parent.id !== "template") template.items[triangleIndex].masterParent = sv_item.parent.getAttribute("triangle-index");
 
-        var itemIDchildren = sv_item.objRef.querySelectorAll("*");
-        for (var x = 0; x < itemIDchildren.length; x++) {
-          skipItems.push(itemIDchildren[x].getAttribute("id"));
+        var triangleIndexChildren = sv_item.objRef.querySelectorAll("[triangle-class~=templateItem]");
+        for (var x = 0; x < triangleIndexChildren.length; x++) {
+          skipItems.push(parseInt(triangleIndexChildren[x].getAttribute("triangle-index")));
         }
         continue;
       }
 
-      template.items[itemID] = {};
+      template.items[triangleIndex] = {};
 
-      template.items[itemID]["triangle-id"] = sv_item.triangleId;
-      template.items[itemID]["user-class"] = sv_item.userClass;
-      template.items[itemID]["triangle-class"] = sv_item.triangleClass;
-      template.items[itemID]["tagName"] = sv_item.tag;
-      template.items[itemID]["className"] = sv_item.className;
-      template.items[itemID]["name"] = sv_item.objRef.getAttribute("name");
-      template.items[itemID]["style"] = sv_item.objRef.style.cssText;
-      template.items[itemID]["clearFloat"] = TRIANGLE.isType.clearFloat(sv_item.objRef.nextSibling) ? 1 : 0;
+      template.items[triangleIndex]["triangle-index"] = sv_item.index;
+      template.items[triangleIndex]["user-class"] = sv_item.userClass;
+      template.items[triangleIndex]["triangle-class"] = sv_item.triangleClass;
+      template.items[triangleIndex]["className"] = sv_item.className;
+      template.items[triangleIndex]["id"] = sv_item.id;
+      template.items[triangleIndex]["tagName"] = sv_item.tag;
+      template.items[triangleIndex]["name"] = sv_item.objRef.getAttribute("name");
+      template.items[triangleIndex]["style"] = sv_item.objRef.style.cssText;
+      template.items[triangleIndex]["clearFloat"] = TRIANGLE.isType.clearFloat(sv_item.objRef.nextSibling) ? 1 : 0;
 
       if (TRIANGLE.isType.textBox(sv_item.objRef)
       || TRIANGLE.isType.imageItem(sv_item.objRef)
       || TRIANGLE.isType.formBtn(sv_item.objRef)
-      || TRIANGLE.isType.snippetItem(sv_item.objRef)) template.items[itemID]["innerHTML"] = sv_item.objRef.innerHTML.replace(/&/g, encodeURIComponent("&"));
+      || TRIANGLE.isType.snippetItem(sv_item.objRef)) template.items[triangleIndex]["innerHTML"] = sv_item.objRef.innerHTML.replace(/&/g, encodeURIComponent("&"));
 
       // if (sv_item.isType("textbox")
       // || sv_item.isType("imageItem")
       // || sv_item.isType("snippetItem")
       // || sv_item.tag == "button")
-      // template.items[itemID]["innerHTML"] = sv_item.objRef.innerHTML.replace(/&/g, encodeURIComponent("&"));
+      // template.items[triangleIndex]["innerHTML"] = sv_item.objRef.innerHTML.replace(/&/g, encodeURIComponent("&"));
 
-      template.items[itemID]["src"] = sv_item.objRef.src;
-      template.items[itemID]["children"] = sv_item.objRef.querySelector(".templateItem") ? 1 : 0;
-      template.items[itemID]["childof"] = sv_item.childOf;
-      template.items[itemID]["nextSib"] = sv_item.nextSibling() ? sv_item.nextSibling().id : 0;
-      template.items[itemID]["prevSib"] = sv_item.prevSibling() ? sv_item.prevSibling().id : 0;
-      template.items[itemID]["isLastChild"] = sv_item.isLastChild;
-      template.items[itemID]["item-align"] = sv_item.align || "";
-      template.items[itemID]["hover-style"] = sv_item.hover.cssText || "";
-      template.items[itemID]["link-to"] = sv_item.linkTo;
-      template.items[itemID]["onClick"] = sv_item.objRef.getAttribute("onclick");
-      template.items[itemID]["crop-map"] = sv_item.cropMap;
-      template.items[itemID]["crop-ratio"] = sv_item.cropRatio;
-      template.items[itemID]["target"] = sv_item.objRef.getAttribute("target");
-      template.items[itemID]["form-email"] = sv_item.objRef.getAttribute("form-email");
+      template.items[triangleIndex]["src"] = sv_item.objRef.src;
+      template.items[triangleIndex]["children"] = sv_item.objRef.querySelector("[triangle-class~=templateItem]") ? 1 : 0;
+      template.items[triangleIndex]["triangle-childof"] = sv_item.childOf;
+      template.items[triangleIndex]["nextSib"] = sv_item.nextSibling() ? sv_item.nextSibling().getAttribute("triangle-index") : 0;
+      template.items[triangleIndex]["prevSib"] = sv_item.prevSibling() ? sv_item.prevSibling().getAttribute("triangle-index") : 0;
+      template.items[triangleIndex]["isLastChild"] = sv_item.isLastChild;
+      template.items[triangleIndex]["item-align"] = sv_item.align || "";
+      template.items[triangleIndex]["hover-style"] = sv_item.hover.cssText || "";
+      template.items[triangleIndex]["link-to"] = sv_item.linkTo;
+      template.items[triangleIndex]["onClick"] = sv_item.objRef.getAttribute("onclick");
+      template.items[triangleIndex]["target"] = sv_item.objRef.getAttribute("target");
+      template.items[triangleIndex]["form-email"] = sv_item.objRef.getAttribute("form-email");
+      // add support for looping through all attributes
     }
 
-    //template.responsiveTemplate = TRIANGLE.responsive.create(TRIANGLE.template());
-    template.responsiveItems = TRIANGLE.responsive.prepare();
-
+    template.responsiveItems = formatResponsive();
+    // console.log(template);
     var templateStr = JSON.stringify(template);
-    //console.log(templateStr);
-
     return templateStr;
+
+    function formatResponsive() {
+       var respJSON = {};
+       for (var i = 0; i < TRIANGLE.templateItems.length; i++) {
+         var item = TRIANGLE.templateItems[i];
+         var rect = item.getBoundingClientRect();
+         var respCreate = [item.style.width, Math.round(rect.width * 10000) / 10000, rect.top];
+         respJSON[item.getAttribute("triangle-index")] = respCreate;
+       }
+       return respJSON;
+     }
   },
 
   decode : function(templateStr) {
     var templateFile = JSON.parse(templateStr);
-
     TRIANGLE.json.convertTemplateData(templateFile);
 
     var items = templateFile.items;
 
     for (var prop in items) {
-      if (typeof items[prop] == "string") {
-        var split = items[prop].split(' ');
+      if (typeof items[prop] == "string") { // user-ids are a string rather than an object
+        var split = items[prop].split(' '); // string is in the form "itemID parentID"
         var createItem = document.createElement("div");
         createItem.setAttribute("update-user-id", split[0]);
         if (split[1]) {
-          document.getElementById(split[1]).appendChild(createItem);
+          TRIANGLE.iframe().getTriangleIndex(split[1]).appendChild(createItem);
+        } else {
+          TRIANGLE.template().appendChild(createItem);
+        }
+        continue;
+      } else if (items[prop].masterItem) {
+        var createItem = document.createElement("div");
+        createItem.setAttribute("update-user-id", items[prop].masterID);
+        if (items[prop].masterParent) {
+          TRIANGLE.iframe().getTriangleIndex(items[prop].masterParent).appendChild(createItem);
         } else {
           TRIANGLE.template().appendChild(createItem);
         }
@@ -2178,14 +2187,14 @@ TRIANGLE.json = {
       }
 
       var createItem = document.createElement(items[prop]["tagName"]);
-      createItem.id = prop;
+      createItem.setAttribute("triangle-index", prop);
       if (items[prop]["user-id"]) createItem.setAttribute("user-id", items[prop]["user-id"]);
       createItem = TRIANGLE.json.convertItem(items[prop], createItem);
 
-      var childof = items[prop]["childof"];
-      if (childof && TRIANGLE.iframe().getElementById(childof)) {
-        TRIANGLE.iframe().getElementById(childof).appendChild(createItem);
-      } else if (childof && !document.getElementById(childof)) {
+      var childof = items[prop]["triangle-childof"];
+      if (childof && TRIANGLE.iframe().getTriangleIndex(childof)) {
+        TRIANGLE.iframe().getTriangleIndex(childof).appendChild(createItem);
+      } else if (childof && !TRIANGLE.iframe().getTriangleIndex(childof)) {
         continue;
       } else {
         TRIANGLE.template().appendChild(createItem);
@@ -2216,7 +2225,7 @@ TRIANGLE.json = {
         children[child]["user-id"] ? createChild.setAttribute("user-id", children[child]["user-id"]) : null;
         createChild = TRIANGLE.json.convertItem(children[child], createChild);
 
-        var childof = children[child]["childof"]
+        var childof = children[child]["triangle-childof"]
         if (childof) {
           document.getElementById("JSONtoHTML").querySelector('#' + childof).appendChild(createChild);
         } else {
@@ -2259,13 +2268,14 @@ TRIANGLE.json = {
   },
 
   convertItem : function(itemSrc, createItem) {
-    createItem.className = itemSrc["className"];
-    itemSrc["user-class"] ? createItem.setAttribute("user-class", itemSrc["user-class"]) : null;
-    itemSrc["name"] ? createItem.setAttribute("name", itemSrc["name"]) : null;
     createItem.style.cssText = itemSrc["style"];
     createItem.innerHTML = itemSrc["innerHTML"] ? itemSrc["innerHTML"].replace(/\%26amp;/g, "&") : "";
     createItem.src = itemSrc["src"] || "";
-    itemSrc["triangle-id"] ? createItem.setAttribute("triangle-id", itemSrc["triangle-id"]) : null;
+    if (itemSrc["className"] !== "") createItem.className = itemSrc["className"];
+    if (itemSrc["id"] !== "") createItem.id = itemSrc["id"];
+    itemSrc["user-class"] ? createItem.setAttribute("user-class", itemSrc["user-class"]) : null;
+    itemSrc["name"] ? createItem.setAttribute("name", itemSrc["name"]) : null;
+    itemSrc["triangle-index"] ? createItem.setAttribute("triangle-index", itemSrc["triangle-index"]) : null;
     itemSrc["triangle-class"] ? createItem.setAttribute("triangle-class", itemSrc["triangle-class"]) : null;
     itemSrc["item-align"] ? createItem.setAttribute("item-align", itemSrc["item-align"]) : null;
     itemSrc["hover-style"] ? createItem.setAttribute("hover-style", itemSrc["hover-style"]) : null;
@@ -2361,7 +2371,7 @@ TRIANGLE.json = {
     json = JSON.parse(json);
 
     for (var itemID in json.items) {
-      if (typeof json.items[itemID] == "string") continue;
+      if (typeof json.items[itemID] == "string" || json.items[itemID].masterItem) continue;
       var itemStyle = json.items[itemID]["style"];
       if (json.items[itemStyle]) {
         json.items[itemID]["style"] = json.items[itemStyle]["style"];
@@ -2450,9 +2460,9 @@ TRIANGLE.exportTemplate = {
       var compress = document.getElementById("exportCompress").checked ? 1 : 0;
       var params = "askZip=" + 1 + "&instance=" + TRIANGLE.instance + "&compress=" + compress;
       AJAX.post("php/export_zip.php", params, function(xmlhttp) {
+        // console.log(xmlhttp.responseText);
         TRIANGLE.notify.loading.hide();
         var response = JSON.parse(xmlhttp.responseText);
-        // console.log(response);
         var a = document.createElement("a");
         document.body.appendChild(a);
         a.style = "display: none";
@@ -2466,12 +2476,23 @@ TRIANGLE.exportTemplate = {
   },
 
   raw : function() {
-    TRIANGLE.exportTemplate.callbackAfterSave = function() {
-      TRIANGLE.exportTemplate.postTemplate("php/export_raw.php", {
-        instance : TRIANGLE.instance
-      });
+    if (!TRIANGLE.unsavedPremade) {
+      TRIANGLE.exportTemplate.callbackAfterSave = function() {
+        TRIANGLE.exportTemplate.postTemplate("php/export_raw.php", {
+          instance : TRIANGLE.instance
+        });
+      }
+      TRIANGLE.saveTemplate.saveCurrent();
+    } else {
+      TRIANGLE.exportTemplate.callbackAfterSave = function() {
+        TRIANGLE.exportTemplate.raw();
+        setTimeout(function() {
+          TRIANGLE.popUp.close();
+          TRIANGLE.loadTemplate.openURL(TRIANGLE.currentTemplate, TRIANGLE.currentPage);
+        }, 500);
+      }
+      TRIANGLE.saveTemplate.getSaveName();
     }
-    TRIANGLE.saveTemplate.saveCurrent();
   },
 
   preview : function() {
@@ -2481,8 +2502,9 @@ TRIANGLE.exportTemplate = {
         var compress = document.getElementById("exportCompress").checked ? 1 : 0;
         var params = "askZip=0&instance=" + TRIANGLE.instance + "&compress=" + compress;
         AJAX.post("php/export_zip.php", params, function(xmlhttp) {
+          // console.log(xmlhttp.responseText);
           TRIANGLE.exportTemplate.postTemplate("php/preview_template.php", {
-            instance:TRIANGLE.instance
+            instance: TRIANGLE.instance
           });
         });
       };
@@ -2632,22 +2654,22 @@ TRIANGLE.options = {
   newRow : function() {
     TRIANGLE.selectionBorder.remove();
     var newDiv = document.createElement("div");
-    newDiv.className = "templateItem";
     newDiv.setAttribute("triangle-class", "templateItem");
     newDiv.style.backgroundColor = "#f5f2f0";
     // newDiv.style.minHeight = "100px";
     newDiv.style.height = "auto";
     newDiv.style.width = "100%";
     newDiv.style.display = "block";
-    newDiv.style.position = "relative";
+    // newDiv.style.position = "relative";
 
     var newIndex;
     if (TRIANGLE.item) {
       TRIANGLE.item.insertAfterMe(newDiv);
       TRIANGLE.updateTemplateItems();
-      newIndex = TRIANGLE.item.nextSibling().getAttribute("index");
+      newIndex = TRIANGLE.item.nextSibling().getAttribute("triangle-index");
     } else {
       TRIANGLE.template().appendChild(newDiv);
+      TRIANGLE.updateTemplateItems();
       window.scrollTo(0, TRIANGLE.templateItems[TRIANGLE.templateItems.length - 1].getBoundingClientRect().top - 83);
       // window.scrollTo(0, document.body.scrollHeight);
       // TRIANGLE.iframe().contentWindow.scrollTo(0, TRIANGLE.iframe().contentDocument.body.scrollHeight);
@@ -2667,9 +2689,7 @@ TRIANGLE.options = {
     if (TRIANGLE.item.objRef.children.length > 0
       || TRIANGLE.isType.bannedInsertion(TRIANGLE.item.objRef)) return;
 
-      var item = TRIANGLE.item;
-
-      var columnWidth = Math.floor(parseFloat(item.width) * 100 / columnNum) / 100;
+      var columnWidth = Math.floor(parseFloat(TRIANGLE.itemStyles.width) * 100 / columnNum) / 100;
       var counter = 1;
 
       for (var i = 0; i < columnNum; i++) {
@@ -2680,10 +2700,10 @@ TRIANGLE.options = {
         // newColumn.style.height = "auto"; // or item.height
         newColumn.style.height = TRIANGLE.itemStyles.height;
         newColumn.style.width = columnWidth + TRIANGLE.getUnit(TRIANGLE.itemStyles.width);
-        newColumn.style.position = "relative";
+        // newColumn.style.position = "relative";
 
-        newColumn.setAttribute("item-align", item.align);
-        if (item.align !== "right") {
+        newColumn.setAttribute("item-align", TRIANGLE.item.align);
+        if (TRIANGLE.item.align !== "right") {
           newColumn.style.cssFloat = "left";
           var side = "Right";
           var oppositeSide = "Left";
@@ -2698,15 +2718,15 @@ TRIANGLE.options = {
         newColumn.style.paddingTop = TRIANGLE.itemStyles.paddingTop;
         newColumn.style.paddingBottom = TRIANGLE.itemStyles.paddingBottom;
         if (counter === 1) {
-          newColumn.style["margin" + side] = item["margin" + side];
-          newColumn.style["border" + side + "Width"] = item["border" + side + "Width"];
-          newColumn.style["border" + side + "Style"] = item["border" + side + "Style"];
-          newColumn.style["border" + side + "Color"] = item["border" + side + "Color"];
+          newColumn.style["margin" + side] = TRIANGLE.item["margin" + side];
+          newColumn.style["border" + side + "Width"] = TRIANGLE.item["border" + side + "Width"];
+          newColumn.style["border" + side + "Style"] = TRIANGLE.item["border" + side + "Style"];
+          newColumn.style["border" + side + "Color"] = TRIANGLE.item["border" + side + "Color"];
         } else if (counter === columnNum) {
-          newColumn.style["margin" + oppositeSide] = item["margin" + oppositeSide];
-          newColumn.style["border" + oppositeSide + "Width"] = item["border" + oppositeSide + "Width"];
-          newColumn.style["border" + oppositeSide + "Style"] = item["border" + oppositeSide + "Style"];
-          newColumn.style["border" + oppositeSide + "Color"] = item["border" + oppositeSide + "Color"];
+          newColumn.style["margin" + oppositeSide] = TRIANGLE.item["margin" + oppositeSide];
+          newColumn.style["border" + oppositeSide + "Width"] = TRIANGLE.item["border" + oppositeSide + "Width"];
+          newColumn.style["border" + oppositeSide + "Style"] = TRIANGLE.item["border" + oppositeSide + "Style"];
+          newColumn.style["border" + oppositeSide + "Color"] = TRIANGLE.item["border" + oppositeSide + "Color"];
         }
         newColumn.style.marginTop = TRIANGLE.itemStyles.marginTop;
         newColumn.style.marginBottom = TRIANGLE.itemStyles.marginBottom;
@@ -2717,12 +2737,12 @@ TRIANGLE.options = {
         newColumn.style.borderBottomStyle = TRIANGLE.itemStyles.borderBottomStyle;
         newColumn.style.borderBottomColor = TRIANGLE.itemStyles.borderBottomColor;
         newColumn.style.boxShadow = TRIANGLE.itemStyles.boxShadow;
-        newColumn.className = item.className;
-        newColumn.setAttribute("triangle-class", item.triangleClass);
-        item.insertBeforeMe(newColumn);
+        newColumn.className = TRIANGLE.item.className;
+        newColumn.setAttribute("triangle-class", TRIANGLE.item.triangleClass);
+        TRIANGLE.item.insertBeforeMe(newColumn);
         counter++;
       }
-      TRIANGLE.deleteItem(item.index);
+      TRIANGLE.deleteItem(TRIANGLE.item.index);
       TRIANGLE.updateTemplateItems();
     },
 
@@ -2734,13 +2754,12 @@ TRIANGLE.options = {
       TRIANGLE.checkPadding(TRIANGLE.item.objRef);
 
       var newChild = document.createElement("div");
-      newChild.className = "templateItem childItem";
       newChild.setAttribute("triangle-class", "templateItem childItem");
       newChild.style.backgroundColor = "#BFD7EA";
       newChild.style.minHeight = "100px";
       newChild.style.height = "auto";
       newChild.style.width = "100%";
-      newChild.style.position = "relative";
+      // newChild.style.position = "relative";
 
       TRIANGLE.item.append(newChild);
       TRIANGLE.updateTemplateItems();
@@ -2748,7 +2767,7 @@ TRIANGLE.options = {
 
       var getChildrenLen = TRIANGLE.item.objRef.children.length;
       var getChildObj = TRIANGLE.item.objRef.children[getChildrenLen - 1];
-      var getChildIndex = getChildObj.getAttribute("index");
+      var getChildIndex = getChildObj.getAttribute("triangle-index");
 
       TRIANGLE.selectItem(getChildIndex);
       TRIANGLE.saveItem.createAnimation("min-height", 0, "100px", function(){TRIANGLE.importItem.single(TRIANGLE.item.index)});
@@ -2762,14 +2781,14 @@ TRIANGLE.options = {
         if (parentItem.id == "template") {
           return;
         } else {
-          var getParentIndex = parseInt(parentItem.getAttribute("index"));
+          var getParentIndex = parseInt(parentItem.getAttribute("triangle-index"));
           TRIANGLE.importItem.single(getParentIndex);
         }
       }
     },
 
     shiftUp : function shiftUp() {
-      if (!TRIANGLE.item || TRIANGLE.isType.preventDelete(TRIANGLE.item.objRef)) return;
+      if (!TRIANGLE.item) return;
 
       TRIANGLE.resetClearFloat();
 
@@ -2779,7 +2798,7 @@ TRIANGLE.options = {
       } else {
         var itemSrc = TRIANGLE.item.objRef;
         var itemTarget = TRIANGLE.item.prevSibling();
-        var trackIndex = itemTarget.getAttribute("index");
+        var trackIndex = itemTarget.getAttribute("triangle-index");
         var newElem = TRIANGLE.item.objRef.cloneNode(true);
 
         TRIANGLE.item.parent.insertBefore(newElem, itemTarget);
@@ -2803,7 +2822,7 @@ TRIANGLE.options = {
     },
 
     shiftDown : function shiftDown() {
-      if (!TRIANGLE.item || TRIANGLE.isType.preventDelete(TRIANGLE.item.objRef)) return;
+      if (!TRIANGLE.item) return;
 
       TRIANGLE.resetClearFloat();
 
@@ -2815,7 +2834,7 @@ TRIANGLE.options = {
         var trackIndex = TRIANGLE.item.index;
         var newElem = TRIANGLE.item.objRef.cloneNode(true);
 
-        var targetItem = TRIANGLE.item.nextSibling() ? new TRIANGLE.TemplateItem(TRIANGLE.item.nextSibling().getAttribute("index")) : false;
+        var targetItem = TRIANGLE.item.nextSibling() ? new TRIANGLE.TemplateItem(TRIANGLE.item.nextSibling().getAttribute("triangle-index")) : false;
         if (targetItem) {
           targetItem.insertAfterMe(newElem);
         } else {
@@ -2824,7 +2843,7 @@ TRIANGLE.options = {
         TRIANGLE.item.remove();
         TRIANGLE.updateTemplateItems();
         TRIANGLE.selectItem(trackIndex);
-        TRIANGLE.importItem.single(TRIANGLE.item.nextSibling().getAttribute("index"));
+        TRIANGLE.importItem.single(TRIANGLE.item.nextSibling().getAttribute("triangle-index"));
 
         var itemRect = TRIANGLE.item.objRef.getBoundingClientRect();
         var screenHeight = window.innerHeight;
@@ -2856,35 +2875,35 @@ TRIANGLE.options = {
       }
       var duplicate = item.objRef.cloneNode(true);
 
-      /*if (duplicate.getAttribute("user-id")) {
-      duplicate.setAttribute("user-id", TRIANGLE.library.removeDuplicateUserIDs(duplicate.getAttribute("user-id")));
-    }*/
-    duplicate.removeAttribute("user-id");
-    duplicate.innerHTML = duplicate.innerHTML.replace(/user\-class="[^"]*"/g, "");
+      //   if (duplicate.getAttribute("user-id")) {
+      //   duplicate.setAttribute("user-id", TRIANGLE.library.removeDuplicateUserIDs(duplicate.getAttribute("user-id")));
+      // }
+      duplicate.removeAttribute("user-id");
+      // duplicate.innerHTML = duplicate.innerHTML.replace(/user\-class="[^"]*"/g, "");
 
-    if (parentItem.childNodes.length === 1) {
-      parentItem.appendChild(duplicate);
-    } else {
-      parentItem.insertBefore(duplicate, parentItem.childNodes[identifier + 1]);
-    }
+      if (parentItem.childNodes.length === 1) {
+        parentItem.appendChild(duplicate);
+      } else {
+        parentItem.insertBefore(duplicate, parentItem.childNodes[identifier + 1]);
+      }
 
-    TRIANGLE.updateTemplateItems();
-    //TRIANGLE.importItem.single(parentItem.childNodes[identifier + 1].getAttribute("index"));
-    TRIANGLE.clearSelection();
-    TRIANGLE.selectItem(parentItem.childNodes[identifier + 1].getAttribute("index"));
-    if (item.width !== "100%" && ((item.align && item.align !== "center") || (item.cssFloat))) {
-      TRIANGLE.saveItem.createAnimation("width", 0, TRIANGLE.itemStyles.width, function(){TRIANGLE.importItem.single(TRIANGLE.item.index)});
-    } else {
-      TRIANGLE.saveItem.createAnimation("min-height", 0, TRIANGLE.itemStyles.minHeight, function(){TRIANGLE.importItem.single(TRIANGLE.item.index)});
-    }
-  },
+      TRIANGLE.updateTemplateItems();
+      //TRIANGLE.importItem.single(parentItem.childNodes[identifier + 1].getAttribute("triangle-index"));
+      TRIANGLE.clearSelection();
+      TRIANGLE.selectItem(parentItem.childNodes[identifier + 1].getAttribute("triangle-index"));
+      if (TRIANGLE.itemStyles.width !== "100%" && ((item.align && item.align !== "center") || (TRIANGLE.itemStyles.cssFloat))) {
+        TRIANGLE.saveItem.createAnimation("width", 0, TRIANGLE.itemStyles.width, function(){TRIANGLE.importItem.single(TRIANGLE.item.index)});
+      } else {
+        TRIANGLE.saveItem.createAnimation("min-height", 0, TRIANGLE.itemStyles.minHeight, function(){TRIANGLE.importItem.single(TRIANGLE.item.index)});
+      }
+    },
 
   clipboard : {},
   isClipboardFull : false,
   itemStyles : null,
 
   copyStyles : function() {
-    if (!TRIANGLE.item || TRIANGLE.isType.preventDelete(TRIANGLE.item.objRef)) return;
+    if (!TRIANGLE.item) return;
     TRIANGLE.options.clipboard.tag = TRIANGLE.item.tag;
     TRIANGLE.options.clipboard.src = TRIANGLE.item.objRef.src;
     TRIANGLE.options.clipboard.itemStyles = TRIANGLE.getStyles(TRIANGLE.item.objRef);
@@ -2914,7 +2933,7 @@ TRIANGLE.options = {
   undoIndex : false,
   maxUndo : 20, // maximum number of steps stored to undo
 
-  compareUndoList : function() { //YEET LEFT OFF
+  compareUndoList : function() {
     var contentHTML = TRIANGLE.templateWrapper().innerHTML.trim(); // find this
     contentHTML = contentHTML.replace(/\r|\n/g, "");
     contentHTML = contentHTML.replace(/&nbsp;/g, " ");
@@ -3035,7 +3054,7 @@ TRIANGLE.style = {
   },
 
   itemAlignCenter : function itemAlignCenter() {
-    if (TRIANGLE.item.cssFloat) TRIANGLE.item.objRef.style.cssFloat = "";
+    if (TRIANGLE.itemStyles.cssFloat) TRIANGLE.item.objRef.style.cssFloat = "";
     if (TRIANGLE.item.parent.style.display === "flex") {
       TRIANGLE.item.parent.style.justifyContent = "center";
     } else if (TRIANGLE.item.display == "inline" || TRIANGLE.item.display == "inline-block" || TRIANGLE.item.display == "inline-table" || !TRIANGLE.item.display) {
@@ -3089,7 +3108,7 @@ TRIANGLE.style = {
   item.parent.style.height = item.parent.style.minHeight;
 
   if (!(/translateY\(\-50\%\)/g).test(item.objRef.style.cssText)) {
-  item.objRef.style.position = "relative";
+  // item.objRef.style.position = "relative";
   item.objRef.style.top = "50%";
   item.objRef.style.WebkitTransform = "translateY(-50%)";
   item.objRef.style.msTransform = "translateY(-50%)";
@@ -3451,9 +3470,9 @@ TRIANGLE.colors = {
 
   colorDropChoose : function chooseColor() {
     if (this.style.backgroundColor === "inherit") {
-      TRIANGLE.iframe().getElementById("item" + TRIANGLE.colors.colorDropIndex).style.backgroundColor = this.parentNode.style.backgroundColor;
+      TRIANGLE.iframe().getTriangleIndex(TRIANGLE.colors.colorDropIndex).style.backgroundColor = this.parentNode.style.backgroundColor;
     } else {
-      TRIANGLE.iframe().getElementById("item" + TRIANGLE.colors.colorDropIndex).style.backgroundColor = this.style.backgroundColor;
+      TRIANGLE.iframe().getTriangleIndex(TRIANGLE.colors.colorDropIndex).style.backgroundColor = this.style.backgroundColor;
     }
     for (var i = 0; i < TRIANGLE.templateItems.length; i++) {
       TRIANGLE.templateItems[i].removeEventListener("mousedown", TRIANGLE.colors.colorDropChoose);
@@ -3889,7 +3908,6 @@ isColorLight : function(color) {
 TRIANGLE.text = {
 
   insertTextBox : function insertTextBox(text) {
-
     var newTextBox = document.createElement("p");
     newTextBox.style.backgroundColor = "";
     newTextBox.style.marginTop = "1em";
@@ -3905,13 +3923,16 @@ TRIANGLE.text = {
     newTextBox.style.fontFamily = "inherit";
     newTextBox.style.display = "block";
     // newTextBox.style.fontWeight = "400";
-    newTextBox.className = "templateItem textBox";
     newTextBox.setAttribute("triangle-class", "templateItem textbox");
     newTextBox.innerHTML = text || "New text box";
 
     if (TRIANGLE.item && !TRIANGLE.isType.bannedInsertion(TRIANGLE.item.objRef)) {
-
-      newTextBox.style.color = TRIANGLE.colors.isColorLight(TRIANGLE.item.objRef.style.backgroundColor) ? "black" : "white";
+      if (TRIANGLE.item.objRef.style.backgroundColor == "inherit"
+      || TRIANGLE.item.objRef.style.backgroundColor == "") {
+        newTextBox.style.color = "#333333";
+      } else {
+        newTextBox.style.color = TRIANGLE.colors.isColorLight(TRIANGLE.item.objRef.style.backgroundColor) ? "#333333" : "white";
+      }
 
       if (TRIANGLE.isType.containsNbsp(TRIANGLE.item.objRef)) {
         TRIANGLE.stripNbsp(TRIANGLE.item.objRef);
@@ -3925,7 +3946,7 @@ TRIANGLE.text = {
 
     } else if (!TRIANGLE.item) {
 
-      newTextBox.style.color = TRIANGLE.colors.isColorLight(TRIANGLE.template().style.backgroundColor) ? "black" : "white";
+      newTextBox.style.color = TRIANGLE.colors.isColorLight(TRIANGLE.template().style.backgroundColor) ? "#333333" : "white";
 
       TRIANGLE.template().appendChild(newTextBox);
       window.scrollTo(0, document.body.scrollHeight);
@@ -3985,7 +4006,7 @@ TRIANGLE.text = {
 
   checkTextEditing : function checkTextEditing(event) {
     var item = TRIANGLE.item;
-    var textItems = TRIANGLE.iframe().getElementsByClassName("textBox");
+    var textItems = TRIANGLE.iframe().querySelectorAll("[triangle-class~=textbox]");
     for (var x = 0; x < textItems.length; x++) {
       if (textItems[x].isContentEditable && textItems[x] !== TRIANGLE.iframe().contentDocument.activeElement) {
         TRIANGLE.text.clearTextSelection();
@@ -4556,7 +4577,6 @@ TRIANGLE.images = {
           if (TRIANGLE.isType.containsNbsp(TRIANGLE.item.objRef)) TRIANGLE.stripNbsp(TRIANGLE.item.objRef);
 
           var imgContainer = document.createElement("div");
-          imgContainer.className = "templateItem childItem imageItem";
           imgContainer.setAttribute("triangle-class", "templateItem childItem imageItem");
           imgContainer.style.display = "inline-block";
           imgContainer.style.height = "auto";
@@ -4578,7 +4598,7 @@ TRIANGLE.images = {
 
           var getChildrenLen = TRIANGLE.item.objRef.children.length;
           var getChildObj = TRIANGLE.item.objRef.children[getChildrenLen - 1];
-          var getChildIndex = getChildObj.getAttribute("index");
+          var getChildIndex = getChildObj.getAttribute("triangle-index");
           TRIANGLE.importItem.single(getChildIndex);
         }
       }
@@ -4596,7 +4616,6 @@ TRIANGLE.images = {
 
       } else {
         var imgContainer = document.createElement("div");
-        imgContainer.className = "templateItem childItem imageItem";
         imgContainer.setAttribute("triangle-class", "templateItem childItem imageItem");
         imgContainer.style.display = "inline-block";
         imgContainer.style.height = "auto";
@@ -4621,402 +4640,402 @@ TRIANGLE.images = {
 
   setBackground : false,
 
-  /*setBackground : function() {
-  TRIANGLE.images.load();
-  TRIANGLE.menu.openSideMenu('imageLibraryMenu');
+  //   setBackground : function() {
+  //   TRIANGLE.images.load();
+  //   TRIANGLE.menu.openSideMenu('imageLibraryMenu');
+  //
+  //   if (!TRIANGLE.item) return;
+  //   if (!TRIANGLE.isType.imageItem(TRIANGLE.item.objRef)) return;
+  //
+  //   var imgSrc = TRIANGLE.item.objRef.children[0].src;
+  //
+  //   if (TRIANGLE.item.parent != TRIANGLE.template()) {
+  //   var parentIndex = TRIANGLE.item.parent.getAttribute("triangle-index");
+  //   TRIANGLE.item.remove();
+  //   TRIANGLE.selectionBorder.remove();
+  //   TRIANGLE.selectItem(parentIndex);
+  //   TRIANGLE.importItem.single(TRIANGLE.item.index);
+  //
+  //   TRIANGLE.item.objRef.style.backgroundImage = "url('" + imgSrc + "')";
+  //   TRIANGLE.item.objRef.style.backgroundSize = "100%";
+  // }
+  // },
 
-  if (!TRIANGLE.item) return;
-  if (!TRIANGLE.isType.imageItem(TRIANGLE.item.objRef)) return;
-
-  var imgSrc = TRIANGLE.item.objRef.children[0].src;
-
-  if (TRIANGLE.item.parent != TRIANGLE.template()) {
-  var parentIndex = TRIANGLE.item.parent.getAttribute("index");
-  TRIANGLE.item.remove();
-  TRIANGLE.selectionBorder.remove();
-  TRIANGLE.selectItem(parentIndex);
-  TRIANGLE.importItem.single(TRIANGLE.item.index);
-
-  TRIANGLE.item.objRef.style.backgroundImage = "url('" + imgSrc + "')";
-  TRIANGLE.item.objRef.style.backgroundSize = "100%";
-}
-},*/
-
-removeBackground : function() {
-  if (TRIANGLE.item) {
-    TRIANGLE.item.objRef.style.backgroundImage = "";
-    TRIANGLE.item.objRef.style.backgroundSize = "";
-  } else {
-    TRIANGLE.iframe().getElementById("bodyBgData").style.backgroundImage =
-    TRIANGLE.iframe().contentDocument .body.style.backgroundImage =
-    TRIANGLE.iframe().getElementById("bodyBgData").style.backgroundRepeat =
-    TRIANGLE.iframe().contentDocument.body.style.backgroundRepeat = "";
-  }
-},
-
-crop : {
-
-  toggleMenu : function() {
-    var menu = document.getElementById("cropImageMenu");
-    if (menu.style.display === "none") {
-      menu.style.display = "block";
+  removeBackground : function() {
+    if (TRIANGLE.item) {
+      TRIANGLE.item.objRef.style.backgroundImage = "";
+      TRIANGLE.item.objRef.style.backgroundSize = "";
     } else {
-      menu.style.display = "none";
+      TRIANGLE.iframe().getElementById("bodyBgData").style.backgroundImage =
+      TRIANGLE.iframe().contentDocument .body.style.backgroundImage =
+      TRIANGLE.iframe().getElementById("bodyBgData").style.backgroundRepeat =
+      TRIANGLE.iframe().contentDocument.body.style.backgroundRepeat = "";
     }
   },
 
-  active : false,
+  crop : {
 
-  transferImage : function() {
-    var itemRect = TRIANGLE.item.objRef.getBoundingClientRect();
-    var img = TRIANGLE.item.image;
-    var imgClone = img.cloneNode();
-    var imgRect = TRIANGLE.item.image.getBoundingClientRect();
-    var container = document.getElementById("cropImageContainer");
-    var handles = document.getElementById("cropImageHandles");
-    var cushion = 2;
-    var screenWidth = window.innerWidth - TRIANGLE.scrollbarWidth;
-    var screenHeight = window.innerHeight;
+    toggleMenu : function() {
+      var menu = document.getElementById("cropImageMenu");
+      if (menu.style.display === "none") {
+        menu.style.display = "block";
+      } else {
+        menu.style.display = "none";
+      }
+    },
 
-    // attribute crop-map is structered like this:
-    // cropBorder.left, cropBorder.top, cropImage.marginLeft, cropImage.marginTop
-    if (TRIANGLE.item.cropMap) {
-      var handlesLeft = TRIANGLE.item.cropMap.split(",")[0];
-      var handlesTop = TRIANGLE.item.cropMap.split(",")[1];
-      var imgLeft = TRIANGLE.item.cropMap.split(",")[2];
-      var imgTop = TRIANGLE.item.cropMap.split(",")[3];
-    }
+    active : false,
 
-    container.style.marginTop = (screenHeight - 504) / 2 + "px";
+    transferImage : function() {
+      var itemRect = TRIANGLE.item.objRef.getBoundingClientRect();
+      var img = TRIANGLE.item.image;
+      var imgClone = img.cloneNode();
+      var imgRect = TRIANGLE.item.image.getBoundingClientRect();
+      var container = document.getElementById("cropImageContainer");
+      var handles = document.getElementById("cropImageHandles");
+      var cushion = 2;
+      var screenWidth = window.innerWidth - TRIANGLE.scrollbarWidth;
+      var screenHeight = window.innerHeight;
 
-    document.getElementById("cropImageBg").style.backgroundImage = "url('" + img.src + "')";
+      // attribute crop-map is structered like this:
+      // cropBorder.left, cropBorder.top, cropImage.marginLeft, cropImage.marginTop
+      if (TRIANGLE.item.cropMap) {
+        var handlesLeft = TRIANGLE.item.cropMap.split(",")[0];
+        var handlesTop = TRIANGLE.item.cropMap.split(",")[1];
+        var imgLeft = TRIANGLE.item.cropMap.split(",")[2];
+        var imgTop = TRIANGLE.item.cropMap.split(",")[3];
+      }
 
-    handles.innerHTML = "";
-    handles.appendChild(imgClone);
-    imgClone = handles.children[0];
+      container.style.marginTop = (screenHeight - 504) / 2 + "px";
 
-    var newWidth = 500;
-    var newHeight = 500;
-    var calcWidth = itemRect.width / imgRect.width;
-    var calcHeight = itemRect.height / imgRect.height;
+      document.getElementById("cropImageBg").style.backgroundImage = "url('" + img.src + "')";
 
-    if (imgRect.width > imgRect.height) {
+      handles.innerHTML = "";
+      handles.appendChild(imgClone);
+      imgClone = handles.children[0];
 
-      newHeight *= imgRect.height / imgRect.width;
+      var newWidth = 500;
+      var newHeight = 500;
+      var calcWidth = itemRect.width / imgRect.width;
+      var calcHeight = itemRect.height / imgRect.height;
 
-      imgClone.style.marginLeft = imgLeft ? imgLeft : "";
-      imgClone.style.marginTop = imgTop ? imgTop : "";
+      if (imgRect.width > imgRect.height) {
 
-      imgClone.style.width = newWidth + "px";
-      imgClone.style.height = newHeight + "px";
+        newHeight *= imgRect.height / imgRect.width;
 
-      handles.style.width = calcWidth * newWidth + cushion + "px";
-      handles.style.maxWidth = newWidth + cushion + "px";
-      handles.style.height = calcHeight * newHeight + cushion + "px";
-      handles.style.maxHeight = newHeight + cushion + "px";
+        imgClone.style.marginLeft = imgLeft ? imgLeft : "";
+        imgClone.style.marginTop = imgTop ? imgTop : "";
 
-      handles.style.left = handlesLeft ? handlesLeft : "";
-      handles.style.top = handlesTop ? handlesTop : screenHeight / 2 - newHeight / 2 - cushion / 2 + "px";
+        imgClone.style.width = newWidth + "px";
+        imgClone.style.height = newHeight + "px";
 
-    } else if (imgRect.width < imgRect.height) {
+        handles.style.width = calcWidth * newWidth + cushion + "px";
+        handles.style.maxWidth = newWidth + cushion + "px";
+        handles.style.height = calcHeight * newHeight + cushion + "px";
+        handles.style.maxHeight = newHeight + cushion + "px";
 
-      newWidth *= imgRect.width / imgRect.height;
+        handles.style.left = handlesLeft ? handlesLeft : "";
+        handles.style.top = handlesTop ? handlesTop : screenHeight / 2 - newHeight / 2 - cushion / 2 + "px";
 
-      imgClone.style.marginLeft = imgLeft ? imgLeft : "";
-      imgClone.style.marginTop = imgTop ? imgTop : "";
+      } else if (imgRect.width < imgRect.height) {
 
-      imgClone.style.width = newWidth + "px";
-      imgClone.style.height = newHeight + "px";
+        newWidth *= imgRect.width / imgRect.height;
 
-      handles.style.width = calcWidth * newWidth + cushion + "px";
-      handles.style.maxWidth = newWidth + cushion + "px";
-      handles.style.height = calcHeight * newHeight + cushion + "px";
-      handles.style.maxHeight = newHeight + cushion + "px";
+        imgClone.style.marginLeft = imgLeft ? imgLeft : "";
+        imgClone.style.marginTop = imgTop ? imgTop : "";
 
-      handles.style.top = handlesTop ? handlesTop : "";
-      handles.style.left = handlesLeft ? handlesLeft : screenWidth / 2 - newWidth / 2 - cushion / 2 + "px";
+        imgClone.style.width = newWidth + "px";
+        imgClone.style.height = newHeight + "px";
 
-    } else {
+        handles.style.width = calcWidth * newWidth + cushion + "px";
+        handles.style.maxWidth = newWidth + cushion + "px";
+        handles.style.height = calcHeight * newHeight + cushion + "px";
+        handles.style.maxHeight = newHeight + cushion + "px";
 
-      imgClone.style.marginLeft = imgLeft ? imgLeft : "";
-      imgClone.style.marginTop = imgTop ? imgTop : "";
+        handles.style.top = handlesTop ? handlesTop : "";
+        handles.style.left = handlesLeft ? handlesLeft : screenWidth / 2 - newWidth / 2 - cushion / 2 + "px";
 
-      imgClone.style.width = newWidth + "px";
-      imgClone.style.height = newHeight + "px";
+      } else {
 
-      handles.style.width = calcWidth * newWidth + cushion + "px";
-      handles.style.maxWidth = newWidth + cushion + "px";
-      handles.style.height = calcHeight * newHeight + cushion + "px";
-      handles.style.maxHeight = newHeight + cushion + "px";
+        imgClone.style.marginLeft = imgLeft ? imgLeft : "";
+        imgClone.style.marginTop = imgTop ? imgTop : "";
 
-      handles.style.top = handlesTop ? handlesTop : "";
-      handles.style.left = handlesLeft ? handlesLeft : "";
-    }
+        imgClone.style.width = newWidth + "px";
+        imgClone.style.height = newHeight + "px";
 
-    /*
+        handles.style.width = calcWidth * newWidth + cushion + "px";
+        handles.style.maxWidth = newWidth + cushion + "px";
+        handles.style.height = calcHeight * newHeight + cushion + "px";
+        handles.style.maxHeight = newHeight + cushion + "px";
 
-    w   500
-    - = ---
-    h    x
+        handles.style.top = handlesTop ? handlesTop : "";
+        handles.style.left = handlesLeft ? handlesLeft : "";
+      }
 
-    x = 500h/w
+      /*
+
+      w   500
+      - = ---
+      h    x
+
+      x = 500h/w
 
 
-    w    x
-    - = ---
-    h   500
+      w    x
+      - = ---
+      h   500
 
-    x = 500w/h
+      x = 500w/h
 
-    */
-  },
+      */
+    },
 
-  showHandles : function() {
-    var handleWidth = 8;
-    var handleHeight = 8;
-    var cushion = 2;
-    var classType = "cropHandle";
-    var container = document.getElementById("cropImageContainer");
-    var handleBox = document.getElementById("cropImageHandles");
-    //var handles = ["cropTopLeft", "cropTopMid", "cropTopRight", "cropLeftMid", "cropRightMid", "cropBotLeft", "cropBotMid", "cropBotRight"];
-    var rect = handleBox.getBoundingClientRect();
-    var screenWidth = window.innerWidth - TRIANGLE.scrollbarWidth;
-    var screenHeight = window.innerHeight;
+    showHandles : function() {
+      var handleWidth = 8;
+      var handleHeight = 8;
+      var cushion = 2;
+      var classType = "cropHandle";
+      var container = document.getElementById("cropImageContainer");
+      var handleBox = document.getElementById("cropImageHandles");
+      //var handles = ["cropTopLeft", "cropTopMid", "cropTopRight", "cropLeftMid", "cropRightMid", "cropBotLeft", "cropBotMid", "cropBotRight"];
+      var rect = handleBox.getBoundingClientRect();
+      var screenWidth = window.innerWidth - TRIANGLE.scrollbarWidth;
+      var screenHeight = window.innerHeight;
 
-    var handles = document.getElementsByClassName("cropHandle");
-    for (var i = 0; i < handles.length; i++) {
-      handles[i].style.display = "block";
-    }
+      var handles = document.getElementsByClassName("cropHandle");
+      for (var i = 0; i < handles.length; i++) {
+        handles[i].style.display = "block";
+      }
 
-    document.getElementById("cropTopLeft").style.left = rect.left - handleWidth / 2 - cushion / 2 + "px";
-    document.getElementById("cropTopLeft").style.top = rect.top - handleWidth / 2 - cushion + "px";
+      document.getElementById("cropTopLeft").style.left = rect.left - handleWidth / 2 - cushion / 2 + "px";
+      document.getElementById("cropTopLeft").style.top = rect.top - handleWidth / 2 - cushion + "px";
 
-    document.getElementById("cropTopMid").style.left = rect.left + rect.width / 2 - handleWidth / 2 + "px";
-    document.getElementById("cropTopMid").style.top = document.getElementById("cropTopLeft").style.top;
+      document.getElementById("cropTopMid").style.left = rect.left + rect.width / 2 - handleWidth / 2 + "px";
+      document.getElementById("cropTopMid").style.top = document.getElementById("cropTopLeft").style.top;
 
-    document.getElementById("cropTopRight").style.left = rect.right - handleWidth / 2 + cushion / 2 + "px";
-    document.getElementById("cropTopRight").style.top = document.getElementById("cropTopMid").style.top;
+      document.getElementById("cropTopRight").style.left = rect.right - handleWidth / 2 + cushion / 2 + "px";
+      document.getElementById("cropTopRight").style.top = document.getElementById("cropTopMid").style.top;
 
-    var leftPX = document.getElementById("cropTopLeft").style.left;
-    var midPX = document.getElementById("cropTopMid").style.left;
-    var rightPX = document.getElementById("cropTopRight").style.left;
+      var leftPX = document.getElementById("cropTopLeft").style.left;
+      var midPX = document.getElementById("cropTopMid").style.left;
+      var rightPX = document.getElementById("cropTopRight").style.left;
 
-    document.getElementById("cropLeftMid").style.left = leftPX;
-    document.getElementById("cropLeftMid").style.top = rect.top + rect.height / 2 - handleHeight / 2 + cushion / 2 + "px";
+      document.getElementById("cropLeftMid").style.left = leftPX;
+      document.getElementById("cropLeftMid").style.top = rect.top + rect.height / 2 - handleHeight / 2 + cushion / 2 + "px";
 
-    document.getElementById("cropRightMid").style.left = rightPX;
-    document.getElementById("cropRightMid").style.top = document.getElementById("cropLeftMid").style.top;
+      document.getElementById("cropRightMid").style.left = rightPX;
+      document.getElementById("cropRightMid").style.top = document.getElementById("cropLeftMid").style.top;
 
-    document.getElementById("cropBotLeft").style.left = leftPX;
-    document.getElementById("cropBotLeft").style.top = rect.top + rect.height - handleWidth / 2 + "px";
+      document.getElementById("cropBotLeft").style.left = leftPX;
+      document.getElementById("cropBotLeft").style.top = rect.top + rect.height - handleWidth / 2 + "px";
 
-    document.getElementById("cropBotMid").style.left = midPX;
-    document.getElementById("cropBotMid").style.top = document.getElementById("cropBotLeft").style.top;
+      document.getElementById("cropBotMid").style.left = midPX;
+      document.getElementById("cropBotMid").style.top = document.getElementById("cropBotLeft").style.top;
 
-    document.getElementById("cropBotRight").style.left = rightPX;
-    document.getElementById("cropBotRight").style.top = document.getElementById("cropBotLeft").style.top;
-  },
+      document.getElementById("cropBotRight").style.left = rightPX;
+      document.getElementById("cropBotRight").style.top = document.getElementById("cropBotLeft").style.top;
+    },
 
-  addHandleEventListeners : function() {
-    document.getElementById("cropTopLeft").addEventListener("mouseover", TRIANGLE.images.crop.XY);
-    document.getElementById("cropTopLeft").addEventListener("mousedown", TRIANGLE.images.crop.initiate);
+    addHandleEventListeners : function() {
+      document.getElementById("cropTopLeft").addEventListener("mouseover", TRIANGLE.images.crop.XY);
+      document.getElementById("cropTopLeft").addEventListener("mousedown", TRIANGLE.images.crop.initiate);
 
-    document.getElementById("cropTopMid").addEventListener("mouseover", TRIANGLE.images.crop.Y);
-    document.getElementById("cropTopMid").addEventListener("mousedown", TRIANGLE.images.crop.initiate);
+      document.getElementById("cropTopMid").addEventListener("mouseover", TRIANGLE.images.crop.Y);
+      document.getElementById("cropTopMid").addEventListener("mousedown", TRIANGLE.images.crop.initiate);
 
-    document.getElementById("cropTopRight").addEventListener("mouseover", TRIANGLE.images.crop.XY);
-    document.getElementById("cropTopRight").addEventListener("mousedown", TRIANGLE.images.crop.initiate);
+      document.getElementById("cropTopRight").addEventListener("mouseover", TRIANGLE.images.crop.XY);
+      document.getElementById("cropTopRight").addEventListener("mousedown", TRIANGLE.images.crop.initiate);
 
-    document.getElementById("cropLeftMid").addEventListener("mouseover", TRIANGLE.images.crop.X);
-    document.getElementById("cropLeftMid").addEventListener("mousedown", TRIANGLE.images.crop.initiate);
+      document.getElementById("cropLeftMid").addEventListener("mouseover", TRIANGLE.images.crop.X);
+      document.getElementById("cropLeftMid").addEventListener("mousedown", TRIANGLE.images.crop.initiate);
 
-    document.getElementById("cropRightMid").addEventListener("mouseover", TRIANGLE.images.crop.X);
-    document.getElementById("cropRightMid").addEventListener("mousedown", TRIANGLE.images.crop.initiate);
+      document.getElementById("cropRightMid").addEventListener("mouseover", TRIANGLE.images.crop.X);
+      document.getElementById("cropRightMid").addEventListener("mousedown", TRIANGLE.images.crop.initiate);
 
-    document.getElementById("cropBotLeft").addEventListener("mouseover", TRIANGLE.images.crop.XY);
-    document.getElementById("cropBotLeft").addEventListener("mousedown", TRIANGLE.images.crop.initiate);
+      document.getElementById("cropBotLeft").addEventListener("mouseover", TRIANGLE.images.crop.XY);
+      document.getElementById("cropBotLeft").addEventListener("mousedown", TRIANGLE.images.crop.initiate);
 
-    document.getElementById("cropBotMid").addEventListener("mouseover", TRIANGLE.images.crop.Y);
-    document.getElementById("cropBotMid").addEventListener("mousedown", TRIANGLE.images.crop.initiate);
+      document.getElementById("cropBotMid").addEventListener("mouseover", TRIANGLE.images.crop.Y);
+      document.getElementById("cropBotMid").addEventListener("mousedown", TRIANGLE.images.crop.initiate);
 
-    document.getElementById("cropBotRight").addEventListener("mouseover", TRIANGLE.images.crop.XY);
-    document.getElementById("cropBotRight").addEventListener("mousedown", TRIANGLE.images.crop.initiate);
+      document.getElementById("cropBotRight").addEventListener("mouseover", TRIANGLE.images.crop.XY);
+      document.getElementById("cropBotRight").addEventListener("mousedown", TRIANGLE.images.crop.initiate);
 
-  },
+    },
 
-  itemIndex : -1,
-  direction : null,
-  X : function(){TRIANGLE.images.crop.direction = "X"},
-  Y : function(){TRIANGLE.images.crop.direction = "Y"},
-  XY : function(){TRIANGLE.images.crop.direction = "XY"},
-  handleID : null,
+    itemIndex : -1,
+    direction : null,
+    X : function(){TRIANGLE.images.crop.direction = "X"},
+    Y : function(){TRIANGLE.images.crop.direction = "Y"},
+    XY : function(){TRIANGLE.images.crop.direction = "XY"},
+    handleID : null,
 
-  createBorder : function() {
-    if (TRIANGLE.isType.imageItem(TRIANGLE.item.objRef)) {
-      TRIANGLE.images.crop.active = true;
-      TRIANGLE.images.crop.itemIndex = TRIANGLE.item.index;
-      TRIANGLE.images.crop.transferImage();
-      TRIANGLE.images.crop.toggleMenu();
+    createBorder : function() {
+      if (TRIANGLE.isType.imageItem(TRIANGLE.item.objRef)) {
+        TRIANGLE.images.crop.active = true;
+        TRIANGLE.images.crop.itemIndex = TRIANGLE.item.index;
+        TRIANGLE.images.crop.transferImage();
+        TRIANGLE.images.crop.toggleMenu();
+        TRIANGLE.images.crop.showHandles();
+      }
+    },
+
+    initiate : function() {
+      document.body.addEventListener("mousemove", TRIANGLE.images.crop.start);
+      document.body.addEventListener("mouseup", TRIANGLE.images.crop.stop);
+      TRIANGLE.images.crop.handleID = this.id;
+    },
+
+    start : function(event) {
+      if (TRIANGLE.images.crop.active) {
+
+        TRIANGLE.images.crop.removeHandles();
+
+        var posX = event.clientX;
+        var posY = event.clientY;
+
+        var cushion = 2; // extra space between crop border and image
+        var minSize = 2; // minimum size allowed for resizing
+
+        var container = document.getElementById("cropImageContainer");
+        var containerRect = container.getBoundingClientRect();
+
+        var cropBorder = document.getElementById("cropImageHandles");
+        var cropBorderRect = cropBorder.getBoundingClientRect();
+
+        var img = cropBorder.children[0];
+        var imgRect = img.getBoundingClientRect();
+
+        var maxRight = containerRect.right - (504 - imgRect.width) / 2 + cushion;
+        var maxLeft = containerRect.left + (504 - imgRect.width) / 2 - cushion / 2;
+        var maxTop = containerRect.top + (504 - imgRect.height) / 2 - cushion / 2;
+        var maxBottom = containerRect.bottom - (504 - imgRect.height) / 2 + cushion;
+
+        if (TRIANGLE.images.crop.direction === "X" || TRIANGLE.images.crop.direction === "XY") {
+          if ((/Left/g).test(TRIANGLE.images.crop.handleID)) {
+            if (posX > maxLeft && posX < maxRight - minSize) {
+              cropBorder.style.width = cropBorderRect.right - posX + "px";
+              cropBorder.style.left = posX + "px";
+              img.style.marginLeft = maxLeft - posX + "px";
+            } else if (posX < maxLeft) {
+              cropBorder.style.width = cropBorderRect.right - maxLeft + "px";
+              cropBorder.style.left = maxLeft + "px";
+              img.style.marginLeft = "";
+            }
+          } else {
+            if (posX > maxLeft + minSize && posX < maxRight) {
+              cropBorder.style.width = posX - cropBorderRect.left + "px";
+            } else if (posX > maxRight) {
+              cropBorder.style.width = maxRight - cropBorderRect.left - cushion / 2 + "px";
+            }
+          }
+        }
+
+        if (TRIANGLE.images.crop.direction === "Y" || TRIANGLE.images.crop.direction === "XY") {
+          if ((/Top/g).test(TRIANGLE.images.crop.handleID)) {
+            if (posY > maxTop && posY < maxBottom - minSize) {
+              cropBorder.style.height = cropBorderRect.bottom - posY + "px";
+              cropBorder.style.top = posY + "px";
+              img.style.marginTop = maxTop - posY + "px";
+            } else if (posY < maxTop) {
+              cropBorder.style.height = cropBorderRect.bottom - maxTop + "px";
+              cropBorder.style.top = maxTop + "px";
+              img.style.marginTop = "";
+            }
+          } else {
+            if (posY > maxTop + minSize && posY < maxBottom) {
+              cropBorder.style.height = posY - cropBorderRect.top + "px";
+            } else if (posY > maxBottom) {
+              cropBorder.style.height = maxBottom - cropBorderRect.top - cushion / 2 + "px";
+            }
+          }
+        }
+      }
+    },
+
+    stop : function() {
+      document.body.removeEventListener("mousemove", TRIANGLE.images.crop.start);
+      document.body.removeEventListener("mouseup", TRIANGLE.images.crop.stop);
       TRIANGLE.images.crop.showHandles();
-    }
-  },
+    },
 
-  initiate : function() {
-    document.body.addEventListener("mousemove", TRIANGLE.images.crop.start);
-    document.body.addEventListener("mouseup", TRIANGLE.images.crop.stop);
-    TRIANGLE.images.crop.handleID = this.id;
-  },
+    cancel : function() {
+      TRIANGLE.images.crop.active = false;
+      TRIANGLE.importItem.single(TRIANGLE.images.crop.itemIndex);
+      TRIANGLE.images.crop.itemIndex = -1;
+      TRIANGLE.images.crop.toggleMenu();
+    },
 
-  start : function(event) {
-    if (TRIANGLE.images.crop.active) {
-
-      TRIANGLE.images.crop.removeHandles();
-
-      var posX = event.clientX;
-      var posY = event.clientY;
-
-      var cushion = 2; // extra space between crop border and image
-      var minSize = 2; // minimum size allowed for resizing
-
+    applyCrop : function() {
+      var cushion = 2;
       var container = document.getElementById("cropImageContainer");
       var containerRect = container.getBoundingClientRect();
-
       var cropBorder = document.getElementById("cropImageHandles");
       var cropBorderRect = cropBorder.getBoundingClientRect();
-
       var img = cropBorder.children[0];
       var imgRect = img.getBoundingClientRect();
+      var rect = cropBorder.getBoundingClientRect();
 
-      var maxRight = containerRect.right - (504 - imgRect.width) / 2 + cushion;
-      var maxLeft = containerRect.left + (504 - imgRect.width) / 2 - cushion / 2;
-      var maxTop = containerRect.top + (504 - imgRect.height) / 2 - cushion / 2;
-      var maxBottom = containerRect.bottom - (504 - imgRect.height) / 2 + cushion;
+      TRIANGLE.selectItem(TRIANGLE.images.crop.itemIndex);
+      var itemRect = TRIANGLE.item.objRef.getBoundingClientRect();
+      TRIANGLE.item.objRef.style.overflow = "hidden";
 
-      if (TRIANGLE.images.crop.direction === "X" || TRIANGLE.images.crop.direction === "XY") {
-        if ((/Left/g).test(TRIANGLE.images.crop.handleID)) {
-          if (posX > maxLeft && posX < maxRight - minSize) {
-            cropBorder.style.width = cropBorderRect.right - posX + "px";
-            cropBorder.style.left = posX + "px";
-            img.style.marginLeft = maxLeft - posX + "px";
-          } else if (posX < maxLeft) {
-            cropBorder.style.width = cropBorderRect.right - maxLeft + "px";
-            cropBorder.style.left = maxLeft + "px";
-            img.style.marginLeft = "";
-          }
-        } else {
-          if (posX > maxLeft + minSize && posX < maxRight) {
-            cropBorder.style.width = posX - cropBorderRect.left + "px";
-          } else if (posX > maxRight) {
-            cropBorder.style.width = maxRight - cropBorderRect.left - cushion / 2 + "px";
-          }
-        }
-      }
+      var calcWidth = imgRect.width / (cropBorderRect.width - cushion) * 100;
+      var calcHeight = imgRect.height / (cropBorderRect.height - cushion) * 100;
 
-      if (TRIANGLE.images.crop.direction === "Y" || TRIANGLE.images.crop.direction === "XY") {
-        if ((/Top/g).test(TRIANGLE.images.crop.handleID)) {
-          if (posY > maxTop && posY < maxBottom - minSize) {
-            cropBorder.style.height = cropBorderRect.bottom - posY + "px";
-            cropBorder.style.top = posY + "px";
-            img.style.marginTop = maxTop - posY + "px";
-          } else if (posY < maxTop) {
-            cropBorder.style.height = cropBorderRect.bottom - maxTop + "px";
-            cropBorder.style.top = maxTop + "px";
-            img.style.marginTop = "";
-          }
-        } else {
-          if (posY > maxTop + minSize && posY < maxBottom) {
-            cropBorder.style.height = posY - cropBorderRect.top + "px";
-          } else if (posY > maxBottom) {
-            cropBorder.style.height = maxBottom - cropBorderRect.top - cushion / 2 + "px";
-          }
-        }
+      var calcMarginLeft =  (cropBorderRect.left + cushion / 2 - imgRect.left) / (cropBorderRect.width - cushion) * 100;
+      if (calcMarginLeft < 0.5) calcMarginLeft = 0;
+
+      var calcMarginTop = (cropBorderRect.top + cushion / 2 - imgRect.top) / (cropBorderRect.width - cushion) * 100;
+      if (calcMarginTop < 0.5) calcMarginTop = 0;
+
+      TRIANGLE.item.objRef.setAttribute("crop-map", cropBorder.style.left +
+      "," + cropBorder.style.top +
+      "," + img.style.marginLeft +
+      "," + img.style.marginTop);
+
+      var calcRatio = (cropBorderRect.width - cushion) / (cropBorderRect.height - cushion);
+
+      TRIANGLE.item.objRef.setAttribute("crop-ratio", calcRatio);
+
+      TRIANGLE.item.objRef.style.height = TRIANGLE.item.objRef.style.minHeight = Math.round(itemRect.width / calcRatio) + "px";
+
+      TRIANGLE.item.image.style.width = calcWidth + "%";
+      //TRIANGLE.item.image.style.height = calcHeight + "%";
+      TRIANGLE.item.image.style.height = "auto";
+
+      TRIANGLE.item.image.style.marginLeft = calcMarginLeft > 0 ? -1 * calcMarginLeft + "%" : "";
+      TRIANGLE.item.image.style.marginTop = calcMarginTop > 0 ? -1 * calcMarginTop + "%" : "";
+
+      /*
+
+      w   x
+      - = -
+      h   y
+
+      y = xh/w
+
+
+      w    x
+      - = ---
+      h   500
+
+      x = 500w/h
+
+      */
+
+      TRIANGLE.images.crop.cancel();
+      TRIANGLE.selectItem(TRIANGLE.item.index);
+    },
+
+    removeHandles : function() {
+      var handles = document.getElementsByClassName("cropHandle");
+      for (var i = 0; i < handles.length; i++) {
+        handles[i].style.display = "none";
       }
     }
+
   },
-
-  stop : function() {
-    document.body.removeEventListener("mousemove", TRIANGLE.images.crop.start);
-    document.body.removeEventListener("mouseup", TRIANGLE.images.crop.stop);
-    TRIANGLE.images.crop.showHandles();
-  },
-
-  cancel : function() {
-    TRIANGLE.images.crop.active = false;
-    TRIANGLE.importItem.single(TRIANGLE.images.crop.itemIndex);
-    TRIANGLE.images.crop.itemIndex = -1;
-    TRIANGLE.images.crop.toggleMenu();
-  },
-
-  applyCrop : function() {
-    var cushion = 2;
-    var container = document.getElementById("cropImageContainer");
-    var containerRect = container.getBoundingClientRect();
-    var cropBorder = document.getElementById("cropImageHandles");
-    var cropBorderRect = cropBorder.getBoundingClientRect();
-    var img = cropBorder.children[0];
-    var imgRect = img.getBoundingClientRect();
-    var rect = cropBorder.getBoundingClientRect();
-
-    TRIANGLE.selectItem(TRIANGLE.images.crop.itemIndex);
-    var itemRect = TRIANGLE.item.objRef.getBoundingClientRect();
-    TRIANGLE.item.objRef.style.overflow = "hidden";
-
-    var calcWidth = imgRect.width / (cropBorderRect.width - cushion) * 100;
-    var calcHeight = imgRect.height / (cropBorderRect.height - cushion) * 100;
-
-    var calcMarginLeft =  (cropBorderRect.left + cushion / 2 - imgRect.left) / (cropBorderRect.width - cushion) * 100;
-    if (calcMarginLeft < 0.5) calcMarginLeft = 0;
-
-    var calcMarginTop = (cropBorderRect.top + cushion / 2 - imgRect.top) / (cropBorderRect.width - cushion) * 100;
-    if (calcMarginTop < 0.5) calcMarginTop = 0;
-
-    TRIANGLE.item.objRef.setAttribute("crop-map", cropBorder.style.left +
-    "," + cropBorder.style.top +
-    "," + img.style.marginLeft +
-    "," + img.style.marginTop);
-
-    var calcRatio = (cropBorderRect.width - cushion) / (cropBorderRect.height - cushion);
-
-    TRIANGLE.item.objRef.setAttribute("crop-ratio", calcRatio);
-
-    TRIANGLE.item.objRef.style.height = TRIANGLE.item.objRef.style.minHeight = Math.round(itemRect.width / calcRatio) + "px";
-
-    TRIANGLE.item.image.style.width = calcWidth + "%";
-    //TRIANGLE.item.image.style.height = calcHeight + "%";
-    TRIANGLE.item.image.style.height = "auto";
-
-    TRIANGLE.item.image.style.marginLeft = calcMarginLeft > 0 ? -1 * calcMarginLeft + "%" : "";
-    TRIANGLE.item.image.style.marginTop = calcMarginTop > 0 ? -1 * calcMarginTop + "%" : "";
-
-    /*
-
-    w   x
-    - = -
-    h   y
-
-    y = xh/w
-
-
-    w    x
-    - = ---
-    h   500
-
-    x = 500w/h
-
-    */
-
-    TRIANGLE.images.crop.cancel();
-    TRIANGLE.selectItem(TRIANGLE.item.index);
-  },
-
-  removeHandles : function() {
-    var handles = document.getElementsByClassName("cropHandle");
-    for (var i = 0; i < handles.length; i++) {
-      handles[i].style.display = "none";
-    }
-  }
-
-},
 
 autoSize : function() {
   if (TRIANGLE.item && TRIANGLE.isType.imageItem(TRIANGLE.item.objRef)) {
@@ -5062,7 +5081,10 @@ TRIANGLE.pages = {
   loadPages : function loadPages(template, listType) {
     if (!template) template = "";
 
-    var params = "templateName=" + encodeURIComponent(template) + "&listType=" + listType + "&instance=" + TRIANGLE.instance;
+    var params = "templateName=" + encodeURIComponent(template) +
+    "&listType=" + listType +
+    "&instance=" + TRIANGLE.instance +
+    "&premade=" + TRIANGLE.unsavedPremade;
 
     AJAX.get("php/page_list.php", params, function(xmlhttp) {
       if (listType == "menu") {
@@ -5205,8 +5227,8 @@ TRIANGLE.library = {
     var standbyElems = TRIANGLE.template().getElementsByClassName("standby");
     for (var i = 0; i < standbyElems.length; i++) {
       var standbyClass = standbyElems[i].className;
-      var newClass = standbyClass.replace("standby", "templateItem");
-      standbyElems[i].className = newClass;
+      // var newClass = standbyClass.replace("standby", "templateItem");
+      // standbyElems[i].className = newClass;
       standbyElems[i].setAttribute("triangle-class", standbyElems[i].getAttribute("triangle-class").replace("standby", "templateItem"));
     }
   },
@@ -5219,7 +5241,7 @@ TRIANGLE.library = {
     AJAX.get("php/insert_user_id.php", params, function(xmlhttp) {
       //console.log(xmlhttp.responseText);
       var itemContent = TRIANGLE.json.toHTML(xmlhttp.responseText);
-      var checkSameClass = TRIANGLE.getElementByUserId(name);
+      var checkSameClass = TRIANGLE.iframe().getElementByUserId(name);
       if (!TRIANGLE.item) {
         TRIANGLE.template().innerHTML += itemContent;
         if (checkSameClass) TRIANGLE.template().lastChild.removeAttribute("user-id");
@@ -5246,7 +5268,6 @@ TRIANGLE.library = {
       var newItem = document.createElement("div");
       newItem.setAttribute("user-class", name);
       newItem.style.cssText = userClass[name];
-      newItem.className = "templateItem";
       newItem.setAttribute("triangle-class", "templateItem");
       if (TRIANGLE.item) {
         TRIANGLE.item.append(newItem);
@@ -5265,7 +5286,7 @@ TRIANGLE.library = {
 
     //TRIANGLE.library.loadUserIDs();
 
-    var checkSameClass = TRIANGLE.getElementByUserId(str);
+    var checkSameClass = TRIANGLE.iframe().getElementByUserId(str);
 
     if (!checkSameClass) {
       var echoUserIDs = document.getElementById("echoUserIDs");
@@ -5286,7 +5307,7 @@ TRIANGLE.library = {
         num++;
       }
       str = str.replace(/\d+/g, "") + num.toString();
-      if (TRIANGLE.getElementByUserId(str)) {
+      if (TRIANGLE.iframe().getElementByUserId(str)) {
         removeDuplicate(str);
       } else {
         document.getElementById("userID").value = str;
@@ -5426,7 +5447,6 @@ TRIANGLE.developer = {
     if (snippet && (/[^\s]+/g).test(snippet)) {
       if (TRIANGLE.item && !TRIANGLE.isType.bannedInsertion(TRIANGLE.item.objRef)) {
         var container = document.createElement("div");
-        container.className = "templateItem childItem snippetItem";
         container.setAttribute("triangle-class", "templateItem childItem snippetItem");
         container.style.backgroundColor = "inherit";
         container.style.minHeight = "1px";
@@ -5439,7 +5459,6 @@ TRIANGLE.developer = {
         TRIANGLE.item.objRef.innerHTML = snippet;
       } else {
         var container = document.createElement("div");
-        container.className = "templateItem childItem snippetItem";
         container.setAttribute("triangle-class", "templateItem childItem snippetItem");
         container.style.backgroundColor = "inherit";
         container.style.minHeight = "1px";
@@ -5628,30 +5647,30 @@ TRIANGLE.dragDrop = {
 
     dragVis : function dragVis(event) {
       if (TRIANGLE.hoveredElem) { // TRIANGLE.hoveredElem is set in TRIANGLE.hoverBorder.show()
-        var hoveredIndex = parseInt(TRIANGLE.hoveredElem.getAttribute("index"));
-        if (TRIANGLE.hoveredElem.parentNode.id != "template") var parentIndex = parseInt(TRIANGLE.hoveredElem.parentNode.getAttribute("index"));
+        var hoveredIndex = parseInt(TRIANGLE.hoveredElem.getAttribute("triangle-index"));
+        if (TRIANGLE.hoveredElem.parentNode.id != "template") var parentIndex = parseInt(TRIANGLE.hoveredElem.parentNode.getAttribute("triangle-index"));
 
         var nextIndex = undefined;
         if (TRIANGLE.hoveredElem.nextSibling && TRIANGLE.isType.templateItem(TRIANGLE.hoveredElem.nextSibling)) {
-          nextIndex = parseInt(TRIANGLE.hoveredElem.nextSibling.getAttribute("index"));
+          nextIndex = parseInt(TRIANGLE.hoveredElem.nextSibling.getAttribute("triangle-index"));
         }
 
         var prevIndex = undefined;
         if (TRIANGLE.hoveredElem.previousSibling && TRIANGLE.isType.templateItem(TRIANGLE.hoveredElem.previousSibling)) {
-          prevIndex = parseInt(TRIANGLE.hoveredElem.previousSibling.getAttribute("index"));
+          prevIndex = parseInt(TRIANGLE.hoveredElem.previousSibling.getAttribute("triangle-index"));
         }
 
         var firstChildIndex = undefined;
-        if (TRIANGLE.hoveredElem.children[0] && TRIANGLE.hoveredElem.children[0].getAttribute("index")) {
-          firstChildIndex = parseInt(TRIANGLE.hoveredElem.children[0].getAttribute("index"));
+        if (TRIANGLE.hoveredElem.children[0] && TRIANGLE.hoveredElem.children[0].getAttribute("triangle-index")) {
+          firstChildIndex = parseInt(TRIANGLE.hoveredElem.children[0].getAttribute("triangle-index"));
         }
 
         var lastChildIndex = undefined;
         if (TRIANGLE.hoveredElem.children[0] && TRIANGLE.isType.templateItem(TRIANGLE.hoveredElem.lastChild)) {
-          lastChildIndex = parseInt(TRIANGLE.hoveredElem.lastChild.getAttribute("index"));
+          lastChildIndex = parseInt(TRIANGLE.hoveredElem.lastChild.getAttribute("triangle-index"));
         }
       }
-      if (TRIANGLE.dragDrop.draggingElem) var draggingIndex = parseInt(TRIANGLE.dragDrop.draggingElem.getAttribute("index"));
+      if (TRIANGLE.dragDrop.draggingElem) var draggingIndex = parseInt(TRIANGLE.dragDrop.draggingElem.getAttribute("triangle-index"));
       if (TRIANGLE.hoveredElem === TRIANGLE.dragDrop.draggingElem) return;
 
 
@@ -5700,7 +5719,7 @@ TRIANGLE.dragDrop = {
         console.log("only child in parent")
         TRIANGLE.dragDrop.removeVisBox();
         return;
-      }*/else if (TRIANGLE.hoveredElem.children.length === 1 && TRIANGLE.hoveredElem.children[0].getAttribute("index") == draggingIndex) {
+      }*/else if (TRIANGLE.hoveredElem.children.length === 1 && TRIANGLE.hoveredElem.children[0].getAttribute("triangle-index") == draggingIndex) {
       //console.log("only child in parent")
       TRIANGLE.dragDrop.removeVisBox();
       return;
@@ -5736,10 +5755,10 @@ TRIANGLE.dragDrop = {
 
 function indexChildren(index) {
   var indexArr = [];
-  var elem = document.getElementById("item" + index);
+  var elem = TRIANGLE.iframe().getTriangleIndex(index);
   var children = elem.querySelectorAll(".templateItem");
   for (var i = 0; i < children.length; i++) {
-    indexArr[i] = parseInt(children[i].getAttribute("index"));
+    indexArr[i] = parseInt(children[i].getAttribute("triangle-index"));
   }
   return indexArr;
 }
@@ -5867,7 +5886,7 @@ TRIANGLE.generateBorder = function generateBorder(rectangle) {
   borderElem.style.height = rectangle.height + borderSpace + "px";
   borderElem.style.width = rectangle.width + borderSpace + "px";
   borderElem.style.top = rectangle.top - (borderSpace / 2) + TRIANGLE.iframe().getBoundingClientRect().top + "px";
-  borderElem.style.left = rectangle.left - (borderSpace / 2) + "px";
+  borderElem.style.left = rectangle.left - (borderSpace / 2) + TRIANGLE.iframe().getBoundingClientRect().left + "px";
 
   var secondBorder = document.createElement("div");
   secondBorder.id = "noClickThru";
@@ -5972,7 +5991,7 @@ TRIANGLE.selectedItemOptions = {
       optionsBar.style.display = "initial";
       var rect = TRIANGLE.item.objRef.getBoundingClientRect();
       optionsBar.style.top = rect.bottom + 20 + TRIANGLE.iframe().getBoundingClientRect().top + "px";
-      optionsBar.style.left = rect.left + (rect.width / 2 - optionsBar.getBoundingClientRect().width / 2) + "px";
+      optionsBar.style.left = rect.left + (rect.width / 2 - optionsBar.getBoundingClientRect().width / 2) + TRIANGLE.iframe().getBoundingClientRect().left + "px";
     }
   },
 
@@ -5996,7 +6015,7 @@ TRIANGLE.resize = {
       var handleHeight = 8;
       var overflowGap = TRIANGLE.scrollbarWidth + 10;
       var rect = TRIANGLE.item.objRef.getBoundingClientRect();
-      var iframeTop = TRIANGLE.iframe().getBoundingClientRect().top;
+      var iframeRect = TRIANGLE.iframe().getBoundingClientRect();
       var selBorder = document.getElementById("selectionBorder");
       var classType = "resizeHandle";
       var marginClass = "marginHandle";
@@ -6007,8 +6026,8 @@ TRIANGLE.resize = {
       var topMid = document.createElement("div");
       topMid.style.cursor = "row-resize";
       topMid.className = marginClass;
-      topMid.style.top = rect.top - handleHeight / 2 - 2 + iframeTop + "px";
-      topMid.style.left = rect.left + (rect.width / 2 - handleWidth / 2) + "px";
+      topMid.style.top = rect.top - handleHeight / 2 - 2 + iframeRect.top + "px";
+      topMid.style.left = rect.left + (rect.width / 2 - handleWidth / 2) + iframeRect.left + "px";
       selBorder.appendChild(topMid);
       topMid.addEventListener("mouseover", TRIANGLE.resize.margin.top);
       topMid.addEventListener("mousedown", TRIANGLE.resize.margin.initiate);
@@ -6017,8 +6036,8 @@ TRIANGLE.resize = {
         var botMid = document.createElement("div");
         botMid.style.cursor = "s-resize";
         botMid.className = classType;
-        botMid.style.top = rect.bottom - 2 + iframeTop + "px";
-        botMid.style.left = rect.left + (rect.width / 2 - handleWidth / 2) + "px";
+        botMid.style.top = rect.bottom - 2 + iframeRect.top + "px";
+        botMid.style.left = rect.left + (rect.width / 2 - handleWidth / 2) + iframeRect.left + "px";
         selBorder.appendChild(botMid);
         //isImage ? botMid.addEventListener("mouseover", TRIANGLE.resize.XY) : botMid.addEventListener("mouseover", TRIANGLE.resize.Y);
         botMid.addEventListener("mouseover", TRIANGLE.resize.Y);
@@ -6030,11 +6049,11 @@ TRIANGLE.resize = {
           var topRight = document.createElement("div");
           topRight.style.cursor = "ne-resize";
           topRight.className = classType;
-          topRight.style.top = rect.top - handleHeight + 2 + iframeTop + "px";
+          topRight.style.top = rect.top - handleHeight + 2 + iframeRect.top + "px";
           if (rect.right >= window.innerWidth - overflowGap) {
-            topRight.style.left = window.innerWidth - overflowGap - handleWidth + "px";
+            topRight.style.left = window.innerWidth - overflowGap - handleWidth + iframeRect.left + "px";
           } else {
-            topRight.style.left = rect.right - 2 + "px";
+            topRight.style.left = rect.right - 2 + iframeRect.left + "px";
           }
           selBorder.appendChild(topRight);
           topRight.addEventListener("mouseover", TRIANGLE.resize.XY);
@@ -6043,11 +6062,11 @@ TRIANGLE.resize = {
           var botRight = document.createElement("div");
           botRight.style.cursor = "se-resize";
           botRight.className = classType;
-          botRight.style.top = rect.bottom - 2 + iframeTop + "px";
+          botRight.style.top = rect.bottom - 2 + iframeRect.top + "px";
           if (rect.right >= window.innerWidth - overflowGap) {
-            botRight.style.left = window.innerWidth - overflowGap - handleWidth + "px";
+            botRight.style.left = window.innerWidth - overflowGap - handleWidth + iframeRect.left + "px";
           } else {
-            botRight.style.left = rect.right - 2 + "px";
+            botRight.style.left = rect.right - 2 + iframeRect.left + "px";
           }
           selBorder.appendChild(botRight);
           botRight.addEventListener("mouseover", TRIANGLE.resize.XY);
@@ -6056,11 +6075,11 @@ TRIANGLE.resize = {
           var topLeft = document.createElement("div");
           topLeft.style.cursor = "nw-resize";
           topLeft.className = classType;
-          topLeft.style.top = rect.top - handleHeight + 2 + iframeTop + "px";
+          topLeft.style.top = rect.top - handleHeight + 2 + iframeRect.top + "px";
           if (rect.left <= 0) {
-            topLeft.style.left = 5 + "px";
+            topLeft.style.left = 5 + iframeRect.left + "px";
           } else {
-            topLeft.style.left = rect.left - handleWidth / 2 - 2 + "px";
+            topLeft.style.left = rect.left - handleWidth / 2 - 2 + iframeRect.left + "px";
           }
           selBorder.appendChild(topLeft);
           topLeft.addEventListener("mouseover", TRIANGLE.resize.XY);
@@ -6069,11 +6088,11 @@ TRIANGLE.resize = {
           var botLeft = document.createElement("div");
           botLeft.style.cursor = "sw-resize";
           botLeft.className = classType;
-          botLeft.style.top = rect.bottom - 2 + iframeTop + "px";
+          botLeft.style.top = rect.bottom - 2 + iframeRect.top + "px";
           if (rect.left <= 0) {
-            botLeft.style.left = 5 + "px";
+            botLeft.style.left = 5 + iframeRect.left + "px";
           } else {
-            botLeft.style.left = rect.left - handleWidth / 2 - 2 + "px";
+            botLeft.style.left = rect.left - handleWidth / 2 - 2 + iframeRect.left + "px";
           }
           selBorder.appendChild(botLeft);
           botLeft.addEventListener("mouseover", TRIANGLE.resize.XY);
@@ -6085,11 +6104,11 @@ TRIANGLE.resize = {
         var rightMid = document.createElement("div");
         rightMid.style.cursor = "e-resize";
         rightMid.className = classType;
-        rightMid.style.top = rect.top + (rect.height / 2 - handleHeight / 2) + iframeTop + "px";
+        rightMid.style.top = rect.top + (rect.height / 2 - handleHeight / 2) + iframeRect.top + "px";
         if (rect.right >= window.innerWidth - overflowGap) {
-          rightMid.style.left = window.innerWidth - overflowGap - handleWidth + "px";
+          rightMid.style.left = window.innerWidth - overflowGap - handleWidth + iframeRect.left + "px";
         } else {
-          rightMid.style.left = rect.right - 2 + "px";
+          rightMid.style.left = rect.right - 2 + iframeRect.left + "px";
         }
         selBorder.appendChild(rightMid);
         isImage ? rightMid.addEventListener("mouseover", TRIANGLE.resize.XY) : rightMid.addEventListener("mouseover", TRIANGLE.resize.X);
@@ -6098,11 +6117,11 @@ TRIANGLE.resize = {
         var leftMid = document.createElement("div");
         leftMid.style.cursor = "col-resize";
         leftMid.className = marginClass;
-        leftMid.style.top = rect.top + (rect.height / 2 - handleHeight / 2) + iframeTop + "px";
+        leftMid.style.top = rect.top + (rect.height / 2 - handleHeight / 2) + iframeRect.top + "px";
         if (rect.left <= 0) {
-          leftMid.style.left = 5 + "px";
+          leftMid.style.left = 5 + iframeRect.left + "px";
         } else {
-          leftMid.style.left = rect.left - handleWidth / 2 - 2 + "px";
+          leftMid.style.left = rect.left - handleWidth / 2 - 2 + iframeRect.left + "px";
         }
         selBorder.appendChild(leftMid);
         leftMid.addEventListener("mouseover", TRIANGLE.resize.margin.left);
@@ -6112,11 +6131,11 @@ TRIANGLE.resize = {
         var leftMid = document.createElement("div");
         leftMid.style.cursor = "e-resize";
         leftMid.className = classType;
-        leftMid.style.top = rect.top + (rect.height / 2 - handleHeight / 2) + iframeTop + "px";
+        leftMid.style.top = rect.top + (rect.height / 2 - handleHeight / 2) + iframeRect.top + "px";
         if (rect.left <= 0) {
-          leftMid.style.left = 5 + "px";
+          leftMid.style.left = 5 + iframeRect.left + "px";
         } else {
-          leftMid.style.left = rect.left - handleWidth / 2 - 2 + "px";
+          leftMid.style.left = rect.left - handleWidth / 2 - 2 + iframeRect.left + "px";
         }
         selBorder.appendChild(leftMid);
         isImage ? leftMid.addEventListener("mouseover", TRIANGLE.resize.XY) : leftMid.addEventListener("mouseover", TRIANGLE.resize.X);
@@ -6125,11 +6144,11 @@ TRIANGLE.resize = {
         var rightMid = document.createElement("div");
         rightMid.style.cursor = "col-resize";
         rightMid.className = marginClass;
-        rightMid.style.top = rect.top + (rect.height / 2 - handleHeight / 2) + iframeTop + "px";
+        rightMid.style.top = rect.top + (rect.height / 2 - handleHeight / 2) + iframeRect.top + "px";
         if (rect.right >= window.innerWidth - overflowGap) {
-          rightMid.style.left = window.innerWidth - overflowGap - handleWidth + "px";
+          rightMid.style.left = window.innerWidth - overflowGap - handleWidth + iframeRect.left + "px";
         } else {
-          rightMid.style.left = rect.right - 2 + "px";
+          rightMid.style.left = rect.right - 2 + iframeRect.left + "px";
         }
         selBorder.appendChild(rightMid);
         rightMid.addEventListener("mouseover", TRIANGLE.resize.margin.right);
@@ -6222,7 +6241,7 @@ TRIANGLE.resize = {
       var posY = event.clientY;
       var rect = TRIANGLE.item.objRef.getBoundingClientRect();
       var parentRect = TRIANGLE.item.parent.getBoundingClientRect();
-      var iframeTop = TRIANGLE.iframe().getBoundingClientRect().top;
+      var iframeRect = TRIANGLE.iframe().getBoundingClientRect();
       var minSize = 2; // minimum size allowed for resizing
       var widthLabel = document.getElementById("widthLabel");
       var heightLabel = document.getElementById("heightLabel");
@@ -6240,7 +6259,7 @@ TRIANGLE.resize = {
             posX = nextRect.left;
           }
 
-          if (TRIANGLE.getUnit(item.width) === "%") {
+          if (TRIANGLE.getUnit(TRIANGLE.itemStyles.width) === "%") {
             if (posX <= rect.left + (TRIANGLE.resize.contentWidth / 2) + snapThreshold && posX >= rect.left + (TRIANGLE.resize.contentWidth / 2) - snapThreshold) {
               item.objRef.style.width = "50%";
             } else if (posX <= rect.left + (TRIANGLE.resize.contentWidth / 3) + snapThreshold && posX >= rect.left + (TRIANGLE.resize.contentWidth / 3) - snapThreshold) {
@@ -6282,7 +6301,7 @@ TRIANGLE.resize = {
             }
           }
 
-          if (TRIANGLE.getUnit(item.width) === "%") {
+          if (TRIANGLE.getUnit(TRIANGLE.itemStyles.width) === "%") {
             if (posX <= rect.right - (TRIANGLE.resize.contentWidth / 2) + snapThreshold && posX >= rect.right - (TRIANGLE.resize.contentWidth / 2) - snapThreshold) {
               item.objRef.style.width = "50%";
             } else if (posX <= rect.right - (TRIANGLE.resize.contentWidth / 3) + snapThreshold && posX >= rect.right - (TRIANGLE.resize.contentWidth / 3) - snapThreshold) {
@@ -6406,7 +6425,7 @@ TRIANGLE.resize = {
 function snapYdimension() {
   var isApplied = false;
 
-  var nextIndex = item.nextSibling() ? item.nextSibling().getAttribute("index") : null;
+  var nextIndex = item.nextSibling() ? item.nextSibling().getAttribute("triangle-index") : null;
 
   if (!TRIANGLE.item.isBelow(parseInt(nextIndex))) {
 
@@ -6628,7 +6647,7 @@ TRIANGLE.notify = {
     hide : function() {
       // TRIANGLE.notify.saving.toast.hide();
       setTimeout(function() {
-        TRIANGLE.notify.saving.toast.hide();
+        if (TRIANGLE.notify.saving.toast) TRIANGLE.notify.saving.toast.hide();
       }, 150);
       // TRIANGLE.notify.saving.toast.dispose();
     }
@@ -6667,7 +6686,7 @@ TRIANGLE.notify = {
 
     hide : function() {
       setTimeout(function() {
-        TRIANGLE.notify.loading.toast.hide();
+        if (TRIANGLE.notify.loading.toast) TRIANGLE.notify.loading.toast.hide();
       }, 150);
     }
   },
@@ -6773,7 +6792,7 @@ TRIANGLE.resetClearFloat = function resetClearFloat() {
 }
 
 TRIANGLE.insertClearFloats = function insertClearFloats(item) {
-  if (item.cssFloat) {
+  if (item.objRef.style.cssFloat) {
 
     var clearFloat = document.createElement("div");
     clearFloat.className = "clearFloat";
@@ -6818,7 +6837,7 @@ TRIANGLE.isType = {
 
   templateItem : function(obj) {
     if (obj) {
-      if ((/templateItem/g).test(obj.className) || (/templateItem/g).test(obj.getAttribute("triangle-class"))) {
+      if ((/templateItem/g).test(obj.getAttribute("triangle-class"))) {
         return true;
       } else {
         return false;
@@ -6828,7 +6847,7 @@ TRIANGLE.isType = {
 
   childItem : function isChildItem(obj) {
     if (obj) {
-      if ((/childItem/g).test(obj.className) || (/childItem/g).test(obj.getAttribute("triangle-class"))) {
+      if ((/childItem/g).test(obj.getAttribute("triangle-class"))) {
         return true;
       } else {
         return false;
@@ -6838,7 +6857,7 @@ TRIANGLE.isType = {
 
   textBox : function isTextBox(obj) {
     if (obj) {
-      if ((/textBox/g).test(obj.className) || (/textbox/g).test(obj.getAttribute("triangle-class"))) {
+      if ((/textbox/g).test(obj.getAttribute("triangle-class"))) {
         return true;
       } else {
         return false;
@@ -6848,7 +6867,7 @@ TRIANGLE.isType = {
 
   imageItem : function isImageItem(obj) {
     if (obj) {
-      if ((/img/ig).test(obj.tagName) || (/imageItem/g).test(obj.className) || (/imageItem/g).test(obj.getAttribute("triangle-class"))) {
+      if ((/img/ig).test(obj.tagName) || (/imageItem/g).test(obj.getAttribute("triangle-class"))) {
         return true;
       } else {
         return false;
@@ -6858,7 +6877,7 @@ TRIANGLE.isType = {
 
   snippetItem : function(obj) {
     if (obj) {
-      if ((/snippetItem/g).test(obj.className) || (/snippetItem/g).test(obj.getAttribute("triangle-class"))) {
+      if ((/snippetItem/g).test(obj.getAttribute("triangle-class"))) {
         return true;
       } else {
         return false;
@@ -6882,17 +6901,11 @@ TRIANGLE.isType = {
     && !TRIANGLE.isType.imageItem(obj)
     && !TRIANGLE.isType.formField(obj)
     && !TRIANGLE.isType.formBtn(obj)
-    && !TRIANGLE.isType.snippetItem(obj)
-    && !TRIANGLE.isType.verticalAlign(obj)
-    && obj.style.display !== "table") {
+    && !TRIANGLE.isType.snippetItem(obj)) {
       return false;
     } else {
       return true;
     }
-  },
-
-  preventDelete : function(obj) { // this might now be needed anymore, its a remnant from ecommerce
-    return false;
   },
 
   preventDrag : function(obj) {
@@ -7012,7 +7025,7 @@ TRIANGLE.tooltip = {
   },
   update : function updateTooltipLocation(event) {
     document.getElementById("tooltip").style.top = (event.clientY + 15 + TRIANGLE.iframe().getBoundingClientRect().top) + "px";
-    document.getElementById("tooltip").style.left = (event.clientX + 15) + "px";
+    document.getElementById("tooltip").style.left = (event.clientX + 15 + TRIANGLE.iframe().getBoundingClientRect().left) + "px";
   },
   hide : function hideTooltip() {
     document.getElementById("tooltip").style.display = "none";
@@ -7216,7 +7229,7 @@ TRIANGLE.keyEvents = { // keyboard shortcuts
   },
 
   keyCtrlX : function() {
-    if (TRIANGLE.item && !TRIANGLE.isType.preventDelete(TRIANGLE.item.objRef)) {
+    if (TRIANGLE.item) {
       TRIANGLE.options.copyStyles(TRIANGLE.item.index);
       TRIANGLE.item.remove();
       TRIANGLE.updateTemplateItems();
@@ -7270,7 +7283,7 @@ TRIANGLE.keyEvents = { // keyboard shortcuts
     var inputElements = document.getElementsByTagName("input");
     var textareaElements = document.getElementsByTagName("textarea");
     var selectElements = document.getElementsByTagName("select");
-    var textBoxElements = TRIANGLE.iframe().getElementsByClassName("textBox");
+    var textBoxElements = TRIANGLE.iframe().querySelectorAll("[triangle-class~=textbox]");
     var countActive = 0;
 
     for (var i = 0; i < inputElements.length; i++) {
@@ -7311,7 +7324,6 @@ TRIANGLE.styleFunctions = [
   function (id, value) {id.style.cssText = value;},
   function (id, value) {id.innerHTML = value;},
   function (id, value) {id.className = value;},
-  function (id, value) {if (value) id.setAttribute("triangle-id", value);},
   function (id, value) {if (value) id.setAttribute("triangle-class", value);},
   function (id, value) {if (value) id.setAttribute("item-align", value);},
   function (id, value) {if (value) id.setAttribute("user-id", value);},
@@ -7331,7 +7343,6 @@ TRIANGLE.getStyles = function getStyles(element) {
     element.style.cssText,
     element.innerHTML,
     element.className,
-    element.getAttribute("triangle-id"),
     element.getAttribute("triangle-class"),
     element.getAttribute("item-align"),
     element.getAttribute("user-id"),
@@ -7348,7 +7359,7 @@ TRIANGLE.getStyles = function getStyles(element) {
   return elementStyles;
 }
 
-TRIANGLE.getElementByUserId = function getElementByUserId(str) {
+TRIANGLE.iframe().getElementByUserId = function getElementByUserId(str) {
   for (var i = 0; i < TRIANGLE.templateItems.length; i++) {
     if (TRIANGLE.templateItems[i].getAttribute("user-id") === str) {
       return TRIANGLE.templateItems[i];
@@ -7427,13 +7438,12 @@ TRIANGLE.forms = {
     var newForm = document.createElement("form");
     //newForm.setAttribute("method", "post");
     //newForm.setAttribute("enctype", "application/x-www-form-urlencoded");
-    newForm.className = "templateItem childItem";
     newForm.setAttribute("triangle-class", "templateItem childItem");
     newForm.style.backgroundColor = "inherit";
     // newForm.style.minHeight = "100px";
     newForm.style.height = "auto";
     newForm.style.width = "100%";
-    newForm.style.position = "relative";
+    // newForm.style.position = "relative";
     newForm.style.borderLeft = "1px dashed gray";
     newForm.style.borderRight = "1px dashed gray";
     newForm.style.borderTop = "1px dashed gray";
@@ -7445,7 +7455,7 @@ TRIANGLE.forms = {
     } else {
       TRIANGLE.options.newRow();
       TRIANGLE.updateTemplateItems();
-      TRIANGLE.selectItem(TRIANGLE.templateItems[TRIANGLE.templateItems.length - 1].getAttribute("index"));
+      TRIANGLE.selectItem(TRIANGLE.templateItems[TRIANGLE.templateItems.length - 1].getAttribute("triangle-index"));
       item = TRIANGLE.item;
       TRIANGLE.checkPadding(item.objRef);
       item.append(newForm);
@@ -7456,7 +7466,7 @@ TRIANGLE.forms = {
 
     var getChildrenLen = item.objRef.children.length;
     var getChildObj = item.objRef.children[getChildrenLen - 1];
-    var getChildIndex = getChildObj.getAttribute("index");
+    var getChildIndex = getChildObj.getAttribute("triangle-index");
 
     TRIANGLE.selectItem(getChildIndex);
     TRIANGLE.saveItem.createAnimation("min-height", 0, "100px", function(){TRIANGLE.importItem.single(TRIANGLE.item.index)});
@@ -7476,18 +7486,17 @@ TRIANGLE.forms = {
       if (sv_item.parent.tagName.toUpperCase() === "FORM" || TRIANGLE.item.tag.toUpperCase() === "FORM") {
         break;
       } else {
-        sv_item = new TRIANGLE.TemplateItem(sv_item.parent.getAttribute("index"));
+        sv_item = new TRIANGLE.TemplateItem(sv_item.parent.getAttribute("triangle-index"));
       }
     }
     TRIANGLE.text.insertTextBox("Field Label");
     var newField = document.createElement("div");
-    newField.className = "templateItem childItem formField";
     newField.setAttribute("triangle-class", "templateItem childItem formField");
     newField.style.backgroundColor = "white";
     newField.style.minHeight = "24px";
     newField.style.height = "24px";
     newField.style.width = "100%";
-    newField.style.position = "relative";
+    // newField.style.position = "relative";
     newField.style.paddingLeft = "2px";
     newField.style.paddingRight = "2px";
     newField.style.paddingTop = "2px";
@@ -7525,7 +7534,6 @@ TRIANGLE.forms = {
     submitBtn.setAttribute("type", "button");
     submitBtn.setAttribute("value", "Submit");*/
     var submitBtn = document.createElement("button");
-    submitBtn.className = "templateItem childItem";
     submitBtn.setAttribute("triangle-class", "templateItem childItem");
     //submitBtn.innerHTML = "<div class=\"templateItem childItem textBox\">submit</div>";
     submitBtn.innerHTML = "Submit";
@@ -7586,44 +7594,33 @@ TRIANGLE.locateColumns = function locateColumns() {
   return TRIANGLE.columnMap;
 }
 
-TRIANGLE.responsive = {
-
-  prepare : function() {
-
-    var respJSON = {};
-
-    for (var i = 0; i < TRIANGLE.templateItems.length; i++) {
-      var item = TRIANGLE.templateItems[i];
-
-      var rect = item.getBoundingClientRect();
-      var respCreate = [item.style.width, Math.round(rect.width * 10000) / 10000, rect.top];
-
-      respJSON[item.id] = respCreate;
-    }
-
-    return respJSON;
-  }
-
-} // end TRIANGLE.responsive
-
 //====================================================================================================
 //====================================================================================================
 //====================================================================================================
 
 
 TRIANGLE.defaultSettings = function defaultSettings() {
+  TRIANGLE.styleSheets.xs = TRIANGLE.iframe().getElementById("templateStylesXS").sheet;
+  TRIANGLE.styleSheets.xs.disabled = true;
+  TRIANGLE.styleSheets.sm = TRIANGLE.iframe().getElementById("templateStylesSM").sheet;
+  TRIANGLE.styleSheets.sm.disabled = true;
+  TRIANGLE.styleSheets.md = TRIANGLE.iframe().getElementById("templateStylesMD").sheet;
+  TRIANGLE.styleSheets.md.disabled = true;
+  TRIANGLE.styleSheets.lg = TRIANGLE.iframe().getElementById("templateStylesLG").sheet;
+  TRIANGLE.styleSheets.active = TRIANGLE.styleSheets.lg;
+
   TRIANGLE.maxAllowedItems = 100;
   TRIANGLE.colors.updateBodyBg(); // set default background color for body element
   TRIANGLE.menu.displaySubMenu("displayInsert"); // display a specific menu tab by default
   TRIANGLE.menu.addMenuBtnEvent(); // adds an onClick attribute to all menu tabs
   TRIANGLE.menu.menuBtnActive(document.getElementById("opInsert")); // open a specific menu by default
-  TRIANGLE.menu.addOptionLabelEvents(); // adds mouseover/out events to option buttons to show their labels
   document.getElementById("colorMainBg").style.backgroundColor = document.body.style.backgroundColor; // default on load: auto-import body background color
   TRIANGLE.templateWrapper().addEventListener("mousedown", TRIANGLE.clearSelection, true); // clear element selection if blank area on template is clicked
   TRIANGLE.iframe().getElementById("bottomMarker").addEventListener("mousedown", TRIANGLE.clearSelection, true); // clear element selection bottom marker area on template is clicked
   TRIANGLE.templateWrapper().addEventListener("mouseup", TRIANGLE.text.checkTextEditing, true); // if text is not being edited, destroy the dialogue
   TRIANGLE.iframe().getElementById("bottomMarker").addEventListener("mouseup", TRIANGLE.text.checkTextEditing, true); // if text is not being edited, destroy the dialogue
   document.body.addEventListener("mouseover", TRIANGLE.hoverBorder.hide, true); // remove hover border if not hovering
+  // document.body.addEventListener("mousedown", TRIANGLE.clearSelection, true);
   TRIANGLE.iframe().contentDocument.addEventListener("mouseover", TRIANGLE.hoverBorder.hide, true); // remove hover border if not hovering
   // document.body.addEventListener("keyup", TRIANGLE.keyEvents.whichKey.item);
   document.body.addEventListener("keydown", TRIANGLE.keyEvents.whichKey.item);
@@ -7707,14 +7704,6 @@ TRIANGLE.defaultSettings = function defaultSettings() {
   // });
 
   TRIANGLE.developer.EditSession = ace.require("ace/edit_session").EditSession;
-
-  // TRIANGLE.developer.editor.commands.addCommands([{
-  //   name: "undo",
-  //   bindKey: {win: "Ctrl-z", mac: "Ctrl-z"},
-  //   exec: function(editor) {
-  //     editor.undo();
-  //   }
-  // }]);
 
   TRIANGLE.developer.sessions.html = ace.createEditSession("html");
   TRIANGLE.developer.sessions.html.setOptions({ mode: "ace/mode/html", tabSize: 2, navigateWithinSoftTabs: true });
@@ -7902,3 +7891,9 @@ TRIANGLE.defaultSettings = function defaultSettings() {
 //====================================================================================================
 //====================================================================================================
 //====================================================================================================
+// (/\.class(:?:?[\w\-\(\)\d\.]+)?$/).test(str);
+
+// id selector is higher specificity than attribute selector, but
+// id > attribute > class
+
+// button to make auto-responsive to avoid wait time? depends how long it takes
