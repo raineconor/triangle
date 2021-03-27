@@ -85,10 +85,7 @@
 
     $croppedImages = $JSON_arr["imageList"];
     $croppedImgPaths = cropImages($croppedImages, $imageDest);
-    //var_dump($croppedImgPaths);
     $code = formatCode($JSON_arr, $templateName, $pageName, $compress, $croppedImgPaths);
-
-    //var_dump($code);
 
     preg_match_all("@(src|lazyload)\=\"([^\"]*\/images\/[^\"]+)\"@", $code[0], $HTMLimages); // this can be made much faster if a list of images are stored with the template
     /*$HTMLimages[2] = array_diff($HTMLimages[2], $croppedImgPaths["new"]);
@@ -103,10 +100,6 @@
                                         //"http://trianglecms.com",
                                         "/home/tcadmin/public_html",
                                         $HTMLimages[2][$y]);
-      /*$HTMLimages[2][$y] = preg_replace("/^(http:\/\/(www\.)?braydengregerson\.com\/triangle)/",
-                                        //"http://trianglecms.com",
-                                        "/home/tcadmin/public_html",
-                                        $HTMLimages[2][$y]);*/
       /*$HTMLimages[2][$y] = preg_replace("/^(http:\/\/trianglecms\.com)/",
                                         //"http://trianglecms.com",
                                         "/home/tcadmin/public_html",
@@ -145,14 +138,7 @@
     $code[1] = preg_replace("@url\(\"[^\"]*\/(images\/[^\"]+)\"\)@", "url(\"$1\")", $code[1]);
 
     file_put_contents($filedest . "/" . $pageName . ".php", $code[0]);
-    if (!$compress) {
-      /*if (file_put_contents($filedest . "/" . $pageName . ".css", $code[1])) {
-          echo "YES";
-      } else {
-          echo "NO";
-      }*/
-      file_put_contents($filedest . "/" . $pageName . ".css", $code[1]);
-    }
+    if (!$compress) file_put_contents($filedest . "/" . $pageName . ".css", $code[1]);
   }
 
   $unusedPages = $existingPages ? array_flip($existingPages) : [];
@@ -192,7 +178,7 @@
     $zip->close();
 
     // echo '/app/users/' . $username . '/download/index.php?file=' . urlencode($templateName);
-    $zipFileName = "TRIANGLE-" . urlencode($templateName) . ".zip";
+    $zipFileName = "TRIANGLE-" . ($templateName) . ".zip";
     echo json_encode([
       "filename" => $zipFileName,
       "url" => "users/$username/download/$zipFileName"
