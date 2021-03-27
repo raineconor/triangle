@@ -380,11 +380,13 @@ TRIANGLE.clearSelection = function() {
     radioElements[i].checked = false;
   }
 
-  TRIANGLE.developer.sessions.html.off("change", TRIANGLE.saveItem.outerHTML);
+  TRIANGLE.developer.sessions.innerHTML.off("change", TRIANGLE.saveItem.innerHTML);
+  TRIANGLE.developer.sessions.outerHTML.off("change", TRIANGLE.saveItem.outerHTML);
   TRIANGLE.developer.sessions.css.off("change", TRIANGLE.saveItem.cssStyles);
   TRIANGLE.developer.sessions.hover.off("change", TRIANGLE.saveItem.hoverStyles);
 
-  TRIANGLE.developer.sessions.html.setValue("");
+  TRIANGLE.developer.sessions.innerHTML.setValue("");
+  TRIANGLE.developer.sessions.outerHTML.setValue("");
   TRIANGLE.developer.sessions.css.setValue("");
   TRIANGLE.developer.sessions.hover.setValue("");
 
@@ -605,6 +607,7 @@ TRIANGLE.importItem = {
     importFormEmail(); // imports custom form email
     importItemTree();
     TRIANGLE.importItem.importCodeSnippet();
+    TRIANGLE.importItem.importInnerHTML();
     TRIANGLE.importItem.importOuterHTML();
     TRIANGLE.importItem.importCSSText();
     TRIANGLE.importItem.importHoverCSSText();
@@ -873,12 +876,22 @@ TRIANGLE.importItem = {
     }
   },
 
+  importInnerHTML : function() {
+    console.log("yo")
+    if (TRIANGLE.item && TRIANGLE.isType.textBox(TRIANGLE.item.objRef)) {
+      console.log("hey");
+      TRIANGLE.developer.sessions.innerHTML.setValue(TRIANGLE.item.objRef.innerHTML);
+      TRIANGLE.developer.sessions.innerHTML.on("change", TRIANGLE.saveItem.innerHTML);
+    }
+  },
+
   importOuterHTML : function() {
     if (TRIANGLE.item) {
-      // TRIANGLE.developer.sessions.html.on("change", function(){});
-      TRIANGLE.developer.sessions.html.setValue(TRIANGLE.item.objRef.outerHTML);
-      TRIANGLE.developer.sessions.html.on("change", TRIANGLE.saveItem.outerHTML);
-      // TRIANGLE.developer.sessions.html.on("change", TRIANGLE.saveItem.outerHTML);
+      // TRIANGLE.developer.sessions.outerHTML.on("change", function(){});
+      TRIANGLE.developer.sessions.outerHTML.setValue(TRIANGLE.item.objRef.outerHTML);
+      // TRIANGLE.developer.sessions.outerHTML.setValue(TRIANGLE.item.objRef.outerHTML.replace(/ (triangle-\w+|style)\="[^"]*"/g, ""));
+      TRIANGLE.developer.sessions.outerHTML.on("change", TRIANGLE.saveItem.outerHTML);
+      // TRIANGLE.developer.sessions.outerHTML.on("change", TRIANGLE.saveItem.outerHTML);
     }
   },
 
@@ -1407,12 +1420,27 @@ TRIANGLE.saveItem = {
     }
   },
 
+  innerHTML : function() {
+    // changing the outerHTML causes the reference of TRIANGLE.item to break, so
+    // eventually rewrite this to track the item by it's index as a child
+    var innerHTML = TRIANGLE.developer.sessions.innerHTML.getValue();
+    // if (TRIANGLE.item && innerHTML !== "" && innerHTML !== TRIANGLE.item.objRef.innerHTML) {
+    if (TRIANGLE.item && TRIANGLE.isType.textBox(TRIANGLE.item.objRef)) {
+      var memoIndex = TRIANGLE.item.index;
+      TRIANGLE.item.objRef.innerHTML = innerHTML;
+      TRIANGLE.updateTemplateItems();
+      TRIANGLE.selectItem(memoIndex);
+      // TRIANGLE.saveItem.equalizeUserClasses(TRIANGLE.item.userClass);
+      TRIANGLE.selectionBorder.update();
+    }
+  },
+
   outerHTML : function() {
     // console.trace();
     // return;
     // changing the outerHTML causes the reference of TRIANGLE.item to break, so
     // eventually rewrite this to track the item by it's index as a child
-    var outerHTML = TRIANGLE.developer.sessions.html.getValue();
+    var outerHTML = TRIANGLE.developer.sessions.outerHTML.getValue();
     if (TRIANGLE.item && outerHTML !== "" && outerHTML !== TRIANGLE.item.objRef.outerHTML) {
       var memoIndex = TRIANGLE.item.index;
       TRIANGLE.item.objRef.outerHTML = outerHTML;
@@ -5367,8 +5395,15 @@ TRIANGLE.developer = {
     }
   },
 
+  editInnerHTML : function() {
+    TRIANGLE.developer.editor.setSession(TRIANGLE.developer.sessions.innerHTML);
+    if (TRIANGLE.item) TRIANGLE.importItem.importInnerHTML();
+    TRIANGLE.developer.codeEditor.title("HTML for Textbox");
+    TRIANGLE.developer.codeEditor.show();
+  },
+
   editHTML : function() {
-    TRIANGLE.developer.editor.setSession(TRIANGLE.developer.sessions.html);
+    TRIANGLE.developer.editor.setSession(TRIANGLE.developer.sessions.outerHTML);
     if (TRIANGLE.item) TRIANGLE.importItem.importOuterHTML();
     TRIANGLE.developer.codeEditor.title("HTML for Current Item");
     TRIANGLE.developer.codeEditor.show();
@@ -7261,7 +7296,8 @@ TRIANGLE.keyEvents = { // keyboard shortcuts
   keyH : function() {
     TRIANGLE.menu.displaySubMenu('displayDeveloper');
     TRIANGLE.menu.menuBtnActive(document.getElementById("opDeveloper"));
-    TRIANGLE.developer.editHTML();
+    // TRIANGLE.developer.editHTML();
+    if (TRIANGLE.item && TRIANGLE.isType.textBox(TRIANGLE.item.objRef)) TRIANGLE.developer.editInnerHTML();
   },
 
   keyX : function() {
@@ -7705,9 +7741,13 @@ TRIANGLE.defaultSettings = function defaultSettings() {
 
   TRIANGLE.developer.EditSession = ace.require("ace/edit_session").EditSession;
 
-  TRIANGLE.developer.sessions.html = ace.createEditSession("html");
-  TRIANGLE.developer.sessions.html.setOptions({ mode: "ace/mode/html", tabSize: 2, navigateWithinSoftTabs: true });
-  TRIANGLE.developer.sessions.html.on("change", TRIANGLE.saveItem.outerHTML);
+  TRIANGLE.developer.sessions.innerHTML = ace.createEditSession("html");
+  TRIANGLE.developer.sessions.innerHTML.setOptions({ mode: "ace/mode/html", tabSize: 2, navigateWithinSoftTabs: true });
+  TRIANGLE.developer.sessions.innerHTML.on("change", TRIANGLE.saveItem.innerHTML);
+
+  TRIANGLE.developer.sessions.outerHTML = ace.createEditSession("html");
+  TRIANGLE.developer.sessions.outerHTML.setOptions({ mode: "ace/mode/html", tabSize: 2, navigateWithinSoftTabs: true });
+  TRIANGLE.developer.sessions.outerHTML.on("change", TRIANGLE.saveItem.outerHTML);
 
   // TRIANGLE.developer.sessions.css = new TRIANGLE.developer.EditSession("css");
   TRIANGLE.developer.sessions.css = ace.createEditSession("css");
