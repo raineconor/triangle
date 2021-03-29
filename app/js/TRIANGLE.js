@@ -444,34 +444,45 @@ TRIANGLE.clearSelection = function() {
 TRIANGLE.styleSheets = {
 
   breakpointMap : {
-    "xs" : {
-      width: "300px",
-      styleSheetIndex : 5
+    "xxl" : {
+      width: "100%",
+      styleSheetIndex : 0
     },
-    "sm" : {
-      width: "576px",
-      styleSheetIndex : 4
-    },
-    "md" : {
-      width: "768px",
-      styleSheetIndex : 3
+    "xl" : {
+      width: "100%",
+      styleSheetIndex : 1
     },
     "lg" : {
       // width: "992px",
       width: "100%",
       styleSheetIndex : 2
     },
-    "xl" : {
-      width: "100%",
-      styleSheetIndex : 1
+    "md" : {
+      width: "768px",
+      styleSheetIndex : 3
     },
-    "xxl" : {
-      width: "100%",
-      styleSheetIndex : 0
+    "sm" : {
+      width: "576px",
+      styleSheetIndex : 4
+    },
+    "xs" : {
+      width: "300px",
+      styleSheetIndex : 5
     }
     // lg: 992px,
     // xl: 1200px,
     // xxl: 1400px
+  },
+
+  updateReferences : function() {
+    TRIANGLE.styleSheets.mainSheet = TRIANGLE.iframe().getElementById("templateStyles").sheet;
+    TRIANGLE.styleSheets.xs = TRIANGLE.styleSheets.mainSheet.cssRules[TRIANGLE.styleSheets.breakpointMap.xs.styleSheetIndex];
+    TRIANGLE.styleSheets.sm = TRIANGLE.styleSheets.mainSheet.cssRules[TRIANGLE.styleSheets.breakpointMap.sm.styleSheetIndex];
+    TRIANGLE.styleSheets.md = TRIANGLE.styleSheets.mainSheet.cssRules[TRIANGLE.styleSheets.breakpointMap.md.styleSheetIndex];
+    TRIANGLE.styleSheets.lg = TRIANGLE.styleSheets.mainSheet.cssRules[TRIANGLE.styleSheets.breakpointMap.lg.styleSheetIndex];
+    TRIANGLE.styleSheets.active = TRIANGLE.styleSheets.lg;
+    TRIANGLE.styleSheets.xl = TRIANGLE.styleSheets.mainSheet.cssRules[TRIANGLE.styleSheets.breakpointMap.xl.styleSheetIndex];
+    TRIANGLE.styleSheets.xxl = TRIANGLE.styleSheets.mainSheet.cssRules[TRIANGLE.styleSheets.breakpointMap.xxl.styleSheetIndex];
   },
 
   selectBreakpoint : function(breakpoint) {
@@ -2191,6 +2202,11 @@ TRIANGLE.json = {
     template.styleTag = TRIANGLE.developer.styleTagContent;
     template.scriptTag = TRIANGLE.developer.scriptTagContent;
     template.imageList = {"itemNums":[], "paths":[], "dimensions":[]};
+    template.cssStyles = "";
+    for (var breakpoint in TRIANGLE.styleSheets.breakpointMap) {
+      if (TRIANGLE.styleSheets.breakpointMap.hasOwnProperty(breakpoint))
+        template.cssStyles += TRIANGLE.styleSheets[breakpoint].cssText;
+    }
 
     template.items = [];
     var skipItems = [];
@@ -2225,7 +2241,7 @@ TRIANGLE.json = {
       template.items[triangleIndex]["id"] = sv_item.id;
       template.items[triangleIndex]["tagName"] = sv_item.tag;
       template.items[triangleIndex]["name"] = sv_item.objRef.getAttribute("name");
-      template.items[triangleIndex]["style"] = sv_item.objRef.style.cssText;
+      // template.items[triangleIndex]["style"] = sv_item.objRef.style.cssText;
       template.items[triangleIndex]["clearFloat"] = TRIANGLE.isType.clearFloat(sv_item.objRef.nextSibling) ? 1 : 0;
 
       if (TRIANGLE.isType.textBox(sv_item.objRef)
@@ -2350,6 +2366,8 @@ TRIANGLE.json = {
   },
 
   convertTemplateData : function(templateData) {
+    if (templateData.cssStyles) TRIANGLE.iframe().getElementById("templateStyles").innerHTML = templateData.cssStyles;
+    TRIANGLE.styleSheets.updateReferences();
     TRIANGLE.iframe().getElementById("hoverData").innerHTML = templateData.hoverData;
     TRIANGLE.iframe().getElementById("hoverItems").innerHTML = templateData.hoverItems;
     TRIANGLE.iframe().getElementById("animationData").innerHTML = templateData.hoverItems;
@@ -2488,10 +2506,12 @@ TRIANGLE.json = {
       var itemStyle = json.items[itemID]["style"];
       if (json.items[itemStyle]) {
         json.items[itemID]["style"] = json.items[itemStyle]["style"];
+
+        for (var cssStyle in TRIANGLE.json.compressionMap) {
+          json.items[itemID]["style"] = json.items[itemID]["style"].replace("%" + TRIANGLE.json.compressionMap[cssStyle], cssStyle + ':');
+        }
       }
-      for (var cssStyle in TRIANGLE.json.compressionMap) {
-        json.items[itemID]["style"] = json.items[itemID]["style"].replace("%" + TRIANGLE.json.compressionMap[cssStyle], cssStyle + ':');
-      }
+
     }
 
     return JSON.stringify(json);
@@ -2770,7 +2790,8 @@ TRIANGLE.options = {
       "display:block;",
       "background-color:#f5f2f0;",
       "height:auto;",
-      "width:100%;"
+      "width:100%;",
+      "padding:15px;"
     ]);
     // TRIANGLE.styleSheets.xl.insertRule(newRule);
     TRIANGLE.styleSheets.lg.insertRule(newRule);
@@ -2871,15 +2892,22 @@ TRIANGLE.options = {
       if (TRIANGLE.item.objRef.children[0] && TRIANGLE.item.objRef.children[0].style.display == "table-cell") return;
       if (TRIANGLE.isType.containsNbsp(TRIANGLE.item.objRef)) TRIANGLE.stripNbsp(TRIANGLE.item.objRef);
 
-      TRIANGLE.checkPadding(TRIANGLE.item.objRef);
+      // TRIANGLE.checkPadding(TRIANGLE.item.objRef);
 
       var newChild = document.createElement("div");
+      newChild.id = TRIANGLE.randomID();
       newChild.setAttribute("triangle-class", "templateItem childItem");
-      newChild.style.backgroundColor = "#BFD7EA";
-      newChild.style.minHeight = "100px";
-      newChild.style.height = "auto";
-      newChild.style.width = "100%";
-      // newChild.style.position = "relative";
+      var newRule = TRIANGLE.styleSheets.formatCSSRule("#" + newChild.id, [
+        "display:block;",
+        "background-color:#BFD7EA;",
+        "height:auto;",
+        "width:100%;",
+        "padding:15px;"
+      ]);
+      // TRIANGLE.styleSheets.xl.insertRule(newRule);
+      TRIANGLE.styleSheets.lg.insertRule(newRule);
+      TRIANGLE.styleSheets.md.insertRule(newRule);
+      TRIANGLE.styleSheets.sm.insertRule("#" + newChild.id + "{}");
 
       TRIANGLE.item.append(newChild);
       TRIANGLE.updateTemplateItems();
@@ -3045,7 +3073,7 @@ TRIANGLE.options = {
     pasteItem.innerHTML = pasteItem.innerHTML.replace(/user\-class="[^"]*"/g, ""); // what is this for?
 
     if (TRIANGLE.item) {
-      TRIANGLE.checkPadding(TRIANGLE.item.objRef);
+      // TRIANGLE.checkPadding(TRIANGLE.item.objRef);
       TRIANGLE.item.append(pasteItem);
       // TRIANGLE.importItem.single(TRIANGLE.item.index);
     } else {
@@ -3216,7 +3244,7 @@ TRIANGLE.style = {
     }
 
     TRIANGLE.selectionBorder.remove();
-    TRIANGLE.checkPadding(item.parent);
+    // TRIANGLE.checkPadding(item.parent);
 
     item.parent.style.display = "flex";
     item.parent.style.alignItems = "center";
@@ -4037,7 +4065,7 @@ TRIANGLE.text = {
   insertTextBox : function insertTextBox(text) {
     var newTextBox = document.createElement("p");
     newTextBox.id = TRIANGLE.randomID();
-    var newRule = TRIANGLE.styleSheets.formatCSSRule("#" + newTextBox.id, [
+    var cssRulesList = [
       "display:block;",
       "height:auto;",
       "width:100%;",
@@ -4045,52 +4073,38 @@ TRIANGLE.text = {
       "font-size:inherit;",
       "font-family:inherit;",
       "line-height:1;"
-    ]);
+    ];
+    var parent = TRIANGLE.item ? TRIANGLE.item.objRef : TRIANGLE.template();
+    var parentBg = window.getComputedStyle(parent).backgroundColor;
+    if (parentBg == "" || TRIANGLE.colors.isColorLight(parentBg)) {
+      cssRulesList.push("color:#333333;");
+    } else {
+      cssRulesList.push("color:#ffffff;");
+    }
+    var newRule = TRIANGLE.styleSheets.formatCSSRule("#" + newTextBox.id, cssRulesList);
     // TRIANGLE.styleSheets.xl.insertRule(newRule);
     TRIANGLE.styleSheets.lg.insertRule(newRule);
     TRIANGLE.styleSheets.md.insertRule(newRule);
     TRIANGLE.styleSheets.sm.insertRule("#" + newTextBox.id + "{}");
-    // newTextBox.style.backgroundColor = "";
-    // newTextBox.style.marginTop = "1em";
-    // newTextBox.style.marginBottom = "1em";
-    // newTextBox.style.height = "auto";
-    // newTextBox.style.width = "100%";
-    // newTextBox.style.padding = "15px";
-    // newTextBox.style.fontSize = "inherit";
-    // newTextBox.style.lineHeight = 1;
-    // newTextBox.style.fontFamily = "inherit";
-    // newTextBox.style.display = "block";
+
     newTextBox.setAttribute("triangle-class", "templateItem textbox");
     newTextBox.innerHTML = text || "New text box";
 
     if (TRIANGLE.item && !TRIANGLE.isType.bannedInsertion(TRIANGLE.item.objRef)) {
-      if (TRIANGLE.itemStyles.backgroundColor == "inherit"
-      || TRIANGLE.itemStyles.backgroundColor == "") {
-        newTextBox.style.color = "#333333";
-      } else {
-        newTextBox.style.color = TRIANGLE.colors.isColorLight(TRIANGLE.itemStyles.backgroundColor) ? "#333333" : "white";
-      }
 
       if (TRIANGLE.isType.containsNbsp(TRIANGLE.item.objRef)) {
         TRIANGLE.stripNbsp(TRIANGLE.item.objRef);
       }
-
-      TRIANGLE.checkPadding(TRIANGLE.item.objRef);
-
       TRIANGLE.item.objRef.appendChild(newTextBox);
       TRIANGLE.selectionBorder.update();
-      TRIANGLE.updateTemplateItems(true);
+      TRIANGLE.updateTemplateItems();
 
     } else if (!TRIANGLE.item) {
 
-      newTextBox.style.color = TRIANGLE.colors.isColorLight(TRIANGLE.template().style.backgroundColor) ? "#333333" : "white";
-
       TRIANGLE.template().appendChild(newTextBox);
-      window.scrollTo(0, document.body.scrollHeight);
-      // TRIANGLE.iframe().contentWindow.scrollTo(0, TRIANGLE.iframe().contentDocument.body.scrollHeight);
+      TRIANGLE.iframe().contentWindow.scrollTo(0, newTextBox.offsetTop);
       TRIANGLE.selectionBorder.update();
       TRIANGLE.updateTemplateItems(true);
-
     }
   },
 
@@ -4726,7 +4740,7 @@ TRIANGLE.images = {
           newImage.style.width = "100%";
           newImage.style.height = "auto";
 
-          TRIANGLE.checkPadding(TRIANGLE.item.objRef);
+          // TRIANGLE.checkPadding(TRIANGLE.item.objRef);
 
           imgContainer.appendChild(newImage);
           TRIANGLE.item.append(imgContainer);
@@ -5350,7 +5364,7 @@ TRIANGLE.library = {
         //window.scrollTo(0, TRIANGLE.templateItems[TRIANGLE.templateItems.length - 1].getBoundingClientRect().top - 200);
         window.scrollTo(0, document.body.scrollHeight);
       } else {
-        TRIANGLE.checkPadding(TRIANGLE.item.objRef);
+        // TRIANGLE.checkPadding(TRIANGLE.item.objRef);
         TRIANGLE.item.objRef.innerHTML = newItem + TRIANGLE.item.objRef.innerHTML;
       }
       TRIANGLE.library.convertStandbyItems();
@@ -5386,7 +5400,7 @@ TRIANGLE.library = {
         //window.scrollTo(0, TRIANGLE.templateItems[TRIANGLE.templateItems.length - 1].getBoundingClientRect().top - 200);
         window.scrollTo(0, document.body.scrollHeight);
       } else {
-        TRIANGLE.checkPadding(TRIANGLE.item.objRef);
+        // TRIANGLE.checkPadding(TRIANGLE.item.objRef);
         TRIANGLE.item.objRef.innerHTML += itemContent;
         if (checkSameClass) TRIANGLE.item.objRef.lastChild.removeAttribute("user-id");
       }
@@ -5726,7 +5740,7 @@ TRIANGLE.dragDrop = {
             TRIANGLE.dragDrop.removeVisBox();
           } else if (TRIANGLE.hoveredElem && !TRIANGLE.isType.bannedInsertion(TRIANGLE.hoveredElem)) {
             //console.log(TRIANGLE.hoveredElem.className);
-            TRIANGLE.checkPadding(TRIANGLE.hoveredElem);
+            // TRIANGLE.checkPadding(TRIANGLE.hoveredElem);
             TRIANGLE.hoveredElem.appendChild(droppedElem);
             TRIANGLE.dragDrop.draggingElem.remove();
           }
@@ -7153,6 +7167,7 @@ TRIANGLE.getUnit = function getUnit(str) {
 }
 
 TRIANGLE.checkPadding = function checkPadding(obj) {
+  return;
   if (  (parseInt(obj.style.paddingLeft) === 0 || !obj.style.paddingLeft)
   &&    (parseInt(obj.style.paddingRight) === 0 || !obj.style.paddingRight)
   &&    (parseInt(obj.style.paddingTop) === 0 || !obj.style.paddingTop)
@@ -7596,14 +7611,14 @@ TRIANGLE.forms = {
     newForm.style.borderBottom = "1px dashed gray";
 
     if (item) {
-      TRIANGLE.checkPadding(item.objRef);
+      // TRIANGLE.checkPadding(item.objRef);
       item.append(newForm);
     } else {
       TRIANGLE.options.newRow();
       TRIANGLE.updateTemplateItems();
       TRIANGLE.selectItem(TRIANGLE.templateItems[TRIANGLE.templateItems.length - 1].getAttribute("triangle-index"));
       item = TRIANGLE.item;
-      TRIANGLE.checkPadding(item.objRef);
+      // TRIANGLE.checkPadding(item.objRef);
       item.append(newForm);
     }
 
@@ -7755,18 +7770,7 @@ TRIANGLE.randomID = function() {
 
 
 TRIANGLE.defaultSettings = function defaultSettings() {
-  TRIANGLE.styleSheets.mainSheet = TRIANGLE.iframe().getElementById("templateStyles").sheet;
-  TRIANGLE.styleSheets.xs = TRIANGLE.styleSheets.mainSheet.cssRules[TRIANGLE.styleSheets.breakpointMap.xs.styleSheetIndex];
-  // TRIANGLE.styleSheets.xs.disabled = true;
-  TRIANGLE.styleSheets.sm = TRIANGLE.styleSheets.mainSheet.cssRules[TRIANGLE.styleSheets.breakpointMap.sm.styleSheetIndex];
-  // TRIANGLE.styleSheets.sm.disabled = true;
-  TRIANGLE.styleSheets.md = TRIANGLE.styleSheets.mainSheet.cssRules[TRIANGLE.styleSheets.breakpointMap.md.styleSheetIndex];
-  // TRIANGLE.styleSheets.md.disabled = true;
-  TRIANGLE.styleSheets.lg = TRIANGLE.styleSheets.mainSheet.cssRules[TRIANGLE.styleSheets.breakpointMap.lg.styleSheetIndex];
-  TRIANGLE.styleSheets.active = TRIANGLE.styleSheets.lg;
-  TRIANGLE.styleSheets.xl = TRIANGLE.styleSheets.mainSheet.cssRules[TRIANGLE.styleSheets.breakpointMap.xl.styleSheetIndex];
-  TRIANGLE.styleSheets.xxl = TRIANGLE.styleSheets.mainSheet.cssRules[TRIANGLE.styleSheets.breakpointMap.xxl.styleSheetIndex];
-
+  TRIANGLE.styleSheets.updateReferences();
   TRIANGLE.maxAllowedItems = 100;
   TRIANGLE.colors.updateBodyBg(); // set default background color for body element
   TRIANGLE.menu.displaySubMenu("displayInsert"); // display a specific menu tab by default
