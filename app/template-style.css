@@ -198,3 +198,9 @@ body {
   right:0;
   left:0;*/
 }
+
+.clearfix::after {
+  content: "";
+  clear: both;
+  display: table;
+}

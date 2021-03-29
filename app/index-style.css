@@ -226,6 +226,10 @@ hr {
   background-color:white;
 }
 
+#iframeWrapper {
+  background-color:gray;
+}
+
 #iframeTemplate {
   width:100%;
   overflow:scroll;

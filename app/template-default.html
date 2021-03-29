@@ -6,10 +6,15 @@
   <link rel="stylesheet" href="template-style.min.css" type="text/css" media="screen" />
   <style id="updateAnimation"></style>
 
-  <style id="templateStylesLG"></style>
-  <style id="templateStylesMD"></style>
-  <style id="templateStylesSM"></style>
-  <style id="templateStylesXS"></style>
+  <style id="templateStyles">
+    @media(min-width:1400px) {} /* xxl */
+    @media(min-width:1200px) {} /* xl */
+    @media(min-width:992px) {} /* lg */
+    /* @media(max-width:768px) {} */ /* md */
+    @media(max-width:991px) {} /* md */
+    @media(max-width:767px) {} /* sm */
+    @media(max-width:575px) {} /* xs */
+  </style>
 </head>
 <body>
   <div id="topMarker">Top</div>
