@@ -466,7 +466,9 @@ textarea {
             Build Websites Fast<br>
           </div>
           <div id="item7">
-            Build modern, elegant websites visually in your browser, faster than conventional tools.<br>
+            <div>
+              Build modern, elegant websites visually in your browser, faster than conventional tools.
+            </div>
           </div>
           <a href="register.php">
             <div id="item8">
@@ -501,7 +503,7 @@ textarea {
               Made For Professionals<br>
             </div>
             <div id="item20">
-              From freelancer to agency, Triangle will help you deliver beautiful custom websites to your clients faster.
+              Triangle is an advanced web design platform built for professionals. Our platform’s unique CSS features empower our users to build cutting edge responsive designs.
             </div>
           </div>
           <div id="item21">
