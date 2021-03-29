@@ -44,8 +44,8 @@ document.getElementById("boxShadowBtn").addEventListener("click", function() {
   BS.boxShadowMenu.toggle();
 });
 
-// var poop = new bootstrap.Toast(document.getElementById("darkToast"), {animation:false,autohide:false});
-// poop.show();
+// var test = new bootstrap.Toast(document.getElementById("darkToast"), {animation:false,autohide:false});
+// test.show();
 
 // toasts
 // TRIANGLE.notify.saving.toast = new bootstrap.Toast(document.getElementById("toastSaving"), {autohide:false});
