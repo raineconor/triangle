@@ -380,6 +380,12 @@ function formatCode($data, $templateName, $pageName, $compress = false) {
 
         . "textarea {\n"
         . "  resize:none;\n"
+        . "}\n\n"
+
+        . ".clearfix::after {\n"
+        . "  content: \"\";\n"
+        . "  clear: both;\n"
+        . "  display: table;\n"
         . "}\n\n";
 
 
