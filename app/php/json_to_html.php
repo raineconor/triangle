@@ -94,15 +94,6 @@ function formatCode($data, $templateName, $pageName, $compress = false) {
       $master_item_str = db_query('SELECT content FROM user_ids WHERE username = ? AND template = ? AND user_id = ?', [$username, $templateName, $master_item_id])["content"];
       $item = json_decode($master_item_str, true)[$master_item_id];
 
-      // $new_keys = [];
-      // for ($y = 0; $y < $len; $y++) {
-      //   if ($y === $track) {
-      //     $new_keys[$track] = $master_item_id;
-      //   } else {
-      //     $new_keys[$y] = $item_array_keys[$y];
-      //   }
-      // }
-      // $item_array_keys = $new_keys;
       $item_array_keys[$x] = $master_item_id;
       $data["responsiveItems"][$master_item_id] = $item["responsive"];
       $track = $x;
@@ -445,7 +436,18 @@ function formatCode($data, $templateName, $pageName, $compress = false) {
   //var_dump($userClassList);
   reset($data["items"]);
 
+  $cssBreakpoints = $data["cssStyles"];
+  $cssBreakpoints = str_replace("}@", "}\n\n@", @$cssBreakpoints);
+  $cssBreakpoints = preg_replace("/(\w+) {(.*)}$/m", "$1 {\n$2\n  }\n", $cssBreakpoints);
+  $cssBreakpoints = str_replace("; ", ";\n", $cssBreakpoints);
+  $cssBreakpoints = preg_replace("/^\s*(.+);$/m", "    $1;", $cssBreakpoints);
+
   foreach ($data["items"] as $triangle_index => $item) {
+    $cssBreakpoints = str_replace("#" . $item["id"] . " ", "#item$triangle_index ", $cssBreakpoints);
+    continue;
+
+    // =========================================================================
+
     $itemTitle = null;
     $userClass = false;
     $userID = false;
@@ -538,7 +540,7 @@ function formatCode($data, $templateName, $pageName, $compress = false) {
   }
 
   $globalStyle = !empty($globalTags["style_tag"]) ? $globalTags["style_tag"] . "\n\n" : "";
-  $css .= $globalStyle . $data["styleTag"] . "\n\n";
+  $css .= $globalStyle . $data["styleTag"] . $cssBreakpoints . "\n\n";
 
   unset($data);
   unset($responsive);
