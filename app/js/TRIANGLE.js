@@ -83,9 +83,9 @@ class constructor for TemplateItem. This is a global object that is used by most
 
 TRIANGLE.TemplateItem = function(index) {
   this.index = parseInt(index);
-  this.objRef = TRIANGLE.iframe().getTriangleIndex(this.index) || TRIANGLE.templateItems[this.index];
-  this.prevItem = TRIANGLE.iframe().getTriangleIndex(this.index - 1) || TRIANGLE.templateItems[index - 1];
-  this.nextItem = TRIANGLE.iframe().getTriangleIndex(this.index + 1) || TRIANGLE.templateItems[index + 1];
+  this.objRef = TRIANGLE.iframe().getTriangleIndex(this.index);
+  this.prevItem = TRIANGLE.iframe().getTriangleIndex(this.index - 1);
+  this.nextItem = TRIANGLE.iframe().getTriangleIndex(this.index + 1);
   this.parent = this.objRef.parentNode;
   this.childOf = this.objRef.getAttribute("triangle-childof");
   this.id = this.objRef.id;
