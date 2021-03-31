@@ -359,7 +359,7 @@ textarea {
   font-family:"Lato", sans-serif;
   font-size:14px;
   color:white;
-  line-height:1;
+  line-height:1.5;
   text-align:center;
 }
 
@@ -537,7 +537,12 @@ textarea {
       </div>
       <div id="item32">
         <div id="item33">
-          © Copyright 2021 Raine Conor. All rights reserved. <br>
+          <div>
+            © Copyright 2021 Raine Conor. All rights reserved.
+          </div>
+          <div>
+            info@trianglecms.com
+          </div>
         </div>
       </div>
 
