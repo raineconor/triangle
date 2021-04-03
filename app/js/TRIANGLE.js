@@ -83,9 +83,9 @@ class constructor for TemplateItem. This is a global object that is used by most
 
 TRIANGLE.TemplateItem = function(index) {
   this.index = parseInt(index);
-  this.objRef = TRIANGLE.iframe().getTriangleIndex(this.index);
-  this.prevItem = TRIANGLE.iframe().getTriangleIndex(this.index - 1);
-  this.nextItem = TRIANGLE.iframe().getTriangleIndex(this.index + 1);
+  this.objRef = TRIANGLE.iframe().getTriangleIndex(this.index) || TRIANGLE.templateItems[this.index];
+  this.prevItem = TRIANGLE.iframe().getTriangleIndex(this.index - 1) || TRIANGLE.templateItems[this.index - 1];
+  this.nextItem = TRIANGLE.iframe().getTriangleIndex(this.index + 1) || TRIANGLE.templateItems[this.index + 1];
   this.parent = this.objRef.parentNode;
   this.childOf = this.objRef.getAttribute("triangle-childof");
   this.id = this.objRef.id;
@@ -296,8 +296,6 @@ TRIANGLE.updateTemplateItems = function(repeat) { // boolean, if true repeat fun
 
     if (sv_item.parent.getAttribute("triangle-class") && !sv_item.parent.getAttribute("triangle-class").includes("templateItem")) {
       // sv_item.objRef.addEventListener("mousedown", TRIANGLE.dragDrop.applyDrag, true);
-    } else if (!sv_item.triangleClassList.includes("childItem")) {
-        sv_item.addTriangleClass("childItem");
     }
 
     if (sv_item.triangleClassList.includes("textbox")) {
@@ -308,14 +306,11 @@ TRIANGLE.updateTemplateItems = function(repeat) { // boolean, if true repeat fun
 
     TRIANGLE.templateItems[i].setAttribute("triangle-index", i);
 
-    if (sv_item.triangleClassList.includes("childItem")) {
-      if (sv_item.parent.id === "template") {
-        sv_item.removeTriangleClass("childItem");
-        sv_item.objRef.setAttribute("triangle-childof", "");
-      } else {
-        var parentIndex = sv_item.parent.getAttribute("triangle-index");
-        sv_item.objRef.setAttribute("triangle-childof", parentIndex);
-      }
+    if (sv_item.parent.id === "template") {
+      sv_item.objRef.setAttribute("triangle-childof", "");
+    } else {
+      var parentIndex = sv_item.parent.getAttribute("triangle-index");
+      sv_item.objRef.setAttribute("triangle-childof", parentIndex);
     }
 
     if (TRIANGLE.isType.formField(sv_item.objRef)) {
@@ -462,7 +457,8 @@ TRIANGLE.styleSheets = {
       styleSheetIndex : 3
     },
     "sm" : {
-      width: "576px",
+      // width: "576px",
+      width: "500px",
       styleSheetIndex : 4
     },
     "xs" : {
@@ -925,8 +921,7 @@ TRIANGLE.importItem = {
     }
 
     function importItemTree() {
-      return;
-      if (TRIANGLE.item) {
+      if (TRIANGLE.item && false) {
         var currentNode = TRIANGLE.item.objRef;
         while (currentNode.parentNode.id != "template") {
           var treeBtn = document.createElement("span");
@@ -1656,7 +1651,6 @@ TRIANGLE.saveTemplate = {
     pageName = encodeURIComponent(pageName);
     //========================================================================
     var content = TRIANGLE.json.encode();
-    // content = TRIANGLE.json.compress(content);
     content = encodeURIComponent(content);
     //========================================================================
     var globalStyle = encodeURIComponent(TRIANGLE.developer.globalStyleTagContent);
@@ -1700,7 +1694,6 @@ TRIANGLE.saveTemplate = {
     TRIANGLE.text.deleteUnusedFonts();
 
     var content = TRIANGLE.json.encode();
-    // content = TRIANGLE.json.compress(content);
     //console.log(content);
     content = encodeURIComponent(content);
     //========================================================================
@@ -1731,7 +1724,7 @@ TRIANGLE.saveTemplate = {
   },
 
   saveUserIDs : function() {
-    var userIDs = TRIANGLE.template().querySelectorAll("*[user-id]");
+    var userIDs = TRIANGLE.template().querySelectorAll("[user-id]");
     var userIDobj = {};
 
     for (var i = 0; i < userIDs.length; i++) {
@@ -1741,149 +1734,87 @@ TRIANGLE.saveTemplate = {
       var nextSib = userIDs[i].nextSibling;
       var prevSib = userIDs[i].previousSibling;
 
-      userIDobj[userIDtitle] = {};
-      var indexMap = {};
+      userIDobj[userIDtitle] = {
+        items : []
+      };
 
-      userIDobj[userIDtitle]["user-id"] = userIDs[i].getAttribute("user-id");
-      userIDobj[userIDtitle]["user-class"] = userIDs[i].getAttribute("user-class");
-      userIDobj[userIDtitle]["tagName"] = userIDs[i].tagName;
-      userIDobj[userIDtitle]["id"] = userIDtitle;
-      indexMap[userIDs[i].getAttribute("triangle-index")] = userIDtitle;
-      userIDobj[userIDtitle]["className"] = userIDs[i].className;
-      userIDobj[userIDtitle]["triangle-index"] = userIDs[i].getAttribute("triangle-index");
-      userIDobj[userIDtitle]["triangle-class"] = userIDs[i].getAttribute("triangle-class");
-      userIDobj[userIDtitle]["name"] = userIDs[i].getAttribute("name");
-      userIDobj[userIDtitle]["style"] = userIDs[i].style.cssText;
-      userIDobj[userIDtitle]["clearFloat"] = TRIANGLE.isType.clearFloat(prevSib) ? 1 : 0;
+      var childList = [].slice.call(userIDs[i].querySelectorAll("[triangle-class~=templateItem]"));
+      var userIDList = [userIDs[i]].concat(childList);
 
-      if (TRIANGLE.isType.textBox(userIDs[i])
-      || TRIANGLE.isType.imageItem(userIDs[i])
-      || TRIANGLE.isType.formBtn(userIDs[i])
-      || TRIANGLE.isType.snippetItem(userIDs[i])) userIDobj[userIDtitle]["innerHTML"] = userIDs[i].innerHTML.replace(/&/g, encodeURIComponent("&"));
+      for (var j = 0; j < userIDList.length; j++) {
+        userIDobj[userIDtitle].items[j] = {};
+        userIDobj[userIDtitle].items[j]["user-id"] = userIDList[j].getAttribute("user-id");
+        userIDobj[userIDtitle].items[j]["user-class"] = userIDList[j].getAttribute("user-class");
+        userIDobj[userIDtitle].items[j]["tagName"] = userIDList[j].tagName;
+        userIDobj[userIDtitle].items[j]["id"] = userIDList[j].id;
+        userIDobj[userIDtitle].items[j]["className"] = userIDList[j].className;
+        userIDobj[userIDtitle].items[j]["triangle-index"] = userIDList[j].getAttribute("triangle-index");
+        userIDobj[userIDtitle].items[j]["triangle-class"] = userIDList[j].getAttribute("triangle-class");
+        userIDobj[userIDtitle].items[j]["parentId"] = userIDList[j].parentNode.id;
+        userIDobj[userIDtitle].items[j]["name"] = userIDList[j].getAttribute("name");
+        userIDobj[userIDtitle].items[j]["style"] = userIDList[j].style.cssText;
+        userIDobj[userIDtitle].items[j]["clearFloat"] = TRIANGLE.isType.clearFloat(prevSib) ? 1 : 0;
 
-      userIDobj[userIDtitle]["src"] = userIDs[i].src;
-      // userIDobj[userIDtitle]["triangle-childof"] = 0; // ????
-      /*userIDobj[userIDtitle]["nextSib"] = nextSib && TRIANGLE.isType.templateItem(nextSib) ? nextSib.id : 0;
-      userIDobj[userIDtitle]["prevSib"] = prevSib && TRIANGLE.isType.templateItem(prevSib) ? prevSib.id : 0;*/
-      if (nextSib && TRIANGLE.isType.templateItem(nextSib)) {
-        userIDobj[userIDtitle]["nextSib"] = nextSib.id;
-      } else if (nextSib && TRIANGLE.isType.clearFloat(nextSib)) {
-        userIDobj[userIDtitle]["nextSib"] = nextSib.nextSibling && TRIANGLE.isType.templateItem(nextSib.nextSibling) ? nextSib.nextSibling.id : 0;
-      } else {
-        userIDobj[userIDtitle]["nextSib"] = 0;
-      }
+        userIDobj[userIDtitle].items[j].breakpoints = {};
+        for (var breakpoint in TRIANGLE.styleSheets.breakpointMap) {
+          if (TRIANGLE.styleSheets.breakpointMap.hasOwnProperty(breakpoint)) {
+            var getRule = TRIANGLE.styleSheets.getIndexBySelector(
+              TRIANGLE.styleSheets[breakpoint].cssRules, "#" + userIDList[j].id
+            );
+            if (TRIANGLE.styleSheets[breakpoint].cssRules[getRule]) {
+              userIDobj[userIDtitle].items[j].breakpoints[breakpoint] = TRIANGLE.styleSheets[breakpoint].cssRules[getRule].cssText
+            } else {
+              userIDobj[userIDtitle].items[j].breakpoints[breakpoint] = "#" + userIDList[j].id + " { }";
+            }
+          }
+        }
 
-      if (prevSib && TRIANGLE.isType.templateItem(prevSib)) {
-        userIDobj[userIDtitle]["prevSib"] = prevSib.id;
-      } else if (prevSib && TRIANGLE.isType.clearFloat(prevSib)) {
-        userIDobj[userIDtitle]["prevSib"] = prevSib.previousSibling && TRIANGLE.isType.templateItem(prevSib.previousSibling) ? prevSib.previousSibling.id : 0;
-      } else {
-        userIDobj[userIDtitle]["prevSib"] = 0;
-      }
+        if (TRIANGLE.isType.textBox(userIDList[j])
+        || TRIANGLE.isType.imageItem(userIDList[j])
+        || TRIANGLE.isType.formBtn(userIDList[j])
+        || TRIANGLE.isType.snippetItem(userIDList[j])) userIDobj[userIDtitle].items[j]["innerHTML"] = userIDList[j].innerHTML.replace(/&/g, encodeURIComponent("&"));
 
-      //userIDobj[userIDtitle]["isLastChild"] = !nextSib || (nextSib && !TRIANGLE.isType.templateItem(nextSib)) ? 1 : 0;
-      if (!nextSib) {
-        userIDobj[userIDtitle]["isLastChild"] = 1;
-      } else if (nextSib && TRIANGLE.isType.clearFloat(nextSib)) {
-        userIDobj[userIDtitle]["isLastChild"] = nextSib.nextSibling && TRIANGLE.isType.templateItem(nextSib.nextSibling) ? 0 : 1;
-      } else {
-        userIDobj[userIDtitle]["isLastChild"] = 0;
-      }
-
-      //console.log(userIDobj[userIDtitle]);
-
-      userIDobj[userIDtitle]["item-align"] = userIDs[i].getAttribute("item-align") || "";
-      userIDobj[userIDtitle]["hover-style"] = userIDs[i].getAttribute("hover-style") || "";
-      userIDobj[userIDtitle]["link-to"] = userIDs[i].getAttribute("link-to");
-      userIDobj[userIDtitle]["onClick"] = userIDs[i].getAttribute("onclick");
-      userIDobj[userIDtitle]["crop-map"] = userIDs[i].getAttribute("crop-map");
-      userIDobj[userIDtitle]["crop-ratio"] = userIDs[i].getAttribute("crop-ratio");
-      userIDobj[userIDtitle]["target"] = userIDs[i].getAttribute("target");
-      userIDobj[userIDtitle]["form-email"] = userIDs[i].getAttribute("form-email");
-      userIDobj[userIDtitle]["responsive"] = [userIDs[i].style.width, userIDs[i].getBoundingClientRect().width, userIDs[i].getBoundingClientRect().top];
-
-      userIDobj[userIDtitle]["children"] = {};
-      //var childObj = userIDobj[userIDtitle]["children"];
-
-      var userIDchild = userIDs[i].querySelector("*[user-id]");
-
-      /*if (!userIDchild) {
-
-      userIDobj[userIDtitle]["userIDchild"] = false;*/
-
-      var childList = userIDs[i].querySelectorAll("[triangle-class~=templateItem]");
-
-      for (var x = 0; x < childList.length; x++) {
-        nextSib = childList[x].nextSibling;
-        prevSib = childList[x].previousSibling;
-
-        var childIndex = userIDtitle + x;
-        indexMap[childList[x].getAttribute("triangle-index")] = childIndex;
-
-        userIDobj[userIDtitle]["children"][childIndex] = {};
-        userIDobj[userIDtitle]["children"][childIndex]["user-id"] = childList[x].getAttribute("user-id");
-        userIDobj[userIDtitle]["children"][childIndex]["user-class"] = childList[x].getAttribute("user-class");
-        userIDobj[userIDtitle]["children"][childIndex]["triangle-index"] = childList[x].getAttribute("triangle-index");
-        userIDobj[userIDtitle]["children"][childIndex]["triangle-class"] = childList[x].getAttribute("triangle-class");
-        userIDobj[userIDtitle]["children"][childIndex]["tagName"] = childList[x].tagName;
-        userIDobj[userIDtitle]["children"][childIndex]["className"] = childList[x].className;
-        userIDobj[userIDtitle]["children"][childIndex]["name"] = childList[x].getAttribute("name");
-        userIDobj[userIDtitle]["children"][childIndex]["style"] = childList[x].style.cssText;
-        userIDobj[userIDtitle]["children"][childIndex]["clearFloat"] = TRIANGLE.isType.clearFloat(nextSib) ? 1 : 0;
-
-        if (TRIANGLE.isType.textBox(childList[x])
-        || TRIANGLE.isType.imageItem(childList[x])
-        || TRIANGLE.isType.formBtn(childList[x])
-        || TRIANGLE.isType.snippetItem(childList[x])) userIDobj[userIDtitle]["children"][childIndex]["innerHTML"] = childList[x].innerHTML.replace(/&/g, encodeURIComponent("&"));
-
-        userIDobj[userIDtitle]["children"][childIndex]["src"] = childList[x].src;
-        userIDobj[userIDtitle]["children"][childIndex]["children"] = childList[x].querySelector("[triangle-class~=templateItem]") ? 1 : 0;
-        userIDobj[userIDtitle]["children"][childIndex]["triangle-childof"] = indexMap[childList[x].getAttribute("triangle-childof")];
-        /*userIDobj[userIDtitle]["children"][childIndex]["nextSib"] = nextSib && TRIANGLE.isType.templateItem(nextSib) ? userIDtitle + (x + 1) : 0;
-        userIDobj[userIDtitle]["children"][childIndex]["prevSib"] = prevSib && TRIANGLE.isType.templateItem(prevSib) ? indexMap[prevSib.id] : 0;*/
-
+        userIDobj[userIDtitle].items[j]["src"] = userIDList[j].src;
+        // userIDobj[userIDtitle].items[j]["nextSib"] = nextSib && TRIANGLE.isType.templateItem(nextSib) ? nextSib.id : 0;
+        // userIDobj[userIDtitle].items[j]["prevSib"] = prevSib && TRIANGLE.isType.templateItem(prevSib) ? prevSib.id : 0;
         if (nextSib && TRIANGLE.isType.templateItem(nextSib)) {
-          userIDobj[userIDtitle]["children"][childIndex]["nextSib"] = userIDtitle + (x + 1);
+          userIDobj[userIDtitle].items[j]["nextSib"] = nextSib.id;
         } else if (nextSib && TRIANGLE.isType.clearFloat(nextSib)) {
-          userIDobj[userIDtitle]["children"][childIndex]["nextSib"] = nextSib.nextSibling && TRIANGLE.isType.templateItem(nextSib.nextSibling) ? userIDtitle + (x + 1) : 0;
+          userIDobj[userIDtitle].items[j]["nextSib"] = nextSib.nextSibling && TRIANGLE.isType.templateItem(nextSib.nextSibling) ? nextSib.nextSibling.id : 0;
         } else {
-          userIDobj[userIDtitle]["children"][childIndex]["nextSib"] = 0;
+          userIDobj[userIDtitle].items[j]["nextSib"] = 0;
         }
 
         if (prevSib && TRIANGLE.isType.templateItem(prevSib)) {
-          userIDobj[userIDtitle]["children"][childIndex]["prevSib"] = indexMap[prevSib.getAttribute("triangle-index")];
+          userIDobj[userIDtitle].items[j]["prevSib"] = prevSib.id;
         } else if (prevSib && TRIANGLE.isType.clearFloat(prevSib)) {
-          userIDobj[userIDtitle]["children"][childIndex]["prevSib"] = prevSib.previousSibling && TRIANGLE.isType.templateItem(prevSib.previousSibling) ? indexMap[prevSib.getAttribute("triangle-index")] : 0;
+          userIDobj[userIDtitle].items[j]["prevSib"] = prevSib.previousSibling && TRIANGLE.isType.templateItem(prevSib.previousSibling) ? prevSib.previousSibling.id : 0;
         } else {
-          userIDobj[userIDtitle]["children"][childIndex]["prevSib"] = 0;//SHIT
+          userIDobj[userIDtitle].items[j]["prevSib"] = 0;
         }
 
-        //userIDobj[userIDtitle]["children"][childIndex]["isLastChild"] = !nextSib || (nextSib && !TRIANGLE.isType.templateItem(nextSib)) ? 1 : 0;
-        userIDobj[userIDtitle]["isLastChild"] = !nextSib || (nextSib && !TRIANGLE.isType.templateItem(nextSib)) ? 1 : 0;
+        //userIDobj[userIDtitle].items[j]["isLastChild"] = !nextSib || (nextSib && !TRIANGLE.isType.templateItem(nextSib)) ? 1 : 0;
         if (!nextSib) {
-          userIDobj[userIDtitle]["children"][childIndex]["isLastChild"] = 1;
+          userIDobj[userIDtitle].items[j]["isLastChild"] = 1;
         } else if (nextSib && TRIANGLE.isType.clearFloat(nextSib)) {
-          userIDobj[userIDtitle]["children"][childIndex]["isLastChild"] = nextSib.nextSibling && TRIANGLE.isType.templateItem(nextSib.nextSibling) ? 0 : 1;
+          userIDobj[userIDtitle].items[j]["isLastChild"] = nextSib.nextSibling && TRIANGLE.isType.templateItem(nextSib.nextSibling) ? 0 : 1;
         } else {
-          userIDobj[userIDtitle]["children"][childIndex]["isLastChild"] = 0;
+          userIDobj[userIDtitle].items[j]["isLastChild"] = 0;
         }
 
-        //console.log(userIDobj[userIDtitle]["children"][childIndex]);
+        userIDobj[userIDtitle].items[j]["item-align"] = userIDList[j].getAttribute("item-align") || "";
+        userIDobj[userIDtitle].items[j]["hover-style"] = userIDList[j].getAttribute("hover-style") || "";
+        userIDobj[userIDtitle].items[j]["link-to"] = userIDList[j].getAttribute("link-to");
+        userIDobj[userIDtitle].items[j]["onClick"] = userIDList[j].getAttribute("onclick");
+        userIDobj[userIDtitle].items[j]["crop-map"] = userIDList[j].getAttribute("crop-map");
+        userIDobj[userIDtitle].items[j]["crop-ratio"] = userIDList[j].getAttribute("crop-ratio");
+        userIDobj[userIDtitle].items[j]["target"] = userIDList[j].getAttribute("target");
+        userIDobj[userIDtitle].items[j]["form-email"] = userIDList[j].getAttribute("form-email");
+        userIDobj[userIDtitle].items[j]["responsive"] = [userIDList[j].style.width, userIDList[j].getBoundingClientRect().width, userIDList[j].getBoundingClientRect().top];
 
-        userIDobj[userIDtitle]["children"][childIndex]["item-align"] = childList[x].getAttribute("item-align") || "";
-        userIDobj[userIDtitle]["children"][childIndex]["hover-style"] = childList[x].getAttribute("hover-style") || "";
-        userIDobj[userIDtitle]["children"][childIndex]["link-to"] = childList[x].getAttribute("link-to");
-        userIDobj[userIDtitle]["children"][childIndex]["onClick"] = childList[x].getAttribute("onclick");
-        userIDobj[userIDtitle]["children"][childIndex]["crop-map"] = childList[x].getAttribute("crop-map");
-        userIDobj[userIDtitle]["children"][childIndex]["crop-ratio"] = childList[x].getAttribute("crop-ratio");
-        userIDobj[userIDtitle]["children"][childIndex]["target"] = childList[x].getAttribute("target");
-        userIDobj[userIDtitle]["children"][childIndex]["form-email"] = childList[x].getAttribute("form-email");
-        userIDobj[userIDtitle]["children"][childIndex]["responsive"] = [childList[x].style.width, childList[x].getBoundingClientRect().width, childList[x].getBoundingClientRect().top];
+        userIDobj[userIDtitle].items[j]["children"] = userIDList[j].querySelector("[triangle-class~=templateItem]") ? 1 : 0;
+
       }
-
-      /*} else {
-      userIDobj[userIDtitle]["userIDchild"] = true;
-    }*/
   }
 
   var userIDstr = JSON.stringify(userIDobj);
@@ -2020,7 +1951,7 @@ TRIANGLE.loadTemplate = {
       TRIANGLE.options.blankTemplate();
 
       //===============================================================================
-      var content = TRIANGLE.json.decompress(xmlhttp.responseText);
+      var content = xmlhttp.responseText;
       TRIANGLE.json.decode(content);
       //===============================================================================
 
@@ -2046,63 +1977,40 @@ TRIANGLE.loadTemplate = {
   },
 
   updateUserIDs : function() {
-    var params = "instance=" + TRIANGLE.instance;
+
+    var fetchUserIDs = [].slice.call(TRIANGLE.template().querySelectorAll("[triangle-update-user-id]")).map(function(obj) {
+      return obj.getAttribute("triangle-update-user-id");
+    });
+
+    var params = "instance=" + TRIANGLE.instance + "&id_list=" + encodeURIComponent(fetchUserIDs.toString());
 
     AJAX.post("php/read_user_ids.php", params, function(xmlhttp) {
       if (!xmlhttp.responseText) {
         TRIANGLE.loadTemplate.show();
         return;
       }
-      //console.log(xmlhttp.responseText);
-
       var userIDs = JSON.parse(xmlhttp.responseText);
-      var updateUserIDs = TRIANGLE.template().querySelectorAll("[update-user-id]");
-      var updateIDlist = {};
 
-      for (var i = 0; i < updateUserIDs.length; i++) {
-        updateIDlist[updateUserIDs[i].getAttribute("update-user-id")] = i;
-      }
+      for (var userID in userIDs) {
+        // var originalItem = TRIANGLE.iframe().getElementByUserId(userID);
+        var originalItem = TRIANGLE.iframe().querySelector("[triangle-update-user-id=" + userID + "]");
+        var userIDprops = userIDs[userID].items;
 
-      for (var prop in userIDs) {
-        // console.log(prop);
+        for (var i = 0; i < userIDprops.length; i++) {
+          var createItem = document.createElement(userIDprops[i]["tagName"]);
+          createItem.id = userIDprops[i]["id"];
+          createItem = TRIANGLE.json.convertItem(userIDprops[i], createItem);
 
-        var originalItem = false;
-
-        if (!isNaN(updateIDlist[prop])) {
-          originalItem = updateUserIDs[parseInt(updateIDlist[prop])];
-        } else if (TRIANGLE.iframe().getElementByUserId(prop)) {
-          originalItem = TRIANGLE.iframe().getElementByUserId(prop);
-        } else {
-          continue;
-        }
-        /*var originalItem = TRIANGLE.iframe().getElementByUserId(prop);
-        if (!originalItem) continue;*/
-
-        var createItem = document.createElement(userIDs[prop]["tagName"]);
-        createItem.id = userIDs[prop]["id"];
-        createItem.setAttribute("user-id", prop);
-        createItem = TRIANGLE.json.convertItem(userIDs[prop], createItem);
-
-        originalItem.parentNode.insertBefore(createItem, originalItem);
-        originalItem.parentNode.removeChild(originalItem);
-
-        var children = userIDs[prop]["children"];
-
-        for (var child in children) {
-
-          var createChild = document.createElement(children[child]["tagName"]);
-          createChild = TRIANGLE.json.convertItem(children[child], createChild);
-          createChild.id = child;
-          children[child]["user-id"] ? createChild.setAttribute("user-id", children[child]["user-id"]) : null;
-
-          var childof = children[child]["triangle-childof"];
-          if (childof) {
-            TRIANGLE.iframe().getElementById(childof).appendChild(createChild);
+          if (i === 0) {
+            createItem.setAttribute("user-id", userID);
+            originalItem.parentNode.insertBefore(createItem, originalItem);
+            originalItem.parentNode.removeChild(originalItem);
           } else {
-            createChild = null;
+            TRIANGLE.iframe().getElementById(userIDprops[i]["parentId"]).appendChild(createItem);
           }
+
+          TRIANGLE.updateTemplateItems();
         }
-        TRIANGLE.updateTemplateItems();
       }
 
       TRIANGLE.updateTemplateItems();
@@ -2202,19 +2110,26 @@ TRIANGLE.json = {
     template.styleTag = TRIANGLE.developer.styleTagContent;
     template.scriptTag = TRIANGLE.developer.scriptTagContent;
     template.imageList = {"itemNums":[], "paths":[], "dimensions":[]};
-    template.cssStyles = "";
-    for (var breakpoint in TRIANGLE.styleSheets.breakpointMap) {
-      if (TRIANGLE.styleSheets.breakpointMap.hasOwnProperty(breakpoint))
-        template.cssStyles += TRIANGLE.styleSheets[breakpoint].cssText;
-    }
+    // template.cssStyles = "";
+    // for (var breakpoint in TRIANGLE.styleSheets.breakpointMap) {
+    //   // console.log(TRIANGLE.styleSheets[breakpoint].cssText);
+    //   if (TRIANGLE.styleSheets.breakpointMap.hasOwnProperty(breakpoint))
+    //     template.cssStyles += TRIANGLE.styleSheets[breakpoint].cssText;
+    // }
 
     template.items = [];
-    var skipItems = [];
+    var masterItemChildren = [];
 
     for (var i = 0; i < TRIANGLE.templateItems.length; i++) {
       var sv_item = new TRIANGLE.TemplateItem(i);
-      if (skipItems.indexOf(sv_item.index) > -1) continue;
       var triangleIndex = sv_item.index;
+
+      if (masterItemChildren.indexOf(triangleIndex) > -1) {
+        template.items[triangleIndex] = {
+          masterItemChild: true
+        };
+        continue;
+      }
 
       if (sv_item.userID) {
         template.items[triangleIndex] = {
@@ -2227,13 +2142,12 @@ TRIANGLE.json = {
 
         var triangleIndexChildren = sv_item.objRef.querySelectorAll("[triangle-class~=templateItem]");
         for (var x = 0; x < triangleIndexChildren.length; x++) {
-          skipItems.push(parseInt(triangleIndexChildren[x].getAttribute("triangle-index")));
+          masterItemChildren.push(parseInt(triangleIndexChildren[x].getAttribute("triangle-index")));
         }
         continue;
       }
 
       template.items[triangleIndex] = {};
-
       template.items[triangleIndex]["triangle-index"] = sv_item.index;
       template.items[triangleIndex]["user-class"] = sv_item.userClass;
       template.items[triangleIndex]["triangle-class"] = sv_item.triangleClass;
@@ -2243,6 +2157,20 @@ TRIANGLE.json = {
       template.items[triangleIndex]["name"] = sv_item.objRef.getAttribute("name");
       // template.items[triangleIndex]["style"] = sv_item.objRef.style.cssText;
       template.items[triangleIndex]["clearFloat"] = TRIANGLE.isType.clearFloat(sv_item.objRef.nextSibling) ? 1 : 0;
+
+      template.items[triangleIndex].breakpoints = {};
+      for (var breakpoint in TRIANGLE.styleSheets.breakpointMap) {
+        if (TRIANGLE.styleSheets.breakpointMap.hasOwnProperty(breakpoint)) {
+          var getRule = TRIANGLE.styleSheets.getIndexBySelector(
+            TRIANGLE.styleSheets[breakpoint].cssRules, "#" + sv_item.id
+          );
+          if (TRIANGLE.styleSheets[breakpoint].cssRules[getRule]) {
+            template.items[triangleIndex].breakpoints[breakpoint] = TRIANGLE.styleSheets[breakpoint].cssRules[getRule].cssText
+          } else {
+            template.items[triangleIndex].breakpoints[breakpoint] = "#" + sv_item.id + " { }";
+          }
+        }
+      }
 
       if (TRIANGLE.isType.textBox(sv_item.objRef)
       || TRIANGLE.isType.imageItem(sv_item.objRef)
@@ -2293,34 +2221,26 @@ TRIANGLE.json = {
 
     var items = templateFile.items;
 
-    for (var prop in items) {
-      if (typeof items[prop] == "string") { // user-ids are a string rather than an object
-        var split = items[prop].split(' '); // string is in the form "itemID parentID"
+    for (var i = 0; i < items.length; i++) {
+      if (items[i].masterItem) {
         var createItem = document.createElement("div");
-        createItem.setAttribute("update-user-id", split[0]);
-        if (split[1]) {
-          TRIANGLE.iframe().getTriangleIndex(split[1]).appendChild(createItem);
+        createItem.setAttribute("triangle-update-user-id", items[i].masterID);
+        if (items[i].masterParent) {
+          TRIANGLE.iframe().getTriangleIndex(items[i].masterParent).appendChild(createItem);
         } else {
           TRIANGLE.template().appendChild(createItem);
         }
         continue;
-      } else if (items[prop].masterItem) {
-        var createItem = document.createElement("div");
-        createItem.setAttribute("update-user-id", items[prop].masterID);
-        if (items[prop].masterParent) {
-          TRIANGLE.iframe().getTriangleIndex(items[prop].masterParent).appendChild(createItem);
-        } else {
-          TRIANGLE.template().appendChild(createItem);
-        }
+      } else if (items[i].masterItemChild) {
         continue;
       }
 
-      var createItem = document.createElement(items[prop]["tagName"]);
-      createItem.setAttribute("triangle-index", prop);
-      if (items[prop]["user-id"]) createItem.setAttribute("user-id", items[prop]["user-id"]);
-      createItem = TRIANGLE.json.convertItem(items[prop], createItem);
+      var createItem = document.createElement(items[i]["tagName"]);
+      createItem.setAttribute("triangle-index", i);
+      if (items[i]["user-id"]) createItem.setAttribute("user-id", items[i]["user-id"]);
+      createItem = TRIANGLE.json.convertItem(items[i], createItem);
 
-      var childof = items[prop]["triangle-childof"];
+      var childof = items[i]["triangle-childof"];
       if (childof && TRIANGLE.iframe().getTriangleIndex(childof)) {
         TRIANGLE.iframe().getTriangleIndex(childof).appendChild(createItem);
       } else if (childof && !TRIANGLE.iframe().getTriangleIndex(childof)) {
@@ -2366,8 +2286,8 @@ TRIANGLE.json = {
   },
 
   convertTemplateData : function(templateData) {
-    if (templateData.cssStyles) TRIANGLE.iframe().getElementById("templateStyles").innerHTML = templateData.cssStyles;
-    TRIANGLE.styleSheets.updateReferences();
+    // if (templateData.cssStyles) TRIANGLE.iframe().getElementById("templateStyles").innerHTML = templateData.cssStyles;
+    // TRIANGLE.styleSheets.updateReferences();
     TRIANGLE.iframe().getElementById("hoverData").innerHTML = templateData.hoverData;
     TRIANGLE.iframe().getElementById("hoverItems").innerHTML = templateData.hoverItems;
     TRIANGLE.iframe().getElementById("animationData").innerHTML = templateData.hoverItems;
@@ -2399,6 +2319,10 @@ TRIANGLE.json = {
   },
 
   convertItem : function(itemSrc, createItem) {
+    for (var breakpoint in TRIANGLE.styleSheets.breakpointMap) {
+      if (TRIANGLE.styleSheets.breakpointMap.hasOwnProperty(breakpoint))
+        TRIANGLE.styleSheets[breakpoint].insertRule(itemSrc.breakpoints[breakpoint]);
+    }
     createItem.style.cssText = itemSrc["style"];
     createItem.innerHTML = itemSrc["innerHTML"] ? itemSrc["innerHTML"].replace(/\%26amp;/g, "&") : "";
     createItem.src = itemSrc["src"] || "";
@@ -2417,142 +2341,7 @@ TRIANGLE.json = {
     itemSrc["target"] ? createItem.setAttribute("target", itemSrc["target"]) : null;
     itemSrc["form-email"] ? createItem.setAttribute("form-email", itemSrc["form-email"]) : null;
     return createItem;
-  },
-
-  // converts JSON to NVP in this format: name:value;name:value;name:value;
-  toNVP : function(str) {
-    var dataObj = JSON.parse(str);
-    var dataStr = "";
-    for (var prop in dataObj) {
-      dataStr += prop + ":" + dataObj[prop] + ";";
-    }
-    //dataStr = dataStr.slice(0, -1);
-    return dataStr;
-  },
-
-  // converts NVP to JSON
-  readNVP : function(str) {
-    var dataArr = str.split(";");
-    var dataObj = {};
-    for (var i = 0; i < dataArr.length; i++) {
-      var nvp = dataArr[i].split(":");
-      dataObj[nvp[0]] = nvp[1];
-    }
-    var dataStr = JSON.stringify(dataObj);
-    return dataStr;
-  },
-
-
-  compress : function(json) {
-    json = JSON.parse(json);
-
-    for (var itemID in json.items) {
-      if (typeof json.items[itemID] == "string") continue;
-
-      for (var cssStyle in TRIANGLE.json.compressionMap) {
-        json.items[itemID]["style"] = json.items[itemID]["style"].replace(cssStyle + ':', "%" + TRIANGLE.json.compressionMap[cssStyle]);
-      }
-
-      var itemStyle = json.items[itemID]["style"];
-
-      var splitItemStyle = itemStyle.split(';');
-      for (var i = 0; i < splitItemStyle.length; i++) {
-        splitItemStyle[i] = splitItemStyle[i].trim();
-      }
-
-      for (var findCopy in json.items) {
-        if (json.items[itemID] === json.items[findCopy]) break;
-
-        var copyStyle = json.items[findCopy]["style"];
-        if (copyStyle) {
-          var splitCopyStyle = copyStyle.split(';');
-          for (var i = 0; i < splitCopyStyle.length; i++) {
-            splitCopyStyle[i] = splitCopyStyle[i].trim();
-          }
-
-          if (splitItemStyle.sort().toString() === splitCopyStyle.sort().toString()) {
-            itemStyle = findCopy;
-            break;
-          }
-        }
-      }
-      json.items[itemID]["style"] = itemStyle;
-    }
-
-    for (var itemID in json.responsiveItems) {
-      var itemResp = json.responsiveItems[itemID];
-
-      for (var findCopy in json.responsiveItems) {
-        if (json.responsiveItems[itemID] === json.responsiveItems[findCopy]) break;
-
-        var copyResp = json.responsiveItems[findCopy];
-        if (JSON.stringify(itemResp) === JSON.stringify(copyResp)) {
-          itemResp = findCopy;
-          break;
-        }
-      }
-
-      json.responsiveItems[itemID] = itemResp
-    }
-
-    return JSON.stringify(json);
-  },
-
-  decompress : function(json) {
-    json = JSON.parse(json);
-
-    for (var itemID in json.items) {
-      if (typeof json.items[itemID] == "string" || json.items[itemID].masterItem) continue;
-      var itemStyle = json.items[itemID]["style"];
-      if (json.items[itemStyle]) {
-        json.items[itemID]["style"] = json.items[itemStyle]["style"];
-
-        for (var cssStyle in TRIANGLE.json.compressionMap) {
-          json.items[itemID]["style"] = json.items[itemID]["style"].replace("%" + TRIANGLE.json.compressionMap[cssStyle], cssStyle + ':');
-        }
-      }
-
-    }
-
-    return JSON.stringify(json);
-  },
-
-  // update server-side map too
-  compressionMap : {
-    "background-color" : "bC",
-    "background-image" : "bI",
-    "background-size" : "bSz",
-    "background" : "bg",
-    "min-height" : "mH",
-    "height" : "h",
-    "max-width" : "mW",
-    "width" : "w",
-    "display" : "d",
-    "position" : "po",
-    "float" : "cF",
-    "overflow" : "o",
-    "vertical-align" : "vA",
-    "padding" : "p",
-    "margin" : "m",
-    "box-shadow" : "bS",
-    "border-radius" : "bR",
-    "border-width" : "bW",
-    "border" : "b",
-    "left" : "L",
-    "right" : "R",
-    "top" : "T",
-    "bottom" : "B",
-    "color" : "c",
-    "font-size" : "fS",
-    "line-height" : "lH",
-    "text-align" : "tA",
-    "font-family" : "fF",
-    "font-weight" : "fW",
-    "text-decoration" : "tD",
-    "text-decoration-color" : "tDc"
   }
-
-
 
 } // end TRIANGLE.json
 
@@ -2896,7 +2685,7 @@ TRIANGLE.options = {
 
       var newChild = document.createElement("div");
       newChild.id = TRIANGLE.randomID();
-      newChild.setAttribute("triangle-class", "templateItem childItem");
+      newChild.setAttribute("triangle-class", "templateItem");
       var newRule = TRIANGLE.styleSheets.formatCSSRule("#" + newChild.id, [
         "display:block;",
         "background-color:#BFD7EA;",
@@ -4728,7 +4517,7 @@ TRIANGLE.images = {
           if (TRIANGLE.isType.containsNbsp(TRIANGLE.item.objRef)) TRIANGLE.stripNbsp(TRIANGLE.item.objRef);
 
           var imgContainer = document.createElement("div");
-          imgContainer.setAttribute("triangle-class", "templateItem childItem imageItem");
+          imgContainer.setAttribute("triangle-class", "templateItem imageItem");
           imgContainer.style.display = "inline-block";
           imgContainer.style.height = "auto";
           // imgContainer.style.minHeight = "auto";
@@ -4767,7 +4556,7 @@ TRIANGLE.images = {
 
       } else {
         var imgContainer = document.createElement("div");
-        imgContainer.setAttribute("triangle-class", "templateItem childItem imageItem");
+        imgContainer.setAttribute("triangle-class", "templateItem imageItem");
         imgContainer.style.display = "inline-block";
         imgContainer.style.height = "auto";
         // imgContainer.style.minHeight = "auto";
@@ -5337,7 +5126,7 @@ TRIANGLE.library = {
     AJAX.get("php/insert_premade_template.php", params, function(xmlhttp) {
       //console.log(xmlhttp.responseText);
       TRIANGLE.options.blankTemplate();
-      var content = TRIANGLE.json.decompress(xmlhttp.responseText);
+      var content = xmlhttp.responseText;
       TRIANGLE.json.decode(content);
       TRIANGLE.library.loadUserIDs();
       TRIANGLE.updateTemplateItems();
@@ -5390,8 +5179,19 @@ TRIANGLE.library = {
 
     var params = "instance=" + TRIANGLE.instance + "&name=" + name;
 
+    var createItem = document.createElement("div");
+    createItem.setAttribute("triangle-update-user-id", name);
+    if (TRIANGLE.item) {
+      TRIANGLE.item.append(createItem);
+    } else {
+      TRIANGLE.template().appendChild(createItem);
+    }
+    TRIANGLE.loadTemplate.updateUserIDs();
+
+    return;
+
     AJAX.get("php/insert_user_id.php", params, function(xmlhttp) {
-      //console.log(xmlhttp.responseText);
+      console.log(xmlhttp.responseText);
       var itemContent = TRIANGLE.json.toHTML(xmlhttp.responseText);
       var checkSameClass = TRIANGLE.iframe().getElementByUserId(name);
       if (!TRIANGLE.item) {
@@ -5606,7 +5406,7 @@ TRIANGLE.developer = {
     if (snippet && (/[^\s]+/g).test(snippet)) {
       if (TRIANGLE.item && !TRIANGLE.isType.bannedInsertion(TRIANGLE.item.objRef)) {
         var container = document.createElement("div");
-        container.setAttribute("triangle-class", "templateItem childItem snippetItem");
+        container.setAttribute("triangle-class", "templateItem snippetItem");
         container.style.backgroundColor = "inherit";
         container.style.minHeight = "1px";
         container.style.height = "auto";
@@ -5618,7 +5418,7 @@ TRIANGLE.developer = {
         TRIANGLE.item.objRef.innerHTML = snippet;
       } else {
         var container = document.createElement("div");
-        container.setAttribute("triangle-class", "templateItem childItem snippetItem");
+        container.setAttribute("triangle-class", "templateItem snippetItem");
         container.style.backgroundColor = "inherit";
         container.style.minHeight = "1px";
         container.style.height = "auto";
@@ -7002,7 +6802,7 @@ TRIANGLE.isType = {
     }
   },
 
-  childItem : function isChildItem(obj) {
+  childItem : function(obj) {
     if (obj) {
       if ((/childItem/g).test(obj.getAttribute("triangle-class"))) {
         return true;
@@ -7012,7 +6812,7 @@ TRIANGLE.isType = {
     }
   },
 
-  textBox : function isTextBox(obj) {
+  textBox : function(obj) {
     if (obj) {
       if ((/textbox/g).test(obj.getAttribute("triangle-class"))) {
         return true;
@@ -7167,11 +6967,10 @@ TRIANGLE.getUnit = function getUnit(str) {
 }
 
 TRIANGLE.checkPadding = function checkPadding(obj) {
-  return;
   if (  (parseInt(obj.style.paddingLeft) === 0 || !obj.style.paddingLeft)
   &&    (parseInt(obj.style.paddingRight) === 0 || !obj.style.paddingRight)
   &&    (parseInt(obj.style.paddingTop) === 0 || !obj.style.paddingTop)
-  &&    (parseInt(obj.style.paddingBottom) === 0 || !obj.style.paddingBottom)  ) {
+  &&    (parseInt(obj.style.paddingBottom) === 0 || !obj.style.paddingBottom)  && false) {
     obj.style.padding = "15px";
   }
 }
@@ -7599,7 +7398,7 @@ TRIANGLE.forms = {
     var newForm = document.createElement("form");
     //newForm.setAttribute("method", "post");
     //newForm.setAttribute("enctype", "application/x-www-form-urlencoded");
-    newForm.setAttribute("triangle-class", "templateItem childItem");
+    newForm.setAttribute("triangle-class", "templateItem");
     newForm.style.backgroundColor = "inherit";
     // newForm.style.minHeight = "100px";
     newForm.style.height = "auto";
@@ -7652,7 +7451,7 @@ TRIANGLE.forms = {
     }
     TRIANGLE.text.insertTextBox("Field Label");
     var newField = document.createElement("div");
-    newField.setAttribute("triangle-class", "templateItem childItem formField");
+    newField.setAttribute("triangle-class", "templateItem formField");
     newField.style.backgroundColor = "white";
     newField.style.minHeight = "24px";
     newField.style.height = "24px";
@@ -7695,8 +7494,8 @@ TRIANGLE.forms = {
     submitBtn.setAttribute("type", "button");
     submitBtn.setAttribute("value", "Submit");*/
     var submitBtn = document.createElement("button");
-    submitBtn.setAttribute("triangle-class", "templateItem childItem");
-    //submitBtn.innerHTML = "<div class=\"templateItem childItem textBox\">submit</div>";
+    submitBtn.setAttribute("triangle-class", "templateItem");
+    //submitBtn.innerHTML = "<div class=\"templateItem textBox\">submit</div>";
     submitBtn.innerHTML = "Submit";
     submitBtn.style.display = "block";
     submitBtn.style.margin = "0 auto";

@@ -40,11 +40,8 @@ function formatCode($data, $templateName, $pageName, $compress = false) {
   if ($compress) {
     $CSSinclude = "<style><css></style>";
   } else {
-    // $CSSinclude = "<!--========== CSS Include: =========-->\n"
-    //             . "<link rel=\"stylesheet\" href=\"" . $pageName .".css\" type=\"text/css\" media=\"screen\">\n"
-    //             . "<!--=================================-->\n\n";
+    // "<link rel=\"stylesheet\" href=\"" . $pageName .".css\" type=\"text/css\" media=\"screen\">\n"
     $CSSinclude = "<style><css></style>";
-    // $CSSinclude = "<link rel=\"stylesheet\" href=\"" . $pageName .".css\" type=\"text/css\" media=\"screen\">\n\n";
   }
 
   // PHP 7 logic
@@ -87,42 +84,81 @@ function formatCode($data, $templateName, $pageName, $compress = false) {
     $triangle_index = $item_array_keys[$x];
     $item = $data["items"][$triangle_index];
 
+    if ($item["masterItemChild"]) continue;
+
     $master_item_parent = false;
     if ($item["masterItem"]) {
       $master_item_id = $item["masterID"];
       $master_item_parent = $item["masterParent"];
       $master_item_str = db_query('SELECT content FROM user_ids WHERE username = ? AND template = ? AND user_id = ?', [$username, $templateName, $master_item_id])["content"];
-      $item = json_decode($master_item_str, true)[$master_item_id];
+      $master_item_arr = json_decode($master_item_str, true)["items"];
 
-      $item_array_keys[$x] = $master_item_id;
-      $data["responsiveItems"][$master_item_id] = $item["responsive"];
-      $track = $x;
-      foreach($item["children"] as $child => $childProps) {
-        $data["items"][$child] = $childProps;
-        $data["responsiveItems"][$child] = $childProps["responsive"];
-        $data["items"][$child]["isMasterChild"] = true;
-        $new_keys = [];
-        $done = false;
-        for ($y = 0; $y < $len; $y++) {
-          if ($done) {
-            $new_keys[$y + 1] = $item_array_keys[$y];
-          } else {
-            $new_keys[$y] = $item_array_keys[$y];
-          }
-          if ($y === $track && !$done) {
-            $new_keys[++$track] = $child; // WTF
-            $done = true;
-          }
+      // $master_item_first = array_shift($master_item_arr);
+      // $item_array_keys[$x] = $master_item_first["id"];
+      // if ($master_item_first["parentId"] == "template") $item_array_keys[$x]["parentId"] = "";
+      // array_splice($item_array_keys, $x + 1, 0, $master_item_arr);
+      // $len += count($master_item_arr);
+      //
+      // for ($y = 0; $y < count($master_item_arr); $y++) {
+      //     $data["items"][$master_item_arr[$y]["id"]] = $master_item_arr[$y];
+      //     $data["items"][$master_item_arr[$y]["id"]]["triangle-childof"] = $master_item_arr[$y]["parentId"];
+      //     $data["responsiveItems"][$master_item_arr[$y]["id"]] = $master_item_arr[$y]["responsive"];
+      // }
+
+      for ($y = 0; $y < count($master_item_arr); $y++) {
+        if ($y === 0) {
+          $item = $master_item_arr[0];
+          // $item_array_keys[$x] = $master_item_arr[0]["id"];
+          if ($master_item_arr[0]["parentId"] === "template") $master_item_arr[0]["parentId"] = "";
+        } else {
+          // var_dump($item_array_keys);
+          // array_splice($item_array_keys, $x + $y, 0, $master_item_arr[$y]);
+          $item_array_keys[] = count($item_array_keys);
+          // array_splice($data["items"], $x + $y, 0, $master_item_arr[$y]["id"]);
+          $len++;
         }
-        $item_array_keys = $new_keys;
-        $len++;
-      }
+        // $data["items"][$master_item_arr[$y]["id"]] = $master_item_arr[$y];
+        // $data["items"][$master_item_arr[$y]["id"]]["triangle-childof"] = $master_item_arr[$y]["parentId"];
+        // $data["responsiveItems"][$master_item_arr[$y]["id"]] = $master_item_arr[$y]["responsive"];
 
-      $data["items"][$master_item_id] = $item;
-      $data["items"][$master_item_id]["children"] = !empty($data["items"][$triangle_index]["children"]) ? 1 : 0;
-      unset($data["items"][$triangle_index]);
-      $triangle_index = $master_item_id;
+      }
+      array_shift($master_item_arr);
+      array_splice($data["items"], $x + 1, 0, $master_item_arr);
+
+      // $track = $x;
+      // foreach($item["children"] as $child => $childProps) {
+      //   $data["items"][$child] = $childProps;
+      //   $data["responsiveItems"][$child] = $childProps["responsive"];
+      //   $data["items"][$child]["isMasterChild"] = true;
+      //   $new_keys = [];
+      //   $done = false;
+      //   for ($y = 0; $y < $len; $y++) {
+      //     if ($done) {
+      //       $new_keys[$y + 1] = $item_array_keys[$y];
+      //     } else {
+      //       $new_keys[$y] = $item_array_keys[$y];
+      //     }
+      //     if ($y === $track && !$done) {
+      //       $new_keys[++$track] = $child; // WTF
+      //       $done = true;
+      //     }
+      //   }
+      //   $item_array_keys = $new_keys;
+      //   $len++;
+      // }
+      //
+      // $data["items"][$master_item_id] = $item;
+      // $data["items"][$master_item_id]["children"] = !empty($data["items"][$triangle_index]["children"]) ? 1 : 0;
+      // unset($data["items"][$triangle_index]);
+      // $triangle_index = $master_item_id;
     }
+    // echo "<pre>";
+    // print_r(array_keys($data["items"]));
+    // // echo $item["id"] . "<br />$x<br />";
+    // print_r($item);
+    // echo "</pre>";
+
+    continue;
 
     $tag = strtolower($item["tagName"]);
     $id = null;
@@ -134,17 +170,20 @@ function formatCode($data, $templateName, $pageName, $compress = false) {
       $class = " class=\"" . $item["user-class"] . "\"";
       $userClass = true;
     }
-    if (!empty($item["user-id"])) {
-      $itemTitle = $item["user-id"];
-      $id = " id=\"" . $item["user-id"] . "\"";
-      $userID = true;
+    // if (!empty($item["user-id"])) {
+    //   $itemTitle = $item["user-id"];
+    //   $id = " id=\"" . $item["user-id"] . "\"";
+    //   $userID = true;
+    // }
+    if (!empty($item["id"])) {
+      $itemTitle = $item["id"];
+      $id = " id=\"" . $itemTitle . "\"";
     }
     if ($item["isMasterChild"]) {
       $itemTitle = $triangle_index;
       $id = " id=\"" . $itemTitle . "\"";
       $userID = false;
-    }
-    if (!$item["isMasterChild"] && empty($id) && empty($class)) {
+    } else if (empty($id) && empty($class)) {
       $itemTitle = "item" . $triangle_index;
       $id = " id=\"" . $itemTitle . "\"";
       $userID = false;
@@ -597,9 +636,14 @@ function formatCode($data, $templateName, $pageName, $compress = false) {
 
 //=======================================================================
 
-/*
-function isEmpty() returns an empty string if the variable is empty, or returns the variable in a new format if it's not empty
-*/
+function createItem($itemJSON) {
+  $tag = $itemJSON["tagName"];
+  $id = $itemJSON["id"];
+  return [
+    "openTag" => "<$tag id=\"$id\">",
+    "closingTag" => "</$tag>";
+  ];
+}
 
 function isEmpty($style, $value) {
   if (empty($value)) {

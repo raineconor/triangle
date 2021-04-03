@@ -67,10 +67,10 @@ body {
   $code[1] = preg_replace("@url\(\"[^\"]*\/(images\/[^\"]+)\"\)@", "url(\"$1\")", $code[1]);
 ?>
 
-<div id="editor1"><?php echo htmlentities($code[0]); ?></div><!--
+<pre id="editor1"><?php echo htmlentities($code[0]); ?></pre><!--
 
 --><?php
-if (!$compress) echo "<div id='editor2'>" . htmlentities($code[1]) . "</div>";
+if (!$compress) echo "<pre id='editor2'>" . htmlentities($code[1]) . "</pre>";
 ?>
 <script src="../ace/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript">
