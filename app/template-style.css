@@ -199,6 +199,15 @@ body {
   left:0;*/
 }
 
+#copyright {
+  font-size:10px;
+  color:lightgray;
+  bottom:0;
+  position:absolute;
+  display:block;
+  width:100%;
+}
+
 .clearfix::after {
   content: "";
   clear: both;
