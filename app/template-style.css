@@ -162,11 +162,12 @@ body {
   min-height:100px;
 }
 
-/* .templateItem:empty::after {
-  content:"This element is empty";
+.templateItem:empty::after,
+[triangle-class~=templateItem]:empty:not([triangle-class~=textbox])::after {
+  content:"This element is empty. Insert a textbox, image, or other item.";
   padding:15px;
   color:gray;
-} */
+}
 
 .textBox, [triangle-class~=textbox] {
   -webkit-touch-callout: text;
@@ -202,8 +203,9 @@ body {
 #copyright {
   font-size:10px;
   color:lightgray;
-  bottom:0;
-  position:absolute;
+  /* bottom:0;
+  position:absolute; */
+  margin-top:30px;
   display:block;
   width:100%;
 }

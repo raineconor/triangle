@@ -9,7 +9,7 @@
   if ($instance) {
     $templateName = $_SESSION["currentTemplate"][$instance];
     $pageName = $_SESSION["currentPage"][$instance];
-    $url = $usernameDir . "/export/" . $templateName . "/" . $pageName . ".php";
+    $url = $usernameDir . "/export/" . $templateName . "/" . $pageName . ".html";
 
     if (isset($templateName) && isset($pageName)) {
       header("Location: " . $url);

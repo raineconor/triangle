@@ -56,6 +56,7 @@ body {
 #editor1, #editor2 {
  width:50%;
  height:100vh;
+ margin:0;
 }
 </style>
 </head>

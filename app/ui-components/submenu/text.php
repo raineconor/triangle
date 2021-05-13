@@ -25,8 +25,15 @@
       <option triangle-font-category="serif" google-font="false" style="font-family:'Garamond';">Garamond</option>
       <?php include "google_font_options.html"; ?>
     </select><!-- <input type="number" id="fontSize" min="0" onChange="TRIANGLE.text.changeFontSize();">
-    --><input type="text" id="fontSize" onChange="TRIANGLE.text.changeFontSize();">
+    -->
+    <span class="subMenuOptionLabel">Size</span>
+    <input type="text" id="fontSize" onChange="TRIANGLE.text.changeFontSize();">
   </div>
+
+  <!-- <div class="subMenuOption">
+    <span class="subMenuOptionLabel">Size</span>
+    <input type="text" id="fontSize" onChange="TRIANGLE.text.changeFontSize();">
+  </div> -->
 
   <div class="subMenuOption">
     <!-- <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-fonts" viewBox="0 0 16 16">

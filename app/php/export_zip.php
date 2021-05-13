@@ -40,7 +40,7 @@
     $dir = opendir($filedest);
     while ( false !== ( $file = readdir($dir) ) ) {
       $filename = explode('.', $file);
-      if (( $file != '.' ) && ( $file != '..' ) && count($filename) === 2 && ( $filename[1] === "php" )) {
+      if (( $file != '.' ) && ( $file != '..' ) && count($filename) === 2 && ( $filename[1] === "html" )) {
         if ( !is_dir($filedest . '/' . $file) ) {
           $filename = $filename[0];
           $existingPages[] = $filename;
@@ -66,6 +66,9 @@
   $imageDest = $filedest . '/images/';
   if (!file_exists($imageDest)) mkdir($imageDest);
 
+  $cssDest = $filedest . '/css/';
+  if (!file_exists($cssDest)) mkdir($cssDest);
+
   $pages = db_query_all('SELECT * FROM templates WHERE username = ? AND template = ?', [$username, $templateName]);
   $resetChanges = [];
   $len = count($pages);
@@ -75,7 +78,7 @@
 
     if (isset($existingPages[$pageName])) unset($existingPages[$pageName]);
     if (isset($readChanges) && isset($readChanges[$pageName])
-    && boolval(strpos(file_get_contents($filedest . "/" . $pageName . ".php"), "\n")) !== $compress) {
+    && boolval(strpos(file_get_contents($filedest . "/" . $pageName . ".html"), "\n")) !== $compress) {
       if (!boolval($readChanges[$pageName])) continue;
     }
     $resetChanges[] = [$username, $templateName, $pageName];
@@ -137,8 +140,8 @@
     $code[0] = preg_replace("@(src|lazyload)\=\"[^\"]*\/(images\/[^\"]+)\"@", "$1=\"$2\"", $code[0]);
     $code[1] = preg_replace("@url\(\"[^\"]*\/(images\/[^\"]+)\"\)@", "url(\"$1\")", $code[1]);
 
-    file_put_contents($filedest . "/" . $pageName . ".php", $code[0]);
-    if (!$compress) file_put_contents($filedest . "/" . $pageName . ".css", $code[1]);
+    file_put_contents($filedest . "/" . $pageName . ".html", $code[0]);
+    if (!$compress) file_put_contents($filedest . "/css/" . $pageName . ".css", $code[1]);
   }
 
   $unusedPages = $existingPages ? array_flip($existingPages) : [];
@@ -146,6 +149,7 @@
     if (!preg_match("/\w+-\w+form/", $unusedPage)) {
       $pagePath = $filedest . "/" . $unusedPage;
       if (file_exists($pagePath . '.php')) unlink($pagePath . '.php');
+      if (file_exists($pagePath . '.html')) unlink($pagePath . '.html');
       if (file_exists($pagePath . '.css')) unlink($pagePath . '.css');
     }
   }

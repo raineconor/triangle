@@ -188,8 +188,11 @@ hr {
 #menu select#fontType {
   width:150px;
 }
+#menu select#display {
+  width:110px;
+}
 #menu input#fontSize {
-  border-left:none;
+  /* border-left:none; */
   margin:0;
   width:50px;
 }

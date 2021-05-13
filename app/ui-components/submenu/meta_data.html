@@ -1,27 +1,27 @@
 <div class="subMenu clearfix" id="displayMetaData">
-  <div class="subMenuOption">
+  <div class="subMenuOption" style="width:32.33vw;">
     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
       <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456l-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
       <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
     </svg>
     <span class="subMenuOptionLabel">Page Title</span>
-    <input type="text" id="metaTitle" onKeyUp="TRIANGLE.metaData.title = this.value;" no-clear="true" />
+    <input type="text" id="metaTitle" onKeyUp="TRIANGLE.metaData.title = this.value;" no-clear="true" style="width:calc(100% - 9em);" />
   </div>
 
-  <div class="subMenuOption" id="metaKeywordsMenu">
+  <div class="subMenuOption" id="metaKeywordsMenu" style="width:32.33vw;">
     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
       <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
     </svg>
     <span class="subMenuOptionLabel">Keywords</span>
-    <input type="text" id="metaKeywords" onKeyUp="TRIANGLE.metaData.commaSplit(this);TRIANGLE.metaData.keywords = this.value;" onfocusout="TRIANGLE.metaData.fixCommas(this);" no-clear="true">
+    <input type="text" id="metaKeywords" onKeyUp="TRIANGLE.metaData.commaSplit(this);TRIANGLE.metaData.keywords = this.value;" onfocusout="TRIANGLE.metaData.fixCommas(this);" no-clear="true" style="width:calc(100% - 9em);" />
   </div>
 
-  <div class="subMenuOption" id="metaDescMenu">
+  <div class="subMenuOption" id="metaDescMenu" style="width:32.33vw;">
     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-file-earmark-text" viewBox="0 0 16 16">
       <path d="M5.5 7a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5zM5 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5z"/>
       <path d="M9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.5L9.5 0zm0 1v2A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5z"/>
     </svg>
     <span class="subMenuOptionLabel">Description</span>
-    <input type="text" id="metaDescription" onKeyUp="TRIANGLE.metaData.description = this.value;" no-clear="true">
+    <input type="text" id="metaDescription" onKeyUp="TRIANGLE.metaData.description = this.value;" no-clear="true" style="width:calc(100% - 9em);" />
   </div>
 </div>
