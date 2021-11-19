@@ -6,7 +6,6 @@ require "responsive.php";
 require_once "db_query.php";
 
 
-// this function is called by export_zip.php
 function formatCode($data, $templateName, $pageName, $compress = false) {
 
   global $username;
@@ -122,7 +121,7 @@ function formatCode($data, $templateName, $pageName, $compress = false) {
 
   if (preg_replace("/\s+/", "", $scriptTag) == "<scripttype=\"text/javascript\"></script>") $scriptTag = "";
 
-  if ($imgCount > 5) {
+  if ($imgCount > 5 && false) {
     $imgCount = "<script type=\"text/javascript\">\n" . file_get_contents(__DIR__ . "/../resources/lazyload/lazyload.js") . "\n</script>\n\n";
     $imgURI = 'data:image/gif;base64,R0lGODlhQABAAIAAAMXFxQAAACH5BAAAAAAALAAAAABAAEAAAAJFhI+py+0Po5y02ouz3rz7D4biSJbmiabqyrbuC8fyTNf2jef6zvf+DwwKh8Si8YhMKpfMpvMJjUqn1Kr1is1qt9yuF1AAADs=';
     //$itemTags = str_replace_array("src=", "src=\\\"$imgURI\\\" lazyload=", $itemTags);

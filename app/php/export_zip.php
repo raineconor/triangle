@@ -90,7 +90,7 @@
     $croppedImgPaths = cropImages($croppedImages, $imageDest);
     $code = formatCode($JSON_arr, $templateName, $pageName, $compress, $croppedImgPaths);
 
-    preg_match_all("@(src|lazyload)\=\"([^\"]*\/images\/[^\"]+)\"@", $code[0], $HTMLimages); // this can be made much faster if a list of images are stored with the template
+    // preg_match_all("@(src|lazyload)\=\"([^\"]*\/images\/[^\"]+)\"@", $code[0], $HTMLimages); // this can be made faster if a list of images are stored with the template
     /*$HTMLimages[2] = array_diff($HTMLimages[2], $croppedImgPaths["new"]);
     var_dump($HTMLimages[2]);
     var_dump($croppedImgPaths["new"]);*/
@@ -99,7 +99,7 @@
     //var_dump($croppedImgPaths["new"]);
     for ($y = 0; $y < $len_y; $y++) {
       if ($_SERVER["HTTP_HOST"] === "trianglecms.com")
-      $HTMLimages[2][$y] = preg_replace("/^(http:\/\/localhost)/",
+      $HTMLimages[2][$y] = preg_replace("/^((http:)?\/\/localhost)/",
                                         //"http://trianglecms.com",
                                         "/home/tcadmin/public_html",
                                         $HTMLimages[2][$y]);
@@ -113,7 +113,7 @@
                                         $HTMLimages[2][$y]);
 
       if ($croppedImgPaths["new"] != null && in_array(basename($HTMLimages[2][$y]), $croppedImgPaths["new"])) continue;
-      //error_log($HTMLimages[2][$y]);
+      // error_log($HTMLimages[2][$y]);
       copy($HTMLimages[2][$y], $imageDest . basename($HTMLimages[2][$y]));
     }
 
@@ -139,6 +139,7 @@
 
     $code[0] = preg_replace("@(src|lazyload)\=\"[^\"]*\/(images\/[^\"]+)\"@", "$1=\"$2\"", $code[0]);
     $code[1] = preg_replace("@url\(\"[^\"]*\/(images\/[^\"]+)\"\)@", "url(\"$1\")", $code[1]);
+    if (!$compress) $code[1] = str_replace('url("images/', 'url("../images/', $code[1]);
 
     file_put_contents($filedest . "/" . $pageName . ".html", $code[0]);
     if (!$compress) file_put_contents($filedest . "/css/" . $pageName . ".css", $code[1]);
