@@ -63,9 +63,10 @@ body {
 <body>
 <?php
   //$code = formatCode();
-  $code = formatCode($JSON_arr, $templateName, $pageName, $compress, $croppedImgPaths);
+  $code = formatCode($JSON_arr, $templateName, $pageName, $compress);
   $code[0] = preg_replace("@(src|lazyload)\=\"[^\"]*\/(images\/[^\"]+)\"@", "$1=\"$2\"", $code[0]);
   $code[1] = preg_replace("@url\(\"[^\"]*\/(images\/[^\"]+)\"\)@", "url(\"$1\")", $code[1]);
+  if (!$compress) $code[1] = str_replace('url("images/', 'url("../images/', $code[1]);
 ?>
 
 <pre id="editor1"><?php echo htmlentities($code[0]); ?></pre><!--
