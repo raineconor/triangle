@@ -167,6 +167,9 @@ body {
   content:"This element is empty. Insert a textbox, image, or other item.";
   padding:15px;
   color:gray;
+  text-align:center;
+  font-size:12px;
+  overflow:hidden;
 }
 
 .textBox, [triangle-class~=textbox] {
