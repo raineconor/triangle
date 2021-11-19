@@ -524,6 +524,8 @@ TRIANGLE.deleteItem = function(index) {
   item.remove();
   TRIANGLE.text.deleteUnusedFonts();
   TRIANGLE.clearSelection();
+  TRIANGLE.unsaved = true;
+  TRIANGLE.saveTemplate.saveStatus(false);
 }
 
 
@@ -1134,6 +1136,8 @@ TRIANGLE.saveItem = {
     TRIANGLE.importItem.importCSSText();
     TRIANGLE.importItem.importHoverCSSText();
     TRIANGLE.updateTemplateItems();
+    TRIANGLE.unsaved = true;
+    TRIANGLE.saveTemplate.saveStatus(false);
 
     //====================================================
     //                BEGIN SAVE FUNCTIONS
@@ -1641,6 +1645,21 @@ TRIANGLE.saveItem = {
 
 TRIANGLE.saveTemplate = {
 
+  saveStatus : function(status) {
+    var statusLight = document.getElementById("saveStatusLight");
+    var statusLabel = document.getElementById("saveStatusLabel");
+    var statusTimestamp = document.getElementById("saveStatusTimestamp");
+    if (status) {
+      statusLight.style.backgroundColor = "#66ff99";
+      statusLabel.innerText = "Saved";
+      var currentDate = new Date();
+      statusTimestamp.innerHTML = currentDate.getHours() + ":" + currentDate.getMinutes();
+    } else {
+      statusLight.style.backgroundColor = "#ff6666";
+      statusLabel.innerText = "Last saved " + statusTimestamp.innerHTML;
+    }
+  },
+
   getSaveName : function getSaveName() {
     TRIANGLE.popUp.open("getSaveNameCell");
     document.getElementById("saveTemplateName").focus();
@@ -1682,6 +1701,7 @@ TRIANGLE.saveTemplate = {
       if (templateName) TRIANGLE.currentTemplate = templateName;
       TRIANGLE.currentPage = pageName;
       TRIANGLE.unsaved = false;
+      TRIANGLE.saveTemplate.saveStatus(true);
 
       TRIANGLE.notify.saving.hide();
       TRIANGLE.notify.saved.show();
@@ -1724,6 +1744,7 @@ TRIANGLE.saveTemplate = {
       TRIANGLE.saveTemplate.saveUserIDs();
       TRIANGLE.saveTemplate.saveUserClasses();
       TRIANGLE.unsaved = false;
+      TRIANGLE.saveTemplate.saveStatus(true);
 
       TRIANGLE.notify.saving.hide();
       TRIANGLE.notify.saved.show();
@@ -1986,6 +2007,8 @@ TRIANGLE.loadTemplate = {
       document.getElementById("FTPselect").selectedIndex = 0;
       TRIANGLE.updateTemplateItems();
       TRIANGLE.options.compareUndoList();
+
+      TRIANGLE.saveTemplate.saveStatus(true);
     });
   },
 
@@ -2332,7 +2355,7 @@ TRIANGLE.json = {
   },
 
   convertItem : function(itemSrc, createItem) {
-    console.log(itemSrc);
+    // console.log(itemSrc);
     for (var breakpoint in TRIANGLE.styleSheets.breakpointMap) {
       if (TRIANGLE.styleSheets.breakpointMap.hasOwnProperty(breakpoint))
         TRIANGLE.styleSheets[breakpoint].insertRule(itemSrc.breakpoints[breakpoint]);
@@ -2624,6 +2647,8 @@ TRIANGLE.options = {
     TRIANGLE.clearSelection();
     TRIANGLE.selectItem(newIndex);
     TRIANGLE.saveItem.createAnimation("min-height", 0, "100px", function(){TRIANGLE.importItem.single(TRIANGLE.item.index)});
+    TRIANGLE.unsaved = true;
+    TRIANGLE.saveTemplate.saveStatus(false);
   },
 
   insertColumns : function insertColumns(columnNum) {
@@ -2724,6 +2749,9 @@ TRIANGLE.options = {
       TRIANGLE.saveItem.createAnimation("min-height", 0, "100px", function(){TRIANGLE.importItem.single(TRIANGLE.item.index)});
 
       TRIANGLE.updateTemplateItems();
+
+      TRIANGLE.unsaved = true;
+      TRIANGLE.saveTemplate.saveStatus(false);
     },
 
     selectParent : function selectParent() {
@@ -3113,6 +3141,7 @@ TRIANGLE.colors = {
         TRIANGLE.iframe().getElementById("bodyBgData").style.backgroundColor = TRIANGLE.colors.canvasColorChoice;
       });
       TRIANGLE.colors.canvasPaletteTarget = "bodyBg";
+
     });
 
     document.getElementById("colorElementBg").addEventListener("click", function() {
@@ -3229,6 +3258,8 @@ TRIANGLE.colors = {
     if (TRIANGLE.colors.styleCallback && typeof TRIANGLE.colors.styleCallback == "function") TRIANGLE.colors.styleCallback();
     TRIANGLE.colors.cancelCanvasMenu();
     TRIANGLE.saveItem.equalizeUserClasses(TRIANGLE.item.userClass);
+    TRIANGLE.unsaved = true;
+    TRIANGLE.saveTemplate.saveStatus(false);
   },
 
   cancelCanvasMenu : function cancelCanvasMenu() {
@@ -3394,6 +3425,9 @@ TRIANGLE.colors = {
       TRIANGLE.itemStyles[target] = newColor;
     }
     TRIANGLE.saveItem.equalizeUserClasses(TRIANGLE.item.userClass);
+
+    // TRIANGLE.unsaved = true;
+    // TRIANGLE.saveTemplate.saveStatus(false);
   },
 
   convertCanvasData : function convertCanvasData(rgb){
@@ -3909,6 +3943,8 @@ TRIANGLE.text = {
       TRIANGLE.selectionBorder.update();
       TRIANGLE.updateTemplateItems(true);
     }
+    TRIANGLE.unsaved = true;
+    TRIANGLE.saveTemplate.saveStatus(false);
   },
 
   originalTextPosition : null,
@@ -3956,6 +3992,8 @@ TRIANGLE.text = {
     TRIANGLE.resize.removeHandles();
     TRIANGLE.menu.displaySubMenu('displayTextStyles');
     TRIANGLE.menu.menuBtnActive(document.getElementById("opTextStyles"));
+    TRIANGLE.unsaved = true;
+    TRIANGLE.saveTemplate.saveStatus(false);
   },
 
   checkTextEditing : function checkTextEditing(event) {
@@ -5164,6 +5202,7 @@ TRIANGLE.library = {
       //TRIANGLE.pages.loadPages();
       setTimeout(TRIANGLE.updateTemplateItems, 100);
       TRIANGLE.notify.info.show("If you decide to use this template, please save as a new template before making changes.");
+      // TRIANGLE.saveTemplate.saveStatus(false);
     });
     TRIANGLE.updateTemplateItems();
   },
@@ -5950,7 +5989,8 @@ TRIANGLE.selectionBorder = {
       TRIANGLE.resize.showHandles();
     }
 
-    TRIANGLE.unsaved = true;
+    // TRIANGLE.unsaved = true;
+    // TRIANGLE.saveTemplate.saveStatus(false);
   },
 
   remove : function removeSelectionBorder() {
@@ -6217,6 +6257,8 @@ TRIANGLE.resize = {
     TRIANGLE.text.allowTextSelect();
     TRIANGLE.tooltip.hide();
     // TRIANGLE.iframe().iFrameResizer.resize()
+    TRIANGLE.unsaved = true;
+    TRIANGLE.saveTemplate.saveStatus(false);
   },
 
   start : function resizeItem(event) {

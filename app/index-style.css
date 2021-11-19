@@ -406,6 +406,27 @@ hr {
   overflow:hidden;
   font-family:'Helvetica', 'Arial', sans-serif;
 }
+#saveStatus {
+  display:inline-block;
+  width:auto;
+  height:30px;
+  padding:0 8px;
+  color:white;
+}
+#saveStatusLight {
+  /* saved status: */
+  /* background-color:#66ff99; */
+  /* unsaved status: */
+  background-color:#ff6666;
+  display:inline-block;
+  width:8px;
+  height:8px;
+  border-radius:5px;
+}
+#saveStatusLabel {
+  padding:0 5px;
+}
+
 /*#sideMenu hr {
   height:1px;
   border:none;
