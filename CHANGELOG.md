@@ -1,16 +1,18 @@
-06/01/15 - 08/25/15
+# Changelog
+
+### 06/01/15 - 08/25/15
 
 - project started
 - fixed a bug where children would leave their parent elements when shifting
 - added saving/loading capabilities
 
-12/06/15
+### 12/06/15
 
 - added basic administration page
 - added ability to create a new page from a saved template, passed by get parameters from admin.php
 - increased PHP session security by adding "session_unset()" before "session_destroy()"
 
-12/07/15
+### 12/07/15
 
 - added experimental mobile-responsive columns, which fixes the bug where inserting a child into a
   column becomes vertically out of line with the other columns
@@ -20,7 +22,7 @@
 - new functions include resetClearFloat and insertClearFloat, which are called from updateSelector
   function
 
-12/08/15
+### 12/08/15
 
 - reorganized the directory tree in which templates are saved, it now creates a folder for each
   template and a txt file for each page under that template
@@ -32,7 +34,7 @@
   changed from a column
 - fixed a bug where children were not being retained when shifting elements
 
-12/09/15
+### 12/09/15
 
 - fixed a bug where column elements disappear when shifting down
 - moved if statement that removes float style from certain changed elements from updateSelector to
@@ -53,7 +55,7 @@
   not a child
 - reduced number of regular expressions that exportRaw.php uses for formatting the HTML code to 1
 
-12/10/15
+### 12/10/15
 
 - added pagination
 - new JS file called loadPages.js, new PHP file called page_list.php
@@ -68,16 +70,16 @@
   insertNewChild
 - added a new function called clearTextSelection to remove text highlighting
 
-12/13/15
+### 12/13/15
 
 - began re-designing the entire code structure to use a global object that is instantiated by
   function updateTemplateItems, which replaces updateSelector
 
-12/14/15
+### 12/14/15
 
 - continuing re-design of entire code structure
 
-12/15/15
+### 12/15/15
 
 - debugging code restructure
 - the entire main functions file now uses strict mode
@@ -89,7 +91,7 @@
   reset it
 - removed the for loop in shiftUp and shiftDown that replaced resetClearFloat when it was failing
 
-12/16/15
+### 12/16/15
 
 - added a randomColor function, replaces the manual color generation in several functions
 - fluidWidth function is now called by default on page load to account for tablets and smaller
@@ -100,7 +102,7 @@
 - added a global variable called originalTextBoxBg and originalTextBoxBorder to reset the background
   color and border styles of edited textboxes to their original styles after finishing editing
 
-12/19/15
+### 12/19/15
 
 - fixed a bug where arrow keys used while editing text would shift the element
 - fixed a bug where the selection border of textboxes would remain after shifting them and then
@@ -114,7 +116,7 @@
 - added function refreshTemplateRef to refresh the reference variable pointing to the template
   element
 
-12/20/15
+### 12/20/15
 
 - fixed a bug where textboxes in edit mode were being imported on mousedown, letting the original
   background get reset
@@ -124,7 +126,7 @@
 - wrapped the default settings on page load in a function, added a function call for it immediately
   after
 
-12/21/15
+### 12/21/15
 
 - inserting columns now imports the selected item before inserting the columns
 - edited the fixedWidth and fluidWidth functions to refresh the template reference before continuing
@@ -137,7 +139,7 @@
 - the 10px padding that is auto-added to parents when inserting a textbox or child is only applied
   if padding does not exist or it it 0
 
-12/22/15
+### 12/22/15
 
 - saveFont auto-adds "px" instead of "pt"
 - added a templateTooLarge function that alerts the user when the template is too large to export
@@ -147,7 +149,7 @@
 - clearing textbox editability is now cleared by clearSelection
 - added hyperlinking to text options
 
-12/23/15
+### 12/23/15
 
 - fixed a bug where shifting a normal templateItem past a textbox would not remove the textbox event
   listener on the normal item after shifting
@@ -156,7 +158,7 @@
 - added a new premade template, which is loaded by default when making a new template
 - clearing textbox editability is now cleared by escKey and clearSelection
 
-12/24/15
+### 12/24/15
 
 - added a dashed border on elements when hovering over them
 - selection border updates on scroll
@@ -165,7 +167,7 @@
 - templates are now saved under a folder called "templates" withing the username folder
 - re-styled admin.php
 
-12/25/15
+### 12/25/15
 
 - added a simple image upload to admin.php
 - images are loaded by function loadImages
@@ -177,7 +179,7 @@
 - added resize handles to images
 - simplified updateSelectionBorder
 
-12/27/15
+### 12/27/15
 
 - added complete image resizing on one handle
 - new functions added:
@@ -185,7 +187,7 @@
     * removeResize
     * resizeImg
 
-12/28/15
+### 12/28/15
 
 - added a bottom marker to the template
 - the global variable borderSpace is now adjusted according to the width and parent of the hovered
@@ -197,7 +199,7 @@
   changes
 - added resizing to all items
 
-12/29/15
+### 12/29/15
 
 - reverted the event listeners on the control buttons back to using inline onClick attributes
 - added a new function called getUnit to determine the unit of element styles, for example passing
@@ -205,12 +207,12 @@
 - resizeItem now resizes in percentage if the selected item has a percentage unit
 - insertColumns now divides elements according to their unit instead of just percentage
 
-01/01/16
+### 01/01/16
 
 - named the program "Triangle"
 - restructured the entire file directory
 
-01/02/16
+### 01/02/16
 
 - PHP scripts now use a full directory path reference instead of relative path references
 - function chooseColor selected the color of the parent if the item selected with the color dropper
@@ -218,7 +220,7 @@
 - edited the shiftUp and shiftDown functions to insert a copied element instead of swapping the
   styles
 
-01/03/16
+### 01/03/16
 
 - added a delete link button under text styles
 - fixed a bug in function insertClearFloats where clearFloat elements were not being inserted
@@ -235,7 +237,7 @@
   text from being deselected
 - added a prototype triangle logo to the login page
 
-01/04/16
+### 01/04/16
 
 - added a prototype logo to the admin page
 - made a prototype splash page
@@ -247,17 +249,17 @@
 - the resize handles on the right are now always rendered within easy grabbing range
 - fixed a bug where using the color dropper would shift the selection border to the wrong element
 
-01/05/16
+### 01/05/16
 
 - fixed a bug where the last element on the page would glitch when resizing vertically
 - function importColors now checks if the selected element inherits the background color, and
   imports the parent's background if so
 
-01/06/16
+### 01/06/16
 
 - fixed a bug where height wasn't being applied correctly from the menu
 
-01/11/16
+### 01/11/16
 
 - all items now have a CSS position of relative
 - the size of a parent now limits the ability to resize its child
@@ -269,13 +271,13 @@
 - added compatibility for resizing right-aligned elements, aligned elements now have an "align"
   attribute containing their alignment
 
-01/12/16
+### 01/12/16
 
 - added the align attribute to the array of style functions so it can be passed when duplicating,
   and to the shifting functions
 - added dimension labels to elements that are being resized
 
-01/13/16
+### 01/13/16
 
 - clicking the bottom marker now clears the selection
 - added a function called oppositeColor that takes a hex color as an argument and returns the
@@ -288,7 +290,7 @@
 - using the bold button when the selected item is not selected bolds all the text inside
 - commented out the code that turns the background color of text boxes white when editing
 
-01/14/16
+### 01/14/16
 
 - exportTemplate now removes the item-align attribute
 - added vertical aligning to middle using tables and table-cells
@@ -298,22 +300,22 @@
 - padding and margin now use pixels by default when entering numbers
 - background color input now takes alphanumeric characters up to 6 digits with or without the # sign
 
-01/17/16
+### 01/17/16
 
 - fixed a bug where the RegExp that catches background colors would not accept "inherit"
 
-01/18/16
+### 01/18/16
 
 - the text cursor now shows when editing a textbox
 - created links are now disabled while in the editor
 - redesigned the way templates are listed on the admin page
 - the cursor is now displayed normally when previewing a template
 
-01/19/16
+### 01/19/16
 
 - began adding support for hover effects
 
-01/20/16
+### 01/20/16
 
 - added more support for hover effects
 - styleFunctions now assign attributes only if the value is present
@@ -321,18 +323,18 @@
 - added support for uploading and using custom fonts
 - added an "effects" tab on the menu
 
-01/23/16
+### 01/23/16
 
 - added PHP functions getDirectory and echoDirectory to be included with scripts that read
   directories
 
-01/24/16
+### 01/24/16
 
 - fixed a bug where elements couldnt be resized below their min-height after deleting
   vertical-aligned elements
 - aligning elements without a display style now changes their display to block
 
-01/25/16
+### 01/25/16
 
 - simplified colorMenu.js
 - fixed a bug where hidden libraryItems were increasing the index counter when exporting templates
@@ -344,7 +346,7 @@
 - added a viewport meta tag to exportRaw.php
 - fixed a bug where font links were being repeatedly added to the style tag
 
-01/26/16
+### 01/26/16
 
 - moved the width and height labels to the top right corner of the page
 - exportRaw.php now combines margin, border, padding, and any other left-right-top-bottom styles
@@ -356,7 +358,7 @@
 - moved the style tags in templateWrapper above the other tags
 - fixed a bug in Internet Explorer where changing the font color from the color menu was broken
 
-01/27/16
+### 01/27/16
 
 - added event removals upon deletion of elements
 - the escape key now cancels color dropping
@@ -365,7 +367,7 @@
 - changes made in the style menu now animate the affected element
 - added an anti XSS script for URL security called antiXSS.php
 
-01/28/16
+### 01/28/16
 
 - added a RegExp in upload_font.php for security and syntax checking
 - fixed a bug where hovering over an element during an active animation would create a selection
@@ -377,23 +379,23 @@
   animation finishes
 - re-designed the color menu using the canvas element
 
-01/31/16
+### 01/31/16
 
 - updated support for hover effects with the new formatCode.php and exportTemplate()
 - finished the new color menu
 
-02/01/16
+### 02/01/16
 
 - fixed a bug where body background color was not saving
 - fixed a bug where the border was not being exported correctly
 - improved the mobile-optimization algorithm
 - improved the menu and applyChanges() function
 
-02/02/16
+### 02/02/16
 
 - created a new, animated side menu for saving, opening, images, etc
 
-02/03/16
+### 02/03/16
 
 - fixed a bug where margin, padding, and border code was not being formatted correctly on export
 - removed all bootstrap-related code from all scripts
@@ -403,7 +405,7 @@
 - the templateWrapper now fades in upon load
 - added up and down arrows to change the font value easily
 
-02/04/16
+### 02/04/16
 
 - moved the text editing functions to a separate JS file
 - double clicking a text box with "New text box" inside now deletes the text
@@ -411,115 +413,115 @@
 - the "save as new page" option is now active
 - reworked the save, load, and pages functions/PHP files
 
-02/06/16
+### 02/06/16
 
 - added form building support
 - fixed a bug where entering a height into the style menu an a table-displayed element would revert
   its height to auto
 
-02/07/16
+### 02/07/16
 
 - resizing form fields now snaps to 20px increments
 
-02/08/16
+### 02/08/16
 
 - added PHP form creation based on the forms in the template
 - fixed a bug where pages were being listed incorrectly when loading the editor without a template
 - added page linking from the hyperlink menu
 
-03/05/16
+### 03/05/16
 
 - added a button insertion function for forms
 - added black and white options in the color menu
 - fixed RGB color input support
 - bottom marker now adjusts position based on how vertically large the template is
 
-03/08/16
+### 03/08/16
 
 - the black and white boxes in the color menu now show up in the preview box
 
-03/28/16
+### 03/28/16
 
 - made the bottom marker invisible
 
-03/29/16
+### 03/29/16
 
 - added an image library side menu
 - began reworking drag and drop
 - added a global variable hoveredElem to hold a reference to the currently hovered object
 
-03/31/16
+### 03/31/16
 
 - fixed a drag and drop glitch
 - formatCode.php now combines items with the same styles into one statement, reducing CSS filesize
   by over 70%
 - text selection is now disabled when dragging items
 
-04/01/16
+### 04/01/16
 
 - elements can now be dragged into each other, as well as between each other
 - added a drag and drop visualizer
 
-04/03/16
+### 04/03/16
 
 - improved the drag and drop function
 - altered the copy and paste functions to actually paste the copied element instead of overwriting
   the selected element
 
-04/04/16
+### 04/04/16
 
 - drag and drop now works on the x-axis
 - moved the formatCode.php compression loop into separate functions for the main CSS ad @media, now
   works on @media correctly
 - added code to exportRaw.php that replaces image src URLs with "/images/imgName.file"
 
-04/05/16
+### 04/05/16
 
 - dragging a left-floating element into a right-floating zone now changes the float accordingly
 
-04/07/16
+### 04/07/16
 
 - began adding menu controls for the effects tab
 - added dimension snapping to adjacent elements for the Y-axis while dragging to resize elements
 
-04/09/16
+### 04/09/16
 
 - tested a JavaScript compilation file instead of including each separate script file on index.php
 - added the TRIANGLE namespace and began encapsulating all global functions and variables
 
-04/10/16
+### 04/10/16
 
 - continued migrating the entire JavaScript application to the TRIANGLE namespace
 - fixed a drag and drop X-axis bug
 
-04/14/16
+### 04/14/16
 
 - added a color palette that compiles the color of background, border, and font from all template
   items into one menu
 
-04/15/16
+### 04/15/16
 
 - continued migration to TRIANGLE namespace
 - fixed a bug where item alignment was not converting upon drag and drop relocation
 
-04/16/16
+### 04/16/16
 
 - continued migration to TRIANGLE namespace
 
-04/17/16
+### 04/17/16
 
 - completed migration to TRIANGLE namespace
 - began organization of methods, first order properties reflect each tab of the menu, general
   functions, and template functions
 
-04/18/16
+### 04/18/16
 
 - added number input types in the menu
 - added a text function "changeFontSize" in place of increase/decrease font size
 - added resizing dimension snapping to the X axis
 - added a button to remove item alignment/float
 
-04/19/16
+### 04/19/16
 
 - fixed an error that occurred when trying to insert a textbox with no item selected
 - replaced several keyup body event listeners with just one listener that determines which key was
@@ -529,7 +531,7 @@
 - added a remove method to the TemplateItem prototype
 - keyM opens the images side menu
 
-04/20/16
+### 04/20/16
 
 - esc key now closes the side menu
 - colors in the palette are now categorized into background, font, and border depending on their
@@ -537,24 +539,24 @@
 - the color palette can now be dragged around the window
 - the color dropper now applies the color palette
 
-04/21/16
+### 04/21/16
 
 - the color palette drag start listener is now attached to the document upon initiation
 - added box shadow color to the color palette
 - the color palette is now usable, excluding box shadow color
 
-04/22/16
+### 04/22/16
 
 - added some hover effects methods and a div container for hover versions of items
 - resizing elements now snap to their directly adjacent siblings on the x axis
 
-04/25/16
+### 04/25/16
 
 - inserting a form without an item selected now creates a new row and inserts the form there
 - fixed a bug where font URLs would be duplicated upon using the same font after reloading a
   template
 
-04/26/16
+### 04/26/16
 
 - unused font links are now deleted from the fontData div using TRIANGLE.text.deleteUnusedFonts()
   upon deleting elements
@@ -568,7 +570,7 @@
   width
 - preview_template.php now removes the CSS include for style.css
 
-04/27/16
+### 04/27/16
 
 - pressing D now duplicates the selected item
 - inserting multiple buttons into one form is not allowed anymore
@@ -579,11 +581,11 @@
   is extracted from the style property string
 - the color palette now updates as elements change (may be removed in the future)
 
-04/29/16
+### 04/29/16
 
 - began working on the animation effect studio
 
-04/30/16
+### 04/30/16
 
 - changed the color palette to be dragged from a top bar instead of anywhere on the palette
 - added an "inside" option to TRIANGLE.dragDrop.createVisBox() and a visual for dragging into other
@@ -593,54 +595,54 @@
 - changed TRIANGLE.importItem.mainMethod to TRIANGLE.importItem.single in preparation for importing
   multiple elements
 
-05/01/16
+### 05/01/16
 
 - added an array to importItem that stores selected element indexes and shift-clicked elements are
   appended
 - fixed a bug where the open color palette would get relocated upon opening a canvas color menu
 
-05/03/16
+### 05/03/16
 
 - fixed a bug where the importItem group was removing an item from the array when shift-clicking
   even if it is the only one
 - editing styles in the menu now applies to all selected items
 - inserting columns now applies to multiple items
 
-05/06/16
+### 05/06/16
 
 - fixed a bug where a clearFloat would be inserted incorrectly on odd-numbered rows
 - simplified the insertClearFloats method
 - fixed a bug where the border type was not being imported
 - images are now contained in a div container with class imageItem in order to prepare for cropping
 
-05/07/16
+### 05/07/16
 
 - added image cropping
 - added XY resizing for corner handles
 - combined a while loop and for loop to remove items from arrays that are not updated correctly
   (see TRIANGLE.resetClearFloats())
 
-05/08/16
+### 05/08/16
 
 - default image dragging functions in FireFox browsers is now prevented
 - fixed a bug where the index of a created item was not being imported
 - added a prototype image cropping visualization
 - added overflow to the styleFunctions
 
-05/09/16
+### 05/09/16
 
 - finished upgrading the cropping function, minus some bugs in applyCrop()
 
-05/10/16
+### 05/10/16
 
 - fixed a bug where the top handle of the cropping menu could go below the bottom handle
 - improved the cropping function
 
-05/11/16
+### 05/11/16
 
 - added resize arrow cursors to each crop handle
 
-05/13/16
+### 05/13/16
 
 - fixed top margin calculation in the cropping function
 - added a no-select CSS class to easily disable user selection highlighting in the HTML
@@ -651,7 +653,7 @@
 - commented out a line that causes Y-axis resizing of form fields to snap to intervals of 20px
 - fixed transferring square images to the cropping menu
 
-05/14/16
+### 05/14/16
 
 - fixed the height calculation for the selected item when cropping
 - added margin left and top of the cropBorder image to the crop-map
@@ -670,7 +672,7 @@
 - added TRIANGLE.contentWidth method to compute the width of the element within its padding
 - fixed a bug where the width to height ratio of images would be broken when resizing
 
-05/15/16
+### 05/15/16
 
 - removed support for editing multiple items (JS backup containing support under 05-14-16)
 - fixed animations for applying margin and border styles
@@ -679,7 +681,7 @@
 - fixed visBox creation in all areas
 - added option images for set image background and crop image
 
-05/16/16
+### 05/16/16
 
 - height and width values are now rounded to integers when resizing images
 - height and width values are now displayed in the corner labels when resizing images
@@ -694,74 +696,64 @@
 - fixed border color animations when applying from color menu
 - fixed a bug where dragging an only child would show a visBox next to itself
 
-05/18/16
+### 05/18/16
 
 - the color palette is no longer updated when updating the template items, it was too inconvenient
 - the color palette now displays "no colors to display" when there are no template items
 - added a side choice for the border section in the color palette
 
+### TRIANGLE version 1.01 completed (05/18/16)
 
-//================================================================================================//
-//================================================================================================//
-//================================================================================================//
-
-                            TRIANGLE version 1.01 completed (05/18/16)
-
-//================================================================================================//
-//================================================================================================//
-//================================================================================================//
-
-
-05/22/16
+### 05/22/16
 
 - ctrl+V now checks for active inputs before firing
 
-05/24/16
+### 05/24/16
 
 - added instances, opening different templates in different windows now create different instances
   so saving/loading do not overlap
 - the entire directory of pages is now transferred to the new template name when saving as a new
   template, and the old pages are deleted
 
-05/25/16
+### 05/25/16
 
 - the save current file and save as new page buttons are now revealed when loading a template
 - fixed a bug where the style tag was being removed from the clear float elements upon export
 - fixed a bug where opening an empty editor and then saving as a new template would cause the entire
   template directory to be copied to the save destination
 
-05/26/16
+### 05/26/16
 
 - fixed a bug where the session variables containing instances information about current templates
   and pages was being manipulated as a string instead of an array
 - changed the name of postLoader.js to lazyLoader.js
 
-05/27/16
+### 05/27/16
 
 - fixed a bug where the selection border would be recreated on the element that is hovered when
   typing in a textbox
 
-05/31/16
+### 05/31/16
 
 - fixed a bug where images being resized by a corner would get distorted when hovering over an
   element directly below
 - changed the z-index of the side menu to override the color palette
 
-06/05/16
+### 06/05/16
 
 - formatCode.php now uses the current page name as the CSS file name in the exported code
 - added instances to create_post_forms.php
 
-06/06/16
+### 06/06/16
 
 - fixed images being unresponsive upon export
 - fixed font size skipping an integer
 
-06/07/16
+### 06/07/16
 
 - removed textbox requirement to apply text align
 
-06/08/16
+### 06/08/16
 
 - fixed a bug where duplicate colors would not be added in the color palette if they are from
   different categories
@@ -770,7 +762,7 @@
 - added text-decoration support for export/formatCode, despite having no GUI option to edit the
   style
 
-06/09/16
+### 06/09/16
 
 - fixed a bug where saving a template with several pages as a new template would overwrite the index
   page with the currently open page
@@ -780,7 +772,7 @@
 - fixed the inconsistent link colors
 - dragging floating items into another item now displays the correct visBox
 
-06/10/16
+### 06/10/16
 
 - fixed a bug where dragging a floating element into another would display the visBox on a new row
   instead of floating
@@ -790,39 +782,39 @@
   same parent would display the visBox on a new row
 - the page name is now added to the filename of forms to avoid having duplicate files
 
-06/14/16
+### 06/14/16
 
 - added an undo function
 
-06/15/16
+### 06/15/16
 
 - fixed several bugs in the undo function
 - fixed a bug where dragging elements would not go between other elements on the Y-axis
 
-06/16/16
+### 06/16/16
 
 - began creating a JSON encoder
 
-06/17/16
+### 06/17/16
 
 - templates are now saved/loaded in JSON format by encoding/decoding the template information
 
-06/19/16
+### 06/19/16
 
 - the action attribute in the raw exported code now displays the pagename in the script reference
 
-06/20/16
+### 06/20/16
 
 - added user classes, common elements are updated amongst intra-template pages
 
-06/21/16
+### 06/21/16
 
 - user classes can now be inserted into the template from a library
 - library items are now obtained by GET request in the moment instead of storing the data in the
   document upon template load
 - fixed a bug where &nbsp; characters would prevent saving of user classes
 
-06/22/16
+### 06/22/16
 
 - hyperlinks of the selected item are now displayed in the text tab, where they can be edited easily
 - user classes are now the ID values of their respective elements in exported code
@@ -832,7 +824,7 @@
 - added a confirm exit dialogue when closing the browser window or tab
 - added a hyperlink target dropdown selection
 
-06/23/16
+### 06/23/16
 
 - added code snippet insertion
 - added a bannedInsertion method to the isType object to easily ban certain template items types
@@ -841,7 +833,7 @@
   prevented
 - disabled XSS protection in preview_template.php in order to allow code snippets to execute
 
-06/25/16
+### 06/25/16
 
 - images retain auto height when resized by the handles, but become skewed when the dimensions are
   edited in the menu
@@ -850,66 +842,66 @@
   already exists
 - fixed a bug where nested user classes would be destroyed
 
-06/27/16
+### 06/27/16
 
 - added an auto-size image function, setting it to full width and auto height to maintain its ratio
 
-06/28/16
+### 06/28/16
 
 - began writing a PHP script to decode JSON templates without having to open the files in the DOM
 
-06/29/16
+### 06/29/16
 
 - dashes (-) are not replaced in saved filenames anymore
 - added meta data keywords and descriptions to the developer tab, and support for
   saving/loading/exporting
 
-06/30/16
+### 06/30/16
 
 - the user-class attribute is now removed from elements added from the item library if that user
   class already exists in the document
 - when defining a user class from the library tab, a number is appended if the user class already
   exists in the document
 
-07/01/16
+### 07/01/16
 
 - added a boolean parameter to updateTemplateItems() called repeat, which calls the method again if
   true, solving the double-call issue in most insertion functions
 
-07/02/16
+### 07/02/16
 
 - continued adding support for decoding JSON templates with PHP
 
-07/03/16
+### 07/03/16
 
 - added a loading screen function
 - added an export zip option, works when exporting each page individually, does not zip the contents
   yet
 
-07/04/16
+### 07/04/16
 
 - added FTP profile management
 - publishing a template now prompts for a selection of an FTP profile, and does not upload images if
   they are already on the server
 
-07/05/16
+### 07/05/16
 
 - added a toggle menu for meta data to the developer tab
 - a line break is now inserted every 10 items in the canvas color palette
 - the canvas color palette now has a max-height of 150px and adds the scrollbar automatically
 
-07/06/16
+### 07/06/16
 
 - naming a user class the same as a saved user class that is not necessarily in the document is now
   prevented
 
 
-07/09/16
+### 07/09/16
 
 - added library category dropdowns
 - switched the listing of the FTP username and URL from left to right
 
-07/11/16
+### 07/11/16
 
 - the HTML of nested elements are now formatted correctly when converting from JSON using
   json_to_html.php
@@ -920,7 +912,7 @@
 - added a catch-all else block in the X-axis drag drop section that inserts the visBox when the
   mouse is in the middle of an element
 
-07/12/16
+### 07/12/16
 
 - added an add to cart button to the library in the ecommerce category
 - added key event for letter L which opens the library menu
@@ -932,7 +924,7 @@
   stream
 - cropped images are now resized according to the crop ratio when auto-sizing
 
-07/13/16
+### 07/13/16
 
 - began writing the credit card processing script for ecommerce
 - began creating library items for ecommerce
@@ -946,7 +938,7 @@
   cleaning function
 - added ecommerce catalog items, with editable details in the ecommerce menu tab
 
-07/14/16
+### 07/14/16
 
 - ecommerce components are now non-deletable
 - added catalogs to contain all ecommerce items
@@ -962,11 +954,11 @@
   of the cart are removed
 - the user-class attribute is now removed from duplicated and pasted items
 
-07/15/16
+### 07/15/16
 
 - deprecated the JS version of exportTemplate.format
 
-07/16/16
+### 07/16/16
 
 - began transferring from a flatfile database system to mySQL
 - added db_query.php
@@ -975,7 +967,7 @@
   as 32 characters
 - added an optional max length integer parameter to the sanitize string function
 
-07/17/16
+### 07/17/16
 
 - fixed the full template transfer when saving a multi-page template under a new name
 - admin.php now queries the database for templates, fonts, and FTP profiles
@@ -984,7 +976,7 @@
 - fixed a bug with WAMP where trying to insert a row without defining one of the columns would throw
   an error
 
-07/18/16
+### 07/18/16
 
 - continued transfer to mySQL database
 - user classes are now transferred to the new template when saving an existing template as a new
@@ -995,7 +987,7 @@
 - fixed a bug where forms were not being created upon export
 - directory files are now deleted when deleting a template
 
-07/19/16
+### 07/19/16
 
 - began integrating PayPal as the gateway for ecommerce templates
 - fixed a bug where the cart page was not being created upon save
@@ -1011,7 +1003,7 @@
   same instance
 - the correct page is now loaded when refreshing after saving a new template
 
-07/20/16
+### 07/20/16
 
 - began integrating USPS shipping API
 - all ecommerce items are now logged into the database
@@ -1020,7 +1012,7 @@
 - added resources directory to content directory, contains thrid party resources like PayPal
 - the ecommerce plugin is now implemented as a testing phase
 
-07/21/16
+### 07/21/16
 
 - the ecommerce resources are only added to the zip folder if the cart page exists
 - publishing sites now split the FTP profile URL into 2 parts based on the first occurrence of a '/'
@@ -1029,7 +1021,7 @@
 - zip files are now deleted after being downloaded
 - added .htaccess files throughout the users directory to prevent directory tree exploration
 
-07/22/16
+### 07/22/16
 
 - fixed a bug where inserting a child would not update the clearfloats
 - preview template is delayed 500ms to allow export_zip.php to finish
@@ -1039,24 +1031,24 @@
 - the instance counter now starts at 1 instead of 0 to avoid error in internet explorer
 - a checkout page is now created along with the cart page
 
-07/23/16
+### 07/23/16
 
 - item prices are now calculated on the cart page
 - the item database is now an included external PHP file
 
-07/24/16
+### 07/24/16
 
 - item quantities are now editable in the cart
 - items are now removable from the cart
 
-07/25/16
+### 07/25/16
 
 - fixed a bug where URLs were being split in the CSS formatting function in json_to_html.php
 - 1's and 0's are now passed as boolean values in POST and GET data in order to boolval them
 - text boxes that are editable now have a dashed border
 - inserting a textbox now checks if the background is black and adjusts the font color accordingly
 
-07/26/16
+### 07/26/16
 
 - tax and shipping are calculated using AJAX on the checkout page of ecommerce templates
 - improved the responsive algorithm by accounting for small elements on a medium screen
@@ -1066,7 +1058,7 @@
 - fixed a bug where some items would not set a responsive style, and would throw an unset variable
   error in json_to_html.php
 
-07/27/16
+### 07/27/16
 
 - added TRIANGLE.json object to hold the JSON methods such as encoding and decoding templates
 - added TRIANGLE.refreshTemplateItems() method that sets TRIANGLE.templateItems to null before
@@ -1077,7 +1069,7 @@
 - admin accounts can now load, save, and export everyone's templates (not yet instanced)
 - admin accounts can search templates by username
 
-07/28/16
+### 07/28/16
 
 - added PayPal API keys to the business profile menu on the admin page
 - sandbox API keys are used when previewing, and live API keys are used when exporting to zip
@@ -1091,16 +1083,16 @@
 - converted all AJAX calls to use the new script on the admin page
 - began converting AJAX calls to use the new script in TRIANGLE.js
 
-07/29/16
+### 07/29/16
 
 - added custom emails per form, if it is blank then the Triangle account email is used
 
-08/01/16
+### 08/01/16
 
 - calculating tax is now a per-item option
 - added handling fee option to shipping
 
-08/02/16
+### 08/02/16
 
 - tax is now calculated upon checkout page load instead of using AJAX
 - shipping now takes the highest estimate as the base, and adds handling fees on top
@@ -1108,7 +1100,7 @@
   applying a style
 - ecommerce item IDs are now checked against the existing array for duplicates before being assigned
 
-08/03/16
+### 08/03/16
 
 - added a popUp method to organize the darkWrapper boxes easier to interact with
 - added a shipping setup dialogue, and a shipping_setup column in the ecommerce_items table
@@ -1118,20 +1110,20 @@
 - transferred all AJAX calls to new script method
 - links are not text-decorated, but underlined when applied, making the underline removable
 
-08/04/16
+### 08/04/16
 
 - fixed a bug where the border style was not being imported correctly
 
-08/05/16
+### 08/05/16
 
 - added a small JSON compression algorithm for saving/loading templates
 
-08/06/16
+### 08/06/16
 
 - moved the compression algorithm to a specific method, and added a decompression method
 - responsive styles are now compressed
 
-08/07/16
+### 08/07/16
 
 - improved the compression algorithm
 - fixed a bug where json_to_html.php would check for the wrong value type in an isset function
@@ -1150,7 +1142,7 @@
 - default fonts are now loaded on all accounts from the triangle profile in the database
 - fonts added from admin accounts are added to the triangle profile
 
-08/08/16
+### 08/08/16
 
 - fixed a bug where links didn't work anywhere on the editor page
 - added flat rate/other USPS options
@@ -1160,7 +1152,7 @@
 - updated mySQL account password to a 64-character string
 - improved security for FTP profiles
 
-08/09/16
+### 08/09/16
 
 - session IDs are now regenerated upon register and login to combat against session hijacking
   attacks
@@ -1175,14 +1167,14 @@
 - an error message is now displayed if PayPal API keys are not set up for an ecommerce site
 - PayPal API keys are now encrypted
 
-08/10/16
+### 08/10/16
 
 - added an alert box for adding to cart
 - items with vertical aligned elements are now banned from receiving insertions
 - fixed a bug in unlink_dir.php where the removed directory was trying to be removed twice
 - added a receipt page for forms and payments
 
-08/11/16
+### 08/11/16
 
 - added multi-file upload support for images on the admin page
 - lazyloading is now implemented if there are more than 5 images on a page
@@ -1191,17 +1183,17 @@
 - images can now be deleted from the admin page
 - background images can now be removed
 
-08/12/16
+### 08/12/16
 
 - improved encryption, accounts are now assigned a surrogate key to encrypt/decrypt their content
 - fixed a bug where lazyloaded images were not being exported correctly
 - fixed a bug where user classes were not being updated when acting as a pseudouser
 
-08/14/16
+### 08/14/16
 
 - added a 5 failed attempt limit for logins to protect against brute force attacks
 
-08/15/16
+### 08/15/16
 
 - Triangle API keys are now generated upon user registration
 - added a new database to contain users ecommerce item information, they are granted read-only
@@ -1211,13 +1203,13 @@
 - fixed a bug where item IDs were not being set correctly
 - added inventory stock tracking
 
-08/16/16
+### 08/16/16
 
 - text nodes are now counted when deselecting a text box to check for blank
 - a default template is now generated for each user upon registration, pulled from triangle account
 - added page deletion from the side menu
 
-08/17/16
+### 08/17/16
 
 - fixed a bug where lazyload was being applied to tags other than img, causing loading issues
 - added ctrl+Z to undo
@@ -1225,7 +1217,7 @@
 - the canvas menu is now closed on deselect
 - repositioned the crop apply/cancel buttons
 
-08/18/16
+### 08/18/16
 
 - fixed a bug where all pages of the premade templates were being displayed in the library
 - improved input focus clearing upon deselect
@@ -1239,23 +1231,23 @@
 - added an option to db_query for multiple statement executions, requires a multidimensional array
 - fixed a bug in uploadFonts where the string was being sanitized, causing regex issues
 
-08/19/16
+### 08/19/16
 
 - drag and drop now takes the client dimensions as the measurements for the grabbed element to
   prevent huge visboxes
 - added a web design request form, will be synced with the senders Triangle account
 
-08/20/16
+### 08/20/16
 
 - fixed buggy drag and drop behavior
 
-08/21/16
+### 08/21/16
 
 - various speed enhancements
 - users are now prevented from creating usernames containing both admin(istrator) and triangle in
   the same name, and brayden and gregerson in the same name
 
-08/22/16
+### 08/22/16
 
 - fixed a bug where login attempts would prevent logins no matter how many there were
 - added a change password interface to the admin page
@@ -1263,7 +1255,7 @@
   without checking the username
 - added an option to compress code on export
 
-08/23/16
+### 08/23/16
 
 - fixed a bug where PayPal was refusing the server TLS version incorrectly
 - <?php ?> tags are now commented out in JSONtoHTML as a security measure
@@ -1272,24 +1264,24 @@
 - changed the background and font color of textareas that display code in the menu
 - false CSS styles are now filtered out
 
-08/24/16
+### 08/24/16
 
 - added template preview buttons to the admin page for quicker access and a way to access the
   existing export
 - fixed a bug in the responsive algorithm where incorrect widths were being assigned
 - fixed a bug where too many spaces were being removed when compressing on export
 
-08/25/16
+### 08/25/16
 
 - changed user classes to user IDs to reflect CSS syntax more accurately
 - added user classes to easily change
 
-08/26/16
+### 08/26/16
 
 - the current template and page is now highlighted in the side menu
 - improved export compression by collapsing multiple spaces to one space
 
-08/27/16
+### 08/27/16
 
 - fixed a bug where saving as a new template would not work
 - fixed a bug where the template width style was not being saved correctly
@@ -1299,43 +1291,43 @@
 - fixed a bug in db_query where selecting multiple rows with multiple statements in one query would
   only return the results of the first statement
 
-08/28/16
+### 08/28/16
 
 - fixed bugs occurring when using innerText instead of innerHTML
 - improved export speed by ignoring files that have not changed
 
-08/29/16
+### 08/29/16
 
 - began re-working universal user-id updates
 
-08/30/16
+### 08/30/16
 
 - user IDs are now updated universally
 - fixed a bug where the selection border was not being updated after inserting a user ID
 
-08/31/16
+### 08/31/16
 
 - moved to domain trianglecms.com
 - fixed a bug where user ids were not being exported in the correct order
 
-09/01/16
+### 09/01/16
 
 - fixed various bugs with PayPal from domain transition
 - fixed a bug where form attributes would get scrambled on export
 - fixed a bug where user fonts were not loading in the editor
 - textboxes can now be inserted directly into the template
 
-09/05/16
+### 09/05/16
 
 - made setting an image background more intuitive, and now applicable to body
 
-09/07/16
+### 09/07/16
 
 - fixed a bug where hyperlinks were not blocked in IE
 - any link is now editable
 - uploading images now displays the uploaded images with a success caption
 
-09/08/16
+### 09/08/16
 
 - underline is now removed when deleting hyperlinks
 - user classes are now insertable from the side menu with My Items
@@ -1343,26 +1335,26 @@
 - began converting menu icons to SVG
 - added margin dragging
 
-09/09/16
+### 09/09/16
 
 - fixed a bug where dragging elements into other elements was difficultversion
 
-09/10/16
+### 09/10/16
 
 - improved compression by including CSS in a style tag instead of an external file
 - fonts are now deferred
 
-09/11/16
+### 09/11/16
 
 - added an import website as template function
 - ctrl+left and ctrl+up change the opacity of the template
 
-09/12/16
+### 09/12/16
 
 - fixed a bug where the CSS styles of imported websites were scrambled
 - added margin drag snapping
 
-09/15/16
+### 09/15/16
 
 - items with percentage widths now snap to critical values 33.33%, 50%, and 66.66%
 - fixed a bug where the last element in a row would not snap to its previous sibling when resizing
@@ -1371,69 +1363,69 @@
   alignment of the element
 - fixed a bug where item alignment was not transferring when inserting columns
 
-09/19/16
+### 09/19/16
 
 - fixed a bug where item IDs would not be inserted with a premade template
 - added top margin dragging handle to images
 
-09/27/16
+### 09/27/16
 
 - text selection is now disabled when resizing margins
 
-10/31/16
+### 10/31/16
 
 - disabled PHP error display on the production server
 
-11/13/16
+### 11/13/16
 
 - fixed space occurring below images
 
-11/16/16
+### 11/16/16
 
 - added a style tag and script tag editing box in the developer tab for easier custom code
 
-12/14/16
+### 12/14/16
 
 - added a limit of 100 templates loaded from the database to administrator accounts
 - added a larger and more convenient code editor
 - added support for inserting tabs into textareas
 - disabled browser spellchecking on text input elements
 
-12/28/16
+### 12/28/16
 
 - added a create hyperlink button to the options tab
 - hyperlinks can now be applied to any element
 
-12/29/16
+### 12/29/16
 
 - added a new page button in the page list menu
 - deleting a page now loads the index page by default if the deleted page is loaded in the editor
 
-1/2/17
+### 01/02/17
 
 - opening a template within the editor now directs to a new url instead of loading through AJAX
 - added an icon for the hyperlink option in the options tab
 - temporarily removed ecommerce options until further testing and development
 - fixed a bug where the margin handles would remain on the page after using undo
 
-1/3/17
+### 01/03/17
 
 - added a transparency background to the image library in the editor and reformatted the shape and
   size of the images displayed to squares
 - the code editor is now fixed below the menu, and the marginFix adjusts to the height upon resize
 - the code editor is now opened by default when selecting style or script tag
 
-1/4/17
+### 01/04/17
 
 - fixed a bug where user IDs would not nest correctly when exporting
 - fixed a bug where using the code editor would overwrite the wrong source
 - fixed a bug where typing CSS styles in the developer tab would not be applied
 
-1/5/17
+### 01/05/17
 
 - enlarged code boxes to fit popular CSS style that would split into 2 lines
 
-1/9/17
+### 01/09/17
 
 - users are now given a list of template choices when using the new template button
 - saving as a new template now changes the URL to that template and page
@@ -1444,41 +1436,41 @@
 - added a transparency background to images on the admin page
 - fixed a bug where rgba was removed when editing other styles
 
-1/10/17
+### 01/10/17
 
 - fixed a bug where images would not resize correctly after resizing with the handles then changing
   the height to auto
 - added an apply all sides button for repetitive styles such as padding and margin
 
-1/11/17
+### 01/11/17
 
 - fixed a bug where IDs and classes could not be applied to the same item on export
 
-1/17/17
+### 01/17/17
 
 - fixed a bug where user IDs would not nest correctly when they have a next sibling
 
-1/18/17
+### 01/18/17
 
 - fixed a bug where the save template name input would pop up at the wrong time when exporting
 - fixed a bug where saving as a new page would reload to a blank page
 
-1/23/17
+### 01/23/17
 
 - added global style and script tags
 - slightly improved menu button appearance next to textareas
 
-1/24/17
+### 01/24/17
 
 - fixed a bug where body background images would not save or load
 - cleaned up template export code
 - exporting templates is now much smoother
 - added a prototype for clearing formatted text upon paste
 
-2/1/17
+### 02/01/17
 
 - pages are now listed alphabetically in the menu
 
-2/20/17
+### 02/20/17
 
 - images cropped within triangle are now truly cropped upon export
