@@ -677,7 +677,7 @@ function formatCSStext($cssStr, $isCropped = "") {
 
     "grid-template-columns", "grid-column-gap", "grid-row-gap", "grid-gap", "grid-column-start", "grid-column-end", "grid-row-start", "grid-row-end",
 
-    "flex", "flex-wrap", "flex-direction", "flex-flow", "justify-content", "align-items", "align-content", "order", "flex-grow", "flex-shrink", "flex-basis", "flex", "align-self"
+    "flex", "flex-wrap", "flex-direction", "flex-flow", "justify-content", "align-items", "align-content", "order", "flex-grow", "flex-shrink", "flex-basis", "flex", "align-self", "place-content"
   ];
 
   $onlyUseAllowedStyles = 0;
