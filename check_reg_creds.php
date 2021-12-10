@@ -1,6 +1,6 @@
 <?php
 /*
-(C) Copyright 2020 Raine Conor. All rights reserved.
+
 */
 
   require "app/php/sanitize_string.php";
