@@ -1,4 +1,4 @@
-<img src="https://trianglecms.com/images/triangle-logo-text.svg" alt="Triangle" width="200"/>
+<img src="https://trianglecms.com/images/triangle-logo-text-gradient.svg" alt="Triangle" width="200"/>
 <br>
 <br>
 
