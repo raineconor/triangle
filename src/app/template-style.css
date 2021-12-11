@@ -1,0 +1,221 @@
+* {
+  box-sizing:border-box;
+  outline:none;
+}
+
+a {
+  /* pointer-events: none; */
+}
+
+a img {
+  outline:none;
+}
+
+img {
+  -webkit-user-drag: none;
+  user-drag: none;
+  /* display:block;
+  line-height: 0; */
+}
+
+body {
+  font-family: 'Verdana', sans-serif;
+  /* font-family: 'Lato', sans-serif; */
+  font-size:14px;
+  margin:0;
+  background-color:white;
+  /* prevent selection highlighting */
+  -webkit-touch-callout:none !important;
+  -webkit-user-select:none !important;
+  -khtml-user-select:none !important;
+  -moz-user-select:none !important;
+  -ms-user-select:none !important;
+  user-select:none !important;
+  /* overflow-y:scroll !important; */
+}
+
+.fadeIn {
+  animation-name: fade-in;
+  animation-duration: 200ms;
+}
+
+.fadeOut {
+  animation-name: fade-out;
+  animation-duration: 200ms;
+}
+
+#topMarker {
+  border-bottom: 1px dashed gray;
+  background-color:white;
+  text-align: center;
+  color:gray;
+}
+
+#templateWrapper {
+  /* min-height:170px; */
+  font-size:16px;
+  min-height:60vh;
+  animation-name: fade-in;
+  animation-duration: 400ms;
+}
+
+#template {
+  transition:all 500ms;
+  opacity:0;
+  visibility:hidden;
+}
+
+#showHoverBorder,
+#selectionBorder,
+.selectMultiple,
+#cropImgBorder {
+  pointer-events:none;
+}
+
+#showHoverBorder,
+#selectionBorder {
+  position:fixed;
+  z-index:10;
+}
+
+#showHoverBorder {
+  border:1px solid #478BE3;
+}
+
+#selectionBorder {
+  border:1px solid #90F3FF;
+}
+
+#noClickThru {
+  height: 100%;
+  width: 100%;
+  border: 1px solid #478BE3;
+  padding: 1px;
+}
+
+#selectedItemOptionsBar {
+  position:fixed;
+  z-index:3;
+}
+
+.selectedItemOption {
+  background-color:#478BE3;
+  color:white;
+  padding:5px;
+  border-radius:2px;
+  line-height:0;
+  cursor:pointer;
+  display:inline-block;
+}
+
+.selectedItemOption:hover {
+  background-color:#73AEEE;
+}
+
+.resizeHandle, .marginHandle {
+  width:8px;
+  height:8px;
+  position:fixed;
+  pointer-events:auto;
+  z-index:2;
+}
+
+.resizeHandle {
+  background-color:#ffffff;
+  border:1px solid gray;
+}
+
+.marginHandle {
+  background-color:#90f3ff;
+  border:1px solid #4899B7;
+}
+
+.resizeHandleImg {
+  background-color:#ffffff;
+  border:1px solid gray;
+  position:fixed;
+  pointer-events:auto;
+  z-index:2;
+}
+
+.resizeHandleDiv {
+  background-color:#ffffff;
+  border:1px solid gray;
+  position:fixed;
+  pointer-events:auto;
+  z-index:2;
+}
+
+.snippetItem  * {
+  pointer-events:none;
+}
+
+.templateItem, [triangle-class~=templateItem] {
+  /* border-top:2px dotted #3F88C5;
+  border-right:2px dotted #3F88C5; */
+  /* transition:all 300ms ease 0s; */
+  cursor:pointer;
+}
+
+.templateItem:empty,
+[triangle-class~=templateItem]:empty:not([triangle-class~=textbox]) {
+  min-height:100px;
+}
+
+.templateItem:empty::after,
+[triangle-class~=templateItem]:empty:not([triangle-class~=textbox])::after {
+  content:"This element is empty. Insert a textbox, image, or other item.";
+  padding:15px;
+  color:gray;
+  text-align:center;
+  font-size:12px;
+  overflow:hidden;
+}
+
+.textBox, [triangle-class~=textbox] {
+  -webkit-touch-callout: text;
+  -webkit-user-select: text;
+  -khtml-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+
+.textBox a, [triangle-class~=textbox] a {
+  color: inherit;
+  text-decoration: none;
+  pointer-events: none;
+}
+
+.imageItem img, [triangle-class~=imageItem] img {
+  display:block;
+  line-height: 0;
+}
+
+#bottomMarker {
+  border-top: 1px dashed gray;
+  background-color:none;
+  text-align: center;
+  height:300px;
+  color:gray;
+  /*position:relative;
+  bottom:0;
+  right:0;
+  left:0;*/
+}
+
+#copyright {
+  font-size:10px;
+  color:lightgray;
+  /* bottom:0;
+  position:absolute; */
+  margin-top:30px;
+  display:block;
+  width:100%;
+}
+
+.clearfix::after {
+  content: "";
+  clear: both;
+  display: table;
+}

@@ -1,8 +1,8 @@
 <?php
 
 session_start();
-require "content/scripts/db_query.php";
-require "content/f9eFfXl3tnFKzop5/g5r18Rm56Bem5uyf.php";
+require "app/php/db_query.php";
+require "app/crypt/aes256.php";
 
 $new_surrogate = openssl_random_pseudo_bytes(60);
         $_SESSION["enc_key"] = $new_surrogate;

@@ -1,3 +1,10 @@
-# Untracked files:
-content/users
+build
+components
+node_modules
 .DS_Store
+.sass-cache
+_site
+_config.yaml
+.idea
+dist
+.parcel-cache
