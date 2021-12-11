@@ -7,4 +7,4 @@ Triangle is an online website builder with features that accommodate web design 
 I created this software to accommodate my needs as a web designer, because I could not find anything out there that suited me.
 
 #### License
-See LICENSE.md
+See [LICENSE.md](https://github.com/raineconor/triangle/blob/master/LICENSE)
