@@ -1,4 +1,4 @@
-<img src="https://trianglecms.com/images/triangle-logo-text-gradient.svg" alt="Triangle" width="200"/>
+<img src="https://trianglecms.com/images/triangle-logo-text-gradient.svg" alt="Triangle" width="250"/>
 <br>
 
 Triangle is an online website builder with features that accommodate web design professionals. [Try it for free](https://trianglecms.com/).
