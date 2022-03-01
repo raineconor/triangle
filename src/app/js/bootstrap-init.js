@@ -44,12 +44,5 @@ document.getElementById("boxShadowBtn").addEventListener("click", function() {
   BS.boxShadowMenu.toggle();
 });
 
-// var test = new bootstrap.Toast(document.getElementById("darkToast"), {animation:false,autohide:false});
-// test.show();
-
-// toasts
-// TRIANGLE.notify.saving.toast = new bootstrap.Toast(document.getElementById("toastSaving"), {autohide:false});
-// TRIANGLE.notify.saved.toast = new bootstrap.Toast(document.getElementById("toastSaved"));
-// TRIANGLE.notify.loading.toast = new bootstrap.Toast(document.getElementById("toastLoading"), {autohide:false});
-// TRIANGLE.notify.error.toast = new bootstrap.Toast(document.getElementById("toastError"));
-// TRIANGLE.notify.info.toast = new bootstrap.Toast(document.getElementById("toastInfo"), {autohide:false});
+// var poop = new bootstrap.Toast(document.getElementById("darkToast"), {animation:false,autohide:false});
+// poop.show();

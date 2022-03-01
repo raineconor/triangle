@@ -56,23 +56,23 @@ body {
 #editor1, #editor2 {
  width:50%;
  height:100vh;
- margin:0;
 }
 </style>
 </head>
 <body>
 <?php
   //$code = formatCode();
-  $code = formatCode($JSON_arr, $templateName, $pageName, $compress);
+  $code = formatCode($JSON_arr, $templateName, $pageName, $compress, $croppedImgPaths);
   $code[0] = preg_replace("@(src|lazyload)\=\"[^\"]*\/(images\/[^\"]+)\"@", "$1=\"$2\"", $code[0]);
   $code[1] = preg_replace("@url\(\"[^\"]*\/(images\/[^\"]+)\"\)@", "url(\"$1\")", $code[1]);
   if (!$compress) $code[1] = str_replace('url("images/', 'url("../images/', $code[1]);
+
 ?>
 
-<pre id="editor1"><?php echo htmlentities($code[0]); ?></pre><!--
+<div id="editor1"><?php echo htmlentities($code[0]); ?></div><!--
 
 --><?php
-if (!$compress) echo "<pre id='editor2'>" . htmlentities($code[1]) . "</pre>";
+if (!$compress) echo "<div id='editor2'>" . htmlentities($code[1]) . "</div>";
 ?>
 <script src="../ace/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript">

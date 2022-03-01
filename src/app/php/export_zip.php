@@ -88,9 +88,12 @@
 
     $croppedImages = $JSON_arr["imageList"];
     $croppedImgPaths = cropImages($croppedImages, $imageDest);
+    //var_dump($croppedImgPaths);
     $code = formatCode($JSON_arr, $templateName, $pageName, $compress, $croppedImgPaths);
 
-    // preg_match_all("@(src|lazyload)\=\"([^\"]*\/images\/[^\"]+)\"@", $code[0], $HTMLimages); // this can be made faster if a list of images are stored with the template
+    //var_dump($code);
+
+    preg_match_all("@(src|lazyload)\=\"([^\"]*\/images\/[^\"]+)\"@", $code[0], $HTMLimages); // this can be made much faster if a list of images are stored with the template
     /*$HTMLimages[2] = array_diff($HTMLimages[2], $croppedImgPaths["new"]);
     var_dump($HTMLimages[2]);
     var_dump($croppedImgPaths["new"]);*/
@@ -103,6 +106,10 @@
                                         //"http://trianglecms.com",
                                         "/home/tcadmin/public_html",
                                         $HTMLimages[2][$y]);
+      /*$HTMLimages[2][$y] = preg_replace("/^(http:\/\/(www\.)?braydengregerson\.com\/triangle)/",
+                                        //"http://trianglecms.com",
+                                        "/home/tcadmin/public_html",
+                                        $HTMLimages[2][$y]);*/
       /*$HTMLimages[2][$y] = preg_replace("/^(http:\/\/trianglecms\.com)/",
                                         //"http://trianglecms.com",
                                         "/home/tcadmin/public_html",
@@ -113,7 +120,7 @@
                                         $HTMLimages[2][$y]);
 
       if ($croppedImgPaths["new"] != null && in_array(basename($HTMLimages[2][$y]), $croppedImgPaths["new"])) continue;
-      // error_log($HTMLimages[2][$y]);
+      //error_log($HTMLimages[2][$y]);
       copy($HTMLimages[2][$y], $imageDest . basename($HTMLimages[2][$y]));
     }
 
@@ -142,7 +149,14 @@
     if (!$compress) $code[1] = str_replace('url("images/', 'url("../images/', $code[1]);
 
     file_put_contents($filedest . "/" . $pageName . ".html", $code[0]);
-    if (!$compress) file_put_contents($filedest . "/css/" . $pageName . ".css", $code[1]);
+    if (!$compress) {
+      /*if (file_put_contents($filedest . "/" . $pageName . ".css", $code[1])) {
+          echo "YES";
+      } else {
+          echo "NO";
+      }*/
+      file_put_contents($filedest . "/css/" . $pageName . ".css", $code[1]);
+    }
   }
 
   $unusedPages = $existingPages ? array_flip($existingPages) : [];

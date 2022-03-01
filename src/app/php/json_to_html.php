@@ -6,7 +6,8 @@ require "responsive.php";
 require_once "db_query.php";
 
 
-function formatCode($data, $templateName, $pageName, $compress = false) {
+// this function is called by export_zip.php on line 83
+function formatCode($data, $templateName, $pageName, $compress = false, $croppedImgPaths) {
 
   global $username;
   global $compression_map;
@@ -20,9 +21,12 @@ function formatCode($data, $templateName, $pageName, $compress = false) {
   ============================================*/
 
   $fonts = "";
+  $deferFonts = "";
+
   $fontData = trim($data["fontData"]);
   $fonts = !empty($fontData) ? "<link rel='preconnect' href='https://fonts.gstatic.com'>\n"
           . str_replace("><", ">\n<", $fontData) . "\n" : "";
+
 
   $metaTitle = !empty($data["metaTitle"]) ? $data["metaTitle"] : "Page Title";
   $metaKeywords = !empty($data["metaKeywords"]) ? $data["metaKeywords"] : "insert, keywords, here";
@@ -31,8 +35,11 @@ function formatCode($data, $templateName, $pageName, $compress = false) {
   if ($compress) {
     $CSSinclude = "<style><css></style>";
   } else {
-    $CSSinclude = "<link rel=\"stylesheet\" href=\"css/" . $pageName . ".css\" type=\"text/css\" media=\"screen\">\n";
-    // $CSSinclude = "<style><css></style>";
+    /*$CSSinclude = "<!--========== CSS Include: =========-->\n"
+                . "<link rel=\"stylesheet\" href=\"" . $pageName .".css\" type=\"text/css\" media=\"screen\">\n"
+                . "<!--=================================-->\n\n";*/
+                // $CSSinclude = "<style><css></style>";
+                $CSSinclude = "<link rel=\"stylesheet\" href=\"css/" . $pageName .".css\" type=\"text/css\" media=\"screen\">\n\n";
   }
 
   $html .= "<!DOCTYPE HTML>\n"
@@ -40,12 +47,12 @@ function formatCode($data, $templateName, $pageName, $compress = false) {
          . "<head>\n"
          . "<meta charset=\"utf-8\">\n\n"
 
-         . "<title>$metaTitle</title>\n\n"
+         . "<title>" . $metaTitle . "</title>\n\n"
 
          . "<link rel=\"shortcut icon\" href=\"/favicon.png\" />\n\n"
 
-         . "<meta name=\"description\" content=\"$metaDescription\">\n"
-         . "<meta name=\"keywords\" content=\"$metaKeywords\">\n"
+         . "<meta name=\"description\" content=\"" . $metaDescription . "\">\n"
+         . "<meta name=\"keywords\" content=\"" . $metaKeywords . "\">\n"
          . "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n\n"
 
          . $fonts
@@ -62,49 +69,132 @@ function formatCode($data, $templateName, $pageName, $compress = false) {
   $userClassList = [];
   reset($data["items"]);
 
-  $item_array_keys = array_keys($data["items"]);
-  $len = count($item_array_keys);
-  reset($item_array_keys);
+  $keys = array_keys($data["items"]);
+  $len = count($keys);
+  reset($keys);
 
-  for ($x = 0; $x < $len; $x++) {
-    $triangle_index = $item_array_keys[$x];
-    $item = $data["items"][$triangle_index];
+  for ($x = 0; $x < $len; $x++) { // iterate through all items
+    $key = $keys[$x];
+    $item = $data["items"][$key];
 
-    if (isset($item["masterItemChild"])) continue;
+    $userIDparent = false;
+    if (is_string($item)) { // if item is a user-id
+      $splitUserID = explode(' ', $item);
+      $userID = $splitUserID[0];
+      $userIDparent = isset($splitUserID[1]) ? $splitUserID[1] : false;
+      $item = db_query('SELECT content FROM user_ids WHERE username = ? AND template = ? AND user_id = ?', [$username, $templateName, $userID])["content"];
+      $item = json_decode($item, true)[$userID];
 
-    $master_item_parent = false;
-    if (isset($item["masterItem"])) {
-      $master_item_id = $item["masterID"];
-      $master_item_parent = $item["masterParent"];
-      $master_item_str = db_query('SELECT content FROM user_ids WHERE username = ? AND template = ? AND user_id = ?', [$username, $templateName, $master_item_id])["content"];
-      $master_item_arr = json_decode($master_item_str, true)["items"];
-
-      $master_item_tags = [];
-
-      for ($y = 0; $y < count($master_item_arr); $y++) {
-        $master_item_tags[$y] = [];
-        $item = $master_item_arr[$y];
-        if ($item["master-childof"] >= 0) {
-
+      $new_keys = [];
+      $track = $x;
+      for ($y = 0; $y < $len; $y++) {
+        if ($y === $track) {
+          $new_keys[$track] = $userID;
+        } else {
+          $new_keys[$y] = $keys[$y];
         }
-        $createItem = createItem($item);
-        $createItem["childof"] = $item["master-childof"];
-        $master_item_tags[$y] = $createItem;
+      }
+      $keys = $new_keys;
+      $data["responsiveItems"][$userID] = $item["responsive"];
+
+      foreach($item["children"] as $child => $childStyles) {
+        $data["items"][$child] = $childStyles;
+        $data["responsiveItems"][$child] = $childStyles["responsive"];
+        $new_keys = [];
+        $done = false;
+        for ($y = 0; $y < $len; $y++) {
+          if ($done) {
+            $new_keys[$y + 1] = $keys[$y];
+          } else {
+            $new_keys[$y] = $keys[$y];
+          }
+          if ($y === $track && !$done) {
+            $new_keys[++$track] = $child;
+            $done = true;
+          }
+        }
+        $keys = $new_keys;
+        $len++;
       }
 
-      $data["items"][$triangle_index]["items"] = $master_item_arr;
-      $itemTags[$x] = [
-        "itemHTML" => nestItems($master_item_tags)
-      ];
+      $data["items"][$userID] = $item;
+      $data["items"][$userID]["children"] = !empty($data["items"][$key]["children"]) ? 1 : 0;
+      unset($data["items"][$key]);
+      $key = $userID;
+    }
 
+    $tag = strtolower($item["tagName"]);
+    $id = null;
+    $class = null;
+    $userClass = false;
+    $userID = false;
+    if (!empty($item["user-class"])) {
+      //$itemTitle = $item["user-class"];
+      $class = " class=\"" . $item["user-class"] . "\"";
+      $userClass = true;
+    }
+    if (!empty($item["user-id"])) {
+      $itemTitle = $item["user-id"];
+      $id = " id=\"" . $item["user-id"] . "\"";
+      $userID = true;
+    }
+    if (empty($id) && empty($class)) {
+      $itemTitle = $key;
+      $id = " id=\"" . $key . "\"";
+      $userID = false;
+    }
+    if (empty($class)) {
+      $class = "";
+      $userClass = false;
+    }
+    if ($userClass) {
+      if (!in_array($item["user-class"], $userClassList)) $userClassList[] = $item["user-class"];
+    }
+    //$style = !empty($item["style"]) ? " style=\"" . $item["style"] . "\"" : "";
+    $src = !empty($item["src"]) ? $item["src"] : null;
+    $src = !empty($src) ? " src=\"" . $src . "\"" : "";
+    $name = !empty($item["name"]) ? " name=\"" . $item["name"] . "\" required" : "";
+    $formFieldNames .= !empty($item["name"]) ? $item["name"] . "," : "";
+    $tag = !empty($name) ? "textarea" : $tag;
+    $clearFloat = $item["clearFloat"] ? "<div style=\"clear: both;\"></div>\n" : "";
+    $innerHTML = !empty($item["innerHTML"]) ? "\n" . $item["innerHTML"] . "\n" : "";
+    if (!empty($innerHTML)) {
+      preg_match("/<img[^>]*>/", $innerHTML, $countImgTags);
+      if ($countImgTags) {
+        $imgCount++;
+      }
+      $len_y = count($croppedImgPaths["original"]);
+      for ($y = 0; $y < $len_y; $y++) {
+        //if (strpos($innerHTML, $croppedImgPaths["original"][$y])) {
+        //if (strpos($innerHTML, "item" . $croppedImgPaths["itemNums"][$y]) && strpos($innerHTML, $croppedImgPaths["original"][$y])) {
+          echo $croppedImgPaths["itemNums"][$y] . "\n";
+        if (strpos($id . $class, "item" . $croppedImgPaths["itemNums"][$y])) {
+          $innerHTML = str_replace($croppedImgPaths["original"][$y], $croppedImgPaths["new"][$y], $innerHTML);
+          $innerHTML = preg_replace('#style="[^"]*"#', 'style="width:100%;height:auto;"', $innerHTML);
+          unset($croppedImgPaths["original"][$y]);
+          unset($croppedImgPaths["new"][$y]);
+        }
+      }
+    }
+    $target = !empty($item["target"]) ? " target=\"" . $item["target"] . "\"" : "";
+    //$innerHTML = !empty($item["link-to"]) ? "\n<a href=\"" . $item["link-to"] . "\"" . $target . ">" . $innerHTML . "</a>\n" : $innerHTML;
+    $openLink = !empty($item["link-to"]) ? "\n<a href=\"" . $item["link-to"] . "\"" . $target . ">" : "";
+    $closeLink = !empty($openLink) ? "</a>" : "";
+    $form = $tag === "form" ? " method=\"post\" enctype=\"application/x-www-form-urlencoded\" action=\"" . $pageName . "-" . $itemTitle . "form.php\"" : "";
+    /*$htmlStr = "<" . $tag . " id=\"" . $id . "\"" . $name . $src . $form . ">" . $innerHTML . "</" . $tag . ">\n" . $clearFloat;
+    $itemHTML .= $htmlStr;*/
+
+    $closeTag = $innerHTML . "</" . $tag . ">\n" . $clearFloat;
+
+    $itemTags[$key]["openTag"] = $openLink . "<" . $tag . $id . $class /* . $style */. $name . $src . $form . ">";
+    $itemTags[$key]["closeTag"] = $closeTag . $closeLink;
+    $itemTags[$key]["children"] = boolval($item["children"]);
+    if ($userIDparent) {
+      $itemTags[$key]["childOf"] = $userIDparent;
     } else {
-      $itemTags[$x] = createItem($item);
+      $itemTags[$key]["childOf"] = !empty($item["childof"]) ? $item["childof"] : false;
     }
-
-    if (!empty($item["user-class"]) && !in_array($item["user-class"], $userClassList)) {
-      $userClassList[] = $item["user-class"];
-    }
-
+    $itemTags[$key]["isLastChild"] = boolval($item["isLastChild"]);
   }
 
   $openScript = "<script type=\"text/javascript\">\n";
@@ -136,13 +226,53 @@ function formatCode($data, $templateName, $pageName, $compress = false) {
   $layer = 0;
   reset($itemTags);
 
-  $itemHTML .= nestItems($itemTags);
+  foreach ($itemTags as $key => $item) { // iterate through all items and create HTML nesting structure
+    $itemHTML .= $item["openTag"];
+
+    if (!$item["children"] && $item["isLastChild"]) {
+
+      //echo htmlspecialchars($item["openTag"]) . " has no children, is last child.<br>"; // debug
+
+      $itemHTML .= $item["closeTag"];
+      $isLast = true;
+      $childOf = $item["childOf"];
+
+      //echo "Child of: " . $childOf . "<br>"; // debug
+
+      $prevChildOf;
+      $counter = 0;
+      while ($isLast && $childOf) {
+        $itemHTML .= $itemTags[$childOf]["closeTag"];
+        $isLast = boolval($itemTags[$childOf]["isLastChild"]);
+        $prevChildOf = $childOf;
+        $childOf = $itemTags[$childOf]["childOf"];
+        //echo "Loop $counter --- isLast = $isLast, childOf = $childOf<br>"; // debug
+        $counter++;
+      }
+
+    } else if (!$item["children"] && !$item["isLastChild"]) {
+      //echo htmlspecialchars($item["openTag"]) . " has no children, is not last child.<br>";
+      $itemHTML .= $item["closeTag"];
+    }/* else if ($item["children"]) {
+      echo htmlspecialchars($item["openTag"]) . " has children.<br>"; // debug
+    }
+
+    echo "<br>-----------------------<br>"; // debug*/
+  }
+
+  //var_dump($data);
 
   $lookAhead = "/(<(?!(i|em|b|u))\b[^>]*>)(?=\w*\s*[.,\/#!$%\^&\*;:{}=\-_`~\(\)@\+]*)*/";
+
   $itemHTML = preg_replace($lookAhead, "$1\n", $itemHTML);
+
   $lookAhead = "#(?=<(/*?)(?!(em|i|b|u|br\s*/*|strong))\w+?.+?>)#";
+
   $itemHTML = preg_replace($lookAhead, "\n", $itemHTML);
+
   $itemHTML = preg_split("/\n+/", $itemHTML, -1, PREG_SPLIT_NO_EMPTY);
+
+  //var_dump($itemHTML);
 
   $layer = "";
   $openTag = "#<(?!(em|i|b|u|br\s*/*|strong|source))\w+?.+?>#";
@@ -183,9 +313,20 @@ function formatCode($data, $templateName, $pageName, $compress = false) {
   $html .= implode($itemHTML);
 
   $html .= "\n\n</div>\n\n"
+         . $deferFonts
+         . $imgCount
          . $scriptTag
          . "</body>\n\n"
          . "</html>";
+         //$test = "";
+
+  //echo "<textarea style='width:50%;height:100%;resize:none;'>" . htmlspecialchars($html) . "</textarea>";
+
+  //return;
+
+  //$html = preg_replace("/action\=\"(item\d+form\.php)\"/", "action=\"" . $_SESSION["currentPage"][$instance] . "-$1\"", $html);
+
+  //$html = preg_replace("/(<div[^>]*style=\"[^\"]*display:\s*inline-block[^\"]*\"[^>]*><\/div>)\n</", "$1<!--\n--><", $html);
 
   /*============================================
                END HTML FORMATTING
@@ -201,6 +342,10 @@ function formatCode($data, $templateName, $pageName, $compress = false) {
   $css .= "* {\n"
         . "  box-sizing:border-box;\n"
         . "}\n\n"
+
+        // . "*[onClick] {\n"
+        // . "  cursor:pointer;\n"
+        // . "}\n\n"
 
         . "body {\n"
         . "  font-family:" . $bodyFont . ";\n"
@@ -231,12 +376,6 @@ function formatCode($data, $templateName, $pageName, $compress = false) {
 
         . "textarea {\n"
         . "  resize:none;\n"
-        . "}\n\n"
-
-        . ".clearfix::after {\n"
-        . "  content: \"\";\n"
-        . "  clear: both;\n"
-        . "  display: table;\n"
         . "}\n\n";
 
 
@@ -296,59 +435,7 @@ function formatCode($data, $templateName, $pageName, $compress = false) {
   //var_dump($userClassList);
   reset($data["items"]);
 
-  $breakpoints = [
-    "xxl" => "@media (min-width: 1400px) {\n",
-    "xl" => "@media (min-width: 1200px) {\n",
-    "lg" => "@media (min-width: 992px) {\n",
-    "md" => "@media (max-width: 991px) {\n",
-    "sm" => "@media (max-width: 767px) {\n",
-    "xs" => "@media (max-width: 575px) {\n"
-  ];
-
-  $hoverStyles = "";
-
-  foreach ($data["items"] as $triangle_index => $item) {
-    if (isset($item["masterItemChild"])) continue;
-    // $cssBreakpoints = str_replace("#" . $item["id"] . " ", "#item$triangle_index ", $cssBreakpoints);
-    $indent = "  ";
-    if (isset($item["masterItem"])) {
-
-      for ($y = 0; $y < count($item["items"]); $y++) {
-        $breakpoints["xxl"] .= $indent . $item["items"][$y]["breakpoints"]["xxl"] . "\n";
-        $breakpoints["xl"] .= $indent . $item["items"][$y]["breakpoints"]["xl"] . "\n";
-        $breakpoints["lg"] .= $indent . $item["items"][$y]["breakpoints"]["lg"] . "\n";
-        $breakpoints["md"] .= $indent . $item["items"][$y]["breakpoints"]["md"] . "\n";
-        $breakpoints["sm"] .= $indent . $item["items"][$y]["breakpoints"]["sm"] . "\n";
-        $breakpoints["xs"] .= $indent . $item["items"][$y]["breakpoints"]["xs"] . "\n";
-        if (!empty($item["items"][$y]["hover-style"]) && $item["items"][$y]["hover-style"] != "null")
-        $hoverStyles .= "#" . $item["items"][$y]["id"] . ":hover {\n"
-          . rtrim(formatCSStext($item["items"][$y]["hover-style"])) . "\n}";
-      }
-
-    } else {
-
-      $breakpoints["xxl"] .= $indent . $item["breakpoints"]["xxl"] . "\n";
-      $breakpoints["xl"] .= $indent . $item["breakpoints"]["xl"] . "\n";
-      $breakpoints["lg"] .= $indent . $item["breakpoints"]["lg"] . "\n";
-      $breakpoints["md"] .= $indent . $item["breakpoints"]["md"] . "\n";
-      $breakpoints["sm"] .= $indent . $item["breakpoints"]["sm"] . "\n";
-      $breakpoints["xs"] .= $indent . $item["breakpoints"]["xs"] . "\n";
-      if (!empty($item["hover-style"]) && $item["hover-style"] != "null")
-      $hoverStyles .= "#" . $item["id"] . ":hover {\n"
-        . rtrim(formatCSStext($item["hover-style"])) . "\n}";
-
-    }
-
-      // if ($item["hover-style"] && !is_null($item["hover-style"]) && $item["hover-style"] != "null") {
-      //   $css .= $elemType . $itemTitle . ":hover {\n"
-      //     . preg_replace("/\s+-webkit-user-select:none;/", "", formatCSStext($item["hover-style"]))
-      //     . "}\n\n";
-      //   }
-
-    continue;
-
-    // =========================================================================
-
+  foreach ($data["items"] as $key => $item) {
     $itemTitle = null;
     $userClass = false;
     $userID = false;
@@ -361,24 +448,19 @@ function formatCode($data, $templateName, $pageName, $compress = false) {
       $userClass = false;
       $userID = true;
     }
-    if (!$item["isMasterChild"] && empty($itemTitle)) {
-      $itemTitle = "item" . $triangle_index;
-      $userClass = false;
-      $userID = false;
-    }
     if (empty($itemTitle)) {
-      $itemTitle = $triangle_index;
+      $itemTitle = $key;
       $userClass = false;
       $userID = false;
     }
 
-    if (is_string($data["responsiveItems"][$triangle_index]) && isset($data["responsiveItems"][  $data["responsiveItems"][$triangle_index]  ])) $data["responsiveItems"][$triangle_index] = $data["responsiveItems"][  $data["responsiveItems"][$triangle_index]  ];
+    if (is_string($data["responsiveItems"][$key]) && isset($data["responsiveItems"][  $data["responsiveItems"][$key]  ])) $data["responsiveItems"][$key] = $data["responsiveItems"][  $data["responsiveItems"][$key]  ];
 
     $responsive = [];
-    if (isset($data["responsiveItems"][$triangle_index])) {
-      $responsive[$triangle_index] = responsive_item($triangle_index, $data["responsiveItems"][$triangle_index], $item["triangle-childof"], $item["nextSib"], $item["prevSib"], $data["responsiveItems"]);
+    if (isset($data["responsiveItems"][$key])) {
+      $responsive[$key] = responsive_item($key, $data["responsiveItems"][$key], $item["childof"], $item["nextSib"], $item["prevSib"], $data["responsiveItems"]);
     } else {
-      $responsive[$triangle_index] = responsive_item($triangle_index, [null, 0, 0], null, null, null);
+      $responsive[$key] = responsive_item($key, [null, 0, 0], null, null, null);
     }
 
     if ($userClass && $readUserClasses && isset($userClassList[$itemTitle])) {
@@ -406,7 +488,7 @@ function formatCode($data, $templateName, $pageName, $compress = false) {
 
       $css .= $elemType . $itemTitle . " {\n"
            . preg_replace("/\s+-webkit-user-select:none;/", "",
-             preg_replace("/(;|{)\s*width:[^;]+;/", ";\n  width:" . $responsive[$triangle_index]["xs"] . ';', formatCSStext($itemStyle, $item["crop-map"])))
+             preg_replace("/(;|{)\s*width:[^;]+;/", ";\n  width:" . $responsive[$key]["xs"] . ';', formatCSStext($itemStyle, $item["crop-map"])))
            . "}\n\n";
 
       if ($item["hover-style"] && !is_null($item["hover-style"]) && $item["hover-style"] != "null") {
@@ -415,21 +497,21 @@ function formatCode($data, $templateName, $pageName, $compress = false) {
              . "}\n\n";
       }
 
-      if (!empty($responsive[$triangle_index]["sm"])) {
+      if (!empty($responsive[$key]["sm"])) {
       $mediaSM .= '  ' . $elemType . $itemTitle . " {\n"
-               . isEmpty("  width", $responsive[$triangle_index]["sm"])
+               . isEmpty("  width", $responsive[$key]["sm"])
                . "  }\n";
       }
 
-      if (!empty($responsive[$triangle_index]["md"])) {
+      if (!empty($responsive[$key]["md"])) {
       $mediaMD .= '  ' . $elemType . $itemTitle . " {\n"
-               . isEmpty("  width", $responsive[$triangle_index]["md"])
+               . isEmpty("  width", $responsive[$key]["md"])
                . "  }\n";
       }
 
-      if (!empty($responsive[$triangle_index]["lg"])) {
+      if (!empty($responsive[$key]["lg"])) {
       $mediaLG .= '  ' . $elemType . $itemTitle . " {\n"
-               . isEmpty("  width", $responsive[$triangle_index]["lg"])
+               . isEmpty("  width", $responsive[$key]["lg"])
                . "  }\n";
       }
       if ($userClass) unset($userClassList[$itemTitle]);
@@ -439,17 +521,9 @@ function formatCode($data, $templateName, $pageName, $compress = false) {
       createJSONform($pageName . "-" . $itemTitle . "form", $formFieldNames, $item["form-email"], $templateName, $pageName);
     }
   }
-  $cssBreakpoints = implode("\n}\n\n", $breakpoints) . "\n}";
-  // $cssBreakpoints = str_replace("}@", "}\n\n@", @$cssBreakpoints);
-  $cssBreakpoints = preg_replace("/.\w+ {\s+}/", "", $cssBreakpoints);
-  $cssBreakpoints = preg_replace("/\s{4,}/", "", $cssBreakpoints);
-  $cssBreakpoints = preg_replace("/(\w+) {(.*)}$/m", "$1 {\n$2\n  }\n", $cssBreakpoints);
-  $cssBreakpoints = str_replace("; ", ";\n  ", $cssBreakpoints);
-  // $cssBreakpoints = str_replace("  }", "}", $cssBreakpoints);
-  $cssBreakpoints = preg_replace("/^\s*(.+);$/m", "    $1;", $cssBreakpoints);
 
   $globalStyle = !empty($globalTags["style_tag"]) ? $globalTags["style_tag"] . "\n\n" : "";
-  $css .= $globalStyle . $data["styleTag"] . $cssBreakpoints . "\n\n" . $hoverStyles . "\n\n";
+  $css .= $globalStyle . $data["styleTag"] . "\n\n";
 
   unset($data);
   unset($responsive);
@@ -506,92 +580,9 @@ function formatCode($data, $templateName, $pageName, $compress = false) {
 
 //=======================================================================
 
-function createItem($item) {
-  $tag = strtolower($item["tagName"]);
-
-  $openTag = "<$tag";
-  $closeTag = "</$tag>";
-
-  if ($tag === "form") {
-    $openTag .= ' method="post" enctype="application/x-www-form-urlencoded" action="'. $pageName . '-' . $itemTitle . 'form.php"';
-  }
-
-  if (!empty($item["id"])) {
-    $openTag .= ' id="' . $item["id"] . '"';
-  }
-
-  if (!empty($item["user-class"])) {
-    $openTag .= ' class="' . $item["user-class"] . '"';
-    // if (!in_array($item["user-class"], $userClassList)) $userClassList[] = $item["user-class"];
-  }
-
-  if (!empty($item["name"])) {
-    $openTag .= ' name="' . $item["name"] . '" required';
-    $formFieldNames .= $item["name"] . ",";
-  }
-
-  if (!empty($item["src"])) {
-    $openTag .= ' src="' . $item["src"] . '"';
-  }
-
-  if (!empty($item["link-to"])) {
-    $target = !empty($item["target"]) ? ' target="' . $item["target"] . '"' : "";
-    $openTag = '<a href="' . $item["link-to"] . '"' . $target . '>' . $openTag;
-    $closeTag .= '</a>';
-  }
-
-  // if (!empty($item["style"])) {
-  //   $openTag .= ' style="' . $item["style"] . '"';
-  // }
-
-  // $tag = !empty($name) ? "textarea" : $tag;
-
-  if ($item["clearFloat"]) {
-    $closeTag .= '<div style="clear:both"></div>';
-  }
-
-  if (!empty($item["innerHTML"])) {
-    $closeTag = "\n" . $item["innerHTML"] . "\n" . $closeTag;
-  }
-
-  $openTag .= ">";
-
-  return [
-    "openTag" => $openTag,
-    "closeTag" => $closeTag,
-    "childof" => $item["triangle-childof"],
-    "children" => boolval($item["children"]),
-    "isLastChild" => boolval($item["isLastChild"])
-  ];
-}
-
-function nestItems($itemTags) {
-  $itemHTML = "";
-  foreach ($itemTags as $triangle_index => $item) {
-    if (isset($item["itemHTML"])) {
-      $itemHTML .= $item["itemHTML"];
-      continue;
-    }
-    $itemHTML .= $item["openTag"];
-    if (!$item["children"] && $item["isLastChild"]) {
-      $itemHTML .= $item["closeTag"];
-      $isLast = true;
-      $childof = $item["childof"];
-
-      $prevChildOf;
-      while ($isLast && $childof > -1) {
-        $itemHTML .= $itemTags[$childof]["closeTag"];
-        $isLast = boolval($itemTags[$childof]["isLastChild"]);
-        $prevChildOf = $childof;
-        $childof = $itemTags[$childof]["childof"];
-      }
-
-    } else if (!$item["children"] && !$item["isLastChild"]) {
-      $itemHTML .= $item["closeTag"];
-    }
-  }
-  return $itemHTML;
-}
+/*
+function isEmpty() returns an empty string if the variable is empty, or returns the variable in a new format if it's not empty
+*/
 
 function isEmpty($style, $value) {
   if (empty($value)) {
@@ -680,32 +671,24 @@ function formatCSStext($cssStr, $isCropped = "") {
     "flex", "flex-wrap", "flex-direction", "flex-flow", "justify-content", "align-items", "align-content", "order", "flex-grow", "flex-shrink", "flex-basis", "flex", "align-self", "place-content"
   ];
 
-  $onlyUseAllowedStyles = 0;
   $space = "  ";
-
-  if ($onlyUseAllowedStyles) {
-    $cssArr = explode(";", $cssStr);
-    $cssDict = [];
-    $len = count($cssArr);
-    for ($x = 0; $x < $len; $x++) {
-      $splitStyle = explode(":", $cssArr[$x], 2);
-      !empty($splitStyle[0]) ? $splitStyle[0] = trim($splitStyle[0]) : null;
-      !empty($splitStyle[1]) ? $splitStyle[1] = trim($splitStyle[1]) : null;
-      !empty($splitStyle[0]) ? $cssDict[$splitStyle[0]] = $splitStyle[1] : null;
-    }
-
-    $cssFormat = '';
-    $len = count($allowedStyles);
-    for ($x = 0; $x < $len; $x++) {
-      if (!empty($cssDict[$allowedStyles[$x]])) {
-        $cssFormat .= $space . $allowedStyles[$x] . ":" . $cssDict[$allowedStyles[$x]] . ";\n";
-      }
-    }
-  } else {
-    $cssFormat = $space . preg_replace("/;\s+/", ";\n$space", $cssStr) . "\n";
+  $cssArr = explode(";", $cssStr);
+  $cssDict = [];
+  $len = count($cssArr);
+  for ($x = 0; $x < $len; $x++) {
+    $splitStyle = explode(":", $cssArr[$x], 2);
+    !empty($splitStyle[0]) ? $splitStyle[0] = trim($splitStyle[0]) : null;
+    !empty($splitStyle[1]) ? $splitStyle[1] = trim($splitStyle[1]) : null;
+    !empty($splitStyle[0]) ? $cssDict[$splitStyle[0]] = $splitStyle[1] : null;
   }
 
-
+  $cssFormat = '';
+  $len = count($allowedStyles);
+  for ($x = 0; $x < $len; $x++) {
+    if (!empty($cssDict[$allowedStyles[$x]])) {
+      $cssFormat .= $space . $allowedStyles[$x] . ":" . $cssDict[$allowedStyles[$x]] . ";\n";
+    }
+  }
 
   $cssFormat = mergeBorder($cssFormat);
 

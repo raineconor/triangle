@@ -169,7 +169,6 @@ body {
   color:gray;
   text-align:center;
   font-size:12px;
-  overflow:hidden;
 }
 
 .textBox, [triangle-class~=textbox] {
@@ -182,8 +181,8 @@ body {
 }
 
 .textBox a, [triangle-class~=textbox] a {
-  color: inherit;
-  text-decoration: none;
+  color:inherit;
+  text-decoration:none;
   pointer-events: none;
 }
 

@@ -16,7 +16,6 @@
   $globalStyle = $_POST["globalStyle"];
   $globalScript = $_POST["globalScript"];
   $instance = intval(sanitize($_POST["instance"]));
-  $unsavedPremade = _POST("unsavedPremade");
 
   if (!empty($_POST["templateName"]) && isset($_POST["templateName"])) {
     $templateName = preg_replace("/[^\w\s\-]+/", "_", sanitize(substr($_POST["templateName"], 0, 32)));
@@ -37,7 +36,6 @@
       create_page($username, $templateName, $pageName, $content);
     }
   } else {
-    $chooseUsername = $unsavedPremade ? "triangle" : $username;
     $currentTemplate = $_SESSION["currentTemplate"][$instance];
     if ($currentTemplate !== $templateName && !empty($currentTemplate)) {
       $readTemplate = db_query_all('SELECT page FROM templates WHERE username = ? AND template = ?', [$username, $currentTemplate]);
@@ -73,13 +71,13 @@
       create_page($username, $templateName, $pageName, $content);
     }
   }
-  
+
   if ($globalTags = db_query('SELECT style_tag, script_tag FROM global_tags WHERE username = ? AND template = ?', [$username, $templateName])) {
     db_query('UPDATE global_tags SET style_tag = ?, script_tag = ? WHERE username = ? AND template = ?', [$globalStyle, $globalScript, $username, $templateName]);
   } else {
     db_query('INSERT INTO global_tags (username, template, style_tag, script_tag) VALUES (?, ?, ?, ?)', [$username, $templateName, $globalStyle, $globalScript]);
   }
-
+  
   // reset the current template/page
   $_SESSION["currentPage"][$instance] = $pageName;
   $_SESSION["currentTemplate"][$instance] = $templateName;
