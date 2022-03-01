@@ -1,31 +1,10 @@
 <?php
 
-// Linux AMPPS
-// $host = '127.0.0.1';
-// $db   = 'triangle';
-// $user = 'root';
-// $pass = 'mysql';
-
-
-// CC VPS
+// MAMP
 $host = 'localhost';
-$db   = 'tcadmin_triangle';
-$user = 'tcadmin_admin';
-//$pass = 'n~0bKf~lc@ORp)L/(ar;dZ?p(]}w1m=;zC_C;!AJPhsT?TLt+MY%IpzDk-4I+:LH';
-$pass = 'OC9Icq&Rggw@B5P0D4^9rMrLiDp^&0KwlG8MdHV^8';
-
-
-// AWS
-/*$host = 'aasrw9w8y05kxv.c5tyjnclywzs.us-west-2.rds.amazonaws.com';
-$db   = 'ebdb';
-$user = 'tcadmin';
-$pass = 'Opro^o3iSpVpubOzL0F%4M%c^pYRnFterOMm9QzCb';*/
-
-// WAMP
-/*$host = 'localhost';
 $db   = 'triangle';
 $user = 'root';
-$pass = '';*/
+$pass = 'root';
 
 $charset = 'utf8';
 
