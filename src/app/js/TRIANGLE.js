@@ -598,6 +598,7 @@ TRIANGLE.importItem = {
     importBoxShadow(); // imports box shadow
     TRIANGLE.importItem.importColors(); // imports colors of selected element
     importFont(); // imports font styles
+    importAltTag();
     importUserID(); // imports custom user item name
     importUserClass(); // imports custom user item class
     importHyperlink(); // imports hyperlink string from anchor tag
@@ -728,6 +729,10 @@ TRIANGLE.importItem = {
           break;
         }
       }
+    }
+
+    function importAltTag() {
+      document.getElementById("altTag").value = TRIANGLE.item.objRef.firstChild.getAttribute("alt")
     }
 
     function importUserID() {
@@ -1385,6 +1390,13 @@ TRIANGLE.saveItem = {
       }
       TRIANGLE.saveItem.equalizeUserClasses(TRIANGLE.item.userClass);
       TRIANGLE.selectItem(TRIANGLE.item.index);
+    }
+  },
+
+  saveAltTag : function() {
+    if (TRIANGLE.item && TRIANGLE.item.isType("imageItem")) {
+      var alt = document.getElementById("altTag").value
+      TRIANGLE.item.objRef.firstChild.setAttribute("alt", alt)
     }
   },
 
@@ -7363,7 +7375,8 @@ TRIANGLE.styleFunctions = [
   function (id, value) {if (value) id.setAttribute("crop-ratio", value);},
   function (id, value) {if (value) id.setAttribute("target", value);},
   function (id, value) {if (value) id.setAttribute("user-class", value);},
-  function (id, value) {if (value) id.setAttribute("form-email", value);}
+  function (id, value) {if (value) id.setAttribute("form-email", value);},
+  function (id, value) {if (value) id.setAttribute("alt", value);}
 ];
 
 TRIANGLE.getStyles = function getStyles(element) {
@@ -7383,7 +7396,8 @@ TRIANGLE.getStyles = function getStyles(element) {
     element.getAttribute("crop-ratio"),
     element.getAttribute("target"),
     element.getAttribute("user-class"),
-    element.getAttribute("form-email")
+    element.getAttribute("form-email"),
+    element.getAttribute("alt")
   ];
   return elementStyles;
 }
