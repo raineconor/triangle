@@ -43,7 +43,7 @@ function formatCode($data, $templateName, $pageName, $compress = false, $cropped
   }
 
   $html .= "<!DOCTYPE HTML>\n"
-         . "<html>\n"
+         . "<html lang=\"en\">\n"
          . "<head>\n"
          . "<meta charset=\"utf-8\">\n\n"
 
