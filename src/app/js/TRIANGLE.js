@@ -732,7 +732,8 @@ TRIANGLE.importItem = {
     }
 
     function importAltTag() {
-      document.getElementById("altTag").value = TRIANGLE.item.objRef.firstChild.getAttribute("alt")
+      if (TRIANGLE.item.isType("imageItem"))
+        document.getElementById("altTag").value = TRIANGLE.item.objRef.firstChild.getAttribute("alt")
     }
 
     function importUserID() {
