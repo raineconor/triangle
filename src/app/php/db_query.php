@@ -1,7 +1,7 @@
 <?php
 
 // MAMP
-$host = '127.0.0.1';
+$host = 'localhost';
 $db   = 'triangle';
 $user = 'root';
 $pass = 'root';
