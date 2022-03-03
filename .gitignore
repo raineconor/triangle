@@ -8,3 +8,5 @@ _config.yaml
 .idea
 dist
 .parcel-cache
+
+db_query.php
