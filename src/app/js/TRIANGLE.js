@@ -4217,7 +4217,7 @@ TRIANGLE.text = {
       TRIANGLE.text.replaceTextSelection();
       var pageDropdown = document.getElementById("hyperlinkPage");
       if (pageDropdown.selectedIndex !== 0) {
-        var linkChoice = pageDropdown.options[pageDropdown.selectedIndex].value + ".php";
+        var linkChoice = pageDropdown.options[pageDropdown.selectedIndex].value + ".html";
         if (TRIANGLE.isType.textBox(TRIANGLE.item.objRef) && TRIANGLE.item.objRef.isContentEditable) {
           TRIANGLE.iframe().contentDocument.execCommand("createLink", null, linkChoice);
         } else {
@@ -4238,7 +4238,7 @@ TRIANGLE.text = {
 
       var pageDropdown = document.getElementById("hyperlinkPage");
       if (pageDropdown.selectedIndex !== 0) {
-        var linkChoice = pageDropdown.options[pageDropdown.selectedIndex].value + ".php";
+        var linkChoice = pageDropdown.options[pageDropdown.selectedIndex].value + ".html";
         TRIANGLE.item.objRef.setAttribute("link-to", linkChoice);
       } else if (document.getElementById("hyperlinkURL").value !== "") {
         var linkURL = document.getElementById("hyperlinkURL").value;

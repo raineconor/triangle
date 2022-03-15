@@ -149,6 +149,7 @@
     if (!$compress) $code[1] = str_replace('url("images/', 'url("../images/', $code[1]);
 
     file_put_contents($filedest . "/" . $pageName . ".html", $code[0]);
+    if (file_exists($filedest . "/" . $pageName . ".php")) unlink($filedest . "/" . $pageName . ".php");
     if (!$compress) {
       /*if (file_put_contents($filedest . "/" . $pageName . ".css", $code[1])) {
           echo "YES";
